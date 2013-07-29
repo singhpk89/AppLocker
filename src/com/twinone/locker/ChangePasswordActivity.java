@@ -48,7 +48,11 @@ public class ChangePasswordActivity extends LockActivityBase {
 	@Override
 	protected void onOkButton() {
 		if (isFirstPassword) {
-			setupSecond();
+			if (tvPassword.getText().toString().isEmpty()) {
+				Toast.makeText(this, "No password entered", Toast.LENGTH_SHORT);
+			} else {
+				setupSecond();
+			}
 		} else {
 			if (tvPassword.getText().toString().equals(mPassword)) {
 				onPasswordConfirm();

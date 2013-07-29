@@ -55,8 +55,7 @@ public abstract class LockActivityBase extends Activity implements
 		tvHeader = (TextView) findViewById(R.id.tvHeader);
 		tvFooter = (TextView) findViewById(R.id.tvFooter);
 		ivAppIcon = (ImageView) findViewById(R.id.ivAppIcon);
-		
-		
+
 		bOK = (Button) findViewById(R.id.bOK);
 		bBack = (Button) findViewById(R.id.bBack);
 		b0 = (Button) findViewById(R.id.b0);
@@ -103,9 +102,6 @@ public abstract class LockActivityBase extends Activity implements
 			break;
 		}
 		default: {
-			StringBuilder sb = new StringBuilder(tvPassword.getText())
-					.append(((Button) v).getText());
-			tvPassword.setText(sb.toString());
 			onNumberButton(v);
 			break;
 		}
@@ -115,35 +111,42 @@ public abstract class LockActivityBase extends Activity implements
 	@Override
 	public boolean onLongClick(View v) {
 		if (v.getId() == R.id.bBack) {
-			tvPassword.setText("");
 			onBackButton(true);
 		}
 		return false;
 	}
 
 	/**
-	 * Called every time a number button is pressed. Adding the number to the
-	 * {@link TextView} is already taken care of when this method is called,
-	 * don't do it again.
+	 * Called every time a number button is pressed. If you override this
+	 * method, call super.{@link #onNumberButton(View)} to take care of adding
+	 * the numbers to the {@link #tvPassword}
 	 * 
 	 * @param v
 	 */
-	protected abstract void onNumberButton(View v);
+	protected void onNumberButton(View v) {
+		StringBuilder sb = new StringBuilder(tvPassword.getText())
+				.append(((Button) v).getText());
+		tvPassword.setText(sb.toString());
+	}
 
 	/**
-	 * Called every time the back button is pressed. You shouldn't do anything
-	 * in this method, because removing the last character is already taken care
-	 * of.
-	 */
-	protected abstract void onBackButton(boolean longPress);
-
-	/**
-	 * Called every time the OK button is pressed.
+	 * Called every time the back button is pressed. If you override this method
+	 * call super.{@link #onBackButton(boolean)} to take care of removing the
+	 * last character from {@link #tvPassword}
 	 * 
-	 * @deprecated Not longer useful since {@link #onNumberButton(View)} should
-	 *             automatically check the passwords
+	 * @param longPress
 	 */
-	protected abstract void onOkButton();
+
+	protected void onBackButton(boolean longPress) {
+		tvPassword.setText("");
+	}
+
+	/**
+	 * Called every time the OK button is pressed. The default implementation does nothing.
+	 */
+	protected  void onOkButton() {
+		
+	}
 
 	@Override
 	protected void onPause() {

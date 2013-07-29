@@ -13,7 +13,8 @@
 
     <!--  -->
     <dimen name="password_horizontal_padding">10dp</dimen>
-    <dimen name="password_vertical_margin">0dp</dimen>
+    <dimen name="password_top_margin">10dp</dimen>
+    <dimen name="password_bottom_margin">0dp</dimen>
     <dimen name="image_right_margin">10dp</dimen>
     <dimen name="footerscroll_vertical_padding">5dp</dimen>
 

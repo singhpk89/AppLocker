@@ -10,11 +10,12 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="4"
         android:gravity="center"
+        android:orientation="vertical"
         android:paddingBottom="@dimen/main_vertical_padding"
         android:paddingLeft="@dimen/main_horizontal_padding"
         android:paddingRight="@dimen/main_horizontal_padding"
@@ -22,29 +23,32 @@
 
         <!-- This is actually an edittext but for the styling a button is used. -->
 
-        <ImageView
-            android:id="@+id/ivAppIcon"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginRight="@dimen/image_right_margin"
-            android:contentDescription="Application Image" />
+            android:orientation="horizontal" >
 
-        <TextView
-            android:id="@+id/tvHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/ivAppIcon"
-            android:layout_toRightOf="@id/ivAppIcon"
-            android:textAppearance="@android:style/TextAppearance.Large" />
+            <ImageView
+                android:id="@+id/ivAppIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/image_right_margin"
+                android:contentDescription="Application Image" />
+
+            <TextView
+                android:id="@+id/tvHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textAppearance="@android:style/TextAppearance.Large" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/tvPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tvHeader"
-            android:layout_marginBottom="@dimen/password_vertical_margin"
-            android:layout_marginTop="@dimen/password_vertical_margin"
+            android:layout_marginBottom="@dimen/password_bottom_margin"
+            android:layout_marginTop="@dimen/password_top_margin"
             android:cursorVisible="false"
             android:inputType="textPassword"
             android:maxLength="6"
@@ -55,25 +59,23 @@
 
         <ScrollView
             android:layout_width="match_parent"
-                android:paddingTop="@dimen/footerscroll_vertical_padding"
-                android:paddingBottom="@dimen/footerscroll_vertical_padding"
             android:layout_height="80dp"
-            android:layout_below="@id/tvPassword" >
+            android:paddingBottom="@dimen/footerscroll_vertical_padding"
+            android:paddingTop="@dimen/footerscroll_vertical_padding" >
 
             <TextView
                 android:id="@+id/tvFooter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical"
-                android:text="This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password."
                 android:textAppearance="@android:style/TextAppearance.Small" />
         </ScrollView>
-    </RelativeLayout>
+    </LinearLayout>
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3" >
+        android:layout_weight="6" >
 
         <TableRow
             android:layout_width="wrap_content"

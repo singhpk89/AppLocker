@@ -13,63 +13,63 @@ public class ChangePasswordLockActivity extends LockActivityBase {
 	/**
 	 * Value of the first password
 	 */
-	private String firstPassword;
+	private String mPassword;
 	/**
 	 * Whether the user is entering the first or the second password.
 	 */
-	private boolean isFirstPassword;
+	private boolean isFirstPassword = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		// overridePendingTransition(android.R.anim.fade_in,
-		// android.R.anim.fade_in);
 		setContentView(R.layout.locker);
 		initLayout();
-		ivAppIcon.setImageResource(R.drawable.ic_launcher);
-		tvHeader.setText(getApplicationInfo().loadLabel(getPackageManager()));
+		// Hide because we're just changing the password
+		ivAppIcon.setVisibility(View.GONE);
+		tvHeader.setText("Change password");
 		setupFirst();
 	}
 
 	private void setupFirst() {
-		tvHeader.setText(getApplicationInfo().loadLabel(getPackageManager()));
+		mPassword = null;
+		tvFooter.setText("Enter the new password\n4 or more numbers is recommended");
 		tvPassword.setText("");
 		isFirstPassword = true;
 	}
 
 	private void setupSecond() {
-		setTitle("Confirm password");
+		mPassword = tvPassword.getText().toString();
+		tvFooter.setText("Confirmation\nEnter the same password again");
 		tvPassword.setText("");
 		isFirstPassword = false;
 
 	}
 
 	private void onPasswordConfirm() {
-		Log.d(TAG, "OnPasswordConfirm");
-		boolean isSet = ObserverService.setPassword(this, firstPassword);
+		Log.d(TAG, "Changing password to " + mPassword);
+		boolean isSet = ObserverService.setPassword(this, mPassword);
 		Toast.makeText(this,
-				isSet ? "Password changed" : "Error changing password",
+				isSet ? "Password successfully changed" : "Error changing password",
 				Toast.LENGTH_SHORT).show();
+		if (!isSet)
+			Log.w(TAG, "Password could not be changed!!!");
 		finish();
-
-	}
-
-	@Override
-	protected void onNumberButton(View v) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void onBackButton(boolean longPress) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	protected void onOkButton() {
-		// TODO Auto-generated method stub
-
+		if (isFirstPassword) {
+			setupSecond();
+		} else {
+			if (tvPassword.getText().toString().equals(mPassword)) {
+				onPasswordConfirm();
+			} else {
+				setupFirst();
+				Toast.makeText(this, "Passwords do not match",
+						Toast.LENGTH_SHORT).show();
+				Log.d(TAG, "Passwords do not match");
+			}
+		}
 	}
 }

@@ -1,0 +1,56 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme"></style>
+
+    <!-- For showing and hiding locker -->
+    <style name="LockerAnimation">
+        <item name="android:inAnimation">@anim/fade_in</item>
+        <item name="android:outAnimation">@anim/fade_out</item>
+    </style>
+
+    <!-- Themes for locker -->
+    <style name="Theme_LockerLight" parent="@android:style/Theme.Holo.Light.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/LockerAnimation</item>
+        <item name="android:buttonStyle">@style/Button_Light</item>
+    </style>
+
+    <style name="Theme_LockerDark" parent="@android:style/Theme.Holo.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/LockerAnimation</item>
+        <item name="android:buttonStyle">@style/Button_Dark</item>
+    </style>
+
+    <style name="Button_Dark" parent="@android:style/Widget.Holo.Button">
+        <item name="android:background">@drawable/locker_button_dark</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Button_Light" parent="@android:style/Widget.Holo.Light.Button">
+        <item name="android:background">@drawable/locker_button_light</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextView_Dark" parent="@android:style/Widget.Holo.TextView">
+        <item name="android:background">@drawable/locker_button_dark</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextView_Light" parent="@android:style/Widget.Holo.Light.TextView">
+        <item name="android:background">@drawable/locker_button_light</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+</resources>

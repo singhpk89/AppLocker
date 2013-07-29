@@ -11,18 +11,19 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.twinone.locker.ObserverService.LocalBinder;
 
-public class AppLockActivity extends LockActivityBase {
+public class LockActivity extends LockActivityBase {
 
 	private static final String TAG = "Locker";
 
-	private String mPassword;
+	/** The password saved in the file */
+	private String savedPassword;
 
-	private LockInfo forApp;
+	/** The application which we are showing this locker for */
+	private LockInfo target;
 
 	private ObserverService mService;
 	boolean mBound = false;
@@ -34,27 +35,32 @@ public class AppLockActivity extends LockActivityBase {
 
 		initLayout();
 
-		mPassword = ObserverService.getPassword(this);
+		savedPassword = ObserverService.getPassword(this);
 
 		// Get the packagename
-		forApp = (LockInfo) getIntent().getExtras().getSerializable(
+		target = (LockInfo) getIntent().getExtras().getSerializable(
 				ObserverService.EXTRA_APPINFO);
-		Log.w(TAG, "LockerActivity for " + forApp + " " + forApp.hashCode());
 
-	}
+		// load icon or hide the ImageView
+		ApplicationInfo forApp = getAI(target.packageName);
+		if (forApp != null) {
+			ivAppIcon.setBackground(forApp.loadIcon(getPackageManager()));
+			tvHeader.setText(forApp.loadLabel(getPackageManager()));
+		} else {
+			Log.w(TAG, "Could not load ApplicationInfo image");
+			ivAppIcon.setVisibility(View.GONE);
+		}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		// overridePendingTransition(0, 0);
+		tvFooter.setText("Enter password to unlock");
+
+		Log.w(TAG, "LockerActivity for " + target);
+
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if (!isFinishing()) {
-			finish();
-		}
+		finish();
 	}
 
 	@Override
@@ -79,73 +85,18 @@ public class AppLockActivity extends LockActivityBase {
 		}
 	};
 
-	@Override
-	public void onClick(View v) {
-		String currentPassword = tvPassword
-				.
-				getText()
-				.
-				toString();
-		switch (v.getId()) {
-		case R.id.bOK:
-			if (!checkPassword(currentPassword)) {
-				// Incorrect password
-				tvPassword.setText("");
-				Toast.makeText(this, "Incorrect password", Toast.LENGTH_SHORT)
-						.show();
-			}
-			break;
-		case R.id.bBack:
-			// Remove last character
-			if (!currentPassword.isEmpty()) {
-				currentPassword = currentPassword.substring(0,
-						currentPassword.length() - 1);
-				tvPassword.setText(currentPassword);
-
-			}
-			break;
-		default:
-			currentPassword += ((Button) v).getText();
-			tvPassword.setText(currentPassword);
-			checkPassword(currentPassword);
-			break;
-		}
-	}
-
+	/**
+	 * Checks the password and performs the appropriate action.
+	 * 
+	 * @param toCheck
+	 * @return
+	 */
 	private boolean checkPassword(String toCheck) {
-		if (toCheck.equals(mPassword)) {
-			onCorrectPassword();
+		if (toCheck.equals(savedPassword)) {
+			unlock();
 			return true;
 		} else {
 			return false;
-		}
-	}
-
-	private void onCorrectPassword() {
-
-		if (forApp.packageName.equals(getApplicationInfo().packageName)) {
-			// Intent i = new Intent(this, MainActivity.class);
-			// startActivity(i);
-			if (mBound) {
-				mService.doUnlock(forApp.packageName);
-			} else {
-				Log.w(TAG, "Service not bound, cannot unlock");
-			}
-
-			Log.d(TAG, "Unlocked own app, finishing");
-			finish();
-		} else {
-			// To avoid root and parent activity errors
-			// Log.d(TAG, "Unlocked 3rd party, moving to back");
-			if (mBound) {
-				mService.doUnlock(forApp.packageName);
-				Log.d(TAG, "Unlocked 3rd party app");
-			} else {
-				Log.w(TAG, "Service not bound, cannot unlock");
-			}
-			finish();
-			moveTaskToBack(true);
-			// myFinish();
 		}
 	}
 
@@ -183,19 +134,53 @@ public class AppLockActivity extends LockActivityBase {
 
 	@Override
 	protected void onNumberButton(View v) {
-		// TODO Auto-generated method stub
-
+		super.onNumberButton(v);
+		checkPassword(tvPassword.getText().toString());
 	}
 
 	@Override
 	protected void onBackButton(boolean longPress) {
-		// TODO Auto-generated method stub
-
+		super.onBackButton(longPress);
 	}
 
 	@Override
 	protected void onOkButton() {
-		// TODO Auto-generated method stub
+		super.onOkButton();
+		if (!checkPassword(tvPassword.getText().toString())) {
+			// Incorrect password
+			tvPassword.setText("");
+			Toast.makeText(this, "Incorrect password", Toast.LENGTH_SHORT)
+					.show();
+		}
+	}
 
+	/**
+	 * Exit the {@link LockActivity}
+	 */
+	private void unlock() {
+
+		if (target.packageName.equals(getApplicationInfo().packageName)) {
+			// Intent i = new Intent(this, MainActivity.class);
+			// startActivity(i);
+			if (mBound) {
+				mService.doUnlock(target.packageName);
+			} else {
+				Log.w(TAG, "Service not bound, cannot unlock");
+			}
+
+			Log.d(TAG, "Unlocked own app, finishing");
+			finish();
+		} else {
+			// To avoid root and parent activity errors
+			// Log.d(TAG, "Unlocked 3rd party, moving to back");
+			if (mBound) {
+				mService.doUnlock(target.packageName);
+				Log.d(TAG, "Unlocked 3rd party app");
+			} else {
+				Log.w(TAG, "Service not bound, cannot unlock");
+			}
+			finish();
+			// moveTaskToBack(true);
+		}
 	}
 }

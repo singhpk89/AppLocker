@@ -2,7 +2,6 @@ package com.twinone.locker;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -86,7 +85,6 @@ public abstract class LockActivityBase extends Activity implements
 
 	@Override
 	public void onClick(View v) {
-		Log.d("asd", "Clicked button");
 		switch (v.getId()) {
 		case R.id.bOK: {
 			onOkButton();

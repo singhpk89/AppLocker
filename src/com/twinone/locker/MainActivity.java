@@ -20,20 +20,17 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 	Button bChangePass;
 	Button bToggleService;
-	private boolean mShowingLocker = false;
+	public static final String EXTRA_UNLOCKED = "com.twinone.locker.Unlocked";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
 
+		setContentView(R.layout.activity_main);
 		bToggleService = (Button) findViewById(R.id.bToggleService);
 		bChangePass = (Button) findViewById(R.id.bChangePassword);
 		bToggleService.setOnClickListener(this);
 		bChangePass.setOnClickListener(this);
-		// We have to check if a password is set, and if not, ask the user to
-		// create a password.
-
 	}
 
 	@Override
@@ -57,22 +54,30 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		if (!mShowingLocker) {
-			finish();
-		}
+		getIntent().putExtra(EXTRA_UNLOCKED, false);
+
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 
+		// If there is no password, don't show locker
+		// If it's already unlocked, don't show locker
+		boolean unlocked = getIntent().getBooleanExtra(EXTRA_UNLOCKED, false);
+		boolean emptyPassword = ObserverService.getPassword(this).isEmpty();
+		Log.d(TAG, "unlocked: " + unlocked + " existsPassword: "
+				+ emptyPassword);
+		if (!unlocked && !emptyPassword) {
+			Intent i = new Intent(this, DieLockActivity.class);
+			startActivity(i);
+			finish();
+			return;
+		}
 		// Reset the layout if the service has changed while not at activity.
 		updateLayout(isServiceRunning());
 
 		// If not showing the locker, we should show it
-		if (!mShowingLocker) {
-			mShowingLocker = true;
-		}
 	}
 
 	private boolean isServiceRunning() {
@@ -119,7 +124,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	}
 
 	private final void startChangePasswordActivity() {
-		Intent i = new Intent(this, ChangePasswordLockActivity.class);
+		Intent i = new Intent(this, ChangePasswordActivity.class);
 		startActivity(i);
 	}
 

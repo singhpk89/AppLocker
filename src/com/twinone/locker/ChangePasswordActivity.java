@@ -3,10 +3,9 @@ package com.twinone.locker;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
-public class ChangePasswordLockActivity extends LockActivityBase {
+public class ChangePasswordActivity extends LockActivityBase {
 
 	private static final String TAG = "Locker";
 
@@ -21,10 +20,10 @@ public class ChangePasswordLockActivity extends LockActivityBase {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.locker);
 		initLayout();
+
 		// Hide because we're just changing the password
 		ivAppIcon.setVisibility(View.GONE);
 		tvHeader.setText("Change password");
@@ -46,17 +45,6 @@ public class ChangePasswordLockActivity extends LockActivityBase {
 
 	}
 
-	private void onPasswordConfirm() {
-		Log.d(TAG, "Changing password to " + mPassword);
-		boolean isSet = ObserverService.setPassword(this, mPassword);
-		Toast.makeText(this,
-				isSet ? "Password successfully changed" : "Error changing password",
-				Toast.LENGTH_SHORT).show();
-		if (!isSet)
-			Log.w(TAG, "Password could not be changed!!!");
-		finish();
-	}
-
 	@Override
 	protected void onOkButton() {
 		if (isFirstPassword) {
@@ -71,5 +59,17 @@ public class ChangePasswordLockActivity extends LockActivityBase {
 				Log.d(TAG, "Passwords do not match");
 			}
 		}
+	}
+
+	private void onPasswordConfirm() {
+		Log.d(TAG, "Changing password to " + mPassword);
+		boolean isSet = ObserverService.setPassword(this, mPassword);
+		Toast.makeText(
+				this,
+				isSet ? "Password successfully changed"
+						: "Error changing password", Toast.LENGTH_SHORT).show();
+		if (!isSet)
+			Log.w(TAG, "Password could not be changed!!!");
+		finish();
 	}
 }

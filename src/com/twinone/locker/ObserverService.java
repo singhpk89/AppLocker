@@ -8,9 +8,11 @@ import java.util.concurrent.TimeUnit;
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
@@ -22,25 +24,24 @@ public class ObserverService extends Service {
 	public static final String TAG = "Observer";
 	public static final String PREF_PASSWD_KEY = "com.twinone.locker.pref.passwd";
 	public static final String PREF_PASSWD_DEF = "";
-	private static final String LOCKER_CLASS = AppLockActivity.class.getName();
-	// avoid too large delay, because we could miss a package change if the user
-	// goes forth and back very quickly
-	private long DELAY = DELAY_NORMAL;
+	private static final String LOCKER_CLASS = LockActivity.class.getName();
+
+	private long DELAY = 150;
 
 	//
-	private static final long DELAY_PERFORMANCE = 50;
-	private static final long DELAY_FAST = 75;
-	private static final long DELAY_NORMAL = 100;
-	private static final long DELAY_SLOW = 150;
-	private static final long DELAY_POWERSAVE = 200;
+	// private static final long DELAY_PERFORMANCE = 50;
+	// private static final long DELAY_FAST = 75;
+	// private static final long DELAY_NORMAL = 100;
+	// private static final long DELAY_SLOW = 150;
+	// private static final long DELAY_POWERSAVE = 200;
 
 	private String mPassword;
-	private String lastApp = "";
-	private String lastClass = "";
+	// private String lastApp = "";
 	// private String lastClass = "";
 
 	private ActivityManager am;
 	private ScheduledExecutorService mExecutor;
+	BroadcastReceiver mBroadcastReceiver;
 
 	/** In this map information about apps will be */
 	private ArrayList<LockInfo> lockList;
@@ -58,27 +59,26 @@ public class ObserverService extends Service {
 
 	@Override
 	public void onCreate() {
-		// TODO Auto-generated method stub
 		super.onCreate();
 		Log.w(TAG, "onCreate");
 
-		// TODO Load preferences
+		// TODO Load applications from preferences
 		am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 		mPassword = getPassword(this);
 		lockList = new ArrayList<LockInfo>();
 
-		// Add whatsapp for testing
+		// Testing apps
+		// -------------------------------
+
 		lockList.add(new LockInfo("com.whatsapp", mPassword));
 		lockList.add(new LockInfo("com.twitter.android", mPassword));
-		// NEW: Own app will call the locker itself, no need to check in
-		// service.
-		// This provides a way to disable the service and still lock own app.
-		// // Don't lock own app because it's the first time and the password
-		// has
-		// // just been set.
-		lockList.add(new LockInfo(getApplicationInfo().packageName, mPassword)
-				.setLock(false));
-		// empty notification hack for a foreground service without notification
+		// lockList.add(new LockInfo(getApplicationInfo().packageName,
+		// mPassword)
+		// .setLock(false));
+
+		// ------------------------------
+
+		// Set an empty notification
 		@SuppressWarnings("deprecation")
 		Notification n = new Notification(0, null, System.currentTimeMillis());
 		n.flags |= Notification.FLAG_NO_CLEAR;
@@ -86,10 +86,29 @@ public class ObserverService extends Service {
 
 		// Start the monitoring
 		mExecutor = Executors.newSingleThreadScheduledExecutor();
-		mExecutor.scheduleWithFixedDelay(new MyMonitor(), 0, DELAY,
+		mExecutor.scheduleWithFixedDelay(new ActivePackageMonitor(), 0, DELAY,
 				TimeUnit.MILLISECONDS);
 
+		mBroadcastReceiver = new ScreenReceiver();
+		registerReceiver(mBroadcastReceiver, new IntentFilter(
+				Intent.ACTION_SCREEN_ON));
+
 	}
+
+	class ScreenReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+				Log.i("TAG", "Screen ON");
+				relockAll();
+			}
+			if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+				Log.i("TAG", "Screen OFF");
+				relockAll();
+			}
+		}
+	};
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -100,7 +119,7 @@ public class ObserverService extends Service {
 	 * Get password from SharedPreferences
 	 * 
 	 * @param c
-	 * @return
+	 * @return The password current password or an empty string.
 	 */
 	public static final String getPassword(Context c) {
 		return c.getSharedPreferences("default", MODE_PRIVATE).getString(
@@ -121,7 +140,7 @@ public class ObserverService extends Service {
 		return editor.commit();
 	}
 
-	private class MyMonitor extends Thread {
+	private class ActivePackageMonitor extends Thread {
 		@Override
 		public void run() {
 			ComponentName app = am.getRunningTasks(1).get(0).topActivity;
@@ -131,10 +150,11 @@ public class ObserverService extends Service {
 			// boolean appChanged = !appName.equals(lastApp);
 			// boolean classChanged = !className.equals(lastClass);
 
+			// if (classChanged || appChanged)
 			onObserve(appName, className);
 
-			lastClass = className;
-			lastApp = appName;
+			// lastClass = className;
+			// lastApp = appName;
 		}
 
 		/**
@@ -145,6 +165,7 @@ public class ObserverService extends Service {
 		 * @param className
 		 */
 		private void onObserve(String appName, String className) {
+			// Log.v(TAG, "Package: " + appName);
 			// the app that's currently in front
 			LockInfo app = getLockInfoByPackageName(appName);
 			if (className.equals(LOCKER_CLASS)) {
@@ -157,20 +178,45 @@ public class ObserverService extends Service {
 			if (app != null) {
 				// lock app if we should
 				if (app.lock) {
-					printLockInfos();
+					// printLockInfos();
+					// TODO FIXME Temporary test: Unlock the app here and relock
+					// it in the LockActivity to avoid doubling lockactivity
 					Log.v(TAG,
 							"Show locker for " + app.packageName
 									+ app.hashCode());
 					showLocker(app);
 				}
 			}
-			for (LockInfo li : lockList) {
-				// lock all other apps because they're not in front anymore
-				if (!li.packageName.equals(appName)) {
-					if (li.lock == false) {
-						Log.v(TAG, "Relocking " + li.packageName);
-						li.lock = true;
-					}
+			// lock all other apps because they're not in front anymore
+			relock(appName);
+		}
+	}
+
+	/**
+	 * Locks ALL apps (Useful when screen is turned off)
+	 */
+	private void relockAll() {
+		for (LockInfo li : lockList) {
+			if (li.lock == false) {
+				Log.v(TAG, "relockAll() " + li.packageName);
+				li.lock = true;
+
+			}
+		}
+	}
+
+	/**
+	 * Locks all apps except the one matching the provided string.
+	 * 
+	 * @param appName
+	 *            The app that must NOT be locked.
+	 */
+	private void relock(String appName) {
+		for (LockInfo li : lockList) {
+			if (!li.packageName.equals(appName)) {
+				if (li.lock == false) {
+					Log.v(TAG, "relock() " + li.packageName);
+					li.lock = true;
 				}
 			}
 		}
@@ -228,9 +274,9 @@ public class ObserverService extends Service {
 			} else {
 				Log.w(TAG, "Tried to unlock " + li.hashCode()
 						+ " but was not locked");
+				printLockInfos();
 			}
 			li.lock = false;
-			printLockInfos();
 			return;
 		}
 		Log.w(TAG, "Not unlocked " + appName + ": not in list.");
@@ -246,11 +292,11 @@ public class ObserverService extends Service {
 			return;
 		}
 		// Log.d(TAG, "Starting locker for " + lockInfo.packageName);
-		Intent intent = new Intent(ObserverService.this, AppLockActivity.class);
+		Intent intent = new Intent(ObserverService.this, LockActivity.class);
 		intent.setAction(Intent.ACTION_VIEW);
 		intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		// intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+		intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 		intent.putExtra(EXTRA_APPINFO, lockInfo);
 		startActivity(intent);
 	}

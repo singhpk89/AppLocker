@@ -37,6 +37,7 @@ public abstract class LockActivityBase extends Activity implements
 
 	protected TextView tvPassword;
 	protected TextView tvHeader;
+	protected TextView tvFooter;
 	protected ImageView ivAppIcon;
 
 	@Override
@@ -52,6 +53,7 @@ public abstract class LockActivityBase extends Activity implements
 	protected void initLayout() {
 		tvPassword = (TextView) findViewById(R.id.tvPassword);
 		tvHeader = (TextView) findViewById(R.id.tvHeader);
+		tvFooter = (TextView) findViewById(R.id.tvFooter);
 		ivAppIcon = (ImageView) findViewById(R.id.ivAppIcon);
 		
 		

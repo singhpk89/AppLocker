@@ -23,12 +23,19 @@ public final class R {
          */
         public static final int activity_horizontal_margin=0x7f050000;
         public static final int activity_vertical_margin=0x7f050001;
+        public static final int footerscroll_vertical_padding=0x7f05000a;
+        public static final int image_right_margin=0x7f050009;
         public static final int locker_button_margin=0x7f050002;
         public static final int locker_button_radius=0x7f050004;
         public static final int locker_button_text_size=0x7f050003;
+        /**  These are for the Upper part (above the buttons) 
+         */
         public static final int main_horizontal_padding=0x7f050005;
+        public static final int main_vertical_padding=0x7f050006;
+        /**   
+         */
         public static final int password_horizontal_padding=0x7f050007;
-        public static final int password_margin_vertical=0x7f050006;
+        public static final int password_vertical_margin=0x7f050008;
     }
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
@@ -36,7 +43,7 @@ public final class R {
         public static final int locker_button_light=0x7f020002;
     }
     public static final class id {
-        public static final int action_settings=0x7f090012;
+        public static final int action_settings=0x7f090013;
         public static final int b0=0x7f09000d;
         public static final int b1=0x7f090003;
         public static final int b2=0x7f090004;
@@ -53,6 +60,7 @@ public final class R {
         public static final int bToggleService=0x7f090000;
         public static final int ivAppIcon=0x7f090010;
         public static final int llLockerRoot=0x7f09000f;
+        public static final int tvFooter=0x7f090012;
         public static final int tvHeader=0x7f090011;
         public static final int tvPassword=0x7f090002;
     }

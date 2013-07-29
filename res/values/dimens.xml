@@ -6,8 +6,15 @@
     <dimen name="locker_button_margin">5dp</dimen>
     <dimen name="locker_button_text_size">30sp</dimen>
     <dimen name="locker_button_radius">3dp</dimen>
+
+    <!-- These are for the Upper part (above the buttons) -->
     <dimen name="main_horizontal_padding">30dp</dimen>
-    <dimen name="password_margin_vertical">10dp</dimen>
+    <dimen name="main_vertical_padding">10dp</dimen>
+
+    <!--  -->
     <dimen name="password_horizontal_padding">10dp</dimen>
-    
+    <dimen name="password_vertical_margin">0dp</dimen>
+    <dimen name="image_right_margin">10dp</dimen>
+    <dimen name="footerscroll_vertical_padding">5dp</dimen>
+
 </resources>

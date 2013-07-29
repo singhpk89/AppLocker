@@ -33,7 +33,7 @@ public class ChangePasswordLockActivity extends LockActivityBase {
 	}
 
 	private void setupFirst() {
-		setTitle("Setup password");
+		tvHeader.setText(getApplicationInfo().loadLabel(getPackageManager()));
 		tvPassword.setText("");
 		isFirstPassword = true;
 	}

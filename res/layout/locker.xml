@@ -15,8 +15,10 @@
         android:layout_height="0dp"
         android:layout_weight="2"
         android:gravity="center"
+        android:paddingBottom="@dimen/main_vertical_padding"
         android:paddingLeft="@dimen/main_horizontal_padding"
-        android:paddingRight="@dimen/main_horizontal_padding" >
+        android:paddingRight="@dimen/main_horizontal_padding"
+        android:paddingTop="@dimen/main_vertical_padding" >
 
         <!-- This is actually an edittext but for the styling a button is used. -->
 
@@ -25,9 +27,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:contentDescription="Application Image" 
-            android:layout_marginRight="@dimen/password_horizontal_padding"
-            />
+            android:layout_marginRight="@dimen/image_right_margin"
+            android:contentDescription="Application Image" />
 
         <TextView
             android:id="@+id/tvHeader"
@@ -35,16 +36,15 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/ivAppIcon"
             android:layout_toRightOf="@id/ivAppIcon"
-            android:textAppearance="@android:style/TextAppearance.Large"
-             />
+            android:textAppearance="@android:style/TextAppearance.Large" />
 
         <Button
             android:id="@+id/tvPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tvHeader"
-            android:layout_marginBottom="@dimen/password_margin_vertical"
-            android:layout_marginTop="@dimen/password_margin_vertical"
+            android:layout_marginBottom="@dimen/password_vertical_margin"
+            android:layout_marginTop="@dimen/password_vertical_margin"
             android:cursorVisible="false"
             android:inputType="textPassword"
             android:maxLength="6"
@@ -52,6 +52,22 @@
             android:paddingRight="@dimen/password_horizontal_padding"
             android:textSize="50sp" >
         </Button>
+
+        <ScrollView
+            android:layout_width="match_parent"
+                android:paddingTop="@dimen/footerscroll_vertical_padding"
+                android:paddingBottom="@dimen/footerscroll_vertical_padding"
+            android:layout_height="80dp"
+            android:layout_below="@id/tvPassword" >
+
+            <TextView
+                android:id="@+id/tvFooter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:text="This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password.This is a very nice footer. Please enter your password."
+                android:textAppearance="@android:style/TextAppearance.Small" />
+        </ScrollView>
     </RelativeLayout>
 
     <TableLayout

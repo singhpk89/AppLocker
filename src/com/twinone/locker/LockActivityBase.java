@@ -138,9 +138,12 @@ public abstract class LockActivityBase extends Activity implements
 	 */
 
 	protected void onBackButton() {
+
 		StringBuilder sb = new StringBuilder(tvPassword.getText());
-		sb.delete(sb.length() - 1, sb.length());
-		tvPassword.setText(sb.toString());
+		if (sb.length() != 0) {
+			sb.delete(sb.length() - 1, sb.length());
+			tvPassword.setText(sb.toString());
+		}
 	}
 
 	/**

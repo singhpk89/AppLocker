@@ -51,7 +51,7 @@ public class LockActivity extends LockActivityBase {
 			ivAppIcon.setVisibility(View.GONE);
 		}
 
-		tvFooter.setText("Enter password to unlock");
+		tvFooter.setText("Your phone will explode if you don't enter the right password\nDon't worry, you'll be able to change this message in the future");
 
 		Log.w(TAG, "LockerActivity for " + target);
 
@@ -139,11 +139,6 @@ public class LockActivity extends LockActivityBase {
 	}
 
 	@Override
-	protected void onBackButton(boolean longPress) {
-		super.onBackButton(longPress);
-	}
-
-	@Override
 	protected void onOkButton() {
 		super.onOkButton();
 		if (!checkPassword(tvPassword.getText().toString())) {
@@ -158,29 +153,36 @@ public class LockActivity extends LockActivityBase {
 	 * Exit the {@link LockActivity}
 	 */
 	private void unlock() {
-
-		if (target.packageName.equals(getApplicationInfo().packageName)) {
-			// Intent i = new Intent(this, MainActivity.class);
-			// startActivity(i);
-			if (mBound) {
-				mService.doUnlock(target.packageName);
-			} else {
-				Log.w(TAG, "Service not bound, cannot unlock");
-			}
-
-			Log.d(TAG, "Unlocked own app, finishing");
-			finish();
+		if (mBound) {
+			mService.doUnlock(target.packageName);
 		} else {
-			// To avoid root and parent activity errors
-			// Log.d(TAG, "Unlocked 3rd party, moving to back");
-			if (mBound) {
-				mService.doUnlock(target.packageName);
-				Log.d(TAG, "Unlocked 3rd party app");
-			} else {
-				Log.w(TAG, "Service not bound, cannot unlock");
-			}
-			finish();
-			// moveTaskToBack(true);
+			Log.w(TAG, "Service not bound, cannot unlock");
 		}
+		finish();
+
+		// FROM HERE DOWN IT'S THE OLD VERSION
+		// if (target.packageName.equals(getApplicationInfo().packageName)) {
+		// // Intent i = new Intent(this, MainActivity.class);
+		// // startActivity(i);
+		// if (mBound) {
+		// mService.doUnlock(target.packageName);
+		// } else {
+		// Log.w(TAG, "Service not bound, cannot unlock");
+		// }
+		//
+		// Log.d(TAG, "Unlocked own app, finishing");
+		// finish();
+		// } else {
+		// // To avoid root and parent activity errors
+		// // Log.d(TAG, "Unlocked 3rd party, moving to back");
+		// if (mBound) {
+		// mService.doUnlock(target.packageName);
+		// Log.d(TAG, "Unlocked 3rd party app");
+		// } else {
+		// Log.w(TAG, "Service not bound, cannot unlock");
+		// }
+		// finish();
+		// // moveTaskToBack(true);
+		// }
 	}
 }

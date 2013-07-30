@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,7 +42,8 @@ public abstract class LockActivityBase extends Activity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setTheme(R.style.Theme_LockerDark);
+		setTheme(R.style.Theme_Dark);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 	}
 
@@ -96,7 +98,7 @@ public abstract class LockActivityBase extends Activity implements
 				tvPassword.setText(sb.delete(sb.length() - 1, sb.length())
 						.toString());
 			}
-			onBackButton(false);
+			onBackButton();
 			break;
 		}
 		default: {
@@ -109,7 +111,7 @@ public abstract class LockActivityBase extends Activity implements
 	@Override
 	public boolean onLongClick(View v) {
 		if (v.getId() == R.id.bBack) {
-			onBackButton(true);
+			onBackButtonLong();
 		}
 		return false;
 	}
@@ -129,21 +131,36 @@ public abstract class LockActivityBase extends Activity implements
 
 	/**
 	 * Called every time the back button is pressed. If you override this method
-	 * call super.{@link #onBackButton(boolean)} to take care of removing the
-	 * last character from {@link #tvPassword}
+	 * call super.{@link #onBackButton(boolean)} to remove last character from
+	 * {@link #tvPassword}
 	 * 
 	 * @param longPress
 	 */
 
-	protected void onBackButton(boolean longPress) {
+	protected void onBackButton() {
+		StringBuilder sb = new StringBuilder(tvPassword.getText());
+		sb.delete(sb.length() - 1, sb.length());
+		tvPassword.setText(sb.toString());
+	}
+
+	/**
+	 * Called every time the back button is long-pressed. If you override this
+	 * method call super.{@link #onBackButton(boolean)} to remove all characters
+	 * from {@link #tvPassword}
+	 * 
+	 * @param longPress
+	 */
+
+	protected void onBackButtonLong() {
 		tvPassword.setText("");
 	}
 
 	/**
-	 * Called every time the OK button is pressed. The default implementation does nothing.
+	 * Called every time the OK button is pressed. The default implementation
+	 * does nothing.
 	 */
-	protected  void onOkButton() {
-		
+	protected void onOkButton() {
+
 	}
 
 	@Override

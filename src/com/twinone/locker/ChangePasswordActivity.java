@@ -35,6 +35,7 @@ public class ChangePasswordActivity extends LockActivityBase {
 		tvFooter.setText("Enter the new password\n4 or more numbers is recommended");
 		tvPassword.setText("");
 		isFirstPassword = true;
+
 	}
 
 	private void setupSecond() {
@@ -74,6 +75,13 @@ public class ChangePasswordActivity extends LockActivityBase {
 						: "Error changing password", Toast.LENGTH_SHORT).show();
 		if (!isSet)
 			Log.w(TAG, "Password could not be changed!!!");
-		finish();
+		MainActivity.showWithoutPassword(this);
+	}
+
+	// Go back to main activity.
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		MainActivity.showWithoutPassword(this);
 	}
 }

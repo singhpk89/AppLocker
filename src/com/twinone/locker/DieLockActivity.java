@@ -1,6 +1,5 @@
 package com.twinone.locker;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -36,10 +35,8 @@ public class DieLockActivity extends LockActivityBase {
 	protected void onNumberButton(View v) {
 		super.onNumberButton(v);
 		if (tvPassword.getText().toString().equals(savedPassword)) {
-			Intent i = new Intent(this, MainActivity.class);
-			i.putExtra(MainActivity.EXTRA_UNLOCKED, true);
-			startActivity(i);
-			finish();
+			MainActivity.showWithoutPassword(this);
+
 		}
 	}
 
@@ -47,10 +44,7 @@ public class DieLockActivity extends LockActivityBase {
 	protected void onOkButton() {
 		super.onOkButton();
 		if (tvPassword.getText().toString().equals(savedPassword)) {
-			Intent i = new Intent(this, MainActivity.class);
-			i.putExtra(MainActivity.EXTRA_UNLOCKED, true);
-			startActivity(i);
-			finish();
+			MainActivity.showWithoutPassword(this);
 		} else {
 			tvPassword.setText("");
 			Toast.makeText(this, "Incorrect password", Toast.LENGTH_SHORT)

@@ -240,6 +240,7 @@ public class ObserverService extends Service {
 		mExecutor = null;
 		am = null;
 		lockList = null;
+		unregisterReceiver(mBroadcastReceiver);
 	}
 
 	private LockInfo getLockInfoByPackageName(String packageName) {

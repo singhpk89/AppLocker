@@ -20,11 +20,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 	Button bChangePass;
 	Button bToggleService;
-	public static final String EXTRA_UNLOCKED = "com.twinone.locker.Unlocked";
+
+	private static final String EXTRA_UNLOCKED = "com.twinone.locker.Unlocked";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setTheme(R.style.Theme_Dark);
 
 		setContentView(R.layout.activity_main);
 		bToggleService = (Button) findViewById(R.id.bToggleService);
@@ -47,8 +49,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 				startObserverService();
 			}
 			break;
+		case R.id.bSelect:
+			startSelectActivity();
 		}
 	}
+	
 
 	@Override
 	protected void onPause() {
@@ -127,10 +132,28 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		Intent i = new Intent(this, ChangePasswordActivity.class);
 		startActivity(i);
 	}
+	private final void startSelectActivity() {
+		Intent i = new Intent(this, SelectActivity.class);
+		startActivity(i);
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+
+	/**
+	 * Provide a way back to {@link MainActivity} without having to provide a
+	 * password again. It finishes the calling {@link Activity}
+	 * 
+	 * @param context
+	 */
+	public static final void showWithoutPassword(Context context) {
+		Intent i = new Intent(context, MainActivity.class);
+		i.putExtra(EXTRA_UNLOCKED, true);
+		context.startActivity(i);
+		((Activity) context).finish();
+	}
+
 }

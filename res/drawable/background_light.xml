@@ -3,7 +3,7 @@
 
     <stroke
         android:width="2dip"
-        android:color="#4fa5d5" />
+        android:color="@color/blue_dark" />
 
     <corners android:radius="@dimen/locker_button_radius" />
 

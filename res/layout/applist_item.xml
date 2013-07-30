@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llThumbnail"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_marginRight="5dip"
+    android:padding="3dip" >
+
+    <!-- android:background="@drawable/image_bg" -->
+
+    <ImageView
+        android:id="@+id/listIcon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:contentDescription="icon"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/listName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/listIcon"
+        android:text="bla"
+        android:textAppearance="@android:style/TextAppearance.Large"
+        android:textIsSelectable="false" />
+
+    <ToggleButton
+        android:id="@+id/listLocked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true" />
+
+</RelativeLayout>

@@ -24,13 +24,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- ExcludeFromRecents will hide it in task switcher -->
-        <!-- NoHistory will finish in onPause -->
+
+        <!-- Derived activities will return to MainActivity -->
         <activity
-            android:name="com.twinone.locker.LockActivity"
+            android:name="com.twinone.locker.DieLockActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden" >
+            android:noHistory="true"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.twinone.locker.ChangePasswordActivity"
@@ -39,10 +39,20 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.twinone.locker.DieLockActivity"
-            android:configChanges="orientation|screenSize"
+            android:name="com.twinone.locker.SelectActivity"
             android:noHistory="true"
             android:screenOrientation="portrait" >
+        </activity>
+        <!-- End derived activities -->
+
+
+        <!-- ExcludeFromRecents will hide it in task switcher -->
+        <!-- NoHistory will finish in onPause -->
+        <activity
+            android:name="com.twinone.locker.LockActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
 
         <service android:name="com.twinone.locker.ObserverService" />

@@ -93,11 +93,6 @@ public abstract class LockActivityBase extends Activity implements
 			break;
 		}
 		case R.id.bBack: {
-			StringBuilder sb = new StringBuilder(tvPassword.getText());
-			if (sb.length() > 0) {
-				tvPassword.setText(sb.delete(sb.length() - 1, sb.length())
-						.toString());
-			}
 			onBackButton();
 			break;
 		}
@@ -141,7 +136,7 @@ public abstract class LockActivityBase extends Activity implements
 
 		StringBuilder sb = new StringBuilder(tvPassword.getText());
 		if (sb.length() != 0) {
-			sb.delete(sb.length() - 1, sb.length());
+			sb.deleteCharAt(sb.length() - 1);
 			tvPassword.setText(sb.toString());
 		}
 	}

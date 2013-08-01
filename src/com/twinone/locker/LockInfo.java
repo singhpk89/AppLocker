@@ -9,21 +9,31 @@ public class LockInfo implements Serializable {
 	 */
 	private static final long serialVersionUID = 5216460479711908074L;
 
-	public final String packageName;
+	public String packageName;
 	public String className;
-	public String password;
-	public boolean lock;
+	public String label;
+	public boolean locked;
 
-	public LockInfo(String packageName, String password) {
-		this.packageName = packageName;
-		this.password = password;
-		lock = true;
+	public LockInfo(String packageName) {
+		init(packageName, null, true);
 	}
 
-	public LockInfo(String packageName, String password, boolean lock) {
+	public LockInfo(String packageName, String label) {
+		init(packageName, label, true);
+	}
+
+	public LockInfo(String packageName, String label, boolean lock) {
+		init(packageName, label, lock);
+	}
+
+	public LockInfo(String packageName, boolean lock) {
+		init(packageName, null, lock);
+	}
+
+	private void init(String packageName, String label, boolean lock) {
 		this.packageName = packageName;
-		this.password = password;
-		this.lock = lock;
+		this.label = label;
+		this.locked = lock;
 	}
 
 	public LockInfo setClassName(String className) {
@@ -32,7 +42,7 @@ public class LockInfo implements Serializable {
 	}
 
 	public LockInfo setLock(boolean lock) {
-		this.lock = lock;
+		this.locked = lock;
 		return this;
 	}
 
@@ -60,4 +70,19 @@ public class LockInfo implements Serializable {
 		return "LI:" + (className == null ? packageName : className);
 	}
 
+	// @Override
+	// public int compareTo(LockInfo o) {
+	// // Log.d("TEST", this.label + " " + ((LockInfo) o).label + " "
+	// // + this.label.compareTo(((LockInfo) o).label));
+	// // if (this.label.equals("Contacts")
+	// // || ((LockInfo) o).label.equals("Contacts")) {
+	// // }
+	// return this.label.compareTo(((LockInfo) o).label);
+	//
+	// // if (this.tracked != ((LockInfo) o).tracked) {
+	// // return this.tracked ? -1 : 1;
+	// // } else {
+	// // return this.label.compareTo(((LockInfo) o).label);
+	// // }
+	// }
 }

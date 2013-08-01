@@ -5,7 +5,8 @@
         android:width="1dp"
         android:color="#4fa5d5" />
 
-    <corners android:radius="@dimen/locker_button_radius" />
+    <corners android:topLeftRadius="15dp"
+        android:bottomRightRadius="15dp" />
 
     <gradient
         android:angle="270"

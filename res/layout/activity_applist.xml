@@ -6,9 +6,7 @@
     <ListView
         android:id="@+id/lvAppList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@color/blue_dark"
-        android:dividerHeight="1dp" >
+        android:layout_height="match_parent" >
     </ListView>
 
 </LinearLayout>

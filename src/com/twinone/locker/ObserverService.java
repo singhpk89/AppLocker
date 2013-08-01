@@ -1,6 +1,7 @@
 package com.twinone.locker;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -22,8 +23,15 @@ public class ObserverService extends Service {
 
 	public static final String EXTRA_APPINFO = "com.twinone.locker.extraInfo";
 	public static final String TAG = "Observer";
-	public static final String PREF_PASSWD_KEY = "com.twinone.locker.pref.passwd";
-	public static final String PREF_PASSWD_DEF = "";
+
+	public static final String PREF_FILE_PASSWD = "default";
+	public static final String PREF_KEY_PASSWD = "com.twinone.locker.pref.passwd";
+	public static final String PREF_DEF_PASSWD = "";
+
+	/** File where locked apps are stored as {@link SharedPreferences} */
+	private static final String PREF_FILE_APPS = "locked_apps";
+	private static final String PREF_KEY_APPS = "com.twinone.locker.pref.apps";
+
 	private static final String LOCKER_CLASS = LockActivity.class.getName();
 
 	private long DELAY = 150;
@@ -36,15 +44,15 @@ public class ObserverService extends Service {
 	// private static final long DELAY_POWERSAVE = 200;
 
 	private String mPassword;
-	// private String lastApp = "";
-	// private String lastClass = "";
+	private String lastApp = "";
+	private String lastClass = "";
 
 	private ActivityManager am;
 	private ScheduledExecutorService mExecutor;
 	BroadcastReceiver mBroadcastReceiver;
 
 	/** In this map information about apps will be */
-	private ArrayList<LockInfo> lockList;
+	private HashSet<LockInfo> trackedApps;
 
 	@Override
 	public IBinder onBind(Intent i) {
@@ -62,21 +70,15 @@ public class ObserverService extends Service {
 		super.onCreate();
 		Log.w(TAG, "onCreate");
 
-		// TODO Load applications from preferences
 		am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 		mPassword = getPassword(this);
-		lockList = new ArrayList<LockInfo>();
+		trackedApps = new HashSet<LockInfo>();
 
 		// Testing apps
 		// -------------------------------
 
-		lockList.add(new LockInfo("com.whatsapp", mPassword));
-		lockList.add(new LockInfo("com.twitter.android", mPassword));
-		// lockList.add(new LockInfo(getApplicationInfo().packageName,
-		// mPassword)
-		// .setLock(false));
-
-		// ------------------------------
+		// trackedApps.add(new LockInfo("com.whatsapp"));
+		// trackedApps.add(new LockInfo("com.twitter.android"));
 
 		// Set an empty notification
 		@SuppressWarnings("deprecation")
@@ -93,6 +95,8 @@ public class ObserverService extends Service {
 		registerReceiver(mBroadcastReceiver, new IntentFilter(
 				Intent.ACTION_SCREEN_ON));
 
+		// TODO Load applications from preferences
+		updateTrackedApps();
 	}
 
 	class ScreenReceiver extends BroadcastReceiver {
@@ -122,8 +126,8 @@ public class ObserverService extends Service {
 	 * @return The password current password or an empty string.
 	 */
 	public static final String getPassword(Context c) {
-		return c.getSharedPreferences("default", MODE_PRIVATE).getString(
-				PREF_PASSWD_KEY, PREF_PASSWD_DEF);
+		return c.getSharedPreferences(PREF_FILE_PASSWD, MODE_PRIVATE)
+				.getString(PREF_KEY_PASSWD, PREF_DEF_PASSWD);
 	}
 
 	/**
@@ -134,9 +138,9 @@ public class ObserverService extends Service {
 	 * @return True if success, false on failure
 	 */
 	public static final boolean setPassword(Context c, String password) {
-		SharedPreferences.Editor editor = c.getSharedPreferences("default",
-				MODE_PRIVATE).edit();
-		editor.putString(ObserverService.PREF_PASSWD_KEY, password);
+		SharedPreferences.Editor editor = c.getSharedPreferences(
+				PREF_FILE_PASSWD, MODE_PRIVATE).edit();
+		editor.putString(ObserverService.PREF_KEY_PASSWD, password);
 		return editor.commit();
 	}
 
@@ -147,14 +151,16 @@ public class ObserverService extends Service {
 			String appName = app.getPackageName();
 			String className = app.getClassName();
 
-			// boolean appChanged = !appName.equals(lastApp);
-			// boolean classChanged = !className.equals(lastClass);
+			boolean appChanged = !appName.equals(lastApp);
+			boolean classChanged = !className.equals(lastClass);
 
-			// if (classChanged || appChanged)
+			if (classChanged || appChanged) {
+				Log.d(TAG, "" + appName + " " + className);
+			}
 			onObserve(appName, className);
 
-			// lastClass = className;
-			// lastApp = appName;
+			lastClass = className;
+			lastApp = appName;
 		}
 
 		/**
@@ -177,10 +183,7 @@ public class ObserverService extends Service {
 			// Only if we're monitoring the app
 			if (app != null) {
 				// lock app if we should
-				if (app.lock) {
-					// printLockInfos();
-					// TODO FIXME Temporary test: Unlock the app here and relock
-					// it in the LockActivity to avoid doubling lockactivity
+				if (app.locked) {
 					Log.v(TAG,
 							"Show locker for " + app.packageName
 									+ app.hashCode());
@@ -196,10 +199,10 @@ public class ObserverService extends Service {
 	 * Locks ALL apps (Useful when screen is turned off)
 	 */
 	private void relockAll() {
-		for (LockInfo li : lockList) {
-			if (li.lock == false) {
+		for (LockInfo li : trackedApps) {
+			if (li.locked == false) {
 				Log.v(TAG, "relockAll() " + li.packageName);
-				li.lock = true;
+				li.locked = true;
 
 			}
 		}
@@ -212,11 +215,11 @@ public class ObserverService extends Service {
 	 *            The app that must NOT be locked.
 	 */
 	private void relock(String appName) {
-		for (LockInfo li : lockList) {
+		for (LockInfo li : trackedApps) {
 			if (!li.packageName.equals(appName)) {
-				if (li.lock == false) {
+				if (li.locked == false) {
 					Log.v(TAG, "relock() " + li.packageName);
-					li.lock = true;
+					li.locked = true;
 				}
 			}
 		}
@@ -224,8 +227,8 @@ public class ObserverService extends Service {
 
 	private void printLockInfos() {
 		Log.d(TAG, "------------");
-		for (LockInfo li : lockList) {
-			Log.v(TAG, li.lock + "\t" + li);
+		for (LockInfo li : trackedApps) {
+			Log.v(TAG, li.locked + "\t" + li);
 		}
 		Log.d(TAG, "------------");
 	}
@@ -239,14 +242,14 @@ public class ObserverService extends Service {
 		mExecutor.shutdownNow();
 		mExecutor = null;
 		am = null;
-		lockList = null;
+		trackedApps = null;
 		unregisterReceiver(mBroadcastReceiver);
 	}
 
 	private LockInfo getLockInfoByPackageName(String packageName) {
-		if (lockList == null)
+		if (trackedApps == null)
 			Log.wtf(TAG, "lockList = null");
-		for (LockInfo li : lockList) {
+		for (LockInfo li : trackedApps) {
 			if (li.packageName.equals(packageName)) {
 				return li;
 			}
@@ -270,14 +273,14 @@ public class ObserverService extends Service {
 		Log.d(TAG, "doUnlock called");
 		LockInfo li = getLockInfoByPackageName(appName);
 		if (li != null) {
-			if (li.lock == true) {
+			if (li.locked == true) {
 				Log.i(TAG, "Unlocked in list: " + li.packageName);
 			} else {
 				Log.w(TAG, "Tried to unlock " + li.hashCode()
 						+ " but was not locked");
 				printLockInfos();
 			}
-			li.lock = false;
+			li.locked = false;
 			return;
 		}
 		Log.w(TAG, "Not unlocked " + appName + ": not in list.");
@@ -300,6 +303,61 @@ public class ObserverService extends Service {
 		intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 		intent.putExtra(EXTRA_APPINFO, lockInfo);
 		startActivity(intent);
+	}
+
+	/**
+	 * 
+	 * @param context
+	 * @return A {@link Set} that is safe to edit and use.
+	 */
+	public static final Set<String> getTrackedApps(Context c) {
+		Set<String> apps = new HashSet<String>();
+		SharedPreferences sp = c.getSharedPreferences(PREF_FILE_APPS,
+				Context.MODE_PRIVATE);
+		Set<String> prefApps = sp.getStringSet(PREF_KEY_APPS,
+				new HashSet<String>());
+		apps.addAll(prefApps);
+		return apps;
+
+	}
+
+	/**
+	 * Tracks or untracks an app
+	 * 
+	 * @param packageName
+	 * @param shouldTrack
+	 *            True if the new state will be tracking, false if not
+	 */
+	public final void setTracking(String packageName, boolean shouldTrack) {
+		Set<String> apps = getTrackedApps(this);
+		SharedPreferences.Editor editor = getSharedPreferences(PREF_FILE_APPS,
+				Context.MODE_PRIVATE).edit();
+		boolean done;
+		if (shouldTrack) {
+			done = apps.add(packageName);
+
+		} else {
+			done = apps.remove(packageName);
+		}
+
+		Log.d(TAG, (shouldTrack ? "Added" : "Removed ") + packageName + " ? "
+				+ done);
+		editor.putStringSet(PREF_KEY_APPS, apps);
+		boolean commited = editor.commit();
+		if (!commited) {
+			Log.w(TAG, "Not commited!");
+		}
+		updateTrackedApps();
+	}
+
+	// TODO
+	public final void updateTrackedApps() {
+		Set<String> apps = getTrackedApps(this);
+		trackedApps = new HashSet<LockInfo>();
+		for (String s : apps) {
+			trackedApps.add(new LockInfo(s));
+		}
+
 	}
 
 }

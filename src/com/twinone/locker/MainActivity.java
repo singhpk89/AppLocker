@@ -18,8 +18,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 	private static final String TAG = "Main";
 
-	Button bChangePass;
+	Button bStartChangePass;
 	Button bToggleService;
+	Button bStartSelect;
 
 	private static final String EXTRA_UNLOCKED = "com.twinone.locker.Unlocked";
 
@@ -30,9 +31,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 		setContentView(R.layout.activity_main);
 		bToggleService = (Button) findViewById(R.id.bToggleService);
-		bChangePass = (Button) findViewById(R.id.bChangePassword);
+		bStartChangePass = (Button) findViewById(R.id.bChangePassword);
+		bStartSelect = (Button) findViewById(R.id.bSelect);
 		bToggleService.setOnClickListener(this);
-		bChangePass.setOnClickListener(this);
+		bStartChangePass.setOnClickListener(this);
+		bStartSelect.setOnClickListener(this);
 	}
 
 	@Override
@@ -53,7 +56,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			startSelectActivity();
 		}
 	}
-	
 
 	@Override
 	protected void onPause() {
@@ -132,6 +134,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		Intent i = new Intent(this, ChangePasswordActivity.class);
 		startActivity(i);
 	}
+
 	private final void startSelectActivity() {
 		Intent i = new Intent(this, SelectActivity.class);
 		startActivity(i);

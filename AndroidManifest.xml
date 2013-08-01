@@ -39,6 +39,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:label="Select apps to lock"
             android:name="com.twinone.locker.SelectActivity"
             android:noHistory="true"
             android:screenOrientation="portrait" >

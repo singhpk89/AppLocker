@@ -62,7 +62,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		// TODO Auto-generated method stub
 		super.onPause();
 		getIntent().putExtra(EXTRA_UNLOCKED, false);
-
 	}
 
 	@Override

@@ -51,7 +51,7 @@ public class LockActivity extends LockActivityBase {
 			ivAppIcon.setVisibility(View.GONE);
 		}
 
-		tvFooter.setText("Your phone will explode if you don't enter the right password\nDon't worry, you'll be able to change this message in the future");
+		tvFooter.setText("Enter password to unlock");
 		// tvFooter.setText("Eres una cotilla!\nPero te quiero <3");
 		Log.w(TAG, "LockerActivity for " + target);
 

@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/image_right_margin"
-                android:contentDescription="Application Image" />
+                android:contentDescription="@string/icon_desc" />
 
             <TextView
                 android:id="@+id/tvHeader"
@@ -187,7 +187,8 @@
                 android:layout_height="fill_parent"
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
-                android:text="OK" />
+                android:text="@string/locker_ok"
+                android:textSize="@dimen/locker_button_small" />
 
             <Button
                 android:id="@+id/b0"
@@ -204,7 +205,8 @@
                 android:layout_height="fill_parent"
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
-                android:text="BACK" />
+                android:text="@string/locker_back"
+                android:textSize="@dimen/locker_button_small" />
         </TableRow>
     </TableLayout>
 

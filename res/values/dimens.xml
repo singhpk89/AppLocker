@@ -6,6 +6,7 @@
     <dimen name="locker_button_margin">5dp</dimen>
     <dimen name="locker_button_text_size">30sp</dimen>
     <dimen name="locker_button_radius">3dp</dimen>
+    <dimen name="locker_button_small">12sp</dimen>
 
     <!-- These are for the Upper part (above the buttons) -->
     <dimen name="main_horizontal_padding">30dp</dimen>

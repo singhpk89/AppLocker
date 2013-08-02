@@ -26,13 +26,13 @@ public class ChangePasswordActivity extends LockActivityBase {
 
 		// Hide because we're just changing the password
 		ivAppIcon.setVisibility(View.GONE);
-		tvHeader.setText("Change password");
+		tvHeader.setText(R.string.change_pass_tit);
 		setupFirst();
 	}
 
 	private void setupFirst() {
 		mPassword = null;
-		tvFooter.setText("Enter the new password\n4 or more numbers is recommended");
+		tvFooter.setText(R.string.change_pass_desc);
 		tvPassword.setText("");
 		isFirstPassword = true;
 
@@ -40,7 +40,7 @@ public class ChangePasswordActivity extends LockActivityBase {
 
 	private void setupSecond() {
 		mPassword = tvPassword.getText().toString();
-		tvFooter.setText("Confirmation\nEnter the same password again");
+		tvFooter.setText(R.string.change_pass_desc_confirmation);
 		tvPassword.setText("");
 		isFirstPassword = false;
 
@@ -50,7 +50,8 @@ public class ChangePasswordActivity extends LockActivityBase {
 	protected void onOkButton() {
 		if (isFirstPassword) {
 			if (tvPassword.getText().toString().isEmpty()) {
-				Toast.makeText(this, "No password entered", Toast.LENGTH_SHORT);
+				Toast.makeText(this, R.string.change_pass_empty,
+						Toast.LENGTH_SHORT);
 			} else {
 				setupSecond();
 			}
@@ -59,7 +60,7 @@ public class ChangePasswordActivity extends LockActivityBase {
 				onPasswordConfirm();
 			} else {
 				setupFirst();
-				Toast.makeText(this, "Passwords do not match",
+				Toast.makeText(this, R.string.change_pass_not_match,
 						Toast.LENGTH_SHORT).show();
 				Log.d(TAG, "Passwords do not match");
 			}
@@ -71,8 +72,8 @@ public class ChangePasswordActivity extends LockActivityBase {
 		boolean isSet = ObserverService.setPassword(this, mPassword);
 		Toast.makeText(
 				this,
-				isSet ? "Password successfully changed"
-						: "Error changing password", Toast.LENGTH_SHORT).show();
+				isSet ? R.string.change_pass_changed
+						: R.string.change_pass_not_changed, Toast.LENGTH_SHORT).show();
 		if (!isSet)
 			Log.w(TAG, "Password could not be changed!!!");
 		MainActivity.showWithoutPassword(this);

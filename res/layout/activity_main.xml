@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:text="Enable service" >
+        android:text="@string/main_start_service" >
     </Button>
 
     <Button
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:text="Change password" >
+        android:text="@string/main_change_password" >
     </Button>
 
     <Button
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:text="Select apps" >
+        android:text="@string/main_select_apps" >
     </Button>
 
 </LinearLayout>

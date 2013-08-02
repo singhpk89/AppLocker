@@ -63,16 +63,17 @@ public class SelectActivity extends Activity implements OnItemClickListener {
 	@Override
 	protected void onStop() {
 		super.onStop();
-		if (mBound) {
-			unbindService(mConnection);
-			mBound = false;
-		}
+
 	}
 
 	// Go back to main activity.
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
+		if (mBound) {
+			unbindService(mConnection);
+			mBound = false;
+		}
 		MainActivity.showWithoutPassword(this);
 	}
 
@@ -80,7 +81,6 @@ public class SelectActivity extends Activity implements OnItemClickListener {
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		AppHolder ah = (AppHolder) mAppAdapter.getItem(position);
-
 		if (mBound) {
 			mService.setTracking(ah.ri.activityInfo.packageName, !ah.tracked);
 		} else {

@@ -27,7 +27,7 @@ public class DieLockActivity extends LockActivityBase {
 
 		// Hide because it's our own app
 		ivAppIcon.setVisibility(View.GONE);
-		tvHeader.setText("Enter password");
+		tvHeader.setText(R.string.locker_enter_password);
 		savedPassword = ObserverService.getPassword(this);
 	}
 

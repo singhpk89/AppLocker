@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Locker</string>
+    <string name="action_settings">Ajustes</string>
+    <!-- All strings for MainActivity -->
+    <string name="main_start_service">Iniciar bloqueo</string>
+    <string name="main_stop_service">Detener bloqueo</string>
+    <string name="main_change_password">Cambiar contraseña</string>
+    <string name="main_select_apps">Aplicaciones</string>
+
+    <!-- All Strings for applist -->
+    <string name="applist_on">SI</string>
+    <string name="applist_tit">Aplicationes bloqueadas</string>
+    <string name="icon_desc">icon</string>
+
+    <!-- Change password activity -->
+    <string name="change_pass_tit">Nueva contraseña</string>
+    <string name="change_pass_desc">Introduce la nueva contraseña\nSe recomienda 4 o más dígitos</string>
+    <string name="change_pass_desc_confirmation">Confirma la contraseña</string>
+    <string name="change_pass_not_match">Las contraseñas no coinciden</string>
+    <string name="change_pass_changed">Contraseña cambiada</string>
+    <string name="change_pass_not_changed">Error al cambiar contraseña</string>
+    <string name="change_pass_empty">Error: Contraseña vacía</string>
+    <string name="dialog_empty_password">Tienes que crear una contraseña antes de empezar a bloquear aplicaciones.\¿Quieres crearla ahora?</string>
+    <string name="select_tit">Aplicaciones bloqueadas</string>
+
+    <!-- All strings for LockActivity -->
+    <string name="locker_footer_default">Introduce la contraseña para desbloquear</string>
+    <string name="locker_enter_password">Introduce contraseña</string>
+    <string name="locker_invalid_password">Contraseña incorrecta</string>
+    <string name="locker_ok">OK</string>
+    <string name="locker_back">ATRÁS</string>
+
+</resources>

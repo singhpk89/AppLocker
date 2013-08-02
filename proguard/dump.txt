@@ -51443,12 +51443,11 @@ Constant Pool (count = 235):
   + Integer [2130903044]
   + String []
   + String [Could not load ApplicationInfo image]
+  + String [Enter password to unlock]
   + String [Incorrect password]
   + String [Locker]
   + String [LockerActivity for ]
   + String [Service not bound, cannot unlock]
-  + String [Your phone will explode if you don't enter the right password
-Don't worry, you'll be able to change this message in the future]
   + String [android.intent.action.MAIN]
   + String [android.intent.category.HOME]
   + String [com.twinone.locker.extraInfo]
@@ -51603,6 +51602,7 @@ Don't worry, you'll be able to change this message in the future]
   + Utf8 [<init>]
   + Utf8 [Code]
   + Utf8 [Could not load ApplicationInfo image]
+  + Utf8 [Enter password to unlock]
   + Utf8 [Incorrect password]
   + Utf8 [Landroid/content/ServiceConnection;]
   + Utf8 [Landroid/widget/ImageView;]
@@ -51614,8 +51614,6 @@ Don't worry, you'll be able to change this message in the future]
   + Utf8 [LockerActivity for ]
   + Utf8 [Service not bound, cannot unlock]
   + Utf8 [StackMapTable]
-  + Utf8 [Your phone will explode if you don't enter the right password
-Don't worry, you'll be able to change this message in the future]
   + Utf8 [Z]
   + Utf8 [a]
   + Utf8 [addCategory]
@@ -51790,7 +51788,7 @@ Methods (count = 12):
       [85] invokevirtual #51
         + Methodref [android/widget/TextView.setText (Ljava/lang/CharSequence;)V]
       [88] goto +20 (target=108)
-      [91] ldc #5
+      [91] ldc #6
         + String [Locker]
       [93] ldc #3
         + String [Could not load ApplicationInfo image]
@@ -51806,17 +51804,16 @@ Methods (count = 12):
       [108] aload_0 v0
       [109] getfield #32
         + Fieldref [com/twinone/locker/LockActivity.p Landroid/widget/TextView;]
-      [112] ldc #8
-        + String [Your phone will explode if you don't enter the right password
-Don't worry, you'll be able to change this message in the future]
+      [112] ldc #4
+        + String [Enter password to unlock]
       [114] invokevirtual #51
         + Methodref [android/widget/TextView.setText (Ljava/lang/CharSequence;)V]
-      [117] ldc #5
+      [117] ldc #6
         + String [Locker]
       [119] new #28
         + Class [java/lang/StringBuilder]
       [122] dup
-      [123] ldc #6
+      [123] ldc #7
         + String [LockerActivity for ]
       [125] invokespecial #76
         + Methodref [java/lang/StringBuilder.<init> (Ljava/lang/String;)V]
@@ -52030,7 +52027,7 @@ Don't worry, you'll be able to change this message in the future]
       [29] invokevirtual #51
         + Methodref [android/widget/TextView.setText (Ljava/lang/CharSequence;)V]
       [32] aload_0 v0
-      [33] ldc #4
+      [33] ldc #5
         + String [Incorrect password]
       [35] iconst_0
       [36] invokestatic #52
@@ -52062,9 +52059,9 @@ Don't worry, you'll be able to change this message in the future]
       [18] invokevirtual #66
         + Methodref [com/twinone/locker/ObserverService.a (Ljava/lang/String;)V]
       [21] goto +11 (target=32)
-      [24] ldc #5
+      [24] ldc #6
         + String [Locker]
-      [26] ldc #7
+      [26] ldc #8
         + String [Service not bound, cannot unlock]
       [28] invokestatic #47
         + Methodref [android/util/Log.w (Ljava/lang/String;Ljava/lang/String;)I]

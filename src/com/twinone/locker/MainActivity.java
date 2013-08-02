@@ -101,16 +101,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	private final void startObserverService() {
 		if (ObserverService.getPassword(this).isEmpty()) {
 			new AlertDialog.Builder(this)
-					.setTitle("Error")
-					.setMessage(
-							"You must create a password first.\n"
-									+ "Do you want to set a password now?")
-					.setPositiveButton("Yes", new OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							startChangePasswordActivity();
-						}
-					}).setNegativeButton("No", null).show();
+					.setMessage(R.string.dialog_empty_password)
+					.setPositiveButton(android.R.string.yes,
+							new OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									startChangePasswordActivity();
+								}
+							}).setNegativeButton(android.R.string.no, null)
+					.show();
 		} else {
 			Intent i = new Intent(this, ObserverService.class);
 			startService(i);
@@ -126,7 +126,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	}
 
 	private final void updateLayout(boolean isServiceRunning) {
-		bToggleService.setText(isServiceRunning ? "Stop lock" : "Start lock");
+		bToggleService.setText(isServiceRunning ? R.string.main_stop_service
+				: R.string.main_start_service);
 	}
 
 	private final void startChangePasswordActivity() {

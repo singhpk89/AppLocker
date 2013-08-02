@@ -51,8 +51,7 @@ public class LockActivity extends LockActivityBase {
 			ivAppIcon.setVisibility(View.GONE);
 		}
 
-		tvFooter.setText("Enter password to unlock");
-		// tvFooter.setText("Eres una cotilla!\nPero te quiero <3");
+		tvFooter.setText(R.string.locker_footer_default);
 		Log.w(TAG, "LockerActivity for " + target);
 
 	}
@@ -144,8 +143,8 @@ public class LockActivity extends LockActivityBase {
 		if (!checkPassword(tvPassword.getText().toString())) {
 			// Incorrect password
 			tvPassword.setText("");
-			Toast.makeText(this, "Incorrect password", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(this, R.string.locker_invalid_password,
+					Toast.LENGTH_SHORT).show();
 		}
 	}
 

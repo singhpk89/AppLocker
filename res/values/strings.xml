@@ -3,5 +3,33 @@
 
     <string name="app_name">Locker</string>
     <string name="action_settings">Settings</string>
+    <!-- All strings for MainActivity -->
+    <string name="main_start_service">Start lock</string>
+    <string name="main_stop_service">Stop lock</string>
+    <string name="main_change_password">Change password</string>
+    <string name="main_select_apps">Apps</string>
+
+    <!-- All Strings for applist -->
+    <string name="applist_on">ON</string>
+    <string name="applist_tit">Locked apps</string>
+    <string name="icon_desc">icon</string>
+
+    <!-- Change password activity -->
+    <string name="change_pass_tit">Change password</string>
+    <string name="change_pass_desc">Enter the new password\n4 or more digits is recommended</string>
+    <string name="change_pass_desc_confirmation">Confirm password</string>
+    <string name="change_pass_not_match">Passwords do not match</string>
+    <string name="change_pass_changed">Password successfully changed</string>
+    <string name="change_pass_not_changed">Error changing password</string>
+    <string name="change_pass_empty">Error: Empty password</string>
+    <string name="dialog_empty_password">You must setup a password before you can lock apps.\nDo you want to setup a password now?</string>
+    <string name="select_tit">Select apps to lock</string>
+
+    <!-- All strings for LockActivity -->
+    <string name="locker_footer_default">Enter password to unlock</string>
+    <string name="locker_enter_password">Enter password</string>
+    <string name="locker_invalid_password">Invalid password</string>
+    <string name="locker_ok">OK</string>
+    <string name="locker_back">BACK</string>
 
 </resources>

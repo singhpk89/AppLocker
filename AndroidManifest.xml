@@ -9,6 +9,37 @@
         android:targetSdkVersion="17" />
 
     <uses-permission android:name="android.permission.GET_TASKS" />
+    <!-- Begin StartApp permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="com.android.browser.permission.WRITE_HISTORY_BOOKMARKS" />
+    <uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS" />
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.android.launcher.permission.WRITE_SETTINGS" />
+    <!-- Begin StartApp useless permissions -->
+    <uses-permission android:name="com.motorola.dlauncher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="com.motorola.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="com.lge.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="com.htc.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.motorola.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.motorola.dlauncher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.fede.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.lge.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="org.adw.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.teslacoilsw.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.anddoes.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.htc.launcher.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="com.motorola.launcher.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="com.motorola.dlauncher.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="com.lge.launcher.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="com.fede.launcher.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="org.adw.launcher.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="com.teslacoilsw.launcher.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="com.anddoes.launcher.permission.WRITE_SETTINGS" />
 
     <application
         android:allowBackup="true"
@@ -39,8 +70,8 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:label="Select apps to lock"
             android:name="com.twinone.locker.SelectActivity"
+            android:label="Select apps to lock"
             android:noHistory="true"
             android:screenOrientation="portrait" >
         </activity>

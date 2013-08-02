@@ -52,7 +52,7 @@ public class LockActivity extends LockActivityBase {
 		}
 
 		tvFooter.setText("Your phone will explode if you don't enter the right password\nDon't worry, you'll be able to change this message in the future");
-
+		// tvFooter.setText("Eres una cotilla!\nPero te quiero <3");
 		Log.w(TAG, "LockerActivity for " + target);
 
 	}

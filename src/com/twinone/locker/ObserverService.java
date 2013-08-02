@@ -34,22 +34,23 @@ public class ObserverService extends Service {
 
 	private static final String LOCKER_CLASS = LockActivity.class.getName();
 
-	private long DELAY = 150;
+	private long DELAY = DELAY_POWERSAVE;
 
-	//
-	// private static final long DELAY_PERFORMANCE = 50;
-	// private static final long DELAY_FAST = 75;
-	// private static final long DELAY_NORMAL = 100;
-	// private static final long DELAY_SLOW = 150;
-	// private static final long DELAY_POWERSAVE = 200;
+	private static final long DELAY_PERFORMANCE = 70;
+	private static final long DELAY_FAST = 100;
+	private static final long DELAY_NORMAL = 150;
+	private static final long DELAY_SLOW = 200;
+	private static final long DELAY_POWERSAVE = 250;
 
 	private String mPassword;
 	private String lastApp = "";
 	private String lastClass = "";
 
+	private boolean mScreenOn = true;
+
 	private ActivityManager am;
 	private ScheduledExecutorService mExecutor;
-	BroadcastReceiver mBroadcastReceiver;
+	BroadcastReceiver mScreenStatusReceiver;
 
 	/** In this map information about apps will be */
 	private HashSet<LockInfo> trackedApps;
@@ -74,10 +75,7 @@ public class ObserverService extends Service {
 		mPassword = getPassword(this);
 		trackedApps = new HashSet<LockInfo>();
 
-		// Testing apps
-		// -------------------------------
-
-		// trackedApps.add(new LockInfo("com.whatsapp"));
+		// // trackedApps.add(new LockInfo("com.whatsapp"));
 		// trackedApps.add(new LockInfo("com.twitter.android"));
 
 		// Set an empty notification
@@ -87,16 +85,32 @@ public class ObserverService extends Service {
 		startForeground(42, n);
 
 		// Start the monitoring
-		mExecutor = Executors.newSingleThreadScheduledExecutor();
-		mExecutor.scheduleWithFixedDelay(new ActivePackageMonitor(), 0, DELAY,
-				TimeUnit.MILLISECONDS);
+		startScheduler();
 
-		mBroadcastReceiver = new ScreenReceiver();
-		registerReceiver(mBroadcastReceiver, new IntentFilter(
-				Intent.ACTION_SCREEN_ON));
+		mScreenStatusReceiver = new ScreenReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(Intent.ACTION_SCREEN_ON);
+		filter.addAction(Intent.ACTION_SCREEN_OFF);
+		registerReceiver(mScreenStatusReceiver, filter);
 
 		// TODO Load applications from preferences
 		updateTrackedApps();
+	}
+
+	private void startScheduler() {
+		if (mExecutor == null) {
+			mExecutor = Executors.newSingleThreadScheduledExecutor();
+			mExecutor.scheduleWithFixedDelay(new PackageMonitor(), 0, DELAY,
+					TimeUnit.MILLISECONDS);
+		}
+
+	}
+
+	private void stopScheduler() {
+		if (mExecutor == null) {
+			mExecutor.shutdownNow();
+			mExecutor = null;
+		}
 	}
 
 	class ScreenReceiver extends BroadcastReceiver {
@@ -105,10 +119,14 @@ public class ObserverService extends Service {
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
 				Log.i("TAG", "Screen ON");
-				relockAll();
+				mScreenOn = true;
+				startScheduler();
+				// relockAll();
 			}
 			if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
 				Log.i("TAG", "Screen OFF");
+				mScreenOn = false;
+				stopScheduler();
 				relockAll();
 			}
 		}
@@ -144,10 +162,13 @@ public class ObserverService extends Service {
 		return editor.commit();
 	}
 
-	private class ActivePackageMonitor extends Thread {
+	private class PackageMonitor extends Thread {
 		@Override
 		public void run() {
+			// Avoid battery drain when screen off.
+
 			ComponentName app = am.getRunningTasks(1).get(0).topActivity;
+
 			String appName = app.getPackageName();
 			String className = app.getClassName();
 
@@ -239,11 +260,11 @@ public class ObserverService extends Service {
 		Log.w(TAG, "onDestroy");
 		// IMPORTANT
 		// The executor will happily run if it's not shutdown explicitly
-		mExecutor.shutdownNow();
-		mExecutor = null;
+		stopScheduler();
+
 		am = null;
 		trackedApps = null;
-		unregisterReceiver(mBroadcastReceiver);
+		unregisterReceiver(mScreenStatusReceiver);
 	}
 
 	private LockInfo getLockInfoByPackageName(String packageName) {
@@ -318,7 +339,6 @@ public class ObserverService extends Service {
 				new HashSet<String>());
 		apps.addAll(prefApps);
 		return apps;
-
 	}
 
 	/**

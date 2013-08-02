@@ -88,11 +88,11 @@ public class SelectActivity extends Activity implements OnItemClickListener {
 		}
 
 		// Move to top when re-enter
-		// mAppAdapter.updateLockSwitches(this);
+		mAppAdapter.updateLockSwitches(this);
 
 		// Dynamic move to top
-		mAppAdapter.loadAppsIntoList(this);
-		mAppAdapter.sort();
+		// mAppAdapter.loadAppsIntoList(this);
+		// mAppAdapter.sort();
 
 		mAppAdapter.notifyDataSetChanged();
 	}

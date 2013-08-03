@@ -22,7 +22,7 @@ public class DieLockActivity extends LockActivityBase {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.locker);
+		setContentView(R.layout.activity_locker);
 		initLayout();
 
 		// Hide because it's our own app

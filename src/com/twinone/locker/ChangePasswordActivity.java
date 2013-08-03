@@ -21,7 +21,7 @@ public class ChangePasswordActivity extends LockActivityBase {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.locker);
+		setContentView(R.layout.activity_locker);
 		initLayout();
 
 		// Hide because we're just changing the password

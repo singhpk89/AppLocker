@@ -3,12 +3,16 @@
 
     <string name="app_name">Locker</string>
     <string name="action_settings">Settings</string>
+
     <!-- All strings for MainActivity -->
     <string name="main_start_service">Start lock</string>
     <string name="main_stop_service">Stop lock</string>
-    <string name="main_change_password">Change password</string>
+    <string name="main_change_password">Set password</string>
     <string name="main_select_apps">Apps</string>
-
+    <string name="main_change_message">Message</string>
+    <string name="main_change_message_desc">This message will appear under your locked apps\You can use %s to represent the app name</string>
+    <string name="main_change_message_saved">Message saved</string>
+    
     <!-- All Strings for applist -->
     <string name="applist_on">ON</string>
     <string name="applist_tit">Locked apps</string>
@@ -29,7 +33,8 @@
     <string name="locker_footer_default">Enter password to unlock</string>
     <string name="locker_enter_password">Enter password</string>
     <string name="locker_invalid_password">Invalid password</string>
-    <string name="locker_ok">OK</string>
-    <string name="locker_back">BACK</string>
+    <string name="upper_ok">OK</string>
+    <string name="upper_back">BACK</string>
+    <string name="cancel">Cancelar</string>
 
 </resources>

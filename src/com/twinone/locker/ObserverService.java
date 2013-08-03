@@ -21,6 +21,7 @@ import android.util.Log;
 
 public class ObserverService extends Service {
 
+	public static final String EXTRA_MESSAGE = "com.twinone.locker.extraMessage";
 	public static final String EXTRA_APPINFO = "com.twinone.locker.extraInfo";
 	public static final String TAG = "Observer";
 
@@ -47,6 +48,7 @@ public class ObserverService extends Service {
 	private String mPassword;
 	private String lastApp = "";
 	private String lastClass = "";
+	private String mMessage = "";
 
 	private boolean mScreenOn = true;
 
@@ -72,6 +74,8 @@ public class ObserverService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		Log.w(TAG, "onCreate");
+
+		mMessage = getMessage(this);
 
 		am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 		mPassword = getPassword(this);
@@ -164,10 +168,16 @@ public class ObserverService extends Service {
 		return editor.commit();
 	}
 
+	public static final String getMessage(Context c) {
+		return c.getSharedPreferences(PREF_FILE_PASSWD, MODE_PRIVATE)
+				.getString(PREF_KEY_MESSAGE,
+						c.getString(R.string.locker_footer_default));
+	}
+
 	public static final boolean setMessage(Context c, String value) {
 		SharedPreferences.Editor editor = c.getSharedPreferences(
 				PREF_FILE_PASSWD, MODE_PRIVATE).edit();
-		editor.putString(ObserverService.PREF_KEY_MESSAGE, value);
+		editor.putString(PREF_KEY_MESSAGE, value);
 		return editor.commit();
 	}
 
@@ -332,6 +342,7 @@ public class ObserverService extends Service {
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 		intent.putExtra(EXTRA_APPINFO, lockInfo);
+		intent.putExtra(EXTRA_MESSAGE, mMessage);
 		startActivity(intent);
 	}
 

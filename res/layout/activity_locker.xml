@@ -184,7 +184,7 @@
                 android:layout_height="fill_parent"
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
-                android:text="@string/locker_ok"
+                android:text="@string/upper_ok"
                 android:textSize="@dimen/locker_button_small" />
 
             <Button
@@ -202,7 +202,7 @@
                 android:layout_height="fill_parent"
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
-                android:text="@string/locker_back"
+                android:text="@string/upper_back"
                 android:textSize="@dimen/locker_button_small" />
         </TableRow>
     </TableLayout>

@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -21,6 +23,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	Button bStartChangePass;
 	Button bToggleService;
 	Button bStartSelect;
+	Button bChangeMessage;
 
 	private static final String EXTRA_UNLOCKED = "com.twinone.locker.Unlocked";
 
@@ -33,9 +36,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		bToggleService = (Button) findViewById(R.id.bToggleService);
 		bStartChangePass = (Button) findViewById(R.id.bChangePassword);
 		bStartSelect = (Button) findViewById(R.id.bSelect);
+		bChangeMessage = (Button) findViewById(R.id.bChangeMessage);
 		bToggleService.setOnClickListener(this);
 		bStartChangePass.setOnClickListener(this);
 		bStartSelect.setOnClickListener(this);
+		bChangeMessage.setOnClickListener(this);
 	}
 
 	@Override
@@ -54,7 +59,43 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			break;
 		case R.id.bSelect:
 			startSelectActivity();
+		case R.id.bChangeMessage:
+			showChangeMessageDialog();
+			break;
 		}
+	}
+
+	private void showChangeMessageDialog() {
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setTitle(R.string.main_change_message);
+		alert.setMessage(R.string.main_change_message_desc);
+
+		final EditText input = new EditText(this);
+		input.setText(ObserverService.getMessage(this));
+
+		alert.setPositiveButton(R.string.upper_ok,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						String value = input.getText().toString();
+						boolean saved = ObserverService.setMessage(
+								MainActivity.this, value);
+						if (saved) {
+							Toast.makeText(MainActivity.this,
+									R.string.main_change_message_saved,
+									Toast.LENGTH_SHORT).show();
+						}
+					}
+				});
+
+		alert.setNegativeButton(R.string.cancel,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						// Canceled.
+					}
+				});
+		alert.setView(input);
+		alert.show();
+
 	}
 
 	@Override

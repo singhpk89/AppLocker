@@ -31,7 +31,7 @@ public class LockActivity extends LockActivityBase {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.locker);
+		setContentView(R.layout.activity_locker);
 
 		initLayout();
 
@@ -51,7 +51,11 @@ public class LockActivity extends LockActivityBase {
 			ivAppIcon.setVisibility(View.GONE);
 		}
 
-		tvFooter.setText(R.string.locker_footer_default);
+		String getMessage = getIntent().getExtras().getString(
+				ObserverService.EXTRA_MESSAGE);
+
+		tvFooter.setText(String.format(getMessage,
+				forApp.loadLabel(getPackageManager())));
 		Log.w(TAG, "LockerActivity for " + target);
 
 	}

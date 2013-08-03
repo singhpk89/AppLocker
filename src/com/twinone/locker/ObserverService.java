@@ -27,6 +27,8 @@ public class ObserverService extends Service {
 	public static final String PREF_FILE_PASSWD = "default";
 	public static final String PREF_KEY_PASSWD = "com.twinone.locker.pref.passwd";
 	public static final String PREF_DEF_PASSWD = "";
+	public static final String PREF_KEY_MESSAGE = "com.twinone.locker.pref.message";
+
 
 	/** File where locked apps are stored as {@link SharedPreferences} */
 	private static final String PREF_FILE_APPS = "locked_apps";
@@ -159,6 +161,13 @@ public class ObserverService extends Service {
 		SharedPreferences.Editor editor = c.getSharedPreferences(
 				PREF_FILE_PASSWD, MODE_PRIVATE).edit();
 		editor.putString(ObserverService.PREF_KEY_PASSWD, password);
+		return editor.commit();
+	}
+	
+	public static final boolean setMessage(Context c, String value) {
+		SharedPreferences.Editor editor = c.getSharedPreferences(
+				PREF_FILE_PASSWD, MODE_PRIVATE).edit();
+		editor.putString(ObserverService.PREF_KEY_MESSAGE, value);
 		return editor.commit();
 	}
 

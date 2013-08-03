@@ -50752,20 +50752,19 @@ _____________________________________________________________________
 
 Interfaces (count = 0):
 
-Constant Pool (count = 148):
-  + Integer [2130903044]
+Constant Pool (count = 145):
+  + Integer [2130903043]
+  + Integer [2131165193]
+  + Integer [2131165194]
+  + Integer [2131165195]
+  + Integer [2131165196]
+  + Integer [2131165197]
+  + Integer [2131165198]
+  + Integer [2131165199]
   + String []
-  + String [Change password]
   + String [Changing password to ]
-  + String [Confirmation
-Enter the same password again]
-  + String [Enter the new password
-4 or more numbers is recommended]
-  + String [Error changing password]
   + String [Locker]
-  + String [No password entered]
   + String [Password could not be changed!!!]
-  + String [Password successfully changed]
   + String [Passwords do not match]
   + Class [android/util/Log]
   + Class [android/widget/ImageView]
@@ -50788,8 +50787,9 @@ Enter the same password again]
   + Methodref [android/util/Log.w (Ljava/lang/String;Ljava/lang/String;)I]
   + Methodref [android/widget/ImageView.setVisibility (I)V]
   + Methodref [android/widget/TextView.getText ()Ljava/lang/CharSequence;]
+  + Methodref [android/widget/TextView.setText (I)V]
   + Methodref [android/widget/TextView.setText (Ljava/lang/CharSequence;)V]
-  + Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
+  + Methodref [android/widget/Toast.makeText (Landroid/content/Context;II)Landroid/widget/Toast;]
   + Methodref [android/widget/Toast.show ()V]
   + Methodref [com/twinone/locker/ChangePasswordActivity.b ()V]
   + Methodref [com/twinone/locker/ChangePasswordActivity.e ()V]
@@ -50821,7 +50821,7 @@ Enter the same password again]
   + NameAndType [g ()V]
   + NameAndType [getText ()Ljava/lang/CharSequence;]
   + NameAndType [isEmpty ()Z]
-  + NameAndType [makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
+  + NameAndType [makeText (Landroid/content/Context;II)Landroid/widget/Toast;]
   + NameAndType [n Landroid/widget/TextView;]
   + NameAndType [o Landroid/widget/TextView;]
   + NameAndType [onBackPressed ()V]
@@ -50830,6 +50830,7 @@ Enter the same password again]
   + NameAndType [q Landroid/widget/ImageView;]
   + NameAndType [r Z]
   + NameAndType [setContentView (I)V]
+  + NameAndType [setText (I)V]
   + NameAndType [setText (Ljava/lang/CharSequence;)V]
   + NameAndType [setVisibility (I)V]
   + NameAndType [show ()V]
@@ -50842,7 +50843,7 @@ Enter the same password again]
   + Utf8 [()Z]
   + Utf8 [(I)V]
   + Utf8 [(Landroid/content/Context;)V]
-  + Utf8 [(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
+  + Utf8 [(Landroid/content/Context;II)Landroid/widget/Toast;]
   + Utf8 [(Landroid/content/Context;Ljava/lang/String;)Z]
   + Utf8 [(Landroid/os/Bundle;)V]
   + Utf8 [(Ljava/lang/CharSequence;)V]
@@ -50851,21 +50852,13 @@ Enter the same password again]
   + Utf8 [(Ljava/lang/String;)V]
   + Utf8 [(Ljava/lang/String;Ljava/lang/String;)I]
   + Utf8 [<init>]
-  + Utf8 [Change password]
   + Utf8 [Changing password to ]
   + Utf8 [Code]
-  + Utf8 [Confirmation
-Enter the same password again]
-  + Utf8 [Enter the new password
-4 or more numbers is recommended]
-  + Utf8 [Error changing password]
   + Utf8 [Landroid/widget/ImageView;]
   + Utf8 [Landroid/widget/TextView;]
   + Utf8 [Ljava/lang/String;]
   + Utf8 [Locker]
-  + Utf8 [No password entered]
   + Utf8 [Password could not be changed!!!]
-  + Utf8 [Password successfully changed]
   + Utf8 [Passwords do not match]
   + Utf8 [StackMapTable]
   + Utf8 [Z]
@@ -50920,11 +50913,11 @@ Methods (count = 7):
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 10, locals = 1, stack = 2):
       [0] aload_0 v0
-      [1] invokespecial #44
+      [1] invokespecial #46
         + Methodref [com/twinone/locker/d.<init> ()V]
       [4] aload_0 v0
       [5] iconst_1
-      [6] putfield #29
+      [6] putfield #30
         + Fieldref [com/twinone/locker/ChangePasswordActivity.r Z]
       [9] return
       Code attribute exceptions (count = 0):
@@ -50936,31 +50929,31 @@ Methods (count = 7):
     + Code attribute instructions (code length = 38, locals = 2, stack = 2):
       [0] aload_0 v0
       [1] aload_1 v1
-      [2] invokespecial #46
+      [2] invokespecial #48
         + Methodref [com/twinone/locker/d.onCreate (Landroid/os/Bundle;)V]
       [5] aload_0 v0
       [6] ldc #1
-        + Integer [2130903044]
-      [8] invokevirtual #41
+        + Integer [2130903043]
+      [8] invokevirtual #43
         + Methodref [com/twinone/locker/ChangePasswordActivity.setContentView (I)V]
       [11] aload_0 v0
-      [12] invokevirtual #37
+      [12] invokevirtual #39
         + Methodref [com/twinone/locker/ChangePasswordActivity.b ()V]
       [15] aload_0 v0
-      [16] getfield #28
+      [16] getfield #29
         + Fieldref [com/twinone/locker/ChangePasswordActivity.q Landroid/widget/ImageView;]
       [19] bipush 8
-      [21] invokevirtual #32
+      [21] invokevirtual #33
         + Methodref [android/widget/ImageView.setVisibility (I)V]
       [24] aload_0 v0
-      [25] getfield #26
+      [25] getfield #27
         + Fieldref [com/twinone/locker/ChangePasswordActivity.o Landroid/widget/TextView;]
-      [28] ldc #3
-        + String [Change password]
-      [30] invokevirtual #34
-        + Methodref [android/widget/TextView.setText (Ljava/lang/CharSequence;)V]
+      [28] ldc #2
+        + Integer [2131165193]
+      [30] invokevirtual #35
+        + Methodref [android/widget/TextView.setText (I)V]
       [33] aload_0 v0
-      [34] invokespecial #38
+      [34] invokespecial #40
         + Methodref [com/twinone/locker/ChangePasswordActivity.e ()V]
       [37] return
       Code attribute exceptions (count = 0):
@@ -50972,26 +50965,25 @@ Methods (count = 7):
     + Code attribute instructions (code length = 29, locals = 1, stack = 2):
       [0] aload_0 v0
       [1] aconst_null
-      [2] putfield #24
+      [2] putfield #25
         + Fieldref [com/twinone/locker/ChangePasswordActivity.a Ljava/lang/String;]
       [5] aload_0 v0
-      [6] getfield #27
+      [6] getfield #28
         + Fieldref [com/twinone/locker/ChangePasswordActivity.p Landroid/widget/TextView;]
-      [9] ldc #6
-        + String [Enter the new password
-4 or more numbers is recommended]
-      [11] invokevirtual #34
-        + Methodref [android/widget/TextView.setText (Ljava/lang/CharSequence;)V]
+      [9] ldc #3
+        + Integer [2131165194]
+      [11] invokevirtual #35
+        + Methodref [android/widget/TextView.setText (I)V]
       [14] aload_0 v0
-      [15] getfield #25
+      [15] getfield #26
         + Fieldref [com/twinone/locker/ChangePasswordActivity.n Landroid/widget/TextView;]
-      [18] ldc #2
+      [18] ldc #9
         + String []
-      [20] invokevirtual #34
+      [20] invokevirtual #36
         + Methodref [android/widget/TextView.setText (Ljava/lang/CharSequence;)V]
       [23] aload_0 v0
       [24] iconst_1
-      [25] putfield #29
+      [25] putfield #30
         + Fieldref [com/twinone/locker/ChangePasswordActivity.r Z]
       [28] return
       Code attribute exceptions (count = 0):
@@ -51003,32 +50995,31 @@ Methods (count = 7):
     + Code attribute instructions (code length = 40, locals = 1, stack = 2):
       [0] aload_0 v0
       [1] aload_0 v0
-      [2] getfield #25
+      [2] getfield #26
         + Fieldref [com/twinone/locker/ChangePasswordActivity.n Landroid/widget/TextView;]
-      [5] invokevirtual #33
+      [5] invokevirtual #34
         + Methodref [android/widget/TextView.getText ()Ljava/lang/CharSequence;]
-      [8] invokeinterface #52
+      [8] invokeinterface #54
         + InterfaceMethodref [java/lang/CharSequence.toString ()Ljava/lang/String;]
-      [13] putfield #24
+      [13] putfield #25
         + Fieldref [com/twinone/locker/ChangePasswordActivity.a Ljava/lang/String;]
       [16] aload_0 v0
-      [17] getfield #27
+      [17] getfield #28
         + Fieldref [com/twinone/locker/ChangePasswordActivity.p Landroid/widget/TextView;]
-      [20] ldc #5
-        + String [Confirmation
-Enter the same password again]
-      [22] invokevirtual #34
-        + Methodref [android/widget/TextView.setText (Ljava/lang/CharSequence;)V]
+      [20] ldc #4
+        + Integer [2131165195]
+      [22] invokevirtual #35
+        + Methodref [android/widget/TextView.setText (I)V]
       [25] aload_0 v0
-      [26] getfield #25
+      [26] getfield #26
         + Fieldref [com/twinone/locker/ChangePasswordActivity.n Landroid/widget/TextView;]
-      [29] ldc #2
+      [29] ldc #9
         + String []
-      [31] invokevirtual #34
+      [31] invokevirtual #36
         + Methodref [android/widget/TextView.setText (Ljava/lang/CharSequence;)V]
       [34] aload_0 v0
       [35] iconst_0
-      [36] putfield #29
+      [36] putfield #30
         + Fieldref [com/twinone/locker/ChangePasswordActivity.r Z]
       [39] return
       Code attribute exceptions (count = 0):
@@ -51039,64 +51030,64 @@ Enter the same password again]
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 95, locals = 1, stack = 3):
       [0] aload_0 v0
-      [1] getfield #29
+      [1] getfield #30
         + Fieldref [com/twinone/locker/ChangePasswordActivity.r Z]
       [4] ifeq +39 (target=43)
       [7] aload_0 v0
-      [8] getfield #25
+      [8] getfield #26
         + Fieldref [com/twinone/locker/ChangePasswordActivity.n Landroid/widget/TextView;]
-      [11] invokevirtual #33
+      [11] invokevirtual #34
         + Methodref [android/widget/TextView.getText ()Ljava/lang/CharSequence;]
-      [14] invokeinterface #52
+      [14] invokeinterface #54
         + InterfaceMethodref [java/lang/CharSequence.toString ()Ljava/lang/String;]
-      [19] invokevirtual #48
+      [19] invokevirtual #50
         + Methodref [java/lang/String.isEmpty ()Z]
       [22] ifeq +14 (target=36)
       [25] aload_0 v0
-      [26] ldc #9
-        + String [No password entered]
+      [26] ldc #8
+        + Integer [2131165199]
       [28] iconst_0
-      [29] invokestatic #35
-        + Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
+      [29] invokestatic #37
+        + Methodref [android/widget/Toast.makeText (Landroid/content/Context;II)Landroid/widget/Toast;]
       [32] pop
       [33] goto +61 (target=94)
       [36] aload_0 v0
-      [37] invokespecial #39
+      [37] invokespecial #41
         + Methodref [com/twinone/locker/ChangePasswordActivity.f ()V]
       [40] goto +54 (target=94)
       [43] aload_0 v0
-      [44] getfield #25
+      [44] getfield #26
         + Fieldref [com/twinone/locker/ChangePasswordActivity.n Landroid/widget/TextView;]
-      [47] invokevirtual #33
+      [47] invokevirtual #34
         + Methodref [android/widget/TextView.getText ()Ljava/lang/CharSequence;]
-      [50] invokeinterface #52
+      [50] invokeinterface #54
         + InterfaceMethodref [java/lang/CharSequence.toString ()Ljava/lang/String;]
       [55] aload_0 v0
-      [56] getfield #24
+      [56] getfield #25
         + Fieldref [com/twinone/locker/ChangePasswordActivity.a Ljava/lang/String;]
-      [59] invokevirtual #47
+      [59] invokevirtual #49
         + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
       [62] ifeq +10 (target=72)
       [65] aload_0 v0
-      [66] invokespecial #40
+      [66] invokespecial #42
         + Methodref [com/twinone/locker/ChangePasswordActivity.g ()V]
       [69] goto +25 (target=94)
       [72] aload_0 v0
-      [73] invokespecial #38
+      [73] invokespecial #40
         + Methodref [com/twinone/locker/ChangePasswordActivity.e ()V]
       [76] aload_0 v0
-      [77] ldc #12
-        + String [Passwords do not match]
+      [77] ldc #5
+        + Integer [2131165196]
       [79] iconst_0
-      [80] invokestatic #35
-        + Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
-      [83] invokevirtual #36
+      [80] invokestatic #37
+        + Methodref [android/widget/Toast.makeText (Landroid/content/Context;II)Landroid/widget/Toast;]
+      [83] invokevirtual #38
         + Methodref [android/widget/Toast.show ()V]
-      [86] ldc #8
+      [86] ldc #11
         + String [Locker]
-      [88] ldc #12
+      [88] ldc #13
         + String [Passwords do not match]
-      [90] invokestatic #30
+      [90] invokestatic #31
         + Methodref [android/util/Log.d (Ljava/lang/String;Ljava/lang/String;)I]
       [93] pop
       [94] return
@@ -51113,63 +51104,63 @@ Enter the same password again]
       = private void g()
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 70, locals = 2, stack = 4):
-      [0] ldc #8
+      [0] ldc #11
         + String [Locker]
-      [2] new #23
+      [2] new #24
         + Class [java/lang/StringBuilder]
       [5] dup
-      [6] ldc #4
+      [6] ldc #10
         + String [Changing password to ]
-      [8] invokespecial #49
+      [8] invokespecial #51
         + Methodref [java/lang/StringBuilder.<init> (Ljava/lang/String;)V]
       [11] aload_0 v0
-      [12] getfield #24
+      [12] getfield #25
         + Fieldref [com/twinone/locker/ChangePasswordActivity.a Ljava/lang/String;]
-      [15] invokevirtual #50
+      [15] invokevirtual #52
         + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
-      [18] invokevirtual #51
+      [18] invokevirtual #53
         + Methodref [java/lang/StringBuilder.toString ()Ljava/lang/String;]
-      [21] invokestatic #30
+      [21] invokestatic #31
         + Methodref [android/util/Log.d (Ljava/lang/String;Ljava/lang/String;)I]
       [24] pop
       [25] aload_0 v0
       [26] aload_0 v0
-      [27] getfield #24
+      [27] getfield #25
         + Fieldref [com/twinone/locker/ChangePasswordActivity.a Ljava/lang/String;]
-      [30] invokestatic #43
+      [30] invokestatic #45
         + Methodref [com/twinone/locker/ObserverService.a (Landroid/content/Context;Ljava/lang/String;)Z]
       [33] istore_1 v1
       [34] aload_0 v0
       [35] iload_1 v1
       [36] ifeq +8 (target=44)
-      [39] ldc #11
-        + String [Password successfully changed]
+      [39] ldc #6
+        + Integer [2131165197]
       [41] goto +5 (target=46)
       [44] ldc #7
-        + String [Error changing password]
+        + Integer [2131165198]
       [46] iconst_0
-      [47] invokestatic #35
-        + Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
-      [50] invokevirtual #36
+      [47] invokestatic #37
+        + Methodref [android/widget/Toast.makeText (Landroid/content/Context;II)Landroid/widget/Toast;]
+      [50] invokevirtual #38
         + Methodref [android/widget/Toast.show ()V]
       [53] iload_1 v1
       [54] ifne +11 (target=65)
-      [57] ldc #8
+      [57] ldc #11
         + String [Locker]
-      [59] ldc #10
+      [59] ldc #12
         + String [Password could not be changed!!!]
-      [61] invokestatic #31
+      [61] invokestatic #32
         + Methodref [android/util/Log.w (Ljava/lang/String;Ljava/lang/String;)I]
       [64] pop
       [65] aload_0 v0
-      [66] invokestatic #42
+      [66] invokestatic #44
         + Methodref [com/twinone/locker/MainActivity.a (Landroid/content/Context;)V]
       [69] return
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 1):
       + Stack map table attribute (count = 3):
         - [44] Var: [a:com/twinone/locker/ChangePasswordActivity][i], Stack: [a:com/twinone/locker/ChangePasswordActivity]
-        - [46] Var: [a:com/twinone/locker/ChangePasswordActivity][i], Stack: [a:com/twinone/locker/ChangePasswordActivity][a:java/lang/String]
+        - [46] Var: [a:com/twinone/locker/ChangePasswordActivity][i], Stack: [a:com/twinone/locker/ChangePasswordActivity][i]
         - [65] Var: ..., Stack: (empty)
   + Method:       onBackPressed()V
     Access flags: 0x1
@@ -51177,10 +51168,10 @@ Enter the same password again]
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 9, locals = 1, stack = 1):
       [0] aload_0 v0
-      [1] invokespecial #45
+      [1] invokespecial #47
         + Methodref [com/twinone/locker/d.onBackPressed ()V]
       [4] aload_0 v0
-      [5] invokestatic #42
+      [5] invokestatic #44
         + Methodref [com/twinone/locker/MainActivity.a (Landroid/content/Context;)V]
       [8] return
       Code attribute exceptions (count = 0):
@@ -51198,10 +51189,10 @@ _____________________________________________________________________
 
 Interfaces (count = 0):
 
-Constant Pool (count = 95):
-  + Integer [2130903044]
+Constant Pool (count = 96):
+  + Integer [2130903043]
+  + Integer [2131165203]
   + String []
-  + String [Enter password]
   + String [Incorrect password]
   + Class [android/widget/ImageView]
   + Class [android/widget/TextView]
@@ -51218,6 +51209,7 @@ Constant Pool (count = 95):
   + Fieldref [com/twinone/locker/DieLockActivity.q Landroid/widget/ImageView;]
   + Methodref [android/widget/ImageView.setVisibility (I)V]
   + Methodref [android/widget/TextView.getText ()Ljava/lang/CharSequence;]
+  + Methodref [android/widget/TextView.setText (I)V]
   + Methodref [android/widget/TextView.setText (Ljava/lang/CharSequence;)V]
   + Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
   + Methodref [android/widget/Toast.show ()V]
@@ -51246,6 +51238,7 @@ Constant Pool (count = 95):
   + NameAndType [onCreate (Landroid/os/Bundle;)V]
   + NameAndType [q Landroid/widget/ImageView;]
   + NameAndType [setContentView (I)V]
+  + NameAndType [setText (I)V]
   + NameAndType [setText (Ljava/lang/CharSequence;)V]
   + NameAndType [setVisibility (I)V]
   + NameAndType [show ()V]
@@ -51264,7 +51257,6 @@ Constant Pool (count = 95):
   + Utf8 [(Ljava/lang/Object;)Z]
   + Utf8 [<init>]
   + Utf8 [Code]
-  + Utf8 [Enter password]
   + Utf8 [Incorrect password]
   + Utf8 [Landroid/widget/ImageView;]
   + Utf8 [Landroid/widget/TextView;]
@@ -51306,7 +51298,7 @@ Methods (count = 4):
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 5, locals = 1, stack = 1):
       [0] aload_0 v0
-      [1] invokespecial #27
+      [1] invokespecial #28
         + Methodref [com/twinone/locker/d.<init> ()V]
       [4] return
       Code attribute exceptions (count = 0):
@@ -51318,15 +51310,15 @@ Methods (count = 4):
     + Code attribute instructions (code length = 42, locals = 2, stack = 2):
       [0] aload_0 v0
       [1] aload_1 v1
-      [2] invokespecial #30
+      [2] invokespecial #31
         + Methodref [com/twinone/locker/d.onCreate (Landroid/os/Bundle;)V]
       [5] aload_0 v0
       [6] ldc #1
-        + Integer [2130903044]
-      [8] invokevirtual #24
+        + Integer [2130903043]
+      [8] invokevirtual #25
         + Methodref [com/twinone/locker/DieLockActivity.setContentView (I)V]
       [11] aload_0 v0
-      [12] invokevirtual #23
+      [12] invokevirtual #24
         + Methodref [com/twinone/locker/DieLockActivity.b ()V]
       [15] aload_0 v0
       [16] getfield #17
@@ -51337,13 +51329,13 @@ Methods (count = 4):
       [24] aload_0 v0
       [25] getfield #16
         + Fieldref [com/twinone/locker/DieLockActivity.o Landroid/widget/TextView;]
-      [28] ldc #3
-        + String [Enter password]
+      [28] ldc #2
+        + Integer [2131165203]
       [30] invokevirtual #20
-        + Methodref [android/widget/TextView.setText (Ljava/lang/CharSequence;)V]
+        + Methodref [android/widget/TextView.setText (I)V]
       [33] aload_0 v0
       [34] aload_0 v0
-      [35] invokestatic #26
+      [35] invokestatic #27
         + Methodref [com/twinone/locker/ObserverService.a (Landroid/content/Context;)Ljava/lang/String;]
       [38] putfield #14
         + Fieldref [com/twinone/locker/DieLockActivity.a Ljava/lang/String;]
@@ -51357,23 +51349,23 @@ Methods (count = 4):
     + Code attribute instructions (code length = 32, locals = 2, stack = 2):
       [0] aload_0 v0
       [1] aload_1 v1
-      [2] invokespecial #29
+      [2] invokespecial #30
         + Methodref [com/twinone/locker/d.a (Landroid/view/View;)V]
       [5] aload_0 v0
       [6] getfield #15
         + Fieldref [com/twinone/locker/DieLockActivity.n Landroid/widget/TextView;]
       [9] invokevirtual #19
         + Methodref [android/widget/TextView.getText ()Ljava/lang/CharSequence;]
-      [12] invokeinterface #32
+      [12] invokeinterface #33
         + InterfaceMethodref [java/lang/CharSequence.toString ()Ljava/lang/String;]
       [17] aload_0 v0
       [18] getfield #14
         + Fieldref [com/twinone/locker/DieLockActivity.a Ljava/lang/String;]
-      [21] invokevirtual #31
+      [21] invokevirtual #32
         + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
       [24] ifeq +7 (target=31)
       [27] aload_0 v0
-      [28] invokestatic #25
+      [28] invokestatic #26
         + Methodref [com/twinone/locker/MainActivity.a (Landroid/content/Context;)V]
       [31] return
       Code attribute exceptions (count = 0):
@@ -51386,39 +51378,39 @@ Methods (count = 4):
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 53, locals = 1, stack = 3):
       [0] aload_0 v0
-      [1] invokespecial #28
+      [1] invokespecial #29
         + Methodref [com/twinone/locker/d.a ()V]
       [4] aload_0 v0
       [5] getfield #15
         + Fieldref [com/twinone/locker/DieLockActivity.n Landroid/widget/TextView;]
       [8] invokevirtual #19
         + Methodref [android/widget/TextView.getText ()Ljava/lang/CharSequence;]
-      [11] invokeinterface #32
+      [11] invokeinterface #33
         + InterfaceMethodref [java/lang/CharSequence.toString ()Ljava/lang/String;]
       [16] aload_0 v0
       [17] getfield #14
         + Fieldref [com/twinone/locker/DieLockActivity.a Ljava/lang/String;]
-      [20] invokevirtual #31
+      [20] invokevirtual #32
         + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
       [23] ifeq +10 (target=33)
       [26] aload_0 v0
-      [27] invokestatic #25
+      [27] invokestatic #26
         + Methodref [com/twinone/locker/MainActivity.a (Landroid/content/Context;)V]
       [30] goto +22 (target=52)
       [33] aload_0 v0
       [34] getfield #15
         + Fieldref [com/twinone/locker/DieLockActivity.n Landroid/widget/TextView;]
-      [37] ldc #2
+      [37] ldc #3
         + String []
-      [39] invokevirtual #20
+      [39] invokevirtual #21
         + Methodref [android/widget/TextView.setText (Ljava/lang/CharSequence;)V]
       [42] aload_0 v0
       [43] ldc #4
         + String [Incorrect password]
       [45] iconst_0
-      [46] invokestatic #21
+      [46] invokestatic #22
         + Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
-      [49] invokevirtual #22
+      [49] invokevirtual #23
         + Methodref [android/widget/Toast.show ()V]
       [52] return
       Code attribute exceptions (count = 0):
@@ -51440,11 +51432,11 @@ _____________________________________________________________________
 Interfaces (count = 0):
 
 Constant Pool (count = 235):
-  + Integer [2130903044]
+  + Integer [2130903043]
+  + Integer [2131165202]
+  + Integer [2131165204]
   + String []
   + String [Could not load ApplicationInfo image]
-  + String [Enter password to unlock]
-  + String [Incorrect password]
   + String [Locker]
   + String [LockerActivity for ]
   + String [Service not bound, cannot unlock]
@@ -51490,8 +51482,9 @@ Constant Pool (count = 235):
   + Methodref [android/widget/ImageView.setBackground (Landroid/graphics/drawable/Drawable;)V]
   + Methodref [android/widget/ImageView.setVisibility (I)V]
   + Methodref [android/widget/TextView.getText ()Ljava/lang/CharSequence;]
+  + Methodref [android/widget/TextView.setText (I)V]
   + Methodref [android/widget/TextView.setText (Ljava/lang/CharSequence;)V]
-  + Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
+  + Methodref [android/widget/Toast.makeText (Landroid/content/Context;II)Landroid/widget/Toast;]
   + Methodref [android/widget/Toast.show ()V]
   + Methodref [com/twinone/locker/LockActivity.a (Ljava/lang/String;)Landroid/content/pm/ApplicationInfo;]
   + Methodref [com/twinone/locker/LockActivity.b ()V]
@@ -51546,7 +51539,7 @@ Constant Pool (count = 235):
   + NameAndType [getText ()Ljava/lang/CharSequence;]
   + NameAndType [loadIcon (Landroid/content/pm/PackageManager;)Landroid/graphics/drawable/Drawable;]
   + NameAndType [loadLabel (Landroid/content/pm/PackageManager;)Ljava/lang/CharSequence;]
-  + NameAndType [makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
+  + NameAndType [makeText (Landroid/content/Context;II)Landroid/widget/Toast;]
   + NameAndType [n Landroid/widget/TextView;]
   + NameAndType [o Landroid/widget/TextView;]
   + NameAndType [onCreate (Landroid/os/Bundle;)V]
@@ -51559,6 +51552,7 @@ Constant Pool (count = 235):
   + NameAndType [s Lcom/twinone/locker/e;]
   + NameAndType [setBackground (Landroid/graphics/drawable/Drawable;)V]
   + NameAndType [setContentView (I)V]
+  + NameAndType [setText (I)V]
   + NameAndType [setText (Ljava/lang/CharSequence;)V]
   + NameAndType [setVisibility (I)V]
   + NameAndType [show ()V]
@@ -51577,7 +51571,7 @@ Constant Pool (count = 235):
   + Utf8 [()V]
   + Utf8 [(I)V]
   + Utf8 [(Landroid/content/Context;)Ljava/lang/String;]
-  + Utf8 [(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
+  + Utf8 [(Landroid/content/Context;II)Landroid/widget/Toast;]
   + Utf8 [(Landroid/content/Context;Ljava/lang/Class;)V]
   + Utf8 [(Landroid/content/Intent;)V]
   + Utf8 [(Landroid/content/Intent;Landroid/content/ServiceConnection;I)Z]
@@ -51602,8 +51596,6 @@ Constant Pool (count = 235):
   + Utf8 [<init>]
   + Utf8 [Code]
   + Utf8 [Could not load ApplicationInfo image]
-  + Utf8 [Enter password to unlock]
-  + Utf8 [Incorrect password]
   + Utf8 [Landroid/content/ServiceConnection;]
   + Utf8 [Landroid/widget/ImageView;]
   + Utf8 [Landroid/widget/TextView;]
@@ -51699,7 +51691,7 @@ Methods (count = 12):
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 22, locals = 1, stack = 4):
       [0] aload_0 v0
-      [1] invokespecial #68
+      [1] invokespecial #69
         + Methodref [com/twinone/locker/d.<init> ()V]
       [4] aload_0 v0
       [5] iconst_0
@@ -51710,7 +51702,7 @@ Methods (count = 12):
         + Class [com/twinone/locker/c]
       [13] dup
       [14] aload_0 v0
-      [15] invokespecial #67
+      [15] invokespecial #68
         + Methodref [com/twinone/locker/c.<init> (Lcom/twinone/locker/LockActivity;)V]
       [18] putfield #37
         + Fieldref [com/twinone/locker/LockActivity.u Landroid/content/ServiceConnection;]
@@ -51724,25 +51716,25 @@ Methods (count = 12):
     + Code attribute instructions (code length = 143, locals = 3, stack = 4):
       [0] aload_0 v0
       [1] aload_1 v1
-      [2] invokespecial #71
+      [2] invokespecial #72
         + Methodref [com/twinone/locker/d.onCreate (Landroid/os/Bundle;)V]
       [5] aload_0 v0
       [6] ldc #1
-        + Integer [2130903044]
-      [8] invokevirtual #62
+        + Integer [2130903043]
+      [8] invokevirtual #63
         + Methodref [com/twinone/locker/LockActivity.setContentView (I)V]
       [11] aload_0 v0
-      [12] invokevirtual #55
+      [12] invokevirtual #56
         + Methodref [com/twinone/locker/LockActivity.b ()V]
       [15] aload_0 v0
       [16] aload_0 v0
-      [17] invokestatic #65
+      [17] invokestatic #66
         + Methodref [com/twinone/locker/ObserverService.a (Landroid/content/Context;)Ljava/lang/String;]
       [20] putfield #34
         + Fieldref [com/twinone/locker/LockActivity.r Ljava/lang/String;]
       [23] aload_0 v0
       [24] aload_0 v0
-      [25] invokevirtual #60
+      [25] invokevirtual #61
         + Methodref [com/twinone/locker/LockActivity.getIntent ()Landroid/content/Intent;]
       [28] invokevirtual #42
         + Methodref [android/content/Intent.getExtras ()Landroid/os/Bundle;]
@@ -51760,7 +51752,7 @@ Methods (count = 12):
         + Fieldref [com/twinone/locker/LockActivity.s Lcom/twinone/locker/e;]
       [47] getfield #38
         + Fieldref [com/twinone/locker/e.a Ljava/lang/String;]
-      [50] invokevirtual #54
+      [50] invokevirtual #55
         + Methodref [com/twinone/locker/LockActivity.a (Ljava/lang/String;)Landroid/content/pm/ApplicationInfo;]
       [53] astore_2 v2
       [54] aload_2 v2
@@ -51770,7 +51762,7 @@ Methods (count = 12):
         + Fieldref [com/twinone/locker/LockActivity.q Landroid/widget/ImageView;]
       [62] aload_2 v2
       [63] aload_0 v0
-      [64] invokevirtual #61
+      [64] invokevirtual #62
         + Methodref [com/twinone/locker/LockActivity.getPackageManager ()Landroid/content/pm/PackageManager;]
       [67] invokevirtual #43
         + Methodref [android/content/pm/ApplicationInfo.loadIcon (Landroid/content/pm/PackageManager;)Landroid/graphics/drawable/Drawable;]
@@ -51781,16 +51773,16 @@ Methods (count = 12):
         + Fieldref [com/twinone/locker/LockActivity.o Landroid/widget/TextView;]
       [77] aload_2 v2
       [78] aload_0 v0
-      [79] invokevirtual #61
+      [79] invokevirtual #62
         + Methodref [com/twinone/locker/LockActivity.getPackageManager ()Landroid/content/pm/PackageManager;]
       [82] invokevirtual #44
         + Methodref [android/content/pm/ApplicationInfo.loadLabel (Landroid/content/pm/PackageManager;)Ljava/lang/CharSequence;]
-      [85] invokevirtual #51
+      [85] invokevirtual #52
         + Methodref [android/widget/TextView.setText (Ljava/lang/CharSequence;)V]
       [88] goto +20 (target=108)
       [91] ldc #6
         + String [Locker]
-      [93] ldc #3
+      [93] ldc #5
         + String [Could not load ApplicationInfo image]
       [95] invokestatic #47
         + Methodref [android/util/Log.w (Ljava/lang/String;Ljava/lang/String;)I]
@@ -51804,10 +51796,10 @@ Methods (count = 12):
       [108] aload_0 v0
       [109] getfield #32
         + Fieldref [com/twinone/locker/LockActivity.p Landroid/widget/TextView;]
-      [112] ldc #4
-        + String [Enter password to unlock]
+      [112] ldc #2
+        + Integer [2131165202]
       [114] invokevirtual #51
-        + Methodref [android/widget/TextView.setText (Ljava/lang/CharSequence;)V]
+        + Methodref [android/widget/TextView.setText (I)V]
       [117] ldc #6
         + String [Locker]
       [119] new #28
@@ -51815,14 +51807,14 @@ Methods (count = 12):
       [122] dup
       [123] ldc #7
         + String [LockerActivity for ]
-      [125] invokespecial #76
+      [125] invokespecial #77
         + Methodref [java/lang/StringBuilder.<init> (Ljava/lang/String;)V]
       [128] aload_0 v0
       [129] getfield #35
         + Fieldref [com/twinone/locker/LockActivity.s Lcom/twinone/locker/e;]
-      [132] invokevirtual #77
+      [132] invokevirtual #78
         + Methodref [java/lang/StringBuilder.append (Ljava/lang/Object;)Ljava/lang/StringBuilder;]
-      [135] invokevirtual #78
+      [135] invokevirtual #79
         + Methodref [java/lang/StringBuilder.toString ()Ljava/lang/String;]
       [138] invokestatic #47
         + Methodref [android/util/Log.w (Ljava/lang/String;Ljava/lang/String;)I]
@@ -51839,10 +51831,10 @@ Methods (count = 12):
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 9, locals = 1, stack = 1):
       [0] aload_0 v0
-      [1] invokespecial #72
+      [1] invokespecial #73
         + Methodref [com/twinone/locker/d.onPause ()V]
       [4] aload_0 v0
-      [5] invokevirtual #59
+      [5] invokevirtual #60
         + Methodref [com/twinone/locker/LockActivity.finish ()V]
       [8] return
       Code attribute exceptions (count = 0):
@@ -51853,7 +51845,7 @@ Methods (count = 12):
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 27, locals = 2, stack = 4):
       [0] aload_0 v0
-      [1] invokespecial #73
+      [1] invokespecial #74
         + Methodref [com/twinone/locker/d.onStart ()V]
       [4] new #12
         + Class [android/content/Intent]
@@ -51870,7 +51862,7 @@ Methods (count = 12):
       [18] getfield #37
         + Fieldref [com/twinone/locker/LockActivity.u Landroid/content/ServiceConnection;]
       [21] iconst_1
-      [22] invokevirtual #57
+      [22] invokevirtual #58
         + Methodref [com/twinone/locker/LockActivity.bindService (Landroid/content/Intent;Landroid/content/ServiceConnection;I)Z]
       [25] pop
       [26] return
@@ -51885,11 +51877,11 @@ Methods (count = 12):
       [1] aload_0 v0
       [2] getfield #34
         + Fieldref [com/twinone/locker/LockActivity.r Ljava/lang/String;]
-      [5] invokevirtual #75
+      [5] invokevirtual #76
         + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
       [8] ifeq +9 (target=17)
       [11] aload_0 v0
-      [12] invokespecial #58
+      [12] invokespecial #59
         + Methodref [com/twinone/locker/LockActivity.e ()V]
       [15] iconst_1
       [16] ireturn
@@ -51905,7 +51897,7 @@ Methods (count = 12):
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 15, locals = 3, stack = 3):
       [0] aload_0 v0
-      [1] invokevirtual #61
+      [1] invokevirtual #62
         + Methodref [com/twinone/locker/LockActivity.getPackageManager ()Landroid/content/pm/PackageManager;]
       [4] aload_1 v1
       [5] sipush 128
@@ -51927,7 +51919,7 @@ Methods (count = 12):
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 25, locals = 1, stack = 2):
       [0] aload_0 v0
-      [1] invokespecial #74
+      [1] invokespecial #75
         + Methodref [com/twinone/locker/d.onStop ()V]
       [4] aload_0 v0
       [5] getfield #29
@@ -51937,7 +51929,7 @@ Methods (count = 12):
       [12] aload_0 v0
       [13] getfield #37
         + Fieldref [com/twinone/locker/LockActivity.u Landroid/content/ServiceConnection;]
-      [16] invokevirtual #64
+      [16] invokevirtual #65
         + Methodref [com/twinone/locker/LockActivity.unbindService (Landroid/content/ServiceConnection;)V]
       [19] aload_0 v0
       [20] iconst_0
@@ -51969,10 +51961,10 @@ Methods (count = 12):
       [16] pop
       [17] aload_0 v0
       [18] aload_1 v1
-      [19] invokevirtual #63
+      [19] invokevirtual #64
         + Methodref [com/twinone/locker/LockActivity.startActivity (Landroid/content/Intent;)V]
       [22] aload_0 v0
-      [23] invokevirtual #59
+      [23] invokevirtual #60
         + Methodref [com/twinone/locker/LockActivity.finish ()V]
       [26] return
       Code attribute exceptions (count = 0):
@@ -51984,7 +51976,7 @@ Methods (count = 12):
     + Code attribute instructions (code length = 23, locals = 2, stack = 2):
       [0] aload_0 v0
       [1] aload_1 v1
-      [2] invokespecial #70
+      [2] invokespecial #71
         + Methodref [com/twinone/locker/d.a (Landroid/view/View;)V]
       [5] aload_0 v0
       [6] aload_0 v0
@@ -51992,9 +51984,9 @@ Methods (count = 12):
         + Fieldref [com/twinone/locker/LockActivity.n Landroid/widget/TextView;]
       [10] invokevirtual #50
         + Methodref [android/widget/TextView.getText ()Ljava/lang/CharSequence;]
-      [13] invokeinterface #79
+      [13] invokeinterface #80
         + InterfaceMethodref [java/lang/CharSequence.toString ()Ljava/lang/String;]
-      [18] invokespecial #56
+      [18] invokespecial #57
         + Methodref [com/twinone/locker/LockActivity.b (Ljava/lang/String;)Z]
       [21] pop
       [22] return
@@ -52006,7 +51998,7 @@ Methods (count = 12):
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 43, locals = 1, stack = 3):
       [0] aload_0 v0
-      [1] invokespecial #69
+      [1] invokespecial #70
         + Methodref [com/twinone/locker/d.a ()V]
       [4] aload_0 v0
       [5] aload_0 v0
@@ -52014,25 +52006,25 @@ Methods (count = 12):
         + Fieldref [com/twinone/locker/LockActivity.n Landroid/widget/TextView;]
       [9] invokevirtual #50
         + Methodref [android/widget/TextView.getText ()Ljava/lang/CharSequence;]
-      [12] invokeinterface #79
+      [12] invokeinterface #80
         + InterfaceMethodref [java/lang/CharSequence.toString ()Ljava/lang/String;]
-      [17] invokespecial #56
+      [17] invokespecial #57
         + Methodref [com/twinone/locker/LockActivity.b (Ljava/lang/String;)Z]
       [20] ifne +22 (target=42)
       [23] aload_0 v0
       [24] getfield #30
         + Fieldref [com/twinone/locker/LockActivity.n Landroid/widget/TextView;]
-      [27] ldc #2
+      [27] ldc #4
         + String []
-      [29] invokevirtual #51
+      [29] invokevirtual #52
         + Methodref [android/widget/TextView.setText (Ljava/lang/CharSequence;)V]
       [32] aload_0 v0
-      [33] ldc #5
-        + String [Incorrect password]
+      [33] ldc #3
+        + Integer [2131165204]
       [35] iconst_0
-      [36] invokestatic #52
-        + Methodref [android/widget/Toast.makeText (Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;]
-      [39] invokevirtual #53
+      [36] invokestatic #53
+        + Methodref [android/widget/Toast.makeText (Landroid/content/Context;II)Landroid/widget/Toast;]
+      [39] invokevirtual #54
         + Methodref [android/widget/Toast.show ()V]
       [42] return
       Code attribute exceptions (count = 0):
@@ -52056,7 +52048,7 @@ Methods (count = 12):
         + Fieldref [com/twinone/locker/LockActivity.s Lcom/twinone/locker/e;]
       [15] getfield #38
         + Fieldref [com/twinone/locker/e.a Ljava/lang/String;]
-      [18] invokevirtual #66
+      [18] invokevirtual #67
         + Methodref [com/twinone/locker/ObserverService.a (Ljava/lang/String;)V]
       [21] goto +11 (target=32)
       [24] ldc #6
@@ -52067,7 +52059,7 @@ Methods (count = 12):
         + Methodref [android/util/Log.w (Ljava/lang/String;Ljava/lang/String;)I]
       [31] pop
       [32] aload_0 v0
-      [33] invokevirtual #59
+      [33] invokevirtual #60
         + Methodref [com/twinone/locker/LockActivity.finish ()V]
       [36] return
       Code attribute exceptions (count = 0):
@@ -52214,7 +52206,6 @@ Interfaces (count = 2):
 
 Constant Pool (count = 172):
   + Integer [2131230724]
-  + Integer [2131361800]
   + Integer [2131361801]
   + Integer [2131361802]
   + Integer [2131361803]
@@ -52227,6 +52218,7 @@ Constant Pool (count = 172):
   + Integer [2131361810]
   + Integer [2131361811]
   + Integer [2131361812]
+  + Integer [2131361813]
   + Integer [2131361814]
   + Integer [2131361815]
   + Integer [2131361816]
@@ -52476,8 +52468,8 @@ Methods (count = 10):
     + Code attribute instructions (code length = 313, locals = 1, stack = 3):
       [0] aload_0 v0
       [1] aload_0 v0
-      [2] ldc #2
-        + Integer [2131361800]
+      [2] ldc #4
+        + Integer [2131361803]
       [4] invokevirtual #57
         + Methodref [com/twinone/locker/d.findViewById (I)Landroid/view/View;]
       [7] checkcast #25
@@ -52486,8 +52478,8 @@ Methods (count = 10):
         + Fieldref [com/twinone/locker/d.n Landroid/widget/TextView;]
       [13] aload_0 v0
       [14] aload_0 v0
-      [15] ldc #16
-        + Integer [2131361815]
+      [15] ldc #3
+        + Integer [2131361802]
       [17] invokevirtual #57
         + Methodref [com/twinone/locker/d.findViewById (I)Landroid/view/View;]
       [20] checkcast #25
@@ -52496,8 +52488,8 @@ Methods (count = 10):
         + Fieldref [com/twinone/locker/d.o Landroid/widget/TextView;]
       [26] aload_0 v0
       [27] aload_0 v0
-      [28] ldc #17
-        + Integer [2131361816]
+      [28] ldc #5
+        + Integer [2131361804]
       [30] invokevirtual #57
         + Methodref [com/twinone/locker/d.findViewById (I)Landroid/view/View;]
       [33] checkcast #25
@@ -52506,8 +52498,8 @@ Methods (count = 10):
         + Fieldref [com/twinone/locker/d.p Landroid/widget/TextView;]
       [39] aload_0 v0
       [40] aload_0 v0
-      [41] ldc #15
-        + Integer [2131361814]
+      [41] ldc #2
+        + Integer [2131361801]
       [43] invokevirtual #57
         + Methodref [com/twinone/locker/d.findViewById (I)Landroid/view/View;]
       [46] checkcast #24
@@ -52516,8 +52508,8 @@ Methods (count = 10):
         + Fieldref [com/twinone/locker/d.q Landroid/widget/ImageView;]
       [52] aload_0 v0
       [53] aload_0 v0
-      [54] ldc #12
-        + Integer [2131361810]
+      [54] ldc #15
+        + Integer [2131361814]
       [56] invokevirtual #57
         + Methodref [com/twinone/locker/d.findViewById (I)Landroid/view/View;]
       [59] checkcast #23
@@ -52526,8 +52518,8 @@ Methods (count = 10):
         + Fieldref [com/twinone/locker/d.b Landroid/widget/Button;]
       [65] aload_0 v0
       [66] aload_0 v0
-      [67] ldc #14
-        + Integer [2131361812]
+      [67] ldc #17
+        + Integer [2131361816]
       [69] invokevirtual #57
         + Methodref [com/twinone/locker/d.findViewById (I)Landroid/view/View;]
       [72] checkcast #23
@@ -52536,8 +52528,8 @@ Methods (count = 10):
         + Fieldref [com/twinone/locker/d.c Landroid/widget/Button;]
       [78] aload_0 v0
       [79] aload_0 v0
-      [80] ldc #13
-        + Integer [2131361811]
+      [80] ldc #16
+        + Integer [2131361815]
       [82] invokevirtual #57
         + Methodref [com/twinone/locker/d.findViewById (I)Landroid/view/View;]
       [85] checkcast #23
@@ -52546,8 +52538,8 @@ Methods (count = 10):
         + Fieldref [com/twinone/locker/d.d Landroid/widget/Button;]
       [91] aload_0 v0
       [92] aload_0 v0
-      [93] ldc #3
-        + Integer [2131361801]
+      [93] ldc #6
+        + Integer [2131361805]
       [95] invokevirtual #57
         + Methodref [com/twinone/locker/d.findViewById (I)Landroid/view/View;]
       [98] checkcast #23
@@ -52556,8 +52548,8 @@ Methods (count = 10):
         + Fieldref [com/twinone/locker/d.e Landroid/widget/Button;]
       [104] aload_0 v0
       [105] aload_0 v0
-      [106] ldc #4
-        + Integer [2131361802]
+      [106] ldc #7
+        + Integer [2131361806]
       [108] invokevirtual #57
         + Methodref [com/twinone/locker/d.findViewById (I)Landroid/view/View;]
       [111] checkcast #23
@@ -52566,8 +52558,8 @@ Methods (count = 10):
         + Fieldref [com/twinone/locker/d.f Landroid/widget/Button;]
       [117] aload_0 v0
       [118] aload_0 v0
-      [119] ldc #5
-        + Integer [2131361803]
+      [119] ldc #8
+        + Integer [2131361807]
       [121] invokevirtual #57
         + Methodref [com/twinone/locker/d.findViewById (I)Landroid/view/View;]
       [124] checkcast #23
@@ -52576,8 +52568,8 @@ Methods (count = 10):
         + Fieldref [com/twinone/locker/d.g Landroid/widget/Button;]
       [130] aload_0 v0
       [131] aload_0 v0
-      [132] ldc #6
-        + Integer [2131361804]
+      [132] ldc #9
+        + Integer [2131361808]
       [134] invokevirtual #57
         + Methodref [com/twinone/locker/d.findViewById (I)Landroid/view/View;]
       [137] checkcast #23
@@ -52586,8 +52578,8 @@ Methods (count = 10):
         + Fieldref [com/twinone/locker/d.h Landroid/widget/Button;]
       [143] aload_0 v0
       [144] aload_0 v0
-      [145] ldc #7
-        + Integer [2131361805]
+      [145] ldc #10
+        + Integer [2131361809]
       [147] invokevirtual #57
         + Methodref [com/twinone/locker/d.findViewById (I)Landroid/view/View;]
       [150] checkcast #23
@@ -52596,8 +52588,8 @@ Methods (count = 10):
         + Fieldref [com/twinone/locker/d.i Landroid/widget/Button;]
       [156] aload_0 v0
       [157] aload_0 v0
-      [158] ldc #8
-        + Integer [2131361806]
+      [158] ldc #11
+        + Integer [2131361810]
       [160] invokevirtual #57
         + Methodref [com/twinone/locker/d.findViewById (I)Landroid/view/View;]
       [163] checkcast #23
@@ -52606,8 +52598,8 @@ Methods (count = 10):
         + Fieldref [com/twinone/locker/d.j Landroid/widget/Button;]
       [169] aload_0 v0
       [170] aload_0 v0
-      [171] ldc #9
-        + Integer [2131361807]
+      [171] ldc #12
+        + Integer [2131361811]
       [173] invokevirtual #57
         + Methodref [com/twinone/locker/d.findViewById (I)Landroid/view/View;]
       [176] checkcast #23
@@ -52616,8 +52608,8 @@ Methods (count = 10):
         + Fieldref [com/twinone/locker/d.k Landroid/widget/Button;]
       [182] aload_0 v0
       [183] aload_0 v0
-      [184] ldc #10
-        + Integer [2131361808]
+      [184] ldc #13
+        + Integer [2131361812]
       [186] invokevirtual #57
         + Methodref [com/twinone/locker/d.findViewById (I)Landroid/view/View;]
       [189] checkcast #23
@@ -52626,8 +52618,8 @@ Methods (count = 10):
         + Fieldref [com/twinone/locker/d.l Landroid/widget/Button;]
       [195] aload_0 v0
       [196] aload_0 v0
-      [197] ldc #11
-        + Integer [2131361809]
+      [197] ldc #14
+        + Integer [2131361813]
       [199] invokevirtual #57
         + Methodref [com/twinone/locker/d.findViewById (I)Landroid/view/View;]
       [202] checkcast #23
@@ -52724,9 +52716,9 @@ Methods (count = 10):
       [1] invokevirtual #47
         + Methodref [android/view/View.getId ()I]
       [4] tableswitch (3 offsets, default=42) (target=46)
-        2131361810: offset = 28, target = 32
-        2131361811: offset = 42, target = 46
-        2131361812: offset = 35, target = 39
+        2131361814: offset = 28, target = 32
+        2131361815: offset = 42, target = 46
+        2131361816: offset = 35, target = 39
         default: offset = 42, target = 46
       [32] aload_0 v0
       [33] invokevirtual #53
@@ -52756,8 +52748,8 @@ Methods (count = 10):
       [0] aload_1 v1
       [1] invokevirtual #47
         + Methodref [android/view/View.getId ()I]
-      [4] ldc #14
-        + Integer [2131361812]
+      [4] ldc #17
+        + Integer [2131361816]
       [6] ificmpne +7 (target=13)
       [9] aload_0 v0
       [10] invokevirtual #56
@@ -53113,8 +53105,13 @@ _____________________________________________________________________
 Interfaces (count = 1):
   + Class [android/view/View$OnClickListener]
 
-Constant Pool (count = 256):
+Constant Pool (count = 245):
+  + Integer [17039369]
+  + Integer [17039379]
   + Integer [2130903041]
+  + Integer [2131165186]
+  + Integer [2131165187]
+  + Integer [2131165200]
   + Integer [2131230724]
   + Integer [2131361793]
   + Integer [2131361794]
@@ -53122,14 +53119,7 @@ Constant Pool (count = 256):
   + Integer [2147483647]
   + String [ existsPassword: ]
   + String [Changing password from button]
-  + String [Error]
   + String [Main]
-  + String [No]
-  + String [Start lock]
-  + String [Stop lock]
-  + String [Yes]
-  + String [You must create a password first.
-Do you want to set a password now?]
   + String [activity]
   + String [com.twinone.locker.Unlocked]
   + String [unlocked: ]
@@ -53166,10 +53156,9 @@ Do you want to set a password now?]
   + Methodref [android/app/Activity.onResume ()V]
   + Methodref [android/app/ActivityManager.getRunningServices (I)Ljava/util/List;]
   + Methodref [android/app/AlertDialog$Builder.<init> (Landroid/content/Context;)V]
-  + Methodref [android/app/AlertDialog$Builder.setMessage (Ljava/lang/CharSequence;)Landroid/app/AlertDialog$Builder;]
-  + Methodref [android/app/AlertDialog$Builder.setNegativeButton (Ljava/lang/CharSequence;Landroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;]
-  + Methodref [android/app/AlertDialog$Builder.setPositiveButton (Ljava/lang/CharSequence;Landroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;]
-  + Methodref [android/app/AlertDialog$Builder.setTitle (Ljava/lang/CharSequence;)Landroid/app/AlertDialog$Builder;]
+  + Methodref [android/app/AlertDialog$Builder.setMessage (I)Landroid/app/AlertDialog$Builder;]
+  + Methodref [android/app/AlertDialog$Builder.setNegativeButton (ILandroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;]
+  + Methodref [android/app/AlertDialog$Builder.setPositiveButton (ILandroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;]
   + Methodref [android/app/AlertDialog$Builder.show ()Landroid/app/AlertDialog;]
   + Methodref [android/content/ComponentName.getClassName ()Ljava/lang/String;]
   + Methodref [android/content/Context.startActivity (Landroid/content/Intent;)V]
@@ -53179,7 +53168,7 @@ Do you want to set a password now?]
   + Methodref [android/util/Log.d (Ljava/lang/String;Ljava/lang/String;)I]
   + Methodref [android/view/View.getId ()I]
   + Methodref [android/widget/Button.setOnClickListener (Landroid/view/View$OnClickListener;)V]
-  + Methodref [android/widget/Button.setText (Ljava/lang/CharSequence;)V]
+  + Methodref [android/widget/Button.setText (I)V]
   + Methodref [com/twinone/locker/MainActivity.a ()Z]
   + Methodref [com/twinone/locker/MainActivity.a (Z)V]
   + Methodref [com/twinone/locker/MainActivity.b ()V]
@@ -53245,13 +53234,12 @@ Do you want to set a password now?]
   + NameAndType [putExtra (Ljava/lang/String;Z)Landroid/content/Intent;]
   + NameAndType [service Landroid/content/ComponentName;]
   + NameAndType [setContentView (I)V]
-  + NameAndType [setMessage (Ljava/lang/CharSequence;)Landroid/app/AlertDialog$Builder;]
-  + NameAndType [setNegativeButton (Ljava/lang/CharSequence;Landroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;]
+  + NameAndType [setMessage (I)Landroid/app/AlertDialog$Builder;]
+  + NameAndType [setNegativeButton (ILandroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;]
   + NameAndType [setOnClickListener (Landroid/view/View$OnClickListener;)V]
-  + NameAndType [setPositiveButton (Ljava/lang/CharSequence;Landroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;]
-  + NameAndType [setText (Ljava/lang/CharSequence;)V]
+  + NameAndType [setPositiveButton (ILandroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;]
+  + NameAndType [setText (I)V]
   + NameAndType [setTheme (I)V]
-  + NameAndType [setTitle (Ljava/lang/CharSequence;)Landroid/app/AlertDialog$Builder;]
   + NameAndType [show ()Landroid/app/AlertDialog;]
   + NameAndType [startActivity (Landroid/content/Intent;)V]
   + NameAndType [startService (Landroid/content/Intent;)Landroid/content/ComponentName;]
@@ -53266,9 +53254,11 @@ Do you want to set a password now?]
   + Utf8 [()Ljava/util/Iterator;]
   + Utf8 [()V]
   + Utf8 [()Z]
+  + Utf8 [(I)Landroid/app/AlertDialog$Builder;]
   + Utf8 [(I)Landroid/view/View;]
   + Utf8 [(I)Ljava/util/List;]
   + Utf8 [(I)V]
+  + Utf8 [(ILandroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;]
   + Utf8 [(Landroid/content/Context;)Ljava/lang/String;]
   + Utf8 [(Landroid/content/Context;)V]
   + Utf8 [(Landroid/content/Context;Ljava/lang/Class;)V]
@@ -53280,9 +53270,6 @@ Do you want to set a password now?]
   + Utf8 [(Landroid/view/View$OnClickListener;)V]
   + Utf8 [(Landroid/view/View;)V]
   + Utf8 [(Lcom/twinone/locker/MainActivity;)V]
-  + Utf8 [(Ljava/lang/CharSequence;)Landroid/app/AlertDialog$Builder;]
-  + Utf8 [(Ljava/lang/CharSequence;)V]
-  + Utf8 [(Ljava/lang/CharSequence;Landroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;]
   + Utf8 [(Ljava/lang/Object;)Z]
   + Utf8 [(Ljava/lang/String;)Ljava/lang/Object;]
   + Utf8 [(Ljava/lang/String;)Ljava/lang/StringBuilder;]
@@ -53295,17 +53282,10 @@ Do you want to set a password now?]
   + Utf8 [<init>]
   + Utf8 [Changing password from button]
   + Utf8 [Code]
-  + Utf8 [Error]
   + Utf8 [Landroid/content/ComponentName;]
   + Utf8 [Landroid/widget/Button;]
   + Utf8 [Main]
-  + Utf8 [No]
   + Utf8 [StackMapTable]
-  + Utf8 [Start lock]
-  + Utf8 [Stop lock]
-  + Utf8 [Yes]
-  + Utf8 [You must create a password first.
-Do you want to set a password now?]
   + Utf8 [a]
   + Utf8 [activity]
   + Utf8 [android/app/Activity]
@@ -53364,7 +53344,6 @@ Do you want to set a password now?]
   + Utf8 [setPositiveButton]
   + Utf8 [setText]
   + Utf8 [setTheme]
-  + Utf8 [setTitle]
   + Utf8 [show]
   + Utf8 [startActivity]
   + Utf8 [startService]
@@ -53390,7 +53369,7 @@ Methods (count = 14):
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 5, locals = 1, stack = 1):
       [0] aload_0 v0
-      [1] invokespecial #45
+      [1] invokespecial #44
         + Methodref [android/app/Activity.<init> ()V]
       [4] return
       Code attribute exceptions (count = 0):
@@ -53402,65 +53381,65 @@ Methods (count = 14):
     + Code attribute instructions (code length = 81, locals = 2, stack = 3):
       [0] aload_0 v0
       [1] aload_1 v1
-      [2] invokespecial #47
+      [2] invokespecial #46
         + Methodref [android/app/Activity.onCreate (Landroid/os/Bundle;)V]
       [5] aload_0 v0
-      [6] ldc #2
+      [6] ldc #7
         + Integer [2131230724]
-      [8] invokevirtual #77
+      [8] invokevirtual #75
         + Methodref [com/twinone/locker/MainActivity.setTheme (I)V]
       [11] aload_0 v0
-      [12] ldc #1
+      [12] ldc #3
         + Integer [2130903041]
-      [14] invokevirtual #76
+      [14] invokevirtual #74
         + Methodref [com/twinone/locker/MainActivity.setContentView (I)V]
       [17] aload_0 v0
       [18] aload_0 v0
-      [19] ldc #3
+      [19] ldc #8
         + Integer [2131361793]
-      [21] invokevirtual #72
+      [21] invokevirtual #70
         + Methodref [com/twinone/locker/MainActivity.findViewById (I)Landroid/view/View;]
-      [24] checkcast #29
+      [24] checkcast #28
         + Class [android/widget/Button]
-      [27] putfield #43
+      [27] putfield #42
         + Fieldref [com/twinone/locker/MainActivity.b Landroid/widget/Button;]
       [30] aload_0 v0
       [31] aload_0 v0
-      [32] ldc #4
+      [32] ldc #9
         + Integer [2131361794]
-      [34] invokevirtual #72
+      [34] invokevirtual #70
         + Methodref [com/twinone/locker/MainActivity.findViewById (I)Landroid/view/View;]
-      [37] checkcast #29
+      [37] checkcast #28
         + Class [android/widget/Button]
-      [40] putfield #42
+      [40] putfield #41
         + Fieldref [com/twinone/locker/MainActivity.a Landroid/widget/Button;]
       [43] aload_0 v0
       [44] aload_0 v0
-      [45] ldc #5
+      [45] ldc #10
         + Integer [2131361795]
-      [47] invokevirtual #72
+      [47] invokevirtual #70
         + Methodref [com/twinone/locker/MainActivity.findViewById (I)Landroid/view/View;]
-      [50] checkcast #29
+      [50] checkcast #28
         + Class [android/widget/Button]
-      [53] putfield #44
+      [53] putfield #43
         + Fieldref [com/twinone/locker/MainActivity.c Landroid/widget/Button;]
       [56] aload_0 v0
-      [57] getfield #43
+      [57] getfield #42
         + Fieldref [com/twinone/locker/MainActivity.b Landroid/widget/Button;]
       [60] aload_0 v0
-      [61] invokevirtual #64
+      [61] invokevirtual #62
         + Methodref [android/widget/Button.setOnClickListener (Landroid/view/View$OnClickListener;)V]
       [64] aload_0 v0
-      [65] getfield #42
+      [65] getfield #41
         + Fieldref [com/twinone/locker/MainActivity.a Landroid/widget/Button;]
       [68] aload_0 v0
-      [69] invokevirtual #64
+      [69] invokevirtual #62
         + Methodref [android/widget/Button.setOnClickListener (Landroid/view/View$OnClickListener;)V]
       [72] aload_0 v0
-      [73] getfield #44
+      [73] getfield #43
         + Fieldref [com/twinone/locker/MainActivity.c Landroid/widget/Button;]
       [76] aload_0 v0
-      [77] invokevirtual #64
+      [77] invokevirtual #62
         + Methodref [android/widget/Button.setOnClickListener (Landroid/view/View$OnClickListener;)V]
       [80] return
       Code attribute exceptions (count = 0):
@@ -53471,38 +53450,38 @@ Methods (count = 14):
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 73, locals = 2, stack = 2):
       [0] aload_1 v1
-      [1] invokevirtual #63
+      [1] invokevirtual #61
         + Methodref [android/view/View.getId ()I]
       [4] tableswitch (3 offsets, default=68) (target=72)
         2131361793: offset = 43, target = 47
         2131361794: offset = 28, target = 32
         2131361795: offset = 64, target = 68
         default: offset = 68, target = 72
-      [32] ldc #10
+      [32] ldc #14
         + String [Main]
-      [34] ldc #8
+      [34] ldc #13
         + String [Changing password from button]
-      [36] invokestatic #62
+      [36] invokestatic #60
         + Methodref [android/util/Log.d (Ljava/lang/String;Ljava/lang/String;)I]
       [39] pop
       [40] aload_0 v0
-      [41] invokespecial #70
+      [41] invokespecial #68
         + Methodref [com/twinone/locker/MainActivity.d ()V]
       [44] goto +28 (target=72)
       [47] aload_0 v0
-      [48] invokespecial #66
+      [48] invokespecial #64
         + Methodref [com/twinone/locker/MainActivity.a ()Z]
       [51] ifeq +10 (target=61)
       [54] aload_0 v0
-      [55] invokespecial #69
+      [55] invokespecial #67
         + Methodref [com/twinone/locker/MainActivity.c ()V]
       [58] goto +14 (target=72)
       [61] aload_0 v0
-      [62] invokespecial #68
+      [62] invokespecial #66
         + Methodref [com/twinone/locker/MainActivity.b ()V]
       [65] goto +7 (target=72)
       [68] aload_0 v0
-      [69] invokespecial #71
+      [69] invokespecial #69
         + Methodref [com/twinone/locker/MainActivity.e ()V]
       [72] return
       Code attribute exceptions (count = 0):
@@ -53520,15 +53499,15 @@ Methods (count = 14):
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 16, locals = 1, stack = 3):
       [0] aload_0 v0
-      [1] invokespecial #48
+      [1] invokespecial #47
         + Methodref [android/app/Activity.onPause ()V]
       [4] aload_0 v0
-      [5] invokevirtual #74
+      [5] invokevirtual #72
         + Methodref [com/twinone/locker/MainActivity.getIntent ()Landroid/content/Intent;]
-      [8] ldc #17
+      [8] ldc #16
         + String [com.twinone.locker.Unlocked]
       [10] iconst_0
-      [11] invokevirtual #61
+      [11] invokevirtual #59
         + Methodref [android/content/Intent.putExtra (Ljava/lang/String;Z)Landroid/content/Intent;]
       [14] pop
       [15] return
@@ -53540,73 +53519,73 @@ Methods (count = 14):
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 92, locals = 4, stack = 4):
       [0] aload_0 v0
-      [1] invokespecial #49
+      [1] invokespecial #48
         + Methodref [android/app/Activity.onResume ()V]
       [4] aload_0 v0
-      [5] invokevirtual #74
+      [5] invokevirtual #72
         + Methodref [com/twinone/locker/MainActivity.getIntent ()Landroid/content/Intent;]
-      [8] ldc #17
+      [8] ldc #16
         + String [com.twinone.locker.Unlocked]
       [10] iconst_0
-      [11] invokevirtual #60
+      [11] invokevirtual #58
         + Methodref [android/content/Intent.getBooleanExtra (Ljava/lang/String;Z)Z]
       [14] istore_1 v1
       [15] aload_0 v0
-      [16] invokestatic #81
+      [16] invokestatic #79
         + Methodref [com/twinone/locker/ObserverService.a (Landroid/content/Context;)Ljava/lang/String;]
-      [19] invokevirtual #85
+      [19] invokevirtual #83
         + Methodref [java/lang/String.isEmpty ()Z]
       [22] istore_2 v2
-      [23] ldc #10
+      [23] ldc #14
         + String [Main]
-      [25] new #38
+      [25] new #37
         + Class [java/lang/StringBuilder]
       [28] dup
-      [29] ldc #18
+      [29] ldc #17
         + String [unlocked: ]
-      [31] invokespecial #86
+      [31] invokespecial #84
         + Methodref [java/lang/StringBuilder.<init> (Ljava/lang/String;)V]
       [34] iload_1 v1
-      [35] invokevirtual #88
+      [35] invokevirtual #86
         + Methodref [java/lang/StringBuilder.append (Z)Ljava/lang/StringBuilder;]
-      [38] ldc #7
+      [38] ldc #12
         + String [ existsPassword: ]
-      [40] invokevirtual #87
+      [40] invokevirtual #85
         + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
       [43] iload_2 v2
-      [44] invokevirtual #88
+      [44] invokevirtual #86
         + Methodref [java/lang/StringBuilder.append (Z)Ljava/lang/StringBuilder;]
-      [47] invokevirtual #89
+      [47] invokevirtual #87
         + Methodref [java/lang/StringBuilder.toString ()Ljava/lang/String;]
-      [50] invokestatic #62
+      [50] invokestatic #60
         + Methodref [android/util/Log.d (Ljava/lang/String;Ljava/lang/String;)I]
       [53] pop
       [54] iload_1 v1
       [55] ifne +28 (target=83)
       [58] iload_2 v2
       [59] ifne +24 (target=83)
-      [62] new #25
+      [62] new #24
         + Class [android/content/Intent]
       [65] dup
       [66] aload_0 v0
-      [67] ldc #31
+      [67] ldc #30
         + Class [com/twinone/locker/DieLockActivity]
-      [69] invokespecial #59
+      [69] invokespecial #57
         + Methodref [android/content/Intent.<init> (Landroid/content/Context;Ljava/lang/Class;)V]
       [72] astore_3 v3
       [73] aload_0 v0
       [74] aload_3 v3
-      [75] invokevirtual #78
+      [75] invokevirtual #76
         + Methodref [com/twinone/locker/MainActivity.startActivity (Landroid/content/Intent;)V]
       [78] aload_0 v0
-      [79] invokevirtual #73
+      [79] invokevirtual #71
         + Methodref [com/twinone/locker/MainActivity.finish ()V]
       [82] return
       [83] aload_0 v0
       [84] aload_0 v0
-      [85] invokespecial #66
+      [85] invokespecial #64
         + Methodref [com/twinone/locker/MainActivity.a ()Z]
-      [88] invokespecial #67
+      [88] invokespecial #65
         + Methodref [com/twinone/locker/MainActivity.a (Z)V]
       [91] return
       Code attribute exceptions (count = 0):
@@ -53619,44 +53598,44 @@ Methods (count = 14):
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 66, locals = 4, stack = 2):
       [0] aload_0 v0
-      [1] ldc #16
+      [1] ldc #15
         + String [activity]
-      [3] invokevirtual #75
+      [3] invokevirtual #73
         + Methodref [com/twinone/locker/MainActivity.getSystemService (Ljava/lang/String;)Ljava/lang/Object;]
-      [6] checkcast #20
+      [6] checkcast #19
         + Class [android/app/ActivityManager]
       [9] astore_1 v1
       [10] aload_1 v1
-      [11] ldc #6
+      [11] ldc #11
         + Integer [2147483647]
-      [13] invokevirtual #50
+      [13] invokevirtual #49
         + Methodref [android/app/ActivityManager.getRunningServices (I)Ljava/util/List;]
-      [16] invokeinterface #92
+      [16] invokeinterface #90
         + InterfaceMethodref [java/util/List.iterator ()Ljava/util/Iterator;]
       [21] astore_3 v3
       [22] goto +33 (target=55)
       [25] aload_3 v3
-      [26] invokeinterface #91
+      [26] invokeinterface #89
         + InterfaceMethodref [java/util/Iterator.next ()Ljava/lang/Object;]
-      [31] checkcast #21
+      [31] checkcast #20
         + Class [android/app/ActivityManager$RunningServiceInfo]
       [34] astore_2 v2
-      [35] ldc #33
+      [35] ldc #32
         + Class [com/twinone/locker/ObserverService]
-      [37] invokevirtual #83
+      [37] invokevirtual #81
         + Methodref [java/lang/Class.getName ()Ljava/lang/String;]
       [40] aload_2 v2
-      [41] getfield #41
+      [41] getfield #40
         + Fieldref [android/app/ActivityManager$RunningServiceInfo.service Landroid/content/ComponentName;]
-      [44] invokevirtual #57
+      [44] invokevirtual #55
         + Methodref [android/content/ComponentName.getClassName ()Ljava/lang/String;]
-      [47] invokevirtual #84
+      [47] invokevirtual #82
         + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
       [50] ifeq +5 (target=55)
       [53] iconst_1
       [54] ireturn
       [55] aload_3 v3
-      [56] invokeinterface #90
+      [56] invokeinterface #88
         + InterfaceMethodref [java/util/Iterator.hasNext ()Z]
       [61] ifne -36 (target=25)
       [64] iconst_0
@@ -53670,93 +53649,88 @@ Methods (count = 14):
     Access flags: 0x12
       = private final void b()
     Class member attributes (count = 1):
-    + Code attribute instructions (code length = 77, locals = 2, stack = 5):
+    + Code attribute instructions (code length = 72, locals = 2, stack = 5):
       [0] aload_0 v0
-      [1] invokestatic #81
+      [1] invokestatic #79
         + Methodref [com/twinone/locker/ObserverService.a (Landroid/content/Context;)Ljava/lang/String;]
-      [4] invokevirtual #85
+      [4] invokevirtual #83
         + Methodref [java/lang/String.isEmpty ()Z]
-      [7] ifeq +47 (target=54)
-      [10] new #22
+      [7] ifeq +42 (target=49)
+      [10] new #21
         + Class [android/app/AlertDialog$Builder]
       [13] dup
       [14] aload_0 v0
-      [15] invokespecial #51
+      [15] invokespecial #50
         + Methodref [android/app/AlertDialog$Builder.<init> (Landroid/content/Context;)V]
-      [18] ldc #9
-        + String [Error]
-      [20] invokevirtual #55
-        + Methodref [android/app/AlertDialog$Builder.setTitle (Ljava/lang/CharSequence;)Landroid/app/AlertDialog$Builder;]
-      [23] ldc #15
-        + String [You must create a password first.
-Do you want to set a password now?]
-      [25] invokevirtual #52
-        + Methodref [android/app/AlertDialog$Builder.setMessage (Ljava/lang/CharSequence;)Landroid/app/AlertDialog$Builder;]
-      [28] ldc #14
-        + String [Yes]
-      [30] new #35
+      [18] ldc #6
+        + Integer [2131165200]
+      [20] invokevirtual #51
+        + Methodref [android/app/AlertDialog$Builder.setMessage (I)Landroid/app/AlertDialog$Builder;]
+      [23] ldc #2
+        + Integer [17039379]
+      [25] new #34
         + Class [com/twinone/locker/f]
-      [33] dup
-      [34] aload_0 v0
-      [35] invokespecial #82
+      [28] dup
+      [29] aload_0 v0
+      [30] invokespecial #80
         + Methodref [com/twinone/locker/f.<init> (Lcom/twinone/locker/MainActivity;)V]
-      [38] invokevirtual #54
-        + Methodref [android/app/AlertDialog$Builder.setPositiveButton (Ljava/lang/CharSequence;Landroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;]
-      [41] ldc #11
-        + String [No]
-      [43] aconst_null
-      [44] invokevirtual #53
-        + Methodref [android/app/AlertDialog$Builder.setNegativeButton (Ljava/lang/CharSequence;Landroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;]
-      [47] invokevirtual #56
+      [33] invokevirtual #53
+        + Methodref [android/app/AlertDialog$Builder.setPositiveButton (ILandroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;]
+      [36] ldc #1
+        + Integer [17039369]
+      [38] aconst_null
+      [39] invokevirtual #52
+        + Methodref [android/app/AlertDialog$Builder.setNegativeButton (ILandroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;]
+      [42] invokevirtual #54
         + Methodref [android/app/AlertDialog$Builder.show ()Landroid/app/AlertDialog;]
-      [50] pop
-      [51] goto +25 (target=76)
-      [54] new #25
+      [45] pop
+      [46] goto +25 (target=71)
+      [49] new #24
         + Class [android/content/Intent]
-      [57] dup
-      [58] aload_0 v0
-      [59] ldc #33
+      [52] dup
+      [53] aload_0 v0
+      [54] ldc #32
         + Class [com/twinone/locker/ObserverService]
-      [61] invokespecial #59
+      [56] invokespecial #57
         + Methodref [android/content/Intent.<init> (Landroid/content/Context;Ljava/lang/Class;)V]
-      [64] astore_1 v1
-      [65] aload_0 v0
-      [66] aload_1 v1
-      [67] invokevirtual #79
+      [59] astore_1 v1
+      [60] aload_0 v0
+      [61] aload_1 v1
+      [62] invokevirtual #77
         + Methodref [com/twinone/locker/MainActivity.startService (Landroid/content/Intent;)Landroid/content/ComponentName;]
-      [70] pop
-      [71] aload_0 v0
-      [72] iconst_1
-      [73] invokespecial #67
+      [65] pop
+      [66] aload_0 v0
+      [67] iconst_1
+      [68] invokespecial #65
         + Methodref [com/twinone/locker/MainActivity.a (Z)V]
-      [76] return
+      [71] return
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 1):
       + Stack map table attribute (count = 2):
-        - [54] Var: ..., Stack: (empty)
-        - [76] Var: ..., Stack: (empty)
+        - [49] Var: ..., Stack: (empty)
+        - [71] Var: ..., Stack: (empty)
   + Method:       c()V
     Access flags: 0x12
       = private final void c()
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 23, locals = 2, stack = 4):
-      [0] new #25
+      [0] new #24
         + Class [android/content/Intent]
       [3] dup
       [4] aload_0 v0
-      [5] ldc #33
+      [5] ldc #32
         + Class [com/twinone/locker/ObserverService]
-      [7] invokespecial #59
+      [7] invokespecial #57
         + Methodref [android/content/Intent.<init> (Landroid/content/Context;Ljava/lang/Class;)V]
       [10] astore_1 v1
       [11] aload_0 v0
       [12] aload_1 v1
-      [13] invokevirtual #80
+      [13] invokevirtual #78
         + Methodref [com/twinone/locker/MainActivity.stopService (Landroid/content/Intent;)Z]
       [16] pop
       [17] aload_0 v0
       [18] iconst_0
-      [19] invokespecial #67
+      [19] invokespecial #65
         + Methodref [com/twinone/locker/MainActivity.a (Z)V]
       [22] return
       Code attribute exceptions (count = 0):
@@ -53767,40 +53741,40 @@ Do you want to set a password now?]
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 19, locals = 2, stack = 2):
       [0] aload_0 v0
-      [1] getfield #43
+      [1] getfield #42
         + Fieldref [com/twinone/locker/MainActivity.b Landroid/widget/Button;]
       [4] iload_1 v1
       [5] ifeq +8 (target=13)
-      [8] ldc #13
-        + String [Stop lock]
+      [8] ldc #5
+        + Integer [2131165187]
       [10] goto +5 (target=15)
-      [13] ldc #12
-        + String [Start lock]
-      [15] invokevirtual #65
-        + Methodref [android/widget/Button.setText (Ljava/lang/CharSequence;)V]
+      [13] ldc #4
+        + Integer [2131165186]
+      [15] invokevirtual #63
+        + Methodref [android/widget/Button.setText (I)V]
       [18] return
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 1):
       + Stack map table attribute (count = 2):
         - [13] Var: ..., Stack: [a:android/widget/Button]
-        - [15] Var: [a:com/twinone/locker/MainActivity][i], Stack: [a:android/widget/Button][a:java/lang/String]
+        - [15] Var: [a:com/twinone/locker/MainActivity][i], Stack: [a:android/widget/Button][i]
   + Method:       d()V
     Access flags: 0x12
       = private final void d()
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 17, locals = 2, stack = 4):
-      [0] new #25
+      [0] new #24
         + Class [android/content/Intent]
       [3] dup
       [4] aload_0 v0
-      [5] ldc #30
+      [5] ldc #29
         + Class [com/twinone/locker/ChangePasswordActivity]
-      [7] invokespecial #59
+      [7] invokespecial #57
         + Methodref [android/content/Intent.<init> (Landroid/content/Context;Ljava/lang/Class;)V]
       [10] astore_1 v1
       [11] aload_0 v0
       [12] aload_1 v1
-      [13] invokevirtual #78
+      [13] invokevirtual #76
         + Methodref [com/twinone/locker/MainActivity.startActivity (Landroid/content/Intent;)V]
       [16] return
       Code attribute exceptions (count = 0):
@@ -53810,18 +53784,18 @@ Do you want to set a password now?]
       = private final void e()
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 17, locals = 2, stack = 4):
-      [0] new #25
+      [0] new #24
         + Class [android/content/Intent]
       [3] dup
       [4] aload_0 v0
-      [5] ldc #34
+      [5] ldc #33
         + Class [com/twinone/locker/SelectActivity]
-      [7] invokespecial #59
+      [7] invokespecial #57
         + Methodref [android/content/Intent.<init> (Landroid/content/Context;Ljava/lang/Class;)V]
       [10] astore_1 v1
       [11] aload_0 v0
       [12] aload_1 v1
-      [13] invokevirtual #78
+      [13] invokevirtual #76
         + Methodref [com/twinone/locker/MainActivity.startActivity (Landroid/content/Intent;)V]
       [16] return
       Code attribute exceptions (count = 0):
@@ -53840,30 +53814,30 @@ Do you want to set a password now?]
       = public static final void a(android.content.Context)
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 32, locals = 2, stack = 4):
-      [0] new #25
+      [0] new #24
         + Class [android/content/Intent]
       [3] dup
       [4] aload_0 v0
-      [5] ldc #32
+      [5] ldc #31
         + Class [com/twinone/locker/MainActivity]
-      [7] invokespecial #59
+      [7] invokespecial #57
         + Methodref [android/content/Intent.<init> (Landroid/content/Context;Ljava/lang/Class;)V]
       [10] astore_1 v1
       [11] aload_1 v1
-      [12] ldc #17
+      [12] ldc #16
         + String [com.twinone.locker.Unlocked]
       [14] iconst_1
-      [15] invokevirtual #61
+      [15] invokevirtual #59
         + Methodref [android/content/Intent.putExtra (Ljava/lang/String;Z)Landroid/content/Intent;]
       [18] pop
       [19] aload_0 v0
       [20] aload_1 v1
-      [21] invokevirtual #58
+      [21] invokevirtual #56
         + Methodref [android/content/Context.startActivity (Landroid/content/Intent;)V]
       [24] aload_0 v0
-      [25] checkcast #19
+      [25] checkcast #18
         + Class [android/app/Activity]
-      [28] invokevirtual #46
+      [28] invokevirtual #45
         + Methodref [android/app/Activity.finish ()V]
       [31] return
       Code attribute exceptions (count = 0):
@@ -53874,7 +53848,7 @@ Do you want to set a password now?]
     Class member attributes (count = 1):
     + Code attribute instructions (code length = 5, locals = 1, stack = 1):
       [0] aload_0 v0
-      [1] invokespecial #70
+      [1] invokespecial #68
         + Methodref [com/twinone/locker/MainActivity.d ()V]
       [4] return
       Code attribute exceptions (count = 0):
@@ -56308,10 +56282,21 @@ Methods (count = 7):
     Access flags: 0x4
       = protected void onStop()
     Class member attributes (count = 1):
-    + Code attribute instructions (code length = 25, locals = 1, stack = 2):
+    + Code attribute instructions (code length = 5, locals = 1, stack = 1):
       [0] aload_0 v0
       [1] invokespecial #35
         + Methodref [android/app/Activity.onStop ()V]
+      [4] return
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 0):
+  + Method:       onBackPressed()V
+    Access flags: 0x1
+      = public void onBackPressed()
+    Class member attributes (count = 1):
+    + Code attribute instructions (code length = 29, locals = 1, stack = 2):
+      [0] aload_0 v0
+      [1] invokespecial #32
+        + Methodref [android/app/Activity.onBackPressed ()V]
       [4] aload_0 v0
       [5] getfield #26
         + Fieldref [com/twinone/locker/SelectActivity.c Z]
@@ -56326,25 +56311,14 @@ Methods (count = 7):
       [20] iconst_0
       [21] putfield #26
         + Fieldref [com/twinone/locker/SelectActivity.c Z]
-      [24] return
+      [24] aload_0 v0
+      [25] invokestatic #40
+        + Methodref [com/twinone/locker/MainActivity.a (Landroid/content/Context;)V]
+      [28] return
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 1):
       + Stack map table attribute (count = 1):
         - [24] Var: ..., Stack: (empty)
-  + Method:       onBackPressed()V
-    Access flags: 0x1
-      = public void onBackPressed()
-    Class member attributes (count = 1):
-    + Code attribute instructions (code length = 9, locals = 1, stack = 1):
-      [0] aload_0 v0
-      [1] invokespecial #32
-        + Methodref [android/app/Activity.onBackPressed ()V]
-      [4] aload_0 v0
-      [5] invokestatic #40
-        + Methodref [com/twinone/locker/MainActivity.a (Landroid/content/Context;)V]
-      [8] return
-      Code attribute exceptions (count = 0):
-      Code attribute attributes (attribute count = 0):
   + Method:       onItemClick(Landroid/widget/AdapterView;Landroid/view/View;IJ)V
     Access flags: 0x1
       = public void onItemClick(android.widget.AdapterView,android.view.View,int,long)

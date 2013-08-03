@@ -8,4 +8,22 @@
         <!-- API 11 theme customizations can go here. -->
     </style>
 
+    <!-- Themes for locker -->
+
+    <style name="Theme_Dark" parent="@android:style/Theme.Holo">
+        <item name="android:windowAnimationStyle">@style/LockerAnimation</item>
+        <item name="android:buttonStyle">@style/Button_Dark</item>
+        <item name="android:textColor">@color/button_white</item>
+    </style>
+
+    <style name="Button_Dark" parent="@android:style/Widget.Holo.Button">
+        <item name="android:background">@drawable/button_dark</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextView_Dark" parent="@android:style/Widget.Holo.TextView">
+        <item name="android:background">@drawable/button_dark</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

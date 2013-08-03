@@ -3,5 +3,8 @@
 
     <color name="blue_dark">#4fa5d5</color>
     <color name="blue_light">#4fa5d5</color>
-    
+    <color name="button_white">#ffffff</color>
+    <color name="ics_bg_start">#ff020202</color>
+    <color name="ics_bg_end">#ff272D33</color>
+
 </resources>

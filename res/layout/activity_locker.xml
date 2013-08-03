@@ -82,7 +82,7 @@
             <Button
                 android:id="@+id/b1"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -92,7 +92,7 @@
             <Button
                 android:id="@+id/b2"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -102,7 +102,7 @@
             <Button
                 android:id="@+id/b3"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -118,7 +118,7 @@
             <Button
                 android:id="@+id/b4"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -128,7 +128,7 @@
             <Button
                 android:id="@+id/b5"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -138,7 +138,7 @@
             <Button
                 android:id="@+id/b6"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -154,7 +154,7 @@
             <Button
                 android:id="@+id/b7"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -164,7 +164,7 @@
             <Button
                 android:id="@+id/b8"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -174,7 +174,7 @@
             <Button
                 android:id="@+id/b9"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -185,12 +185,13 @@
         <TableRow
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:weightSum="3" >
 
             <Button
                 android:id="@+id/bOK"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -200,7 +201,7 @@
             <Button
                 android:id="@+id/b0"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -209,13 +210,13 @@
 
             <Button
                 android:id="@+id/bBack"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/upper_back"
-                android:textSize="@dimen/locker_button_small" />
+                android:text="&lt;"
+                android:textSize="@dimen/locker_button_text_size" />
         </TableRow>
     </TableLayout>
 

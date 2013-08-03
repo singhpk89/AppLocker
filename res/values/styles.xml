@@ -4,7 +4,7 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
+    <style name="AppBaseTheme" parent="android:Theme.Black">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -23,34 +23,24 @@
     </style>
 
     <!-- Themes for locker -->
-    <style name="Theme_Light" parent="@android:style/Theme.Holo.Light">
-        <item name="android:windowAnimationStyle">@style/LockerAnimation</item>
-        <item name="android:buttonStyle">@style/Button_Light</item>
-    </style>
 
-    <style name="Theme_Dark" parent="@android:style/Theme.Holo">
+    <style name="Theme_Dark" parent="@android:style/Theme.Black">
         <item name="android:windowAnimationStyle">@style/LockerAnimation</item>
         <item name="android:buttonStyle">@style/Button_Dark</item>
+        <item name="android:windowBackground">@drawable/background_dark</item>
+        <item name="android:textColor">@color/button_white</item>
     </style>
 
-    <style name="Button_Dark" parent="@android:style/Widget.Holo.Button">
-        <item name="android:background">@drawable/background_dark</item>
+    <style name="Button_Dark" parent="@android:style/Widget.Button">
+        <item name="android:background">@drawable/button_dark</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/button_white</item>
     </style>
 
-    <style name="Button_Light" parent="@android:style/Widget.Holo.Light.Button">
-        <item name="android:background">@drawable/background_light</item>
+    <style name="TextView_Dark" parent="@android:style/Widget.TextView">
+        <item name="android:background">@drawable/button_dark</item>
         <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="TextView_Dark" parent="@android:style/Widget.Holo.TextView">
-        <item name="android:background">@drawable/background_dark</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="TextView_Light" parent="@android:style/Widget.Holo.Light.TextView">
-        <item name="android:background">@drawable/background_light</item>
-        <item name="android:textStyle">bold</item>
-    </style>
+        <item name="android:textColor">@color/button_white</item>
+        </style>
 
 </resources>

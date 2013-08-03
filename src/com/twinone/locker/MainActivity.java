@@ -210,8 +210,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	public static final void showWithoutPassword(Context context) {
 		Intent i = new Intent(context, MainActivity.class);
 		i.putExtra(EXTRA_UNLOCKED, true);
-		context.startActivity(i);
 		((Activity) context).finish();
+		context.startActivity(i);		
 	}
 
 }

@@ -10,7 +10,7 @@
     <string name="main_change_password">Set password</string>
     <string name="main_select_apps">Apps</string>
     <string name="main_change_message">Message</string>
-    <string name="main_change_message_desc">This message will appear under your locked apps\You can use %s to represent the app name</string>
+    <string name="main_change_message_desc">This message will appear under your locked apps\nYou can use %s to represent the app name</string>
     <string name="main_change_message_saved">Message saved</string>
     
     <!-- All Strings for applist -->

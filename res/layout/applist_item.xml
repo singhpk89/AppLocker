@@ -32,6 +32,8 @@
         android:background="@drawable/applist_button_background"
         android:clickable="false"
         android:focusable="false"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:text="@string/applist_on"
         android:textSize="12sp" />
 

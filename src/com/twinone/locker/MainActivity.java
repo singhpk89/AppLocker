@@ -115,8 +115,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		// If there is no password, don't show locker
 		// If it's already unlocked, don't show locker
 		boolean unlocked = getIntent().getBooleanExtra(EXTRA_UNLOCKED, false);
-		boolean emptyPassword = ObserverService.getPassword(this).isEmpty();
-		Log.d(TAG, "unlocked: " + unlocked + " existsPassword: "
+		boolean emptyPassword = (ObserverService.getPassword(this).length() == 0);
+		Log.d(TAG, "unlocked: " + unlocked + " emptyPassword: "
 				+ emptyPassword);
 		if (!unlocked && !emptyPassword) {
 			Intent i = new Intent(this, DieLockActivity.class);

@@ -49,7 +49,7 @@ public class ChangePasswordActivity extends LockActivityBase {
 	@Override
 	protected void onOkButton() {
 		if (isFirstPassword) {
-			if (tvPassword.getText().toString().isEmpty()) {
+			if (tvPassword.getText().toString().length() == 0) {
 				Toast.makeText(this, R.string.change_pass_empty,
 						Toast.LENGTH_SHORT);
 			} else {

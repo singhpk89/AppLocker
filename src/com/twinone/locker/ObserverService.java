@@ -74,7 +74,6 @@ public class ObserverService extends Service {
 		super.onCreate();
 		Log.w(TAG, "onCreate");
 
-
 		am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 		mPassword = getPassword(this);
 		trackedApps = new HashSet<LockInfo>();
@@ -148,8 +147,10 @@ public class ObserverService extends Service {
 	 * @return The password current password or an empty string.
 	 */
 	public static final String getPassword(Context c) {
-		return c.getSharedPreferences(PREF_FILE_PASSWD, MODE_PRIVATE)
+		String pwd = c.getSharedPreferences(PREF_FILE_PASSWD, MODE_PRIVATE)
 				.getString(PREF_KEY_PASSWD, PREF_DEF_PASSWD);
+		Log.d(TAG, "getPassword:" + pwd);
+		return pwd;
 	}
 
 	/**
@@ -329,7 +330,7 @@ public class ObserverService extends Service {
 	 * Locks the current app
 	 */
 	private void showLocker(LockInfo lockInfo) {
-		if (mPassword.isEmpty()) {
+		if (mPassword.length() == 0) {
 			Log.w(TAG, "Not showing lock for empty password:"
 					+ lockInfo.packageName);
 			return;

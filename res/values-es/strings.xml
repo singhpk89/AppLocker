@@ -11,7 +11,7 @@
     <string name="main_change_message">Mensaje</string>
     <string name="main_change_message_desc">Este mensaje saldrá debajo de la aplicación bloqueada\nPuedes usar %s para el nombre de la aplicación.</string>
     <string name="main_change_message_saved">Mensaje guardado</string>
-    
+
     <!-- All Strings for applist -->
     <string name="applist_on">SI</string>
     <string name="applist_tit">Aplicationes bloqueadas</string>
@@ -25,7 +25,6 @@
     <string name="change_pass_changed">Contraseña cambiada</string>
     <string name="change_pass_not_changed">Error al cambiar contraseña</string>
     <string name="change_pass_empty">Error: Contraseña vacía</string>
-    <string name="dialog_empty_password">Tienes que crear una contraseña antes de empezar a bloquear aplicaciones.\¿Quieres crearla ahora?</string>
     <string name="select_tit">Aplicaciones bloqueadas</string>
 
     <!-- All strings for LockActivity -->
@@ -35,5 +34,7 @@
     <string name="upper_ok">OK</string>
     <string name="upper_back">ATRÁS</string>
     <string name="cancel">Cancelar</string>
+    <string name="welcome_tit">¡Bienvenido a Locker!</string>
+    <string name="welcome_message">Para empezar a bloquear aplicaciones, necesitas crear una contraseña\n¿Quieres crearla ahora?</string>
 
 </resources>

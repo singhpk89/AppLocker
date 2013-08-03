@@ -858,9 +858,9 @@ android.support.v4.widget.ViewDragHelper$Callback:
     148:148:public ViewDragHelper$Callback()
 com.twinone.locker.AppAdapter:
     private static final int ITEM_LAYOUT
-    81:82:public void sort()
+    83:84:public void sort()
 com.twinone.locker.AppAdapter$AppHolder:
-    95:99:public AppAdapter$AppHolder(com.twinone.locker.AppAdapter,java.lang.String,android.content.pm.ResolveInfo,boolean)
+    97:101:public AppAdapter$AppHolder(com.twinone.locker.AppAdapter,java.lang.String,android.content.pm.ResolveInfo,boolean)
 com.twinone.locker.BuildConfig
 com.twinone.locker.ChangePasswordActivity:
     private static final java.lang.String TAG
@@ -877,13 +877,14 @@ com.twinone.locker.MainActivity:
     private static final java.lang.String TAG
     private static final java.lang.String EXTRA_UNLOCKED
 com.twinone.locker.ObserverService:
+    public static final java.lang.String EXTRA_MESSAGE
     public static final java.lang.String EXTRA_APPINFO
     public static final java.lang.String TAG
     public static final java.lang.String PREF_FILE_PASSWD
     public static final java.lang.String PREF_KEY_PASSWD
     public static final java.lang.String PREF_DEF_PASSWD
+    public static final java.lang.String PREF_KEY_MESSAGE
     private static final java.lang.String PREF_FILE_APPS
-    private static final java.lang.String PREF_KEY_APPS
     private static final long DELAY_PERFORMANCE
     private static final long DELAY_FAST
     private static final long DELAY_NORMAL

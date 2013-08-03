@@ -1342,20 +1342,30 @@ com.twinone.locker.MainActivity -> com.twinone.locker.MainActivity:
     android.widget.Button bStartChangePass -> a
     android.widget.Button bToggleService -> b
     android.widget.Button bStartSelect -> c
+    android.widget.Button bChangeMessage -> d
     void onCreate(android.os.Bundle) -> onCreate
     void onClick(android.view.View) -> onClick
+    void showChangeFooterDialog() -> a
     void onPause() -> onPause
     void onResume() -> onResume
-    boolean isServiceRunning() -> a
-    void startObserverService() -> b
-    void stopObserverService() -> c
+    boolean isServiceRunning() -> b
+    void startObserverService() -> c
+    boolean firstTime() -> d
+    void stopObserverService() -> e
     void updateLayout(boolean) -> a
-    void startChangePasswordActivity() -> d
-    void startSelectActivity() -> e
+    void startChangePasswordActivity() -> f
+    void startSelectActivity() -> g
     boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
     void showWithoutPassword(android.content.Context) -> a
     void access$0(com.twinone.locker.MainActivity) -> a
 com.twinone.locker.MainActivity$1 -> com.twinone.locker.f:
+    com.twinone.locker.MainActivity this$0 -> a
+    android.widget.EditText val$input -> b
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.twinone.locker.MainActivity$2 -> com.twinone.locker.g:
+    com.twinone.locker.MainActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.twinone.locker.MainActivity$3 -> com.twinone.locker.h:
     com.twinone.locker.MainActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
 com.twinone.locker.ObserverService -> com.twinone.locker.ObserverService:
@@ -1376,6 +1386,8 @@ com.twinone.locker.ObserverService -> com.twinone.locker.ObserverService:
     int onStartCommand(android.content.Intent,int,int) -> onStartCommand
     java.lang.String getPassword(android.content.Context) -> a
     boolean setPassword(android.content.Context,java.lang.String) -> a
+    java.lang.String getMessage(android.content.Context) -> b
+    boolean setMessage(android.content.Context,java.lang.String) -> b
     void relockAll() -> e
     void relock(java.lang.String) -> b
     void printLockInfos() -> f
@@ -1383,7 +1395,7 @@ com.twinone.locker.ObserverService -> com.twinone.locker.ObserverService:
     com.twinone.locker.LockInfo getLockInfoByPackageName(java.lang.String) -> c
     void doUnlock(java.lang.String) -> a
     void showLocker(com.twinone.locker.LockInfo) -> a
-    java.util.Set getTrackedApps(android.content.Context) -> b
+    java.util.Set getTrackedApps(android.content.Context) -> c
     void setTracking(java.lang.String,boolean) -> a
     void updateTrackedApps() -> a
     void access$0(com.twinone.locker.ObserverService,boolean) -> a
@@ -1399,14 +1411,14 @@ com.twinone.locker.ObserverService -> com.twinone.locker.ObserverService:
     java.lang.String access$10() -> b
     void access$11(com.twinone.locker.ObserverService,com.twinone.locker.LockInfo) -> a
     void access$12(com.twinone.locker.ObserverService,java.lang.String) -> d
-com.twinone.locker.ObserverService$LocalBinder -> com.twinone.locker.g:
+com.twinone.locker.ObserverService$LocalBinder -> com.twinone.locker.i:
     com.twinone.locker.ObserverService this$0 -> a
     com.twinone.locker.ObserverService getInstance() -> a
-com.twinone.locker.ObserverService$PackageMonitor -> com.twinone.locker.h:
+com.twinone.locker.ObserverService$PackageMonitor -> com.twinone.locker.j:
     com.twinone.locker.ObserverService this$0 -> a
     void run() -> run
     void onObserve(java.lang.String,java.lang.String) -> a
-com.twinone.locker.ObserverService$ScreenReceiver -> com.twinone.locker.i:
+com.twinone.locker.ObserverService$ScreenReceiver -> com.twinone.locker.k:
     com.twinone.locker.ObserverService this$0 -> a
     void onReceive(android.content.Context,android.content.Intent) -> onReceive
 com.twinone.locker.SelectActivity -> com.twinone.locker.SelectActivity:
@@ -1421,7 +1433,7 @@ com.twinone.locker.SelectActivity -> com.twinone.locker.SelectActivity:
     void onBackPressed() -> onBackPressed
     void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
     void access$0(com.twinone.locker.SelectActivity,com.twinone.locker.ObserverService) -> a
-com.twinone.locker.SelectActivity$1 -> com.twinone.locker.j:
+com.twinone.locker.SelectActivity$1 -> com.twinone.locker.l:
     com.twinone.locker.SelectActivity this$0 -> a
     void onServiceConnected(android.content.ComponentName,android.os.IBinder) -> onServiceConnected
     void onServiceDisconnected(android.content.ComponentName) -> onServiceDisconnected

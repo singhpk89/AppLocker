@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,6 +78,7 @@ public class AppAdapter extends BaseAdapter {
 			ah.tracked = trackedApps.contains(ah.ri.activityInfo.packageName);
 		}
 	}
+
 	public void sort() {
 		Collections.sort(mApps);
 	}
@@ -163,7 +165,12 @@ public class AppAdapter extends BaseAdapter {
 			lock.setVisibility(ah.tracked ? View.VISIBLE : View.GONE);
 			ImageView icon = (ImageView) view.findViewById(R.id.listIcon);
 			TextView name = (TextView) view.findViewById(R.id.listName);
-			icon.setBackground(ah.ri.loadIcon(mPm));
+			// Avoid deprecation, but stay backwards compatible
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+				icon.setBackgroundDrawable(ah.ri.loadIcon(mPm));
+			} else {
+				icon.setBackground(ah.ri.loadIcon(mPm));
+			}
 			name.setText(ah.label);
 		}
 		return view;

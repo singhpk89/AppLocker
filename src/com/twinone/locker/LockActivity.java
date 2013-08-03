@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -44,7 +45,11 @@ public class LockActivity extends LockActivityBase {
 		// load icon or hide the ImageView
 		ApplicationInfo forApp = getAI(target.packageName);
 		if (forApp != null) {
-			ivAppIcon.setBackground(forApp.loadIcon(getPackageManager()));
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+				ivAppIcon.setBackgroundDrawable(forApp.loadIcon(getPackageManager()));
+			} else {
+				ivAppIcon.setBackground(forApp.loadIcon(getPackageManager()));
+			}
 			tvHeader.setText(forApp.loadLabel(getPackageManager()));
 		} else {
 			Log.w(TAG, "Could not load ApplicationInfo image");

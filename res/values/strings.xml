@@ -26,7 +26,6 @@
     <string name="change_pass_changed">Password successfully changed</string>
     <string name="change_pass_not_changed">Error changing password</string>
     <string name="change_pass_empty">Error: Empty password</string>
-    <string name="dialog_empty_password">You must setup a password before you can lock apps.\nDo you want to setup a password now?</string>
     <string name="select_tit">Select apps to lock</string>
 
     <!-- All strings for LockActivity -->
@@ -35,6 +34,8 @@
     <string name="locker_invalid_password">Invalid password</string>
     <string name="upper_ok">OK</string>
     <string name="upper_back">BACK</string>
-    <string name="cancel">Cancelar</string>
-
+    <string name="cancel">Cancel</string>
+    <string name="welcome_tit">Welcome to Locker!</string>
+    <string name="welcome_message">You need a password before you can lock apps.\nDo you want to setup a password now?</string>
+    
 </resources>

@@ -41,6 +41,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		bStartChangePass.setOnClickListener(this);
 		bStartSelect.setOnClickListener(this);
 		bChangeMessage.setOnClickListener(this);
+		// Show welcome message
+		firstTime();
 	}
 
 	@Override
@@ -59,13 +61,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			break;
 		case R.id.bSelect:
 			startSelectActivity();
+			break;
 		case R.id.bChangeMessage:
-			showChangeMessageDialog();
+			showChangeFooterDialog();
 			break;
 		}
 	}
 
-	private void showChangeMessageDialog() {
+	private void showChangeFooterDialog() {
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setTitle(R.string.main_change_message);
 		alert.setMessage(R.string.main_change_message_desc);
@@ -140,9 +143,23 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	}
 
 	private final void startObserverService() {
-		if (ObserverService.getPassword(this).isEmpty()) {
+		if (!firstTime()) {
+			Intent i = new Intent(this, ObserverService.class);
+			startService(i);
+			updateLayout(true);
+		}
+	}
+
+	/**
+	 * 
+	 * @return True if it's the first time, false if not.
+	 */
+	private final boolean firstTime() {
+		boolean isEmpty = (ObserverService.getPassword(this).length() == 0);
+		if (isEmpty) {
 			new AlertDialog.Builder(this)
-					.setMessage(R.string.dialog_empty_password)
+					.setTitle(R.string.welcome_tit)
+					.setMessage(R.string.welcome_message)
 					.setPositiveButton(android.R.string.yes,
 							new OnClickListener() {
 								@Override
@@ -152,11 +169,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 								}
 							}).setNegativeButton(android.R.string.no, null)
 					.show();
-		} else {
-			Intent i = new Intent(this, ObserverService.class);
-			startService(i);
-			updateLayout(true);
 		}
+		return isEmpty;
 	}
 
 	private final void stopObserverService() {

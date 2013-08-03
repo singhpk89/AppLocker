@@ -51,10 +51,8 @@ public class LockActivity extends LockActivityBase {
 			ivAppIcon.setVisibility(View.GONE);
 		}
 
-		String getMessage = getIntent().getExtras().getString(
-				ObserverService.EXTRA_MESSAGE);
-
-		tvFooter.setText(String.format(getMessage,
+		String getMessage = ObserverService.getMessage(this);
+		tvFooter.setText(getMessage.replace("%s",
 				forApp.loadLabel(getPackageManager())));
 		Log.w(TAG, "LockerActivity for " + target);
 

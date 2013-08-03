@@ -9,7 +9,7 @@
     <dimen name="locker_button_small">12sp</dimen>
 
     <!-- These are for the Upper part (above the buttons) -->
-    <dimen name="main_horizontal_padding">30dp</dimen>
+    <dimen name="main_horizontal_padding">20dp</dimen>
     <dimen name="main_vertical_padding">10dp</dimen>
 
     <!--  -->

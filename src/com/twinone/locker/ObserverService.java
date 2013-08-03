@@ -48,7 +48,6 @@ public class ObserverService extends Service {
 	private String mPassword;
 	private String lastApp = "";
 	private String lastClass = "";
-	private String mMessage = "";
 
 	private boolean mScreenOn = true;
 
@@ -75,7 +74,6 @@ public class ObserverService extends Service {
 		super.onCreate();
 		Log.w(TAG, "onCreate");
 
-		mMessage = getMessage(this);
 
 		am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 		mPassword = getPassword(this);
@@ -178,7 +176,8 @@ public class ObserverService extends Service {
 		SharedPreferences.Editor editor = c.getSharedPreferences(
 				PREF_FILE_PASSWD, MODE_PRIVATE).edit();
 		editor.putString(PREF_KEY_MESSAGE, value);
-		return editor.commit();
+		boolean commited = editor.commit();
+		return commited;
 	}
 
 	private class PackageMonitor extends Thread {
@@ -342,7 +341,6 @@ public class ObserverService extends Service {
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 		intent.putExtra(EXTRA_APPINFO, lockInfo);
-		intent.putExtra(EXTRA_MESSAGE, mMessage);
 		startActivity(intent);
 	}
 

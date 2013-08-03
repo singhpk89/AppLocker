@@ -29,10 +29,10 @@ public class ObserverService extends Service {
 	public static final String PREF_DEF_PASSWD = "";
 	public static final String PREF_KEY_MESSAGE = "com.twinone.locker.pref.message";
 
-
 	/** File where locked apps are stored as {@link SharedPreferences} */
 	private static final String PREF_FILE_APPS = "locked_apps";
-	private static final String PREF_KEY_APPS = "com.twinone.locker.pref.apps";
+	// private static final String PREF_KEY_APPS =
+	// "com.twinone.locker.pref.apps";
 
 	private static final String LOCKER_CLASS = LockActivity.class.getName();
 
@@ -163,7 +163,7 @@ public class ObserverService extends Service {
 		editor.putString(ObserverService.PREF_KEY_PASSWD, password);
 		return editor.commit();
 	}
-	
+
 	public static final boolean setMessage(Context c, String value) {
 		SharedPreferences.Editor editor = c.getSharedPreferences(
 				PREF_FILE_PASSWD, MODE_PRIVATE).edit();
@@ -341,12 +341,9 @@ public class ObserverService extends Service {
 	 * @return A {@link Set} that is safe to edit and use.
 	 */
 	public static final Set<String> getTrackedApps(Context c) {
-		Set<String> apps = new HashSet<String>();
 		SharedPreferences sp = c.getSharedPreferences(PREF_FILE_APPS,
 				Context.MODE_PRIVATE);
-		Set<String> prefApps = sp.getStringSet(PREF_KEY_APPS,
-				new HashSet<String>());
-		apps.addAll(prefApps);
+		Set<String> apps = new HashSet<String>(sp.getAll().keySet());
 		return apps;
 	}
 
@@ -358,20 +355,13 @@ public class ObserverService extends Service {
 	 *            True if the new state will be tracking, false if not
 	 */
 	public final void setTracking(String packageName, boolean shouldTrack) {
-		Set<String> apps = getTrackedApps(this);
 		SharedPreferences.Editor editor = getSharedPreferences(PREF_FILE_APPS,
 				Context.MODE_PRIVATE).edit();
-		boolean done;
 		if (shouldTrack) {
-			done = apps.add(packageName);
-
+			editor.putBoolean(packageName, true);
 		} else {
-			done = apps.remove(packageName);
+			editor.remove(packageName);
 		}
-
-		Log.d(TAG, (shouldTrack ? "Added" : "Removed ") + packageName + " ? "
-				+ done);
-		editor.putStringSet(PREF_KEY_APPS, apps);
 		boolean commited = editor.commit();
 		if (!commited) {
 			Log.w(TAG, "Not commited!");

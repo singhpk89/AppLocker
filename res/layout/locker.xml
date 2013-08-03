@@ -10,67 +10,64 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/main_vertical_padding"
-        android:paddingLeft="@dimen/main_horizontal_padding"
-        android:paddingRight="@dimen/main_horizontal_padding"
-        android:paddingTop="@dimen/main_vertical_padding" >
-
-        <!-- This is actually an edittext but for the styling a button is used. -->
+        android:layout_weight="4" >
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/main_vertical_padding"
+            android:paddingLeft="@dimen/main_horizontal_padding"
+            android:paddingRight="@dimen/main_horizontal_padding"
+            android:paddingTop="@dimen/main_vertical_padding" >
 
-            <ImageView
-                android:id="@+id/ivAppIcon"
-                android:layout_width="wrap_content"
+            <!-- This is actually an edittext but for the styling a button is used. -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/image_right_margin"
-                android:contentDescription="@string/icon_desc" />
+                android:orientation="horizontal" >
 
-            <TextView
-                android:id="@+id/tvHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:textAppearance="@android:style/TextAppearance.Large" />
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/ivAppIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/image_right_margin"
+                    android:contentDescription="@string/icon_desc" />
 
-        <Button
-            android:id="@+id/tvPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/password_bottom_margin"
-            android:layout_marginTop="@dimen/password_top_margin"
-            android:cursorVisible="false"
-            android:inputType="textPassword"
-            android:maxLength="6"
-            android:paddingLeft="@dimen/password_horizontal_padding"
-            android:paddingRight="@dimen/password_horizontal_padding"
-            android:textSize="50sp" >
-        </Button>
+                <TextView
+                    android:id="@+id/tvHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:textAppearance="@android:style/TextAppearance.Large" />
+            </LinearLayout>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:paddingBottom="@dimen/footerscroll_vertical_padding"
-            android:paddingTop="@dimen/footerscroll_vertical_padding" >
+            <Button
+                android:id="@+id/tvPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="@dimen/password_bottom_margin"
+                android:layout_marginTop="@dimen/password_top_margin"
+                android:cursorVisible="false"
+                android:inputType="textPassword"
+                android:maxLength="6"
+                android:paddingLeft="@dimen/password_horizontal_padding"
+                android:paddingRight="@dimen/password_horizontal_padding"
+                android:textSize="50sp" >
+            </Button>
 
             <TextView
                 android:id="@+id/tvFooter"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="vertical"
                 android:textAppearance="@android:style/TextAppearance.Small" />
-        </ScrollView>
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
     <TableLayout
         android:layout_width="match_parent"

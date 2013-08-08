@@ -105,18 +105,21 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
+		Log.w(TAG, "onPause");
 		getIntent().putExtra(EXTRA_UNLOCKED, false);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+		Log.w(TAG, "onResume");
 
 		// If there is no password, don't show locker
 		// If it's already unlocked, don't show locker
 		boolean unlocked = getIntent().getBooleanExtra(EXTRA_UNLOCKED, false);
 		boolean emptyPassword = (ObserverService.getPassword(this).length() == 0);
-		Log.d(TAG, "unlocked: " + unlocked + " emptyPassword: " + emptyPassword);
+		// Log.d(TAG, "unlocked: " + unlocked + " emptyPassword: " +
+		// emptyPassword);
 		if (!unlocked && !emptyPassword) {
 			Intent i = new Intent(this, DieLockActivity.class);
 			startActivity(i);
@@ -126,7 +129,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		// Reset the layout if the service has changed while not at activity.
 		updateLayout(isServiceRunning());
 
-		// If not showing the locker, we should show it
 	}
 
 	private boolean isServiceRunning() {
@@ -217,7 +219,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		super.onBackPressed();
-		finish();
+		moveTaskToBack(true);
 	}
 
 }

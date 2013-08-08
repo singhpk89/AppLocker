@@ -1,6 +1,7 @@
 package com.twinone.locker;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -9,7 +10,7 @@ import android.widget.Toast;
  */
 public class DieLockActivity extends LockActivityBase {
 
-	// private static final String TAG = "DieLocker";
+	private static final String TAG = "DieLocker";
 
 	/**
 	 * Value of the first password
@@ -24,7 +25,7 @@ public class DieLockActivity extends LockActivityBase {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_locker);
 		initLayout();
-
+		Log.d(TAG, "onCreate");
 		// Hide because it's our own app
 		ivAppIcon.setVisibility(View.GONE);
 		tvHeader.setText(R.string.locker_enter_password);
@@ -52,4 +53,17 @@ public class DieLockActivity extends LockActivityBase {
 		}
 	}
 
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		Log.d(TAG, "onPause");
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		Log.d(TAG, "onResume");
+	}
 }

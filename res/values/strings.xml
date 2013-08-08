@@ -12,7 +12,9 @@
     <string name="main_change_message">Message</string>
     <string name="main_change_message_desc">This message will appear under your locked apps\nYou can use %s to represent the app name</string>
     <string name="main_change_message_saved">Message saved</string>
-    
+    <string name="main_share">Share</string>
+    <string name="main_share_text">Try out Locker, the free app to keep your apps private. https://play.google.com/store/apps/details?id=com.twinone.locker</string>
+
     <!-- All Strings for applist -->
     <string name="applist_on">ON</string>
     <string name="applist_tit">Locked apps</string>
@@ -37,5 +39,5 @@
     <string name="cancel">Cancel</string>
     <string name="welcome_tit">Welcome to Locker!</string>
     <string name="welcome_message">You need a password before you can lock apps.\nDo you want to setup a password now?</string>
-    
+
 </resources>

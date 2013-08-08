@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
+        android:padding="10dp"
         android:text="@string/main_start_service" >
     </Button>
 
@@ -24,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
+        android:padding="10dp"
         android:text="@string/main_change_password" >
     </Button>
 
@@ -33,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
+        android:padding="10dp"
         android:text="@string/main_select_apps" >
     </Button>
 
@@ -42,6 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
+        android:padding="10dp"
         android:text="@string/main_change_message" >
     </Button>
 

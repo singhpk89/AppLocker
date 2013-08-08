@@ -149,6 +149,7 @@ public class AppAdapter extends BaseAdapter {
 		return createViewFromResource(arg0, convertView, parent, ITEM_LAYOUT);
 	}
 
+	@SuppressWarnings("deprecation")
 	private View createViewFromResource(int position, View convertView,
 			ViewGroup parent, int resource) {
 		View view = convertView;

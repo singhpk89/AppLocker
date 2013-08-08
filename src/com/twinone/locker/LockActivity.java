@@ -24,11 +24,12 @@ public class LockActivity extends LockActivityBase {
 	private String savedPassword;
 
 	/** The application which we are showing this locker for */
-	private LockInfo target;
+	private String target;
 
 	private ObserverService mService;
 	boolean mBound = false;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -39,14 +40,15 @@ public class LockActivity extends LockActivityBase {
 		savedPassword = ObserverService.getPassword(this);
 
 		// Get the packagename
-		target = (LockInfo) getIntent().getExtras().getSerializable(
-				ObserverService.EXTRA_APPINFO);
+		target = (String) getIntent().getExtras().getSerializable(
+				ObserverService.EXTRA_TARGET_PACKAGENAME);
 
 		// load icon or hide the ImageView
-		ApplicationInfo forApp = getAI(target.packageName);
+		ApplicationInfo forApp = getAI(target);
 		if (forApp != null) {
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-				ivAppIcon.setBackgroundDrawable(forApp.loadIcon(getPackageManager()));
+				ivAppIcon.setBackgroundDrawable(forApp
+						.loadIcon(getPackageManager()));
 			} else {
 				ivAppIcon.setBackground(forApp.loadIcon(getPackageManager()));
 			}
@@ -160,7 +162,7 @@ public class LockActivity extends LockActivityBase {
 	 */
 	private void unlock() {
 		if (mBound) {
-			mService.doUnlock(target.packageName);
+			mService.doUnlock(target);
 		} else {
 			Log.w(TAG, "Service not bound, cannot unlock");
 		}

@@ -16,19 +16,23 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
 public class ObserverService extends Service {
 
 	public static final String EXTRA_MESSAGE = "com.twinone.locker.extraMessage";
-	public static final String EXTRA_APPINFO = "com.twinone.locker.extraInfo";
+	public static final String EXTRA_TARGET_PACKAGENAME = "com.twinone.locker.extraInfo";
 	public static final String TAG = "Observer";
 
 	public static final String PREF_FILE_PASSWD = "default";
 	public static final String PREF_KEY_PASSWD = "com.twinone.locker.pref.passwd";
 	public static final String PREF_DEF_PASSWD = "";
 	public static final String PREF_KEY_MESSAGE = "com.twinone.locker.pref.message";
+	/** Delay in seconds for relocking apps */
+	public static final String PREF_KEY_RELOCK_DELAY = "com.twinone.locker.pref.unlockDelay";
+	public static final int PREF_DEF_RELOCK_DELAY = 10;
 
 	/** File where locked apps are stored as {@link SharedPreferences} */
 	private static final String PREF_FILE_APPS = "locked_apps";
@@ -37,8 +41,7 @@ public class ObserverService extends Service {
 
 	private static final String LOCKER_CLASS = LockActivity.class.getName();
 
-	private long DELAY = DELAY_POWERSAVE;
-
+	private long DELAY = 250;
 	private static final long DELAY_PERFORMANCE = 70;
 	private static final long DELAY_FAST = 100;
 	private static final long DELAY_NORMAL = 150;
@@ -49,7 +52,10 @@ public class ObserverService extends Service {
 	private String lastApp = "";
 	private String lastClass = "";
 
+	
+	@SuppressWarnings("unused")
 	private boolean mScreenOn = true;
+	private long mRelockDelay = 5000;
 
 	private ActivityManager am;
 	private ScheduledExecutorService mExecutor;
@@ -96,7 +102,6 @@ public class ObserverService extends Service {
 		filter.addAction(Intent.ACTION_SCREEN_OFF);
 		registerReceiver(mScreenStatusReceiver, filter);
 
-		// TODO Load applications from preferences
 		updateTrackedApps();
 	}
 
@@ -255,6 +260,7 @@ public class ObserverService extends Service {
 	 *            The app that must NOT be locked.
 	 */
 	private void relock(String appName) {
+		// TODO timing
 		for (LockInfo li : trackedApps) {
 			if (!li.packageName.equals(appName)) {
 				if (li.locked == false) {
@@ -341,7 +347,7 @@ public class ObserverService extends Service {
 		intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-		intent.putExtra(EXTRA_APPINFO, lockInfo);
+		intent.putExtra(EXTRA_TARGET_PACKAGENAME, lockInfo.packageName);
 		startActivity(intent);
 	}
 

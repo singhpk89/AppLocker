@@ -10,7 +10,7 @@
      This issue is fixed in API level 12 (Android 3.1)
     -->
     <corners
-        android:bottomLeftRadius="15dp"
+        android:bottomRightRadius="15dp"
         android:topLeftRadius="15dp" />
 
     <gradient

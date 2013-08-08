@@ -116,8 +116,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		// If it's already unlocked, don't show locker
 		boolean unlocked = getIntent().getBooleanExtra(EXTRA_UNLOCKED, false);
 		boolean emptyPassword = (ObserverService.getPassword(this).length() == 0);
-		Log.d(TAG, "unlocked: " + unlocked + " emptyPassword: "
-				+ emptyPassword);
+		Log.d(TAG, "unlocked: " + unlocked + " emptyPassword: " + emptyPassword);
 		if (!unlocked && !emptyPassword) {
 			Intent i = new Intent(this, DieLockActivity.class);
 			startActivity(i);
@@ -211,7 +210,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		Intent i = new Intent(context, MainActivity.class);
 		i.putExtra(EXTRA_UNLOCKED, true);
 		((Activity) context).finish();
-		context.startActivity(i);		
+		context.startActivity(i);
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		finish();
 	}
 
 }

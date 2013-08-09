@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+    Added in Locker v1.07
+    Author: Patschi (#Patschi, irc.pkern.at/6667)
+    -->
+    <string name="app_name">Locker</string>
+    <string name="action_settings">Einstellungen</string>
+
+    <!-- All strings for MainActivity -->
+    <string name="main_start_service">Aktiviere Sperre</string>
+    <string name="main_stop_service">Deaktiviere Sperre</string>
+    <string name="main_change_password">Passwort setzen</string>
+    <string name="main_select_apps">Apps</string>
+    <string name="main_change_message">Nachricht</string>
+    <string name="main_change_message_desc">Diese Nachricht wird unter den gesperrten Apps erscheinen\nDu kannst %s verwenden, um den Namen der App zu verwenden.</string>
+    <string name="main_change_message_saved">Nachricht gespeichert</string>
+    <string name="main_share">Teilen</string>
+    <string name="main_share_tit">Teile Locker</string>
+    <string name="main_share_text">Probiere Locker, die kostenlose App um deine wichtigen Apps privat zu halten. https://play.google.com/store/apps/details?id=com.twinone.locker</string>
+
+    <!-- All Strings for applist -->
+    <string name="applist_on">EIN</string>
+    <string name="applist_tit">Gesperrte Apps</string>
+    <string name="icon_desc">icon</string>
+
+    <!-- Change password activity -->
+    <string name="change_pass_tit">Passwort ändern</string>
+    <string name="change_pass_desc">Gib das neue Passwort ein\n4 oder mehr Zeichen werden empfohlen</string>
+    <string name="change_pass_desc_confirmation">Passwort bestätigen</string>
+    <string name="change_pass_not_match">Passwörter sind nicht identisch</string>
+    <string name="change_pass_changed">Passwort wurde erfolgreich geändert</string>
+    <string name="change_pass_not_changed">Fehler beim ändern des Passwortes</string>
+    <string name="change_pass_empty">Fehler: Leeres Passwort</string>
+    <string name="select_tit">Gesperrte Apps</string>
+
+    <!-- All strings for LockActivity -->
+    <string name="locker_footer_default">Zum Entsperren Passwort eingeben</string>
+    <string name="locker_enter_password">Passwort eingeben</string>
+    <string name="locker_invalid_password">Falsches Passwort</string>
+    <string name="upper_ok">OK</string>
+    <string name="upper_back">ZURÜCK</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="welcome_tit">Willkommen beim Locker!</string>
+    <string name="welcome_message">Du benötigst ein Passwort bevor du Apps sperren kannst.\nMöchtest du nun ein Passwort setzen?</string>
+   
+    <!-- END v1.07 Strings -->
+
+</resources>

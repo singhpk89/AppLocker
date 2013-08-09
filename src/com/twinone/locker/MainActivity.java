@@ -25,6 +25,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	Button bStartSelect;
 	Button bChangeMessage;
 
+	Button bShare;
+
 	private static final String EXTRA_UNLOCKED = "com.twinone.locker.Unlocked";
 
 	@Override
@@ -37,10 +39,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		bStartChangePass = (Button) findViewById(R.id.bChangePassword);
 		bStartSelect = (Button) findViewById(R.id.bSelect);
 		bChangeMessage = (Button) findViewById(R.id.bChangeMessage);
+		bShare = (Button) findViewById(R.id.bShare);
+
 		bToggleService.setOnClickListener(this);
 		bStartChangePass.setOnClickListener(this);
 		bStartSelect.setOnClickListener(this);
 		bChangeMessage.setOnClickListener(this);
+		bShare.setOnClickListener(this);
 		// Show welcome message
 		firstTime();
 	}
@@ -64,6 +69,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			break;
 		case R.id.bChangeMessage:
 			showChangeFooterDialog();
+			break;
+		case R.id.bShare:
+			Intent i = new Intent(android.content.Intent.ACTION_SEND);
+			i.setType("text/plain");
+			i.putExtra(Intent.EXTRA_TEXT, getString(R.string.main_share_text));
+			startActivity(Intent.createChooser(i,
+					getString(R.string.main_share_tit)));
 			break;
 		}
 	}
@@ -103,7 +115,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
 		Log.w(TAG, "onPause");
 		getIntent().putExtra(EXTRA_UNLOCKED, false);
@@ -217,7 +228,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 	@Override
 	public void onBackPressed() {
-		// TODO Auto-generated method stub
 		super.onBackPressed();
 		moveTaskToBack(true);
 	}

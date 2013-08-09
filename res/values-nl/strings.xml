@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+    Added in Locker v1.0
+    Author: TwinoneDevs
+    -->
+    <string name="app_name">Locker</string>
+    <string name="action_settings">Instellingen</string>
+
+    <!-- All strings for MainActivity -->
+    <string name="main_start_service">Vergrendelen</string>
+    <string name="main_stop_service">Ontgrendelen</string>
+    <string name="main_change_password">Wachtwoord</string>
+    <string name="main_select_apps">Apps</string>
+    <string name="main_change_message">Bericht</string>
+    <string name="main_change_message_desc">Dit bericht komt onder de geblokkeerde app te staan\nJe kunt %s gebruiken voor de naam van de app.</string>
+    <string name="main_change_message_saved">Bericht opgeslagen</string>
+    <string name="main_share">Delen</string>
+    <string name="main_share_tit">Deel Locker</string>
+    <string name="main_share_text">Probeer Locker, de gratis app die je belangrijke apps blokkeert. https://play.google.com/store/apps/details?id=com.twinone.locker</string>
+
+    <!-- All Strings for applist -->
+    <string name="applist_on">AAN</string>
+    <string name="applist_tit">Geblokkeerde apps</string>
+    <string name="icon_desc">icon</string>
+
+    <!-- Change password activity -->
+    <string name="change_pass_tit">Nieuw wachtwoord</string>
+    <string name="change_pass_desc">Voer het nieuwe wachtwoord in\n4 of meer cijfers aanbefolen</string>
+    <string name="change_pass_desc_confirmation">Voer het wachtwoord opnieuw in</string>
+    <string name="change_pass_not_match">De wachtwoorden zijn niet gelijk</string>
+    <string name="change_pass_changed">Wachtwoord veranderd</string>
+    <string name="change_pass_not_changed">Fout tijdens wachtwoord veranderen</string>
+    <string name="change_pass_empty">Fout: Leeg wachtwoord</string>
+    <string name="select_tit">Geblokkeerde apps</string>
+
+    <!-- All strings for LockActivity -->
+    <string name="locker_footer_default">Voer het wachtwoord in om te ontgrendelen</string>
+    <string name="locker_enter_password">Introduce contraseña</string>
+    <string name="locker_invalid_password">Contraseña incorrecta</string>
+    <string name="upper_ok">OK</string>
+    <string name="upper_back">TERUG</string>
+    <string name="cancel">Annuleren</string>
+    <string name="welcome_tit">Welkom bij Locker!</string>
+    <string name="welcome_message">Je moet een wachtwoord hebben om apps te kunnen blokkeren\nWil je nu een nieuw wachtwoord invoeren?</string>
+
+    <!-- END v1.07 Strings -->
+
+</resources>

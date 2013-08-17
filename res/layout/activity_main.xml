@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,53 +9,60 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <Button
-        android:id="@+id/bToggleService"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:padding="10dp"
-        android:text="@string/main_start_service" >
-    </Button>
+        android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/bChangePassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:padding="10dp"
-        android:text="@string/main_change_password" >
-    </Button>
+        <Button
+            android:id="@+id/bToggleService"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+            android:text="@string/main_start_service" >
+        </Button>
 
-    <Button
-        android:id="@+id/bSelect"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:padding="10dp"
-        android:text="@string/main_select_apps" >
-    </Button>
+        <Button
+            android:id="@+id/bChangePassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+            android:text="@string/main_change_password" >
+        </Button>
 
-    <Button
-        android:id="@+id/bChangeMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:padding="10dp"
-        android:text="@string/main_change_message" >
-    </Button>
-     <Button
-        android:id="@+id/bShare"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:padding="10dp"
-        android:text="@string/main_share" >
-    </Button>
+        <Button
+            android:id="@+id/bSelect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+            android:text="@string/main_select_apps" >
+        </Button>
 
-</LinearLayout>
+        <Button
+            android:id="@+id/bPrefs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+            android:text="@string/main_preferences" >
+        </Button>
+
+        <Button
+            android:id="@+id/bShare"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+            android:text="@string/main_share" >
+        </Button>
+    </LinearLayout>
+
+</ScrollView>

@@ -16,46 +16,34 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Binder;
-import android.os.Handler;
+import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
 public class ObserverService extends Service {
 
-	public static final String EXTRA_MESSAGE = "com.twinone.locker.extraMessage";
-	public static final String EXTRA_TARGET_PACKAGENAME = "com.twinone.locker.extraInfo";
+	public static final String EXTRA_MESSAGE = "com.twinone.locker.extra.Message";
+	public static final String EXTRA_TARGET_PACKAGENAME = "com.twinone.locker.extra.Info";
 	public static final String TAG = "Observer";
 
-	public static final String PREF_FILE_PASSWD = "default";
-	public static final String PREF_KEY_PASSWD = "com.twinone.locker.pref.passwd";
-	public static final String PREF_DEF_PASSWD = "";
-	public static final String PREF_KEY_MESSAGE = "com.twinone.locker.pref.message";
-	/** Delay in seconds for relocking apps */
-	public static final String PREF_KEY_RELOCK_DELAY = "com.twinone.locker.pref.unlockDelay";
-	public static final int PREF_DEF_RELOCK_DELAY = 10;
-
-	/** File where locked apps are stored as {@link SharedPreferences} */
-	private static final String PREF_FILE_APPS = "locked_apps";
-	// private static final String PREF_KEY_APPS =
-	// "com.twinone.locker.pref.apps";
+	public static final String PREF_FILE_DEFAULT = "com.twinone.locker.prefs.default";
+	private static final String PREF_FILE_APPS = "com.twinone.locker.prefs.apps";
 
 	private static final String LOCKER_CLASS = LockActivity.class.getName();
 
-	private long DELAY = 250;
-	private static final long DELAY_PERFORMANCE = 70;
-	private static final long DELAY_FAST = 100;
-	private static final long DELAY_NORMAL = 150;
-	private static final long DELAY_SLOW = 200;
-	private static final long DELAY_POWERSAVE = 250;
+	private long mRescheduleDelay = 250;
+	private static final long DELAY_PERFORMANCE = 80;
+	private static final long DELAY_FAST = 150;
+	private static final long DELAY_NORMAL = 200;
+	private static final long DELAY_SLOW = 230;
+	private static final long DELAY_POWERSAVE = 300;
 
 	private String mPassword;
 	private String lastApp = "";
 	private String lastClass = "";
 
-	
-	@SuppressWarnings("unused")
 	private boolean mScreenOn = true;
-	private long mRelockDelay = 5000;
+	private long mRelockDelay = 10000;
 
 	private ActivityManager am;
 	private ScheduledExecutorService mExecutor;
@@ -87,14 +75,18 @@ public class ObserverService extends Service {
 		// // trackedApps.add(new LockInfo("com.whatsapp"));
 		// trackedApps.add(new LockInfo("com.twitter.android"));
 
-		// Set an empty notification
-		@SuppressWarnings("deprecation")
-		Notification n = new Notification(0, null, System.currentTimeMillis());
-		n.flags |= Notification.FLAG_NO_CLEAR;
-		startForeground(42, n);
+		// Until API level 17 (Android 4.2) an empty notification can be set
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+			@SuppressWarnings("deprecation")
+			Notification n = new Notification(0, null,
+					System.currentTimeMillis());
+			n.flags |= Notification.FLAG_NO_CLEAR;
+			startForeground(42, n);
+		} else {
+			// TODO Find a workaround for this
+			// Since android 4.3, a system notification is generated
 
-		// Start the monitoring
-		startScheduler();
+		}
 
 		mScreenStatusReceiver = new ScreenReceiver();
 		IntentFilter filter = new IntentFilter();
@@ -103,13 +95,16 @@ public class ObserverService extends Service {
 		registerReceiver(mScreenStatusReceiver, filter);
 
 		updateTrackedApps();
+
+		// Start the monitoring
+		startScheduler();
 	}
 
 	private void startScheduler() {
 		if (mExecutor == null) {
 			mExecutor = Executors.newSingleThreadScheduledExecutor();
-			mExecutor.scheduleWithFixedDelay(new PackageMonitor(), 0, DELAY,
-					TimeUnit.MILLISECONDS);
+			mExecutor.scheduleWithFixedDelay(new PackageMonitor(), 0,
+					mRescheduleDelay, TimeUnit.MILLISECONDS);
 		}
 
 	}
@@ -129,13 +124,23 @@ public class ObserverService extends Service {
 				Log.i("TAG", "Screen ON");
 				mScreenOn = true;
 				startScheduler();
-				// relockAll();
 			}
 			if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
 				Log.i("TAG", "Screen OFF");
 				mScreenOn = false;
 				stopScheduler();
-				relockAll();
+
+				SharedPreferences sp = context
+						.getSharedPreferences(
+								ObserverService.PREF_FILE_DEFAULT,
+								Context.MODE_PRIVATE);
+				boolean relock = sp.getBoolean(context
+						.getString(R.string.pref_key_relock_after_screenoff),
+						true);
+				if (relock) {
+					relockAll();
+				}
+
 			}
 		}
 	};
@@ -143,47 +148,6 @@ public class ObserverService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		return START_NOT_STICKY;
-	}
-
-	/**
-	 * Get password from SharedPreferences
-	 * 
-	 * @param c
-	 * @return The password current password or an empty string.
-	 */
-	public static final String getPassword(Context c) {
-		String pwd = c.getSharedPreferences(PREF_FILE_PASSWD, MODE_PRIVATE)
-				.getString(PREF_KEY_PASSWD, PREF_DEF_PASSWD);
-		Log.d(TAG, "getPassword:" + pwd);
-		return pwd;
-	}
-
-	/**
-	 * Change the lock password and write it to disk
-	 * 
-	 * @param c
-	 * @param password
-	 * @return True if success, false on failure
-	 */
-	public static final boolean setPassword(Context c, String password) {
-		SharedPreferences.Editor editor = c.getSharedPreferences(
-				PREF_FILE_PASSWD, MODE_PRIVATE).edit();
-		editor.putString(ObserverService.PREF_KEY_PASSWD, password);
-		return editor.commit();
-	}
-
-	public static final String getMessage(Context c) {
-		return c.getSharedPreferences(PREF_FILE_PASSWD, MODE_PRIVATE)
-				.getString(PREF_KEY_MESSAGE,
-						c.getString(R.string.locker_footer_default));
-	}
-
-	public static final boolean setMessage(Context c, String value) {
-		SharedPreferences.Editor editor = c.getSharedPreferences(
-				PREF_FILE_PASSWD, MODE_PRIVATE).edit();
-		editor.putString(PREF_KEY_MESSAGE, value);
-		boolean commited = editor.commit();
-		return commited;
 	}
 
 	private class PackageMonitor extends Thread {
@@ -271,13 +235,13 @@ public class ObserverService extends Service {
 		}
 	}
 
-	private void printLockInfos() {
-		Log.d(TAG, "------------");
-		for (LockInfo li : trackedApps) {
-			Log.v(TAG, li.locked + "\t" + li);
-		}
-		Log.d(TAG, "------------");
-	}
+	// private void printLockInfos() {
+	// Log.d(TAG, "------------");
+	// for (LockInfo li : trackedApps) {
+	// Log.v(TAG, li.locked + "\t" + li);
+	// }
+	// Log.d(TAG, "------------");
+	// }
 
 	@Override
 	public void onDestroy() {
@@ -324,7 +288,7 @@ public class ObserverService extends Service {
 			} else {
 				Log.w(TAG, "Tried to unlock " + li.hashCode()
 						+ " but was not locked");
-				printLockInfos();
+				// printLockInfos();
 			}
 			li.locked = false;
 			return;
@@ -341,7 +305,8 @@ public class ObserverService extends Service {
 					+ lockInfo.packageName);
 			return;
 		}
-		// Log.d(TAG, "Starting locker for " + lockInfo.packageName);
+		Log.d(TAG, "Service " + hashCode() + " Starting locker for "
+				+ lockInfo.packageName);
 		Intent intent = new Intent(ObserverService.this, LockActivity.class);
 		intent.setAction(Intent.ACTION_VIEW);
 		intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
@@ -349,6 +314,47 @@ public class ObserverService extends Service {
 		intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 		intent.putExtra(EXTRA_TARGET_PACKAGENAME, lockInfo.packageName);
 		startActivity(intent);
+	}
+
+	/**
+	 * Get password from SharedPreferences
+	 * 
+	 * @param c
+	 * @return The password current password or an empty string.
+	 */
+	public static final String getPassword(Context c) {
+		String pwd = c.getSharedPreferences(PREF_FILE_DEFAULT, MODE_PRIVATE)
+				.getString(c.getString(R.string.pref_key_passwd), "");
+		// Log.d(TAG, "getPassword:" + pwd);
+		return pwd;
+	}
+
+	/**
+	 * Change the lock password and write it to disk
+	 * 
+	 * @param c
+	 * @param password
+	 * @return True if success, false on failure
+	 */
+	public static final boolean setPassword(Context c, String password) {
+		SharedPreferences.Editor editor = c.getSharedPreferences(
+				PREF_FILE_DEFAULT, MODE_PRIVATE).edit();
+		editor.putString(c.getString(R.string.pref_key_passwd), password);
+		return editor.commit();
+	}
+
+	public static final String getMessage(Context c) {
+		return c.getSharedPreferences(PREF_FILE_DEFAULT, MODE_PRIVATE)
+				.getString(c.getString(R.string.pref_key_lock_message),
+						c.getString(R.string.locker_footer_default));
+	}
+
+	public static final boolean setMessage(Context c, String value) {
+		SharedPreferences.Editor editor = c.getSharedPreferences(
+				PREF_FILE_DEFAULT, MODE_PRIVATE).edit();
+		editor.putString(c.getString(R.string.pref_key_lock_message), value);
+		boolean commited = editor.commit();
+		return commited;
 	}
 
 	/**

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- Start at boot -->
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/pref_key_start_boot"
+        android:summary="@string/pref_desc_start_boot"
+        android:title="@string/pref_tit_start_boot" />
+    <!-- Relock screenoff -->
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/pref_key_relock_after_screenoff"
+        android:summary="@string/pref_desc_relock_after_screenoff"
+        android:title="@string/pref_tit_relock_after_screenoff" />
+    <!-- Vibration -->
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/pref_key_vibrate_keypress"
+        android:summary="@string/pref_desc_vibrate_keypress"
+        android:title="@string/pref_tit_vibrate_keypress" />
+
+    <!-- Message -->
+    <EditTextPreference
+        android:defaultValue="@string/pref_def_lock_message"
+        android:dialogMessage="@string/pref_dlgmsg_lock_message"
+        android:dialogTitle="@string/pref_tit_lock_message"
+        android:key="@string/pref_key_lock_message"
+        android:selectAllOnFocus="true"
+        android:summary="@string/pref_desc_lock_message"
+        android:title="@string/pref_tit_lock_message" />
+    
+
+</PreferenceScreen>

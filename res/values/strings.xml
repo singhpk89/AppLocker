@@ -44,7 +44,47 @@
     <string name="cancel">Cancel</string>
     <string name="welcome_tit">Welcome to Locker!</string>
     <string name="welcome_message">You need a password before you can lock apps.\nDo you want to setup a password now?</string>
-
     <!-- END v1.07 Strings -->
+
+
+    <!-- NEW -->
+
+
+    <!-- BEGIN v1.08 Strings -->
+    <!-- This section represents Locker > Preferences -->
+    <string name="preferences_tit">Preferences</string> <!-- The window title -->
+    <string name="main_preferences">Preferences</string> <!-- The button in the main screen -->
+    <!-- clone of "locker_footer_default" -->
+    <string name="pref_def_lock_message">Enter password to unlock</string>
+    <!-- clone of "main_change_message -->
+    <string name="pref_tit_lock_message">Message</string>
+    <!-- Changed from the original. Re-translate -->
+    <string name="pref_desc_lock_message">This message will appear when an app is locked</string>
+    <string name="pref_dlgmsg_lock_message">You can use %s to represent the app name</string>
+    <!-- Keep it short! -->
+    <string name="pref_tit_start_boot">Start at boot</string>
+    <!-- Descriptions can be longer -->
+    <string name="pref_desc_start_boot">Start locking apps when your device starts</string>
+    <string name="pref_tit_relock_after_screenoff">Relock after screen off</string>
+    <string name="pref_desc_relock_after_screenoff">Ask for a password again after you have turned off your screen</string>
+    <string name="pref_tit_vibrate_keypress">Vibration</string>
+    <string name="pref_desc_vibrate_keypress">Vibrate when you press keys</string>
+
+    <!-- END v1.08 Strings -->
+
+
+    <!--
+		TRANSLATORS: 
+		FROM HERE DOWN, DON'T TRANSLATE ANYTHING
+    -->
+
+
+    <!-- BEGIN PREFERENCES v1.08 -->
+    <string name="pref_key_passwd">com.twinone.locker.pref.passwd</string>
+    <string name="pref_key_lock_message">com.twinone.locker.pref.message_key</string>
+    <string name="pref_key_start_boot">com.twinone.locker.pref.start_boot</string>
+    <string name="pref_key_relock_after_screenoff">com.twinone.locker.pref.relock_after_screenoff</string>
+    <string name="pref_key_relock_between_switch_delay">com.twinone.locker.pref.relock_delay</string>
+    <string name="pref_key_vibrate_keypress">com.twinone.locker.pref.vibrate_keypress</string> <!--  -->
 
 </resources>

@@ -9,12 +9,11 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -32,13 +31,17 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		PreferenceManager.setDefaultValues(this,
+				ObserverService.PREF_FILE_DEFAULT, MODE_PRIVATE, R.xml.prefs,
+				false);
+
 		setTheme(R.style.Theme_Dark);
 
 		setContentView(R.layout.activity_main);
 		bToggleService = (Button) findViewById(R.id.bToggleService);
 		bStartChangePass = (Button) findViewById(R.id.bChangePassword);
 		bStartSelect = (Button) findViewById(R.id.bSelect);
-		bChangeMessage = (Button) findViewById(R.id.bChangeMessage);
+		bChangeMessage = (Button) findViewById(R.id.bPrefs);
 		bShare = (Button) findViewById(R.id.bShare);
 
 		bToggleService.setOnClickListener(this);
@@ -67,8 +70,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		case R.id.bSelect:
 			startSelectActivity();
 			break;
-		case R.id.bChangeMessage:
-			showChangeFooterDialog();
+		case R.id.bPrefs:
+			Intent prefsIntent = new Intent(this, PrefsActivity.class);
+			startActivity(prefsIntent);
 			break;
 		case R.id.bShare:
 			Intent i = new Intent(android.content.Intent.ACTION_SEND);
@@ -80,50 +84,17 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		}
 	}
 
-	private void showChangeFooterDialog() {
-		AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setTitle(R.string.main_change_message);
-		alert.setMessage(R.string.main_change_message_desc);
-
-		final EditText input = new EditText(this);
-		input.setText(ObserverService.getMessage(this));
-
-		alert.setPositiveButton(R.string.upper_ok,
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						String value = input.getText().toString();
-						boolean saved = ObserverService.setMessage(
-								MainActivity.this, value);
-						if (saved) {
-							Toast.makeText(MainActivity.this,
-									R.string.main_change_message_saved,
-									Toast.LENGTH_SHORT).show();
-						}
-					}
-				});
-
-		alert.setNegativeButton(R.string.cancel,
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						// Canceled.
-					}
-				});
-		alert.setView(input);
-		alert.show();
-
-	}
-
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Log.w(TAG, "onPause");
+//		Log.w(TAG, "onPause");
 		getIntent().putExtra(EXTRA_UNLOCKED, false);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.w(TAG, "onResume");
+//		Log.w(TAG, "onResume");
 
 		// If there is no password, don't show locker
 		// If it's already unlocked, don't show locker

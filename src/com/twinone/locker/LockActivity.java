@@ -68,7 +68,6 @@ public class LockActivity extends LockActivityBase {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		finish();
 	}
 
 	@Override
@@ -143,15 +142,15 @@ public class LockActivity extends LockActivityBase {
 	@Override
 	protected void onNumberButton(View v) {
 		super.onNumberButton(v);
-		checkPassword(tvPassword.getText().toString());
+		checkPassword(getPassword());
 	}
 
 	@Override
 	protected void onOkButton() {
 		super.onOkButton();
-		if (!checkPassword(tvPassword.getText().toString())) {
+		if (!checkPassword(getPassword())) {
 			// Incorrect password
-			tvPassword.setText("");
+			setPassword("");
 			Toast.makeText(this, R.string.locker_invalid_password,
 					Toast.LENGTH_SHORT).show();
 		}
@@ -167,6 +166,7 @@ public class LockActivity extends LockActivityBase {
 			Log.w(TAG, "Service not bound, cannot unlock");
 		}
 		finish();
+//		moveTaskToBack(true);
 
 		// FROM HERE DOWN IT'S THE OLD VERSION
 		// if (target.packageName.equals(getApplicationInfo().packageName)) {

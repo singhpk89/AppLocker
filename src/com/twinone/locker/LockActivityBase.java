@@ -1,7 +1,9 @@
 package com.twinone.locker;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -20,8 +22,6 @@ import android.widget.TextView;
 public abstract class LockActivityBase extends Activity implements
 		OnClickListener, OnLongClickListener {
 
-	// private static final String TAG = "AbstractLocker";
-
 	protected Button bOK;
 	protected Button bBack;
 	protected Button b0;
@@ -35,27 +35,46 @@ public abstract class LockActivityBase extends Activity implements
 	protected Button b8;
 	protected Button b9;
 
-	protected TextView tvPassword;
+	private TextView tvPassword;
 	protected TextView tvHeader;
 	protected TextView tvFooter;
 	protected ImageView ivAppIcon;
+
+	/** This string will be updated according to user presses */
+	private String mPassword = "";
+
+	private static final int MAX_PASSWORD_LENGTH = 6;
+	private static final long VIBRATE_DURATION = 50;
+	private Vibrator mVibrator = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setTheme(R.style.Theme_Dark);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
+
+		// Vibration
+		SharedPreferences sp = getSharedPreferences(
+				ObserverService.PREF_FILE_DEFAULT, MODE_PRIVATE);
+		boolean vibrate = sp.getBoolean(
+				getString(R.string.pref_key_vibrate_keypress), true);
+		if (vibrate) {
+			mVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+		}
 	}
 
 	/**
 	 * Should be called after {@link #onCreate(Bundle)} <br>
-	 * Initialized the buttons and the textview
+	 * Initialized the buttons and the TextView
 	 */
 	protected void initLayout() {
-		tvPassword = (TextView) findViewById(R.id.tvPassword);
 		tvHeader = (TextView) findViewById(R.id.tvHeader);
 		tvFooter = (TextView) findViewById(R.id.tvFooter);
 		ivAppIcon = (ImageView) findViewById(R.id.ivAppIcon);
+		tvPassword = (TextView) findViewById(R.id.tvPassword);
+		// FIXME Below is not a solution.
+		// tvPassword.setTransformationMethod(new
+		// PasswordTransformationMethod());
 
 		bOK = (Button) findViewById(R.id.bOK);
 		bBack = (Button) findViewById(R.id.bBack);
@@ -87,6 +106,9 @@ public abstract class LockActivityBase extends Activity implements
 
 	@Override
 	public void onClick(View v) {
+		if (mVibrator != null) {
+			mVibrator.vibrate(VIBRATE_DURATION);
+		}
 		switch (v.getId()) {
 		case R.id.bOK: {
 			onOkButton();
@@ -105,10 +127,13 @@ public abstract class LockActivityBase extends Activity implements
 
 	@Override
 	public boolean onLongClick(View v) {
+		if (mVibrator != null) {
+			mVibrator.vibrate(VIBRATE_DURATION);
+		}
 		if (v.getId() == R.id.bBack) {
 			onBackButtonLong();
 		}
-		return false;
+		return true;
 	}
 
 	/**
@@ -119,9 +144,10 @@ public abstract class LockActivityBase extends Activity implements
 	 * @param v
 	 */
 	protected void onNumberButton(View v) {
-		StringBuilder sb = new StringBuilder(tvPassword.getText())
-				.append(((Button) v).getText());
-		tvPassword.setText(sb.toString());
+		CharSequence buttonText = ((Button) v).getText();
+		if (mPassword.length() < MAX_PASSWORD_LENGTH) {
+			setPassword(mPassword + buttonText);
+		}
 	}
 
 	/**
@@ -133,11 +159,10 @@ public abstract class LockActivityBase extends Activity implements
 	 */
 
 	protected void onBackButton() {
-
-		StringBuilder sb = new StringBuilder(tvPassword.getText());
+		StringBuilder sb = new StringBuilder(mPassword);
 		if (sb.length() != 0) {
 			sb.deleteCharAt(sb.length() - 1);
-			tvPassword.setText(sb.toString());
+			setPassword(sb.toString());
 		}
 	}
 
@@ -150,7 +175,7 @@ public abstract class LockActivityBase extends Activity implements
 	 */
 
 	protected void onBackButtonLong() {
-		tvPassword.setText("");
+		setPassword("");
 	}
 
 	/**
@@ -164,8 +189,30 @@ public abstract class LockActivityBase extends Activity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if (!isFinishing()) {
-			finish();
-		}
+		// TODO FIXME This could also be the problem.
+		// if (!isFinishing()) {
+		// finish();
+		// }
 	}
+
+	private String createDots(int length) {
+		char dot = '\u2022';
+		StringBuilder sb = new StringBuilder(length);
+		for (int i = 0; i < length; i++) {
+			sb.append(dot);
+		}
+		return sb.toString();
+	}
+
+	/** Change the password and update UI */
+	protected void setPassword(String password) {
+		this.mPassword = password;
+		tvPassword.setText(createDots(mPassword.length()));
+	}
+
+	/** Get the current password */
+	public String getPassword() {
+		return mPassword;
+	}
+
 }

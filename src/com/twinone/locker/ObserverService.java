@@ -31,13 +31,6 @@ public class ObserverService extends Service {
 
 	private static final String LOCKER_CLASS = LockActivity.class.getName();
 
-	private long mRescheduleDelay = 250;
-	private static final long DELAY_PERFORMANCE = 80;
-	private static final long DELAY_FAST = 150;
-	private static final long DELAY_NORMAL = 200;
-	private static final long DELAY_SLOW = 230;
-	private static final long DELAY_POWERSAVE = 300;
-
 	private String mPassword;
 	private String lastApp = "";
 	private String lastClass = "";
@@ -102,9 +95,16 @@ public class ObserverService extends Service {
 
 	private void startScheduler() {
 		if (mExecutor == null) {
+			String defaultDelay = getString(R.string.pref_val_perf_normal);
+			long delay;
+			SharedPreferences sp = getSharedPreferences(
+					ObserverService.PREF_FILE_DEFAULT, Context.MODE_PRIVATE);
+			String s = sp.getString(getString(R.string.pref_key_performance),
+					defaultDelay);
+			delay = Long.parseLong(s);
 			mExecutor = Executors.newSingleThreadScheduledExecutor();
-			mExecutor.scheduleWithFixedDelay(new PackageMonitor(), 0,
-					mRescheduleDelay, TimeUnit.MILLISECONDS);
+			mExecutor.scheduleWithFixedDelay(new PackageMonitor(), 0, delay,
+					TimeUnit.MILLISECONDS);
 		}
 
 	}
@@ -193,6 +193,9 @@ public class ObserverService extends Service {
 			if (app != null) {
 				// lock app if we should
 				if (app.locked) {
+					// update last known class name
+					// TODO this was added for whatsapp bug, but can be handy
+					app.className = className;
 					Log.v(TAG,
 							"Show locker for " + app.packageName
 									+ app.hashCode());
@@ -307,6 +310,8 @@ public class ObserverService extends Service {
 		}
 		Log.d(TAG, "Service " + hashCode() + " Starting locker for "
 				+ lockInfo.packageName);
+		// TODO Remove this if whatsapp fixes their bug
+		whatsappWorkaround(lockInfo);
 		Intent intent = new Intent(ObserverService.this, LockActivity.class);
 		intent.setAction(Intent.ACTION_VIEW);
 		intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
@@ -314,6 +319,22 @@ public class ObserverService extends Service {
 		intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 		intent.putExtra(EXTRA_TARGET_PACKAGENAME, lockInfo.packageName);
 		startActivity(intent);
+	}
+
+	/**
+	 * BugFix for Whatsapp's lose focus.
+	 * 
+	 * @param li
+	 */
+	private void whatsappWorkaround(LockInfo li) {
+		if (li.className.equals("com.whatsapp.Conversation")) {
+			try {
+				Log.i(TAG, "Sleeping 700 because whatsapp bug");
+				Thread.sleep(300);
+			} catch (InterruptedException e) {
+				Log.e(TAG, "Interrupted while whatsapp workaround");
+			}
+		}
 	}
 
 	/**

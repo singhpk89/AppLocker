@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="performance_names">
+        <item>@string/performance_very_high</item>
+        <item>@string/performance_high</item>
+        <item>@string/performance_normal</item>
+        <item>@string/performance_low</item>
+        <item>@string/performance_very_low</item>
+    </string-array>
+    <string-array name="performance_values">
+        <item>@string/pref_val_perf_very_high</item>
+        <item>@string/pref_val_perf_high</item>
+        <item>@string/pref_val_perf_normal</item>
+        <item>@string/pref_val_perf_low</item>
+        <item>@string/pref_val_perf_very_low</item>
+    </string-array>
+
+</resources>

@@ -29,6 +29,12 @@
         android:selectAllOnFocus="true"
         android:summary="@string/pref_desc_lock_message"
         android:title="@string/pref_tit_lock_message" />
-    
+
+    <ListPreference
+        android:defaultValue="@string/pref_val_perf_normal"
+        android:entries="@array/performance_names"
+        android:entryValues="@array/performance_values"
+        android:summary="@string/pref_desc_performance"
+        android:title="@string/pref_tit_performance" />
 
 </PreferenceScreen>

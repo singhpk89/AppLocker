@@ -43,8 +43,35 @@
     <string name="upper_back">TERUG</string>
     <string name="cancel">Annuleren</string>
     <string name="welcome_tit">Welkom bij Locker!</string>
-    <string name="welcome_message">Je moet een wachtwoord hebben om apps te kunnen blokkeren\nWil je nu een nieuw wachtwoord invoeren?</string>
-
+    <string name="welcome_message">Om apps te kunnen blokkeren heb je een wachtwoord nodig\nWil je nu een nieuw wachtwoord invoeren?</string>
     <!-- END v1.07 Strings -->
+ <!-- BEGIN v1.08 Strings -->
+    <!-- This section represents Locker > Preferences -->
+    <string name="preferences_tit">Instellingen</string> <!-- The window title -->
+    <string name="main_preferences">Instellingen</string> <!-- The button in the main screen -->
+    <!-- clone of "locker_footer_default" -->
+    <string name="pref_def_lock_message">Voer het wachtwoord in om te ontgrendelen</string>
+    <!-- clone of "main_change_message -->
+    <string name="pref_tit_lock_message">Bericht</string>
+    <!-- Changed from the original. Re-translate -->
+    <string name="pref_desc_lock_message">Dit bericht komt onder de geblokkeerde app te staan</string>
+    <string name="pref_dlgmsg_lock_message">Je kunt %s gebruiken voor de naam van de app</string>
+    <!-- Keep it short! -->
+    <string name="pref_tit_start_boot">Automatisch opstarten</string>
+    <!-- Descriptions can be longer -->
+    <string name="pref_desc_start_boot">Begin automatisch apps te vergrendelen na het opstarten van het toestel</string>
+    <string name="pref_tit_relock_after_screenoff">Vergrendel na scherm uit</string>
+    <string name="pref_desc_relock_after_screenoff">Vraag opnieuw om het wachtwoord nadat het beeldscherm uit is geweest</string>
+    <string name="pref_tit_vibrate_keypress">Vibratie</string>
+    <string name="pref_desc_vibrate_keypress">Trillen wanneer een cijfer wordt ingedrukt</string>
+    <string name="pref_tit_performance">Prestaties</string>
+    <string name="pref_desc_performance">Hoe hoger de prestaties hoe sneller, en hoe meer batterij wordt gebruikt.</string>
+    <string name="performance_very_high">Heel hoog</string>
+    <string name="performance_high">Hoog</string>
+    <string name="performance_normal">Normaal</string>
+    <string name="performance_low">Laag</string>
+    <string name="performance_very_low">Energiebesparing</string>
+    <!-- END v1.08 Strings -->
+
 
 </resources>

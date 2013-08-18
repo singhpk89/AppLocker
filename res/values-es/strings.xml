@@ -44,7 +44,35 @@
     <string name="cancel">Cancelar</string>
     <string name="welcome_tit">¡Bienvenido a Locker!</string>
     <string name="welcome_message">Para empezar a bloquear aplicaciones, necesitas crear una contraseña\n¿Quieres crearla ahora?</string>
-
     <!-- END v1.07 Strings -->
+
+
+    <!-- BEGIN v1.08 Strings -->
+    <!-- This section represents Locker > Preferences -->
+    <string name="preferences_tit">Ajustes</string> <!-- The window title -->
+    <string name="main_preferences">Ajustes</string> <!-- The button in the main screen -->
+    <!-- clone of "locker_footer_default" -->
+    <string name="pref_def_lock_message">Introduce la contraseña para desbloquear</string>
+    <!-- clone of "main_change_message -->
+    <string name="pref_tit_lock_message">Mensaje</string>
+    <!-- Changed from the original. Re-translate -->
+    <string name="pref_desc_lock_message">Este mensaje aparecerá cuando una app esté bloeuqada</string>
+    <string name="pref_dlgmsg_lock_message">Puedes usar %s para el nombre de la aplicación</string>
+    <!-- Keep it short! -->
+    <string name="pref_tit_start_boot">Iniciar con dispositivo</string>
+    <!-- Descriptions can be longer -->
+    <string name="pref_desc_start_boot">Inciar el bloqueo al encender el dispositivo</string>
+    <string name="pref_tit_relock_after_screenoff">Bloqueo pantalla</string>
+    <string name="pref_desc_relock_after_screenoff">Volver a pedir la contraseña cuando se ha bloqueado la pantalla</string>
+    <string name="pref_tit_vibrate_keypress">Vibración</string>
+    <string name="pref_desc_vibrate_keypress">Vibrar cuando se presionan las teclas</string>
+    <string name="pref_tit_performance">Rendimiento</string>
+    <string name="pref_desc_performance">Cuando más alto el rendimiento, más rápido funcionará, pero también consumirá más batería</string>
+    <string name="performance_very_high">Muy alto</string>
+    <string name="performance_high">Alto</string>
+    <string name="performance_normal">Normal</string>
+    <string name="performance_low">Bajo</string>
+    <string name="performance_very_low">Modo ahorro</string>
+    <!-- END v1.08 Strings -->
 
 </resources>

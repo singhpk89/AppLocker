@@ -44,7 +44,35 @@
     <string name="cancel">Abbrechen</string>
     <string name="welcome_tit">Willkommen beim Locker!</string>
     <string name="welcome_message">Du benötigst ein Passwort bevor du Apps sperren kannst.\nMöchtest du nun ein Passwort setzen?</string>
-   
     <!-- END v1.07 Strings -->
+
+
+    <!-- BEGIN v1.08 Strings -->
+    <!-- This section represents Locker > Preferences -->
+    <string name="preferences_tit">Einstellungen</string> <!-- The window title -->
+    <string name="main_preferences">Einstellungen</string> <!-- The button in the main screen -->
+    <!-- clone of "locker_footer_default" -->
+    <string name="pref_def_lock_message">Passwort zum Entsperren eingeben</string>
+    <!-- clone of "main_change_message -->
+    <string name="pref_tit_lock_message">Nachricht</string>
+    <!-- Changed from the original. Re-translate -->
+    <string name="pref_desc_lock_message">Diese Nachricht erscheint, wenn eine App gesperrt ist</string>
+    <string name="pref_dlgmsg_lock_message">Du kannst %s als App-Namen verwenden.</string>
+    <!-- Keep it short! -->
+    <string name="pref_tit_start_boot">Beim Start ausführen</string>
+    <!-- Descriptions can be longer -->
+    <string name="pref_desc_start_boot">Sperre Apps, wenn das Gerät startet</string>
+    <string name="pref_tit_relock_after_screenoff">Sperren ausg. Bildschirm</string>
+    <string name="pref_desc_relock_after_screenoff">Frage erneut nach dem Passwort, nachdem der Bildschirm ausgeschaltet wurde</string>
+    <string name="pref_tit_vibrate_keypress">Vibration</string>
+    <string name="pref_desc_vibrate_keypress">Bei Tastendruck vibrieren</string>
+    <string name="pref_tit_performance">Leistung</string>
+    <string name="pref_desc_performance">Höhere Leistung bietet mehr Geschwindigkeit, verbraucht aber mehr Akku. Der Sparmodus ist dagegen sparsamer, aber auch langsamer</string>
+    <string name="performance_very_high">Sehr hoch</string>
+    <string name="performance_high">Hoch</string>
+    <string name="performance_normal">Normal</string>
+    <string name="performance_low">Niedrig</string>
+    <string name="performance_very_low">Sparmodus</string>
+    <!-- END v1.08 Strings -->
 
 </resources>

@@ -1,5 +1,7 @@
 package com.twinone.locker;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -83,7 +85,7 @@ public class SelectActivity extends Activity implements OnItemClickListener,
 			long id) {
 		AppHolder ah = (AppHolder) mAppAdapter.getItem(position);
 		if (mBound) {
-			mService.setTracking(ah.ri.activityInfo.packageName, !ah.tracked);
+			mService.setTracking(!ah.tracked, ah.ri.activityInfo.packageName);
 		} else {
 			Log.w("SelectActivity", "not bound");
 		}
@@ -111,16 +113,19 @@ public class SelectActivity extends Activity implements OnItemClickListener,
 	}
 
 	private void setAllTracking(boolean track) {
-		for (AppHolder ah : mAppAdapter.getAllItems()) {
-			if (mBound) {
-				mService.setTracking(ah.ri.activityInfo.packageName, track);
-			} else {
-				Log.w("SelectActivity", "not bound");
+		if (mBound) {
+			ArrayList<String> apps = new ArrayList<String>();
+			for (AppHolder ah : mAppAdapter.getAllItems()) {
+				apps.add(ah.ri.activityInfo.packageName);
 			}
+			mService.setTracking(track, apps.toArray(new String[apps.size()]));
+			
+			mAppAdapter.loadAppsIntoList(this);
+			mAppAdapter.sort();
+			mAppAdapter.notifyDataSetChanged();
+		} else {
+			Log.w("SelectActivity", "not bound");
 		}
-		mAppAdapter.loadAppsIntoList(this);
-		mAppAdapter.sort();
-		mAppAdapter.notifyDataSetChanged();
 	}
 
 	@Override

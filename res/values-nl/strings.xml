@@ -17,7 +17,7 @@
     <string name="main_change_message_desc">Dit bericht komt onder de geblokkeerde app te staan\nJe kunt %s gebruiken voor de naam van de app.</string>
     <string name="main_change_message_saved">Bericht opgeslagen</string>
     <string name="main_share">Delen</string>
-    <string name="main_share_tit">Deel Locker</string>
+    <string name="main_share_tit">Locker Delen</string>
     <string name="main_share_text">Probeer Locker, de gratis app die je belangrijke apps blokkeert. https://play.google.com/store/apps/details?id=com.twinone.locker</string>
 
     <!-- All Strings for applist -->
@@ -79,7 +79,7 @@
     <string name="pref_dlgmsg_delay_time">Na deze tijd wordt het wachtwoord weer gevraagd (Sekonden)</string>
     <string name="applist_lock_all">Alle</string>
     <string name="applist_unlock_all">Geen</string>
-
+    <string name="main_rate">Beoordelen</string>
     <!-- END v1.08 Strings -->
 
 </resources>

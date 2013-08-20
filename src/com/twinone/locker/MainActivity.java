@@ -24,9 +24,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	Button bToggleService;
 	Button bStartSelect;
 	Button bChangeMessage;
-
 	Button bShare;
-
+	Button bRate;
 	private static final String EXTRA_UNLOCKED = "com.twinone.locker.Unlocked";
 
 	@Override
@@ -44,12 +43,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		bStartSelect = (Button) findViewById(R.id.bSelect);
 		bChangeMessage = (Button) findViewById(R.id.bPrefs);
 		bShare = (Button) findViewById(R.id.bShare);
+		bRate = (Button) findViewById(R.id.bRate);
 
 		bToggleService.setOnClickListener(this);
 		bStartChangePass.setOnClickListener(this);
 		bStartSelect.setOnClickListener(this);
 		bChangeMessage.setOnClickListener(this);
 		bShare.setOnClickListener(this);
+		bRate.setOnClickListener(this);
 		// Show welcome message
 		firstTime();
 	}
@@ -77,6 +78,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			break;
 		case R.id.bShare:
 			showShareDialog();
+			break;
+		case R.id.bRate:
+			Intent i = new Intent(MainActivity.this, StagingActivity.class);
+			i.putExtra(StagingActivity.EXTRA_ACTION,
+					StagingActivity.ACTION_RATE);
+			startActivity(i);
 			break;
 		}
 	}
@@ -121,8 +128,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		builder.setPositiveButton(android.R.string.ok, new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				Intent i = new Intent(MainActivity.this, ShareActivity.class);
-				i.putExtra(Intent.EXTRA_TEXT, etShareText.getText().toString());
+				Intent i = new Intent(MainActivity.this, StagingActivity.class);
+				i.putExtra(StagingActivity.EXTRA_ACTION,
+						StagingActivity.ACTION_SHARE);
+				i.putExtra(StagingActivity.EXTRA_TEXT, etShareText.getText()
+						.toString());
 				startActivity(i);
 				dialog.cancel();
 			}

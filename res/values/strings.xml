@@ -78,7 +78,7 @@
     <string name="pref_dlgmsg_delay_time">After this time the password will be asked again (Seconds)</string>
     <string name="applist_lock_all">All</string>
     <string name="applist_unlock_all">None</string>
+    <string name="main_rate">Rate</string>
     <!-- END v1.08 Strings -->
-
 
 </resources>

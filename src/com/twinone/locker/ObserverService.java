@@ -285,7 +285,7 @@ public class ObserverService extends Service {
 		}
 		if (mDelayUnlockEnabled) {
 			stopScheduler();
-					if (mDelayUnlockHandler == null) {
+			if (mDelayUnlockHandler == null) {
 				mDelayUnlockHandler = new Handler();
 			}
 			mDelayUnlockHandler.removeCallbacksAndMessages(null);
@@ -415,17 +415,19 @@ public class ObserverService extends Service {
 	/**
 	 * Tracks or untracks an app
 	 * 
-	 * @param packageName
+	 * @param packageNames
 	 * @param shouldTrack
 	 *            True if the new state will be tracking, false if not
 	 */
-	public final void setTracking(String packageName, boolean shouldTrack) {
+	public final void setTracking(boolean shouldTrack, String... packageNames) {
 		SharedPreferences.Editor editor = getSharedPreferences(PREF_FILE_APPS,
 				Context.MODE_PRIVATE).edit();
-		if (shouldTrack) {
-			editor.putBoolean(packageName, true);
-		} else {
-			editor.remove(packageName);
+		for (String packageName : packageNames) {
+			if (shouldTrack) {
+				editor.putBoolean(packageName, true);
+			} else {
+				editor.remove(packageName);
+			}
 		}
 		boolean commited = editor.commit();
 		if (!commited) {

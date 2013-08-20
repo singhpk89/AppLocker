@@ -9,7 +9,7 @@
         android:title="@string/pref_tit_start_boot" />
     <!-- Relock screenoff -->
     <CheckBoxPreference
-        android:defaultValue="true"
+        android:defaultValue="@string/pref_def_relock_after_screenoff"
         android:key="@string/pref_key_relock_after_screenoff"
         android:summary="@string/pref_desc_relock_after_screenoff"
         android:title="@string/pref_tit_relock_after_screenoff" />
@@ -36,5 +36,19 @@
         android:entryValues="@array/performance_values"
         android:summary="@string/pref_desc_performance"
         android:title="@string/pref_tit_performance" />
+
+    <CheckBoxPreference
+        android:defaultValue="@string/pref_def_delay_status"
+        android:key="@string/pref_key_delay_status"
+        android:summary="@string/pref_desc_delay_status"
+        android:title="@string/pref_tit_delay_status" />
+
+    <EditTextPreference
+        android:defaultValue="@string/pref_def_delay_time"
+        android:dependency="@string/pref_key_delay_status"
+        android:dialogMessage="@string/pref_dlgmsg_delay_time"
+        android:key="@string/pref_key_delay_time"
+        android:numeric="integer"
+        android:title="@string/pref_tit_delay_time" />
 
 </PreferenceScreen>

@@ -72,29 +72,11 @@
     <string name="performance_normal">Normal</string>
     <string name="performance_low">Low</string>
     <string name="performance_very_low">Powersave</string>
+    <string name="pref_tit_delay_status">Delay lock</string>
+    <string name="pref_desc_delay_status">When you enter the correct password, next password will be asked after a delay</string>
+    <string name="pref_tit_delay_time">Delay time</string>
+    <string name="pref_dlgmsg_delay_time">After this time the password will be asked again (Seconds)</string>
     <!-- END v1.08 Strings -->
 
-
-    <!--
-		TRANSLATORS: 
-		FROM HERE DOWN, DON'T TRANSLATE ANYTHING
-    -->
-
-
-    <!-- BEGIN PREFERENCES -->
-
-    <string name="pref_key_passwd">com.twinone.locker.pref.passwd</string>
-    <string name="pref_key_lock_message">com.twinone.locker.pref.message_key</string>
-    <string name="pref_key_start_boot">com.twinone.locker.pref.start_boot</string>
-    <string name="pref_key_relock_after_screenoff">com.twinone.locker.pref.relock_after_screenoff</string>
-    <string name="pref_key_relock_between_switch_delay">com.twinone.locker.pref.relock_delay</string>
-    <string name="pref_key_vibrate_keypress">com.twinone.locker.pref.vibrate_keypress</string>
-    <string name="pref_key_performance">com.twinone.locker.pref.performance</string>
-    <!--  -->
-    <string name="pref_val_perf_very_high">75</string>
-    <string name="pref_val_perf_high">125</string>
-    <string name="pref_val_perf_normal">200</string>
-    <string name="pref_val_perf_low">250</string>
-    <string name="pref_val_perf_very_low">300</string>
 
 </resources>

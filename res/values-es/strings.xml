@@ -73,6 +73,10 @@
     <string name="performance_normal">Normal</string>
     <string name="performance_low">Bajo</string>
     <string name="performance_very_low">Modo ahorro</string>
+    <string name="pref_tit_delay_status">Retraso de bloqueo</string>
+    <string name="pref_desc_delay_status">Tras introducir la contraseña correcta, se retrasará el tiempo hasta que se pida la contraseña otra vez</string>
+    <string name="pref_tit_delay_time">Tiempo de retraso</string>
+    <string name="pref_dlgmsg_delay_time">Tras este tiempo se volverá a pedir la contraseña (Segundos)</string>
     <!-- END v1.08 Strings -->
 
 </resources>

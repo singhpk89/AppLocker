@@ -73,6 +73,10 @@
     <string name="performance_normal">Normaal</string>
     <string name="performance_low">Laag</string>
     <string name="performance_very_low">Energiebesparing</string>
+    <string name="pref_tit_delay_status">Slot uistellen</string>
+    <string name="pref_desc_delay_status">Als je het goede wachtwoord invoert, wordt de volgende keer dat het wachtwoord wordt gevraagd uitgesteld</string>
+    <string name="pref_tit_delay_time">Uistel tijd</string>
+    <string name="pref_dlgmsg_delay_time">Na deze tijd wordt het wachtwoord weer gevraagd (Sekonden)</string>
     <!-- END v1.08 Strings -->
 
 </resources>

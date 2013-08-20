@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -75,8 +76,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			startActivity(prefsIntent);
 			break;
 		case R.id.bShare:
-			Intent i = new Intent(this, ShareActivity.class);
-			startActivity(i);
+			showShareDialog();
 			break;
 		}
 	}
@@ -84,7 +84,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		// Log.w(TAG, "onPause");
 		getIntent().putExtra(EXTRA_UNLOCKED, false);
 	}
 
@@ -108,6 +107,28 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		// Reset the layout if the service has changed while not at activity.
 		updateLayout(isServiceRunning());
 
+	}
+
+	private void showShareDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		final View dialogRoot = getLayoutInflater().inflate(
+				R.layout.share_dialog, null);
+		final EditText etShareText = (EditText) dialogRoot
+				.findViewById(R.id.etShareText);
+		etShareText.setText(R.string.main_share_text);
+		builder.setTitle(R.string.main_share_tit);
+		builder.setView(dialogRoot);
+		builder.setPositiveButton(android.R.string.ok, new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Intent i = new Intent(MainActivity.this, ShareActivity.class);
+				i.putExtra(Intent.EXTRA_TEXT, etShareText.getText().toString());
+				startActivity(i);
+				dialog.cancel();
+			}
+		});
+		builder.setNegativeButton(android.R.string.cancel, null);
+		builder.show();
 	}
 
 	private boolean isServiceRunning() {

@@ -17,6 +17,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -41,7 +42,11 @@ public class ObserverService extends Service {
 	private String mPassword;
 	private String mLastApp = "";
 	private String mLastClass = "";
-	private long mRelockDelay = 10000;
+	private boolean mRelockAfterScreenOff;
+	private boolean mDelayUnlockEnabled;
+	private boolean mDelayUnlockActive = false;
+	private long mDelayUnlockRelockMillis;
+	private Handler mDelayUnlockHandler;
 
 	@Override
 	public IBinder onBind(Intent i) {
@@ -103,10 +108,30 @@ public class ObserverService extends Service {
 	 * If the scheduler is running, it will also reset its delay.
 	 */
 	private void loadPreferences() {
+		SharedPreferences sp = getSharedPreferences(PREF_FILE_DEFAULT,
+				MODE_PRIVATE);
+		boolean defaultDelay = Boolean
+				.parseBoolean(getString(R.string.pref_def_delay_status));
+		boolean delayEnabled = sp.getBoolean(
+				getString(R.string.pref_key_delay_status), defaultDelay);
+		mDelayUnlockEnabled = delayEnabled;
+
+		String delaySeconds = sp.getString(
+				getString(R.string.pref_key_delay_time),
+				getString(R.string.pref_def_delay_time));
+		mDelayUnlockRelockMillis = Long.parseLong(delaySeconds) * 1000;
+
+		boolean defaultRelock = Boolean
+				.parseBoolean(getString(R.string.pref_def_relock_after_screenoff));
+		boolean relock = sp.getBoolean(
+				getString(R.string.pref_key_relock_after_screenoff),
+				defaultRelock);
+		mRelockAfterScreenOff = relock;
+
 		mPassword = getPassword(this);
 		loadTrackedApps();
 		if (mScheduledExecutor != null) {
-			// Only start scheduler if it was running.
+			// Only restart scheduler if it was running.
 			startScheduler();
 		}
 	}
@@ -154,15 +179,7 @@ public class ObserverService extends Service {
 				Log.i("TAG", "Screen OFF");
 				mScreenOn = false;
 				stopScheduler();
-
-				SharedPreferences sp = context
-						.getSharedPreferences(
-								ObserverService.PREF_FILE_DEFAULT,
-								Context.MODE_PRIVATE);
-				boolean relock = sp.getBoolean(context
-						.getString(R.string.pref_key_relock_after_screenoff),
-						true);
-				if (relock) {
+				if (mRelockAfterScreenOff) {
 					lockAll();
 				}
 
@@ -202,11 +219,12 @@ public class ObserverService extends Service {
 			if (className.equals(LOCKER_CLASS)) {
 				return;
 			}
+			if (mDelayUnlockActive) {
+				return;
+			}
 			LockInfo app = getLockInfoByPackageName(appName);
 			if (app != null) {
 				if (app.locked) {
-					// update last known class name
-					// TODO this was added for whatsapp bug, but can be handy
 					app.className = className;
 					Log.v(TAG,
 							"Show locker for " + app.packageName
@@ -264,17 +282,30 @@ public class ObserverService extends Service {
 			} else {
 				Log.w(TAG, "Tried to unlock " + li.hashCode()
 						+ " but was not locked");
-				// printLockInfos();
 			}
 			li.locked = false;
-			return;
+		} else {
+			Log.w(TAG, "Not unlocked " + appName + ": not in list.");
 		}
-		Log.w(TAG, "Not unlocked " + appName + ": not in list.");
+		if (mDelayUnlockEnabled) {
+			mDelayUnlockActive = true;
+
+			if (mDelayUnlockHandler == null) {
+				mDelayUnlockHandler = new Handler();
+			}
+			mDelayUnlockHandler.removeCallbacksAndMessages(null);
+			mDelayUnlockHandler.postDelayed(new Runnable() {
+
+				@Override
+				public void run() {
+					mDelayUnlockActive = false;
+				}
+			}, mDelayUnlockRelockMillis);
+		}
 	}
 
 	private LockInfo getLockInfoByPackageName(String packageName) {
 		if (mTrackedApps == null) {
-			Log.wtf(TAG, "lockList = null");
 			return null;
 		}
 		for (LockInfo li : mTrackedApps) {

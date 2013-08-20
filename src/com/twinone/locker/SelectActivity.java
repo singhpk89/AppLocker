@@ -9,17 +9,22 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.twinone.locker.AppAdapter.AppHolder;
 import com.twinone.locker.ObserverService.LocalBinder;
 
-public class SelectActivity extends Activity implements OnItemClickListener {
+public class SelectActivity extends Activity implements OnItemClickListener,
+		OnClickListener {
 
 	ListView mListView;
 	AppAdapter mAppAdapter;
+	Button bAll;
+	Button bNone;
 
 	private ObserverService mService;
 	boolean mBound = false;
@@ -29,13 +34,17 @@ public class SelectActivity extends Activity implements OnItemClickListener {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.Theme_Dark);
-
 		setContentView(R.layout.activity_applist);
 
 		mListView = (ListView) findViewById(R.id.lvAppList);
 		mAppAdapter = new AppAdapter(this);
 		mListView.setAdapter(mAppAdapter);
 		mListView.setOnItemClickListener(this);
+
+		bAll = (Button) findViewById(R.id.bLockAll);
+		bNone = (Button) findViewById(R.id.bUnlockAll);
+		bAll.setOnClickListener(this);
+		bNone.setOnClickListener(this);
 	}
 
 	@Override
@@ -63,17 +72,10 @@ public class SelectActivity extends Activity implements OnItemClickListener {
 	@Override
 	protected void onStop() {
 		super.onStop();
-
-	}
-
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
 		if (mBound) {
 			unbindService(mConnection);
 			mBound = false;
 		}
-		MainActivity.showWithoutPassword(this);
 	}
 
 	@Override
@@ -95,4 +97,36 @@ public class SelectActivity extends Activity implements OnItemClickListener {
 
 		mAppAdapter.notifyDataSetChanged();
 	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.bLockAll:
+			setAllTracking(true);
+			break;
+		case R.id.bUnlockAll:
+			setAllTracking(false);
+			break;
+		}
+	}
+
+	private void setAllTracking(boolean track) {
+		for (AppHolder ah : mAppAdapter.getAllItems()) {
+			if (mBound) {
+				mService.setTracking(ah.ri.activityInfo.packageName, track);
+			} else {
+				Log.w("SelectActivity", "not bound");
+			}
+		}
+		mAppAdapter.loadAppsIntoList(this);
+		mAppAdapter.sort();
+		mAppAdapter.notifyDataSetChanged();
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		MainActivity.showWithoutPassword(this);
+	}
+
 }

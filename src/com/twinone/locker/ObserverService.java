@@ -44,7 +44,6 @@ public class ObserverService extends Service {
 	private String mLastClass = "";
 	private boolean mRelockAfterScreenOff;
 	private boolean mDelayUnlockEnabled;
-	private boolean mDelayUnlockActive = false;
 	private long mDelayUnlockRelockMillis;
 	private Handler mDelayUnlockHandler;
 
@@ -219,9 +218,6 @@ public class ObserverService extends Service {
 			if (className.equals(LOCKER_CLASS)) {
 				return;
 			}
-			if (mDelayUnlockActive) {
-				return;
-			}
 			LockInfo app = getLockInfoByPackageName(appName);
 			if (app != null) {
 				if (app.locked) {
@@ -288,9 +284,8 @@ public class ObserverService extends Service {
 			Log.w(TAG, "Not unlocked " + appName + ": not in list.");
 		}
 		if (mDelayUnlockEnabled) {
-			mDelayUnlockActive = true;
-
-			if (mDelayUnlockHandler == null) {
+			stopScheduler();
+					if (mDelayUnlockHandler == null) {
 				mDelayUnlockHandler = new Handler();
 			}
 			mDelayUnlockHandler.removeCallbacksAndMessages(null);
@@ -298,7 +293,7 @@ public class ObserverService extends Service {
 
 				@Override
 				public void run() {
-					mDelayUnlockActive = false;
+					startScheduler();
 				}
 			}, mDelayUnlockRelockMillis);
 		}

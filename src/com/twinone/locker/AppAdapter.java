@@ -139,6 +139,10 @@ public class AppAdapter extends BaseAdapter {
 		return mApps.get(position);
 	}
 
+	public List<AppHolder> getAllItems() {
+		return mApps;
+	}
+
 	@Override
 	public long getItemId(int position) {
 		return 0;

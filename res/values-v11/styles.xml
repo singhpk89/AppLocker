@@ -12,16 +12,16 @@
 
     <style name="Theme_Dark" parent="@android:style/Theme.Holo">
         <item name="android:windowAnimationStyle">@style/LockerAnimation</item>
-        <item name="android:buttonStyle">@style/Button_Dark</item>
-        <item name="android:textColor">@color/button_white</item>
+        <item name="android:buttonStyle">@style/Button_Dark_Bold</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="Button_Dark" parent="@android:style/Widget.Holo.Button">
+    <style name="Button_Dark_Bold" parent="@android:style/Widget.Holo.Button">
         <item name="android:background">@drawable/button_dark</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="TextView_Dark" parent="@android:style/Widget.Holo.TextView">
+    <style name="TextView_Dark_Bold" parent="@android:style/Widget.Holo.TextView">
         <item name="android:background">@drawable/button_dark</item>
         <item name="android:textStyle">bold</item>
     </style>

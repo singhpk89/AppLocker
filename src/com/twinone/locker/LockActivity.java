@@ -68,6 +68,9 @@ public class LockActivity extends LockActivityBase {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		if (!isFinishing()) {
+			finish();
+		}
 	}
 
 	@Override

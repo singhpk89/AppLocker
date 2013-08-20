@@ -60,6 +60,8 @@
         <activity
             android:name="com.twinone.locker.LockActivity"
             android:configChanges="orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
             android:screenOrientation="portrait" >
         </activity>
         <activity

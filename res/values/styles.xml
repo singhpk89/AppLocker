@@ -26,21 +26,28 @@
 
     <style name="Theme_Dark" parent="@android:style/Theme.Black">
         <item name="android:windowAnimationStyle">@style/LockerAnimation</item>
-        <item name="android:buttonStyle">@style/Button_Dark</item>
+        <item name="android:buttonStyle">@style/Button_Dark_Bold</item>
         <item name="android:windowBackground">@drawable/background_dark</item>
-        <item name="android:textColor">@color/button_white</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="Button_Dark_Bold" parent="@android:style/Widget.Button">
+        <item name="android:background">@drawable/button_dark</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:padding">10dp</item>
     </style>
 
     <style name="Button_Dark" parent="@android:style/Widget.Button">
         <item name="android:background">@drawable/button_dark</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/button_white</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:padding">10dp</item>
     </style>
 
-    <style name="TextView_Dark" parent="@android:style/Widget.TextView">
+    <style name="TextView_Dark_Bold" parent="@android:style/Widget.TextView">
         <item name="android:background">@drawable/button_dark</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/button_white</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="Theme_Transparent" parent="android:Theme">

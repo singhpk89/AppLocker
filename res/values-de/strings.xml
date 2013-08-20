@@ -77,6 +77,8 @@
     <string name="pref_desc_delay_status">Wenn du das korrekte Passwort eingibst, wirst du erst nach einer gewissen Zeit erneut gefragt</string>
     <string name="pref_tit_delay_time">Zeitverzögerung</string>
     <string name="pref_dlgmsg_delay_time">Du wirst erst nach der angegebenen Zeit wieder nach dem Passwort gefragt (Sekunden)</string> <!-- END v1.08 Strings -->
+    <string name="applist_lock_all">Alle</string>
+    <string name="applist_unlock_all">Keine</string>
     <!-- END v1.08 Strings -->
 
 </resources>

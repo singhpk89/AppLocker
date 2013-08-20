@@ -64,7 +64,7 @@
                 android:maxLength="6"
                 android:paddingLeft="@dimen/password_horizontal_padding"
                 android:paddingRight="@dimen/password_horizontal_padding"
-                android:textColor="@color/button_white"
+                android:textColor="@color/white"
                 android:textSize="50sp" >
             </TextView>
 
@@ -93,6 +93,7 @@
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:padding="0px"
                 android:text="1"
                 android:textSize="@dimen/locker_button_text_size" />
 
@@ -103,6 +104,7 @@
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:padding="0px"
                 android:text="2"
                 android:textSize="@dimen/locker_button_text_size" />
 
@@ -113,6 +115,7 @@
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:padding="0px"
                 android:text="3"
                 android:textSize="@dimen/locker_button_text_size" />
         </TableRow>
@@ -129,6 +132,7 @@
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:padding="0px"
                 android:text="4"
                 android:textSize="@dimen/locker_button_text_size" />
 
@@ -139,6 +143,7 @@
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:padding="0px"
                 android:text="5"
                 android:textSize="@dimen/locker_button_text_size" />
 
@@ -149,6 +154,7 @@
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:padding="0px"
                 android:text="6"
                 android:textSize="@dimen/locker_button_text_size" />
         </TableRow>
@@ -165,6 +171,7 @@
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:padding="0px"
                 android:text="7"
                 android:textSize="@dimen/locker_button_text_size" />
 
@@ -175,6 +182,7 @@
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:padding="0px"
                 android:text="8"
                 android:textSize="@dimen/locker_button_text_size" />
 
@@ -185,6 +193,7 @@
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:padding="0px"
                 android:text="9"
                 android:textSize="@dimen/locker_button_text_size" />
         </TableRow>
@@ -202,6 +211,7 @@
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:padding="0px"
                 android:text="@string/upper_ok"
                 android:textSize="@dimen/locker_button_small" />
 
@@ -212,6 +222,7 @@
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:padding="0px"
                 android:text="0"
                 android:textSize="@dimen/locker_button_text_size" />
 
@@ -222,6 +233,7 @@
                 android:layout_margin="@dimen/locker_button_margin"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:padding="0px"
                 android:text="&lt;"
                 android:textSize="@dimen/locker_button_text_size" />
         </TableRow>

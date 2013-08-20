@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.twinone.locker"
-    android:versionCode="107"
-    android:versionName="1.07" >
+    android:versionCode="108"
+    android:versionName="1.08" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -61,6 +61,10 @@
             android:name="com.twinone.locker.LockActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.twinone.locker.ShareActivity"
+            android:theme="@style/Theme_Transparent" >
         </activity>
 
         <service android:name="com.twinone.locker.ObserverService" />

@@ -161,7 +161,7 @@ public class LockActivity extends LockActivityBase {
 	 */
 	private void unlock() {
 		if (mBound) {
-			mService.doUnlock(target);
+			mService.unlock(target);
 		} else {
 			Log.w(TAG, "Service not bound, cannot unlock");
 		}

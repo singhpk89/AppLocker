@@ -45,7 +45,9 @@
     <string name="welcome_tit">Welkom bij Locker!</string>
     <string name="welcome_message">Om apps te kunnen blokkeren heb je een wachtwoord nodig\nWil je nu een nieuw wachtwoord invoeren?</string>
     <!-- END v1.07 Strings -->
- <!-- BEGIN v1.08 Strings -->
+
+
+    <!-- BEGIN v1.08 Strings -->
     <!-- This section represents Locker > Preferences -->
     <string name="preferences_tit">Instellingen</string> <!-- The window title -->
     <string name="main_preferences">Instellingen</string> <!-- The button in the main screen -->
@@ -72,6 +74,5 @@
     <string name="performance_low">Laag</string>
     <string name="performance_very_low">Energiebesparing</string>
     <!-- END v1.08 Strings -->
-
 
 </resources>

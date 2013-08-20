@@ -66,7 +66,6 @@ public class SelectActivity extends Activity implements OnItemClickListener {
 
 	}
 
-	// Go back to main activity.
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();

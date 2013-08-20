@@ -75,11 +75,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			startActivity(prefsIntent);
 			break;
 		case R.id.bShare:
-			Intent i = new Intent(android.content.Intent.ACTION_SEND);
-			i.setType("text/plain");
-			i.putExtra(Intent.EXTRA_TEXT, getString(R.string.main_share_text));
-			startActivity(Intent.createChooser(i,
-					getString(R.string.main_share_tit)));
+			Intent i = new Intent(this, ShareActivity.class);
+			startActivity(i);
 			break;
 		}
 	}
@@ -87,14 +84,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	@Override
 	protected void onPause() {
 		super.onPause();
-//		Log.w(TAG, "onPause");
+		// Log.w(TAG, "onPause");
 		getIntent().putExtra(EXTRA_UNLOCKED, false);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-//		Log.w(TAG, "onResume");
+		// Log.w(TAG, "onResume");
 
 		// If there is no password, don't show locker
 		// If it's already unlocked, don't show locker

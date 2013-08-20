@@ -22,28 +22,26 @@ import android.util.Log;
 
 public class ObserverService extends Service {
 
-	public static final String EXTRA_MESSAGE = "com.twinone.locker.extra.Message";
-	public static final String EXTRA_TARGET_PACKAGENAME = "com.twinone.locker.extra.Info";
 	public static final String TAG = "Observer";
-
 	public static final String PREF_FILE_DEFAULT = "com.twinone.locker.prefs.default";
 	private static final String PREF_FILE_APPS = "com.twinone.locker.prefs.apps";
-
+	public static final String EXTRA_MESSAGE = "com.twinone.locker.extra.Message";
+	public static final String EXTRA_TARGET_PACKAGENAME = "com.twinone.locker.extra.Info";
 	private static final String LOCKER_CLASS = LockActivity.class.getName();
+	private static final boolean WHATSAPP_WORKAROUND = true; // TODO remove
+	private static final long WHATSAPP_WAIT_DELAY = 500;
 
-	private String mPassword;
-	private String lastApp = "";
-	private String lastClass = "";
+	private ActivityManager mAM;
+	private ScheduledExecutorService mScheduledExecutor;
+	private BroadcastReceiver mScreenReceiver;
+	private HashSet<LockInfo> mTrackedApps;
 
+	@SuppressWarnings("unused")
 	private boolean mScreenOn = true;
+	private String mPassword;
+	private String mLastApp = "";
+	private String mLastClass = "";
 	private long mRelockDelay = 10000;
-
-	private ActivityManager am;
-	private ScheduledExecutorService mExecutor;
-	BroadcastReceiver mScreenStatusReceiver;
-
-	/** In this map information about apps will be */
-	private HashSet<LockInfo> trackedApps;
 
 	@Override
 	public IBinder onBind(Intent i) {
@@ -59,14 +57,17 @@ public class ObserverService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.w(TAG, "onCreate");
+		Log.v(TAG, "onCreate");
+		mAM = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 
-		am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-		mPassword = getPassword(this);
-		trackedApps = new HashSet<LockInfo>();
+		loadPreferences();
+		startScheduler();
 
-		// // trackedApps.add(new LockInfo("com.whatsapp"));
-		// trackedApps.add(new LockInfo("com.twitter.android"));
+		mScreenReceiver = new ScreenReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(Intent.ACTION_SCREEN_ON);
+		filter.addAction(Intent.ACTION_SCREEN_OFF);
+		registerReceiver(mScreenReceiver, filter);
 
 		// Until API level 17 (Android 4.2) an empty notification can be set
 		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -80,39 +81,63 @@ public class ObserverService extends Service {
 			// Since android 4.3, a system notification is generated
 
 		}
-
-		mScreenStatusReceiver = new ScreenReceiver();
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(Intent.ACTION_SCREEN_ON);
-		filter.addAction(Intent.ACTION_SCREEN_OFF);
-		registerReceiver(mScreenStatusReceiver, filter);
-
-		updateTrackedApps();
-
-		// Start the monitoring
-		startScheduler();
 	}
 
-	private void startScheduler() {
-		if (mExecutor == null) {
-			String defaultDelay = getString(R.string.pref_val_perf_normal);
-			long delay;
-			SharedPreferences sp = getSharedPreferences(
-					ObserverService.PREF_FILE_DEFAULT, Context.MODE_PRIVATE);
-			String s = sp.getString(getString(R.string.pref_key_performance),
-					defaultDelay);
-			delay = Long.parseLong(s);
-			mExecutor = Executors.newSingleThreadScheduledExecutor();
-			mExecutor.scheduleWithFixedDelay(new PackageMonitor(), 0, delay,
-					TimeUnit.MILLISECONDS);
-		}
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		return START_NOT_STICKY;
+	}
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// Log.w(TAG, "onDestroy");
+		stopScheduler();
+		mAM = null;
+		mTrackedApps = null;
+		unregisterReceiver(mScreenReceiver);
+	}
+
+	/**
+	 * Loads or reloads the preferences at runtime.<br>
+	 * If the scheduler is running, it will also reset its delay.
+	 */
+	private void loadPreferences() {
+		mPassword = getPassword(this);
+		loadTrackedApps();
+		if (mScheduledExecutor != null) {
+			// Only start scheduler if it was running.
+			startScheduler();
+		}
+	}
+
+	/**
+	 * Starts (or restarts) the ScheduledExecutor with the correct peformance
+	 * delay.
+	 */
+	private void startScheduler() {
+		// Shutdown first if it's not running
+		if (mScheduledExecutor != null) {
+			mScheduledExecutor.shutdownNow();
+			mScheduledExecutor = null;
+		}
+		String defaultDelay = getString(R.string.pref_val_perf_normal);
+		SharedPreferences sp = getSharedPreferences(
+				ObserverService.PREF_FILE_DEFAULT, Context.MODE_PRIVATE);
+		String s = sp.getString(getString(R.string.pref_key_performance),
+				defaultDelay);
+		long delay = Long.parseLong(s);
+		mScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+		mScheduledExecutor.scheduleWithFixedDelay(new PackageMonitor(), 0,
+				delay, TimeUnit.MILLISECONDS);
 	}
 
 	private void stopScheduler() {
-		if (mExecutor == null) {
-			mExecutor.shutdownNow();
-			mExecutor = null;
+		if (mScheduledExecutor != null) {
+			mScheduledExecutor.shutdownNow();
+			mScheduledExecutor = null;
+		} else {
+			Log.w(TAG, "Attempted to stop scheduler, but it was already null");
 		}
 	}
 
@@ -138,38 +163,31 @@ public class ObserverService extends Service {
 						.getString(R.string.pref_key_relock_after_screenoff),
 						true);
 				if (relock) {
-					relockAll();
+					lockAll();
 				}
 
 			}
 		}
 	};
 
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		return START_NOT_STICKY;
-	}
-
-	private class PackageMonitor extends Thread {
+	private class PackageMonitor implements Runnable {
 		@Override
 		public void run() {
-			// Avoid battery drain when screen off.
-
-			ComponentName app = am.getRunningTasks(1).get(0).topActivity;
+			ComponentName app = mAM.getRunningTasks(1).get(0).topActivity;
 
 			String appName = app.getPackageName();
 			String className = app.getClassName();
 
-			boolean appChanged = !appName.equals(lastApp);
-			boolean classChanged = !className.equals(lastClass);
+			boolean appChanged = !appName.equals(mLastApp);
+			boolean classChanged = !className.equals(mLastClass);
 
 			if (classChanged || appChanged) {
 				Log.d(TAG, "" + appName + " " + className);
 			}
 			onObserve(appName, className);
 
-			lastClass = className;
-			lastApp = appName;
+			mLastClass = className;
+			mLastApp = appName;
 		}
 
 		/**
@@ -181,17 +199,11 @@ public class ObserverService extends Service {
 		 */
 		private void onObserve(String appName, String className) {
 			// Log.v(TAG, "Package: " + appName);
-			// the app that's currently in front
-			LockInfo app = getLockInfoByPackageName(appName);
 			if (className.equals(LOCKER_CLASS)) {
-				// we don't want to show the locker if the locker is
-				// currently
-				// visible
 				return;
 			}
-			// Only if we're monitoring the app
+			LockInfo app = getLockInfoByPackageName(appName);
 			if (app != null) {
-				// lock app if we should
 				if (app.locked) {
 					// update last known class name
 					// TODO this was added for whatsapp bug, but can be handy
@@ -203,15 +215,15 @@ public class ObserverService extends Service {
 				}
 			}
 			// lock all other apps because they're not in front anymore
-			relock(appName);
+			lock(appName);
 		}
 	}
 
 	/**
 	 * Locks ALL apps (Useful when screen is turned off)
 	 */
-	private void relockAll() {
-		for (LockInfo li : trackedApps) {
+	private void lockAll() {
+		for (LockInfo li : mTrackedApps) {
 			if (li.locked == false) {
 				Log.v(TAG, "relockAll() " + li.packageName);
 				li.locked = true;
@@ -223,13 +235,13 @@ public class ObserverService extends Service {
 	/**
 	 * Locks all apps except the one matching the provided string.
 	 * 
-	 * @param appName
+	 * @param appToExclude
 	 *            The app that must NOT be locked.
 	 */
-	private void relock(String appName) {
+	private void lock(String appToExclude) {
 		// TODO timing
-		for (LockInfo li : trackedApps) {
-			if (!li.packageName.equals(appName)) {
+		for (LockInfo li : mTrackedApps) {
+			if (!li.packageName.equals(appToExclude)) {
 				if (li.locked == false) {
 					Log.v(TAG, "relock() " + li.packageName);
 					li.locked = true;
@@ -238,51 +250,12 @@ public class ObserverService extends Service {
 		}
 	}
 
-	// private void printLockInfos() {
-	// Log.d(TAG, "------------");
-	// for (LockInfo li : trackedApps) {
-	// Log.v(TAG, li.locked + "\t" + li);
-	// }
-	// Log.d(TAG, "------------");
-	// }
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		Log.w(TAG, "onDestroy");
-		// IMPORTANT
-		// The executor will happily run if it's not shutdown explicitly
-		stopScheduler();
-
-		am = null;
-		trackedApps = null;
-		unregisterReceiver(mScreenStatusReceiver);
-	}
-
-	private LockInfo getLockInfoByPackageName(String packageName) {
-		if (trackedApps == null)
-			Log.wtf(TAG, "lockList = null");
-		for (LockInfo li : trackedApps) {
-			if (li.packageName.equals(packageName)) {
-				return li;
-			}
-		}
-		return null;
-	}
-
-	// public void doLock(String appName) {
-	// LockInfo li = getLockInfoByPackageName(appName);
-	// if (li != null) {
-	// if (li.lock == false) {
-	// Log.i(TAG, "Locked in list " + li.packageName);
-	// }
-	// li.lock = true;
-	// return;
-	// }
-	// Log.w(TAG, "Not locked " + appName + ": not in list.");
-	// }
-
-	public void doUnlock(String appName) {
+	/**
+	 * Unlock a single application. Should be called by {@link LockActivity}
+	 * 
+	 * @param appName
+	 */
+	public void unlock(String appName) {
 		Log.d(TAG, "doUnlock called");
 		LockInfo li = getLockInfoByPackageName(appName);
 		if (li != null) {
@@ -299,8 +272,24 @@ public class ObserverService extends Service {
 		Log.w(TAG, "Not unlocked " + appName + ": not in list.");
 	}
 
+	private LockInfo getLockInfoByPackageName(String packageName) {
+		if (mTrackedApps == null) {
+			Log.wtf(TAG, "lockList = null");
+			return null;
+		}
+		for (LockInfo li : mTrackedApps) {
+			if (li.packageName.equals(packageName)) {
+				return li;
+			}
+		}
+		return null;
+	}
+
 	/**
-	 * Locks the current app
+	 * Display a {@link LockActivity} for this {@link LockInfo}.
+	 * 
+	 * @param lockInfo
+	 *            The {@link LockInfo} to lock.
 	 */
 	private void showLocker(LockInfo lockInfo) {
 		if (mPassword.length() == 0) {
@@ -308,10 +297,8 @@ public class ObserverService extends Service {
 					+ lockInfo.packageName);
 			return;
 		}
-		Log.d(TAG, "Service " + hashCode() + " Starting locker for "
-				+ lockInfo.packageName);
-		// TODO Remove this if whatsapp fixes their bug
-		whatsappWorkaround(lockInfo);
+		Log.d(TAG, "Starting locker for " + lockInfo.packageName);
+		whatsappWorkaround(lockInfo); // TODO remove when whatsapp fix
 		Intent intent = new Intent(ObserverService.this, LockActivity.class);
 		intent.setAction(Intent.ACTION_VIEW);
 		intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
@@ -327,12 +314,14 @@ public class ObserverService extends Service {
 	 * @param li
 	 */
 	private void whatsappWorkaround(LockInfo li) {
-		if (li.className.equals("com.whatsapp.Conversation")) {
-			try {
-				Log.i(TAG, "Sleeping 700 because whatsapp bug");
-				Thread.sleep(300);
-			} catch (InterruptedException e) {
-				Log.e(TAG, "Interrupted while whatsapp workaround");
+		if (WHATSAPP_WORKAROUND) {
+			if (li.className.equals("com.whatsapp.Conversation")) {
+				try {
+					Log.i(TAG, "Sleeping for whatsapp bug");
+					Thread.sleep(WHATSAPP_WAIT_DELAY);
+				} catch (InterruptedException e) {
+					Log.e(TAG, "Interrupted while whatsapp workaround");
+				}
 			}
 		}
 	}
@@ -344,10 +333,8 @@ public class ObserverService extends Service {
 	 * @return The password current password or an empty string.
 	 */
 	public static final String getPassword(Context c) {
-		String pwd = c.getSharedPreferences(PREF_FILE_DEFAULT, MODE_PRIVATE)
+		return c.getSharedPreferences(PREF_FILE_DEFAULT, MODE_PRIVATE)
 				.getString(c.getString(R.string.pref_key_passwd), "");
-		// Log.d(TAG, "getPassword:" + pwd);
-		return pwd;
 	}
 
 	/**
@@ -390,6 +377,15 @@ public class ObserverService extends Service {
 		return apps;
 	}
 
+	public final void loadTrackedApps() {
+		Set<String> apps = getTrackedApps(this);
+		mTrackedApps = new HashSet<LockInfo>();
+		for (String s : apps) {
+			mTrackedApps.add(new LockInfo(s));
+		}
+
+	}
+
 	/**
 	 * Tracks or untracks an app
 	 * 
@@ -409,17 +405,6 @@ public class ObserverService extends Service {
 		if (!commited) {
 			Log.w(TAG, "Not commited!");
 		}
-		updateTrackedApps();
+		loadTrackedApps();
 	}
-
-	// TODO
-	public final void updateTrackedApps() {
-		Set<String> apps = getTrackedApps(this);
-		trackedApps = new HashSet<LockInfo>();
-		for (String s : apps) {
-			trackedApps.add(new LockInfo(s));
-		}
-
-	}
-
 }

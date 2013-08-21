@@ -21,15 +21,15 @@ public class StagingActivity extends Activity {
 		Log.w("Stager", "onCreate");
 		String action = getIntent().getExtras().getString(EXTRA_ACTION);
 		if (ACTION_SHARE.equals(action)) {
-			String shareText = getIntent().getExtras().getString(
-					Intent.EXTRA_TEXT);
+			String shareText = getIntent().getExtras().getString(EXTRA_TEXT);
 			Intent i = new Intent(android.content.Intent.ACTION_SEND);
 			i.setType("text/plain");
-			i.putExtra(EXTRA_TEXT, shareText);
+			i.putExtra(Intent.EXTRA_TEXT, shareText);
 			startActivity(Intent.createChooser(i,
 					getString(R.string.main_share_tit)));
 		} else if (ACTION_RATE.equals(action)) {
-			String str = "https://play.google.com/store/apps/details?id=" + getPackageName();
+			String str = "https://play.google.com/store/apps/details?id="
+					+ getPackageName();
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(str)));
 		}
 

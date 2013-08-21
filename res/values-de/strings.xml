@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <!--
+<!--
     Added in Locker v1.07
     Author: Patschi (#Patschi, irc.pkern.at/6667)
-    -->
+-->
+<resources>
+
     <string name="app_name">Locker</string>
     <string name="action_settings">Einstellungen</string>
 
@@ -79,6 +79,7 @@
     <string name="pref_dlgmsg_delay_time">Du wirst erst nach der angegebenen Zeit wieder nach dem Passwort gefragt (Sekunden)</string> <!-- END v1.08 Strings -->
     <string name="applist_lock_all">Alle</string>
     <string name="applist_unlock_all">Keine</string>
+    <string name="main_rate">Bewerten</string>
     <!-- END v1.08 Strings -->
 
 </resources>

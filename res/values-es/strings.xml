@@ -82,4 +82,15 @@
     <string name="main_rate">Valorar</string>
     <!-- END v1.08 Strings -->
 
+
+    <!-- BEGIN v2.0 Strings -->
+    <string name="pref_tit_show_notification">Notificación</string>
+    <!-- For android 4.2 and below, the system will not kill Locker -->
+    <string name="pref_desc_show_notification">Mostrar una notificación mientras se bloquean aplicaciones</string>
+    <!-- Since Android 4.3, system kills app if it doesn't show a notification, we should warnt he users about this -->
+    <string name="pref_desc_show_notification_v18">Mostrar una notificación mientras se bloquean aplicaciones. Se recomienda mantener esta opción encendida, ya que sino Android podría cerrar Locker</string>
+    <string name="notification_title">Locker está activo</string>
+    <string name="notification_state_locked">Haz clic aquí para desactivar el bloqueo</string>
+    <!-- END v2.0 Strings -->
+
 </resources>

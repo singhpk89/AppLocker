@@ -26,7 +26,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	Button bChangeMessage;
 	Button bShare;
 	Button bRate;
-	private static final String EXTRA_UNLOCKED = "com.twinone.locker.Unlocked";
+	public static final String EXTRA_UNLOCKED = "com.twinone.locker.Unlocked";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -188,7 +188,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		Intent i = new Intent(this, ObserverService.class);
 		stopService(i);
 		updateLayout(false);
-
 	}
 
 	private final void updateLayout(boolean isServiceRunning) {

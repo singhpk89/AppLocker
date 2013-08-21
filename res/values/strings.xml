@@ -46,6 +46,7 @@
     <string name="welcome_message">You need a password before you can lock apps.\nDo you want to setup a password now?</string>
     <!-- END v1.07 Strings -->
 
+
     <!-- BEGIN v1.08 Strings -->
     <!-- This section represents Locker > Preferences -->
     <string name="preferences_tit">Preferences</string> <!-- The window title -->
@@ -80,5 +81,16 @@
     <string name="applist_unlock_all">None</string>
     <string name="main_rate">Rate</string>
     <!-- END v1.08 Strings -->
+
+
+    <!-- BEGIN v2.0 Strings -->
+    <string name="pref_tit_show_notification">Notification</string>
+    <!-- For android 4.2 and below, the system will not kill Locker -->
+    <string name="pref_desc_show_notification">Show a notification while apps are locked</string>
+    <!-- Since Android 4.3, system kills app if it doesn't show a notification, we should warnt he users about this -->
+    <string name="pref_desc_show_notification_v18">Show a notification while apps are locked. Keep this enabled for correct functioning of Locker. If you disable this option, Android may kill Locker</string>
+    <string name="notification_title">Locker is active</string>
+    <string name="notification_state_locked">Click here to disable the lock</string>
+    <!-- END v2.0 Strings -->
 
 </resources>

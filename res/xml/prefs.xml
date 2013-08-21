@@ -13,6 +13,11 @@
         android:key="@string/pref_key_relock_after_screenoff"
         android:summary="@string/pref_desc_relock_after_screenoff"
         android:title="@string/pref_tit_relock_after_screenoff" />
+    <CheckBoxPreference
+        android:defaultValue="@string/pref_def_show_notification"
+        android:key="@string/pref_key_show_notification"
+        android:summary="@string/pref_desc_show_notification"
+        android:title="@string/pref_tit_show_notification" />
     <!-- Vibration -->
     <CheckBoxPreference
         android:defaultValue="true"

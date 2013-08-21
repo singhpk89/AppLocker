@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!-- Keys -->
     <string name="pref_key_passwd">com.twinone.locker.pref.passwd</string>
     <string name="pref_key_lock_message">com.twinone.locker.pref.message_key</string>
@@ -10,6 +11,7 @@
     <string name="pref_key_performance">com.twinone.locker.pref.performance</string>
     <string name="pref_key_delay_status">com.twinone.locker.pref.delay_status</string>
     <string name="pref_key_delay_time">com.twinone.locker.pref.delay_time</string>
+    <string name="pref_key_show_notification">com.twinone.locker.pref.show_notification</string>
 
     <!-- Values -->
     <string name="pref_val_perf_very_high">75</string>
@@ -17,10 +19,12 @@
     <string name="pref_val_perf_normal">200</string>
     <string name="pref_val_perf_low">250</string>
     <string name="pref_val_perf_very_low">300</string>
-    
+
     <!-- Defaults -->
     <string name="pref_def_delay_status">false</string>
     <string name="pref_def_relock_after_screenoff">true</string>
     <string name="pref_def_delay_time">60</string>
+    <!-- For Android 4.2 and lower, don't show a notification by default -->
+    <string name="pref_def_show_notification">false</string>
 
 </resources>

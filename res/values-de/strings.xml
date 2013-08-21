@@ -82,4 +82,14 @@
     <string name="main_rate">Bewerten</string>
     <!-- END v1.08 Strings -->
 
+
+    <!-- BEGIN v2.0 Strings -->
+    <string name="pref_tit_show_notification">Benachrichtigungen</string>
+    <!-- For android 4.2 and below, the system will not kill Locker -->
+    <string name="pref_desc_show_notification">Zeige Benachrichtigungen in der Statusleiste</string>
+    <!-- Since Android 4.3, system kills app if it doesn't show a notification, we should warnt he users about this -->
+    <string name="pref_desc_show_notification_v18">Zeige Benachrichtigungen in der Statusleiste. Wird diese Option deaktiviert, beendet Android Locker.</string>
+    <string name="notification_title">Locker ist aktiv</string>
+    <string name="notification_state_locked">Klicke hier um Locker zu deaktivieren</string>
+
 </resources>

@@ -6,8 +6,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -31,6 +34,7 @@ public class ObserverService extends Service {
 	private static final String LOCKER_CLASS = LockActivity.class.getName();
 	private static final boolean WHATSAPP_WORKAROUND = true; // TODO remove
 	private static final long WHATSAPP_WAIT_DELAY = 500;
+	private static final int NOTIFICATION_ID = 1337;
 
 	private ActivityManager mAM;
 	private ScheduledExecutorService mScheduledExecutor;
@@ -46,6 +50,7 @@ public class ObserverService extends Service {
 	private boolean mDelayUnlockEnabled;
 	private long mDelayUnlockRelockMillis;
 	private Handler mDelayUnlockHandler;
+	private boolean mShowNotification;
 
 	@Override
 	public IBinder onBind(Intent i) {
@@ -58,6 +63,7 @@ public class ObserverService extends Service {
 		}
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -74,16 +80,43 @@ public class ObserverService extends Service {
 		registerReceiver(mScreenReceiver, filter);
 
 		// Until API level 17 (Android 4.2) an empty notification can be set
-		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+
+		if (mShowNotification) {
+			Intent i = new Intent(this, MainActivity.class);
+			PendingIntent.getActivity(this, 0, i, 0);
+			PendingIntent pi = PendingIntent.getActivity(this, 0, i, 0);
+
+			Notification n;
+			if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB) {
+				Log.d(TAG, "Showing notification < Honeycomb");
+				n = new Notification(R.drawable.ic_launcher, null,
+						System.currentTimeMillis());
+				String title = getString(R.string.notification_title);
+				String content = getString(R.string.notification_state_locked);
+				n.setLatestEventInfo(this, title, content, pi);
+				n.flags |= Notification.FLAG_NO_CLEAR;
+			} else {
+				Log.d(TAG, "Showing notification > Honeycomb");
+				Notification.Builder nb = new Notification.Builder(this);
+				String title = getString(R.string.notification_title);
+				String content = getString(R.string.notification_state_locked);
+				nb.setContentTitle(title);
+				nb.setTicker(null);
+				nb.setWhen(System.currentTimeMillis());
+				nb.setContentText(content);
+				nb.setSmallIcon(R.drawable.ic_launcher);
+				nb.setOngoing(true);
+				nb.setContentIntent(pi);
+				n = nb.build();
+			}
+			startForeground(NOTIFICATION_ID, n);
+
+		} else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
 			@SuppressWarnings("deprecation")
 			Notification n = new Notification(0, null,
 					System.currentTimeMillis());
 			n.flags |= Notification.FLAG_NO_CLEAR;
-			startForeground(42, n);
-		} else {
-			// TODO Find a workaround for this
-			// Since android 4.3, a system notification is generated
-
+			startForeground(NOTIFICATION_ID, n);
 		}
 	}
 
@@ -95,10 +128,11 @@ public class ObserverService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		// Log.w(TAG, "onDestroy");
+		Log.w(TAG, "onDestroy");
 		stopScheduler();
 		mAM = null;
 		mTrackedApps = null;
+		stopForeground(true);
 		unregisterReceiver(mScreenReceiver);
 	}
 
@@ -126,6 +160,13 @@ public class ObserverService extends Service {
 				getString(R.string.pref_key_relock_after_screenoff),
 				defaultRelock);
 		mRelockAfterScreenOff = relock;
+
+		boolean defaultShowNotification = Boolean
+				.parseBoolean(getString(R.string.pref_def_show_notification));
+		boolean showNotification = sp.getBoolean(
+				getString(R.string.pref_key_show_notification),
+				defaultShowNotification);
+		mShowNotification = showNotification;
 
 		mPassword = getPassword(this);
 		loadTrackedApps();

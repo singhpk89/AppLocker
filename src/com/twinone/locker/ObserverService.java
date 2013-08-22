@@ -7,9 +7,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -20,6 +20,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
@@ -69,7 +70,6 @@ public class ObserverService extends Service {
 		super.onCreate();
 		Log.v(TAG, "onCreate");
 		mAM = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-
 		loadPreferences();
 		startScheduler();
 
@@ -79,39 +79,16 @@ public class ObserverService extends Service {
 		filter.addAction(Intent.ACTION_SCREEN_OFF);
 		registerReceiver(mScreenReceiver, filter);
 
-		// Until API level 17 (Android 4.2) an empty notification can be set
-
 		if (mShowNotification) {
 			Intent i = new Intent(this, MainActivity.class);
 			PendingIntent.getActivity(this, 0, i, 0);
 			PendingIntent pi = PendingIntent.getActivity(this, 0, i, 0);
-
-			Notification n;
-			if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB) {
-				Log.d(TAG, "Showing notification < Honeycomb");
-				n = new Notification(R.drawable.ic_launcher, null,
-						System.currentTimeMillis());
-				String title = getString(R.string.notification_title);
-				String content = getString(R.string.notification_state_locked);
-				n.setLatestEventInfo(this, title, content, pi);
-				n.flags |= Notification.FLAG_NO_CLEAR;
-			} else {
-				Log.d(TAG, "Showing notification > Honeycomb");
-				Notification.Builder nb = new Notification.Builder(this);
-				String title = getString(R.string.notification_title);
-				String content = getString(R.string.notification_state_locked);
-				nb.setContentTitle(title);
-				nb.setTicker(null);
-				nb.setWhen(System.currentTimeMillis());
-				nb.setContentText(content);
-				nb.setSmallIcon(R.drawable.ic_launcher);
-				nb.setOngoing(true);
-				nb.setContentIntent(pi);
-				n = nb.build();
-			}
+			String title = getString(R.string.notification_title);
+			String content = getString(R.string.notification_state_locked);
+			Notification n = getNotificationCompat(title, content, pi);
 			startForeground(NOTIFICATION_ID, n);
-
 		} else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+			// Hack for 4.2 and below to get system priority
 			@SuppressWarnings("deprecation")
 			Notification n = new Notification(0, null,
 					System.currentTimeMillis());
@@ -120,9 +97,51 @@ public class ObserverService extends Service {
 		}
 	}
 
+	/**
+	 * Get a notification to post in the status bar<br>
+	 * This method should not be called directly
+	 * 
+	 * @see #getNotificationCompat(PendingIntent)
+	 * @param pi
+	 * @return
+	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	private Notification getNotification(String title, String content,
+			PendingIntent pi) {
+		Notification.Builder nb = new Notification.Builder(this);
+		nb.setSmallIcon(R.drawable.ic_launcher);
+		nb.setContentTitle(title);
+		nb.setContentText(content);
+		nb.setWhen(System.currentTimeMillis());
+		nb.setContentIntent(pi);
+		nb.setOngoing(true);
+		return nb.build();
+	}
+
+	/**
+	 * Compatibility method for {@link #getNotification(PendingIntent)} to be
+	 * able to use with devices prior to {@link VERSION_CODES#HONEYCOMB}
+	 * 
+	 * @param pi
+	 * @return
+	 */
+	@SuppressWarnings("deprecation")
+	private Notification getNotificationCompat(String title, String content,
+			PendingIntent pi) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+			Notification n = new Notification(R.drawable.ic_launcher, null,
+					System.currentTimeMillis());
+			n.setLatestEventInfo(this, title, content, pi);
+			n.flags |= Notification.FLAG_NO_CLEAR;
+			return n;
+		} else {
+			return getNotification(title, content, pi);
+		}
+	}
+
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		return START_NOT_STICKY;
+		return START_STICKY;
 	}
 
 	@Override
@@ -227,11 +246,15 @@ public class ObserverService extends Service {
 		}
 	};
 
+	protected int mTest = 0;
+
 	private class PackageMonitor implements Runnable {
 		@Override
 		public void run() {
-			ComponentName app = mAM.getRunningTasks(1).get(0).topActivity;
+			// long mBegin = System.nanoTime();
+			long mBegin = System.currentTimeMillis();
 
+			ComponentName app = mAM.getRunningTasks(1).get(0).topActivity;
 			String appName = app.getPackageName();
 			String className = app.getClassName();
 
@@ -245,6 +268,17 @@ public class ObserverService extends Service {
 
 			mLastClass = className;
 			mLastApp = appName;
+
+			// long mEnd = System.nanoTime();
+			long mEnd = System.currentTimeMillis();
+			if (classChanged || appChanged) {
+				Log.d(TAG, "" + mBegin);
+				Log.d(TAG, "" + mEnd);
+				Log.d(TAG, "" + (double) ((mEnd - mBegin)) + " ms");
+				// Log.d(TAG, "" + (double) ((mEnd - mBegin) / 1000000) +
+				// " ms");
+				Log.d(TAG, "----------------------");
+			}
 		}
 
 		/**

@@ -20,9 +20,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.Build;
-import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 public class ObserverService extends Service {
@@ -85,8 +85,15 @@ public class ObserverService extends Service {
 			PendingIntent pi = PendingIntent.getActivity(this, 0, i, 0);
 			String title = getString(R.string.notification_title);
 			String content = getString(R.string.notification_state_locked);
-			Notification n = getNotificationCompat(title, content, pi);
-			startForeground(NOTIFICATION_ID, n);
+			NotificationCompat.Builder nb = new NotificationCompat.Builder(this);
+			nb.setSmallIcon(R.drawable.ic_launcher);
+			nb.setContentTitle(title);
+			nb.setContentText(content);
+			nb.setWhen(System.currentTimeMillis());
+			nb.setContentIntent(pi);
+			nb.setOngoing(true);
+			startForeground(NOTIFICATION_ID, nb.build());
+			
 		} else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
 			// Hack for 4.2 and below to get system priority
 			@SuppressWarnings("deprecation")
@@ -94,48 +101,6 @@ public class ObserverService extends Service {
 					System.currentTimeMillis());
 			n.flags |= Notification.FLAG_NO_CLEAR;
 			startForeground(NOTIFICATION_ID, n);
-		}
-	}
-
-	/**
-	 * Get a notification to post in the status bar<br>
-	 * This method should not be called directly
-	 * 
-	 * @see #getNotificationCompat(PendingIntent)
-	 * @param pi
-	 * @return
-	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private Notification getNotification(String title, String content,
-			PendingIntent pi) {
-		Notification.Builder nb = new Notification.Builder(this);
-		nb.setSmallIcon(R.drawable.ic_launcher);
-		nb.setContentTitle(title);
-		nb.setContentText(content);
-		nb.setWhen(System.currentTimeMillis());
-		nb.setContentIntent(pi);
-		nb.setOngoing(true);
-		return nb.build();
-	}
-
-	/**
-	 * Compatibility method for {@link #getNotification(PendingIntent)} to be
-	 * able to use with devices prior to {@link VERSION_CODES#HONEYCOMB}
-	 * 
-	 * @param pi
-	 * @return
-	 */
-	@SuppressWarnings("deprecation")
-	private Notification getNotificationCompat(String title, String content,
-			PendingIntent pi) {
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-			Notification n = new Notification(R.drawable.ic_launcher, null,
-					System.currentTimeMillis());
-			n.setLatestEventInfo(this, title, content, pi);
-			n.flags |= Notification.FLAG_NO_CLEAR;
-			return n;
-		} else {
-			return getNotification(title, content, pi);
 		}
 	}
 

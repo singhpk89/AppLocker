@@ -7,7 +7,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -93,7 +92,7 @@ public class ObserverService extends Service {
 			nb.setContentIntent(pi);
 			nb.setOngoing(true);
 			startForeground(NOTIFICATION_ID, nb.build());
-			
+
 		} else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
 			// Hack for 4.2 and below to get system priority
 			@SuppressWarnings("deprecation")
@@ -136,13 +135,18 @@ public class ObserverService extends Service {
 		String delaySeconds = sp.getString(
 				getString(R.string.pref_key_delay_time),
 				getString(R.string.pref_def_delay_time));
-		mDelayUnlockRelockMillis = Long.parseLong(delaySeconds) * 1000;
 
-		boolean defaultRelock = Boolean
+		if (delaySeconds.length() == 0) {
+			delaySeconds = "0";
+		}
+
+		mDelayUnlockRelockMillis = (Long.parseLong(delaySeconds) * 1000);
+
+		boolean defaultScreenOffRelock = Boolean
 				.parseBoolean(getString(R.string.pref_def_relock_after_screenoff));
 		boolean relock = sp.getBoolean(
 				getString(R.string.pref_key_relock_after_screenoff),
-				defaultRelock);
+				defaultScreenOffRelock);
 		mRelockAfterScreenOff = relock;
 
 		boolean defaultShowNotification = Boolean

@@ -1,9 +1,11 @@
 package com.twinone.locker;
 
 import android.annotation.TargetApi;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
@@ -11,11 +13,16 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.twinone.locker.util.Util;
+
 public class PrefsActivity extends PreferenceActivity implements
 		OnPreferenceChangeListener {
 
-	private static final String TAG = "PrefsActivity";
+	SharedPreferences.Editor mEditor;
+	// private static final String TAG = "PrefsActivity";
 	protected CheckBoxPreference mNotifPref;
+	protected CheckBoxPreference mDelayStatusPref;
+	protected EditTextPreference mDelayTimePref;
 
 	// private ObserverService mService;
 
@@ -29,8 +36,10 @@ public class PrefsActivity extends PreferenceActivity implements
 			pm.setSharedPreferencesName(ObserverService.PREF_FILE_DEFAULT);
 			pm.setSharedPreferencesMode(MODE_PRIVATE);
 			addPreferencesFromResource(R.xml.prefs);
-
+			mEditor = pm.getSharedPreferences().edit();
 			mNotifPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_show_notification));
+			mDelayStatusPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_delay_status));
+			mDelayTimePref = (EditTextPreference) findPreference(getString(R.string.pref_key_delay_time));
 
 		} else {
 			loadFragment();
@@ -38,6 +47,7 @@ public class PrefsActivity extends PreferenceActivity implements
 	}
 
 	protected void initialize() {
+		mDelayTimePref.setOnPreferenceChangeListener(this);
 		mNotifPref.setOnPreferenceChangeListener(this);
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1) {
 			mNotifPref.setSummary(R.string.pref_desc_show_notification_v18);
@@ -63,8 +73,11 @@ public class PrefsActivity extends PreferenceActivity implements
 			pm.setSharedPreferencesName(ObserverService.PREF_FILE_DEFAULT);
 			pm.setSharedPreferencesMode(MODE_PRIVATE);
 			addPreferencesFromResource(R.xml.prefs);
+			parent.mEditor = pm.getSharedPreferences().edit();
 
 			parent.mNotifPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_show_notification));
+			parent.mDelayTimePref = (EditTextPreference) findPreference(getString(R.string.pref_key_delay_time));
+			parent.mDelayStatusPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_delay_status));
 			parent.initialize();
 		}
 
@@ -72,7 +85,26 @@ public class PrefsActivity extends PreferenceActivity implements
 
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
-		Log.d(TAG, "Preference clicked! " + preference.getKey());
+		// Log.d(TAG, "Preference clicked! " + preference.getKey());
+		String prefKey = preference.getKey();
+		String delayTimeKey = getString(R.string.pref_key_delay_time);
+		if (prefKey.equals(delayTimeKey)) {
+			String newTime = (String) newValue;
+			boolean isZero = (newTime.length() == 0);
+			try {
+				isZero = (Long.parseLong(newTime) == 0);
+				// TODO Remove leading zeros
+			} catch (NumberFormatException e) {
+				isZero = true;
+			}
+			if (isZero) {
+				Log.d("TAG", "isZero!!!");
+				mDelayStatusPref.setChecked(false);
+				mEditor.putBoolean(getString(R.string.pref_key_delay_status),
+						false);
+				Util.applyCompat(mEditor);
+			}
+		}
 		return true;
 	}
 

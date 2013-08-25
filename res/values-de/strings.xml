@@ -61,7 +61,7 @@
     <!-- Keep it short! -->
     <string name="pref_tit_start_boot">Beim Start ausführen</string>
     <!-- Descriptions can be longer -->
-    <string name="pref_desc_start_boot">Sperre Apps, wenn das Gerät startet</string>
+    <string name="pref_desc_start_boot">Apps sperren, wenn das Gerät startet</string>
     <string name="pref_tit_relock_after_screenoff">Sperren ausg. Bildschirm</string>
     <string name="pref_desc_relock_after_screenoff">Frage erneut nach dem Passwort, nachdem der Bildschirm ausgeschaltet wurde</string>
     <string name="pref_tit_vibrate_keypress">Vibration</string>
@@ -88,7 +88,7 @@
     <!-- For android 4.2 and below, the system will not kill Locker -->
     <string name="pref_desc_show_notification">Zeige Benachrichtigungen in der Statusleiste</string>
     <!-- Since Android 4.3, system kills app if it doesn't show a notification, we should warnt he users about this -->
-    <string name="pref_desc_show_notification_v18">Zeige Benachrichtigungen in der Statusleiste. Wird diese Option deaktiviert, kann es vorkommen dass Android Locker beendet</string>
+    <string name="pref_desc_show_notification_v18">Zeige Benachrichtigungen in der Statusleiste. Wird diese Option deaktiviert, kann es vorkommen dass sich Android Locker beendet</string>
     <string name="notification_title">Locker ist aktiv</string>
     <string name="notification_state_locked">Klicke hier um Locker zu deaktivieren</string>
 

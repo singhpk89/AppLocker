@@ -2,7 +2,7 @@ package com.twinone.locker;
 
 import java.io.Serializable;
 
-public class LockInfo implements Serializable {
+public class AppInfo implements Serializable {
 
 	/**
 	 * 
@@ -14,19 +14,19 @@ public class LockInfo implements Serializable {
 	public String label;
 	public boolean locked;
 
-	public LockInfo(String packageName) {
+	public AppInfo(String packageName) {
 		init(packageName, null, true);
 	}
 
-	public LockInfo(String packageName, String label) {
+	public AppInfo(String packageName, String label) {
 		init(packageName, label, true);
 	}
 
-	public LockInfo(String packageName, String label, boolean lock) {
+	public AppInfo(String packageName, String label, boolean lock) {
 		init(packageName, label, lock);
 	}
 
-	public LockInfo(String packageName, boolean lock) {
+	public AppInfo(String packageName, boolean lock) {
 		init(packageName, null, lock);
 	}
 
@@ -36,12 +36,12 @@ public class LockInfo implements Serializable {
 		this.locked = lock;
 	}
 
-	public LockInfo setClassName(String className) {
+	public AppInfo setClassName(String className) {
 		this.className = className;
 		return this;
 	}
 
-	public LockInfo setLock(boolean lock) {
+	public AppInfo setLock(boolean lock) {
 		this.locked = lock;
 		return this;
 	}
@@ -52,8 +52,8 @@ public class LockInfo implements Serializable {
 		if (object == null)
 			return false;
 		// Compare to another lockinfo
-		if (object instanceof LockInfo) {
-			return this.packageName.equals(((LockInfo) object).packageName);
+		if (object instanceof AppInfo) {
+			return this.packageName.equals(((AppInfo) object).packageName);
 		}
 
 		return false;

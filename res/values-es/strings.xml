@@ -56,7 +56,7 @@
     <!-- clone of "main_change_message -->
     <string name="pref_tit_lock_message">Mensaje</string>
     <!-- Changed from the original. Re-translate -->
-    <string name="pref_desc_lock_message">Este mensaje aparecerá cuando una app esté bloeuqada</string>
+    <string name="pref_desc_lock_message">Este mensaje aparecerá cuando una app esté bloqueada</string>
     <string name="pref_dlgmsg_lock_message">Puedes usar %s para el nombre de la aplicación</string>
     <!-- Keep it short! -->
     <string name="pref_tit_start_boot">Iniciar con dispositivo</string>
@@ -67,7 +67,7 @@
     <string name="pref_tit_vibrate_keypress">Vibración</string>
     <string name="pref_desc_vibrate_keypress">Vibrar cuando se presionan las teclas</string>
     <string name="pref_tit_performance">Rendimiento</string>
-    <string name="pref_desc_performance">Cuando más alto el rendimiento, más rápido funcionará, pero también consumirá más batería</string>
+    <string name="pref_desc_performance">Cuanto más alto el rendimiento, más rápido funcionará, pero también consumirá más batería</string>
     <string name="performance_very_high">Muy alto</string>
     <string name="performance_high">Alto</string>
     <string name="performance_normal">Normal</string>

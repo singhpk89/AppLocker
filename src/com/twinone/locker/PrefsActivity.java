@@ -11,9 +11,6 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.util.Log;
-
-import com.twinone.locker.util.Util;
 
 public class PrefsActivity extends PreferenceActivity implements
 		OnPreferenceChangeListener {
@@ -98,11 +95,14 @@ public class PrefsActivity extends PreferenceActivity implements
 				isZero = true;
 			}
 			if (isZero) {
-				Log.d("TAG", "isZero!!!");
 				mDelayStatusPref.setChecked(false);
 				mEditor.putBoolean(getString(R.string.pref_key_delay_status),
 						false);
-				Util.applyCompat(mEditor);
+				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
+					mEditor.commit();
+				} else {
+					mEditor.apply();
+				}
 			}
 		}
 		return true;

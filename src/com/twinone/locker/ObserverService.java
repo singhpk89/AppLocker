@@ -39,7 +39,7 @@ public class ObserverService extends Service {
 	private ActivityManager mAM;
 	private ScheduledExecutorService mScheduledExecutor;
 	private BroadcastReceiver mScreenReceiver;
-	private HashSet<LockInfo> mTrackedApps;
+	private HashSet<AppInfo> mTrackedApps;
 
 	@SuppressWarnings("unused")
 	private boolean mScreenOn = true;
@@ -221,7 +221,7 @@ public class ObserverService extends Service {
 		@Override
 		public void run() {
 			// long mBegin = System.nanoTime();
-			long mBegin = System.currentTimeMillis();
+			// long mBegin = System.currentTimeMillis();
 
 			ComponentName app = mAM.getRunningTasks(1).get(0).topActivity;
 			String appName = app.getPackageName();
@@ -239,15 +239,15 @@ public class ObserverService extends Service {
 			mLastApp = appName;
 
 			// long mEnd = System.nanoTime();
-			long mEnd = System.currentTimeMillis();
-			if (classChanged || appChanged) {
-				Log.d(TAG, "" + mBegin);
-				Log.d(TAG, "" + mEnd);
-				Log.d(TAG, "" + (double) ((mEnd - mBegin)) + " ms");
-				// Log.d(TAG, "" + (double) ((mEnd - mBegin) / 1000000) +
-				// " ms");
-				Log.d(TAG, "----------------------");
-			}
+			// long mEnd = System.currentTimeMillis();
+			// if (classChanged || appChanged) {
+			// Log.d(TAG, "" + mBegin);
+			// Log.d(TAG, "" + mEnd);
+			// Log.d(TAG, "" + (double) ((mEnd - mBegin)) + " ms");
+			// // Log.d(TAG, "" + (double) ((mEnd - mBegin) / 1000000) +
+			// // " ms");
+			// Log.d(TAG, "----------------------");
+			// }
 		}
 
 		/**
@@ -262,7 +262,7 @@ public class ObserverService extends Service {
 			if (className.equals(LOCKER_CLASS)) {
 				return;
 			}
-			LockInfo app = getLockInfoByPackageName(appName);
+			AppInfo app = getLockInfoByPackageName(appName);
 			if (app != null) {
 				if (app.locked) {
 					app.className = className;
@@ -281,7 +281,7 @@ public class ObserverService extends Service {
 	 * Locks ALL apps (Useful when screen is turned off)
 	 */
 	private void lockAll() {
-		for (LockInfo li : mTrackedApps) {
+		for (AppInfo li : mTrackedApps) {
 			if (li.locked == false) {
 				Log.v(TAG, "relockAll() " + li.packageName);
 				li.locked = true;
@@ -298,7 +298,7 @@ public class ObserverService extends Service {
 	 */
 	private void lock(String appToExclude) {
 		// TODO timing
-		for (LockInfo li : mTrackedApps) {
+		for (AppInfo li : mTrackedApps) {
 			if (!li.packageName.equals(appToExclude)) {
 				if (li.locked == false) {
 					Log.v(TAG, "relock() " + li.packageName);
@@ -315,7 +315,7 @@ public class ObserverService extends Service {
 	 */
 	public void unlock(String appName) {
 		Log.d(TAG, "doUnlock called");
-		LockInfo li = getLockInfoByPackageName(appName);
+		AppInfo li = getLockInfoByPackageName(appName);
 		if (li != null) {
 			if (li.locked == true) {
 				Log.i(TAG, "Unlocked in list: " + li.packageName);
@@ -343,11 +343,11 @@ public class ObserverService extends Service {
 		}
 	}
 
-	private LockInfo getLockInfoByPackageName(String packageName) {
+	private AppInfo getLockInfoByPackageName(String packageName) {
 		if (mTrackedApps == null) {
 			return null;
 		}
-		for (LockInfo li : mTrackedApps) {
+		for (AppInfo li : mTrackedApps) {
 			if (li.packageName.equals(packageName)) {
 				return li;
 			}
@@ -356,12 +356,12 @@ public class ObserverService extends Service {
 	}
 
 	/**
-	 * Display a {@link LockActivity} for this {@link LockInfo}.
+	 * Display a {@link LockActivity} for this {@link AppInfo}.
 	 * 
 	 * @param lockInfo
-	 *            The {@link LockInfo} to lock.
+	 *            The {@link AppInfo} to lock.
 	 */
-	private void showLocker(LockInfo lockInfo) {
+	private void showLocker(AppInfo lockInfo) {
 		if (mPassword.length() == 0) {
 			Log.w(TAG, "Not showing lock for empty password:"
 					+ lockInfo.packageName);
@@ -371,7 +371,7 @@ public class ObserverService extends Service {
 		whatsappWorkaround(lockInfo); // TODO remove when whatsapp fix
 		Intent intent = new Intent(ObserverService.this, LockActivity.class);
 		intent.setAction(Intent.ACTION_VIEW);
-		intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+		// intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 		intent.putExtra(EXTRA_TARGET_PACKAGENAME, lockInfo.packageName);
@@ -383,7 +383,7 @@ public class ObserverService extends Service {
 	 * 
 	 * @param li
 	 */
-	private void whatsappWorkaround(LockInfo li) {
+	private void whatsappWorkaround(AppInfo li) {
 		if (WHATSAPP_WORKAROUND) {
 			if (li.className.equals("com.whatsapp.Conversation")) {
 				try {
@@ -449,9 +449,9 @@ public class ObserverService extends Service {
 
 	public final void loadTrackedApps() {
 		Set<String> apps = getTrackedApps(this);
-		mTrackedApps = new HashSet<LockInfo>();
+		mTrackedApps = new HashSet<AppInfo>();
 		for (String s : apps) {
-			mTrackedApps.add(new LockInfo(s));
+			mTrackedApps.add(new AppInfo(s));
 		}
 
 	}

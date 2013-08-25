@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.twinone.locker"
-    android:versionCode="204"
-    android:versionName="2.0.4" >
+    android:versionCode="205"
+    android:versionName="2.0.5" >
 
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
 
+    <!-- v1.0.0 -->
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- v2.0.5 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -30,7 +34,7 @@
 
         <!-- Derived activities will return to MainActivity -->
         <activity
-            android:name="com.twinone.locker.DieLockActivity"
+            android:name="com.twinone.locker.LockOwnActivity"
             android:configChanges="orientation|screenSize"
             android:noHistory="true"
             android:screenOrientation="portrait" >
@@ -61,7 +65,7 @@
             android:name="com.twinone.locker.LockActivity"
             android:configChanges="orientation|screenSize"
             android:excludeFromRecents="true"
-            android:noHistory="true"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -71,9 +75,10 @@
 
         <service android:name="com.twinone.locker.ObserverService" />
 
-        <receiver android:name="com.twinone.locker.BootReceiver" >
+        <receiver android:name="com.twinone.locker.EventReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
         </receiver>
     </application>

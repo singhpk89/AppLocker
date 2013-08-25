@@ -106,7 +106,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		// Log.d(TAG, "unlocked: " + unlocked + " emptyPassword: " +
 		// emptyPassword);
 		if (!unlocked && !emptyPassword) {
-			Intent i = new Intent(this, DieLockActivity.class);
+			Intent i = new Intent(this, LockOwnActivity.class);
 			startActivity(i);
 			finish();
 			return;
@@ -220,7 +220,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	public static final void showWithoutPassword(Context context) {
 		Intent i = new Intent(context, MainActivity.class);
 		i.putExtra(EXTRA_UNLOCKED, true);
-		((Activity) context).finish();
+		if (context instanceof Activity) {
+			if (!((Activity) context).isFinishing()) {
+				((Activity) context).finish();
+			}
+		}
 		context.startActivity(i);
 	}
 

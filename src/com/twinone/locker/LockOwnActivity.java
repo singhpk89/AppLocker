@@ -7,7 +7,7 @@ import android.widget.Toast;
 /**
  * Locks own application, it will die when the correct password is entered.
  */
-public class DieLockActivity extends LockActivityBase {
+public class LockOwnActivity extends LockActivityBase {
 
 	// private static final String TAG = "DieLocker";
 

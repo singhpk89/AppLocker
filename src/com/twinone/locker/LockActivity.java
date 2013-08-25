@@ -29,48 +29,45 @@ public class LockActivity extends LockActivityBase {
 	private ObserverService mService;
 	boolean mBound = false;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_locker);
 
 		initLayout();
+		loadApplicationInfo(getIntent());
+		overridePendingTransition(android.R.anim.fade_in,
+				android.R.anim.fade_out);
+	}
 
+	@SuppressWarnings("deprecation")
+	void loadApplicationInfo(Intent i) {
 		savedPassword = ObserverService.getPassword(this);
 
 		// Get the packagename
-		target = (String) getIntent().getExtras().getSerializable(
+		target = (String) i.getExtras().getSerializable(
 				ObserverService.EXTRA_TARGET_PACKAGENAME);
 
+		Log.d(TAG, "TARGET:" + target);
 		// load icon or hide the ImageView
-		ApplicationInfo forApp = getAI(target);
-		if (forApp != null) {
+		ApplicationInfo ai = getAI(target);
+		if (ai != null) {
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-				ivAppIcon.setBackgroundDrawable(forApp
+				ivAppIcon.setBackgroundDrawable(ai
 						.loadIcon(getPackageManager()));
 			} else {
-				ivAppIcon.setBackground(forApp.loadIcon(getPackageManager()));
+				ivAppIcon.setBackground(ai.loadIcon(getPackageManager()));
 			}
-			tvHeader.setText(forApp.loadLabel(getPackageManager()));
+			tvHeader.setText(ai.loadLabel(getPackageManager()));
 		} else {
 			Log.w(TAG, "Could not load ApplicationInfo image");
 			ivAppIcon.setVisibility(View.GONE);
 		}
-
 		String getMessage = ObserverService.getMessage(this);
 		tvFooter.setText(getMessage.replace("%s",
-				forApp.loadLabel(getPackageManager())));
+				ai.loadLabel(getPackageManager())));
+		setPassword("");
 		Log.w(TAG, "LockerActivity for " + target);
-
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		if (!isFinishing()) {
-			finish();
-		}
 	}
 
 	@Override
@@ -78,6 +75,18 @@ public class LockActivity extends LockActivityBase {
 		super.onStart();
 		Intent i = new Intent(this, ObserverService.class);
 		bindService(i, mConnection, Context.BIND_AUTO_CREATE);
+		Log.d(TAG, "OnStart");
+
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		// TODO Auto-generated method stub
+		super.onNewIntent(intent);
+		Log.d(TAG, "onNewIntent " + intent.hashCode());
+		loadApplicationInfo(intent);
+		overridePendingTransition(android.R.anim.fade_in,
+				android.R.anim.fade_out);
 	}
 
 	private ServiceConnection mConnection = new ServiceConnection() {
@@ -139,7 +148,7 @@ public class LockActivity extends LockActivityBase {
 		Intent i = new Intent(Intent.ACTION_MAIN);
 		i.addCategory(Intent.CATEGORY_HOME);
 		startActivity(i);
-		finish();
+		// leaveLockActivity();
 	}
 
 	@Override
@@ -168,32 +177,13 @@ public class LockActivity extends LockActivityBase {
 		} else {
 			Log.w(TAG, "Service not bound, cannot unlock");
 		}
-		finish();
-//		moveTaskToBack(true);
+		leaveLockActivity();
+	}
 
-		// FROM HERE DOWN IT'S THE OLD VERSION
-		// if (target.packageName.equals(getApplicationInfo().packageName)) {
-		// // Intent i = new Intent(this, MainActivity.class);
-		// // startActivity(i);
-		// if (mBound) {
-		// mService.doUnlock(target.packageName);
-		// } else {
-		// Log.w(TAG, "Service not bound, cannot unlock");
-		// }
-		//
-		// Log.d(TAG, "Unlocked own app, finishing");
+	private void leaveLockActivity() {
 		// finish();
-		// } else {
-		// // To avoid root and parent activity errors
-		// // Log.d(TAG, "Unlocked 3rd party, moving to back");
-		// if (mBound) {
-		// mService.doUnlock(target.packageName);
-		// Log.d(TAG, "Unlocked 3rd party app");
-		// } else {
-		// Log.w(TAG, "Service not bound, cannot unlock");
-		// }
-		// finish();
-		// // moveTaskToBack(true);
-		// }
+		moveTaskToBack(true);
+		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
 	}
 }

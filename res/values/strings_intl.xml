@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="pref_key_version">com.twinone.locker.old_version</string>
     <!-- Keys -->
     <string name="pref_key_passwd">com.twinone.locker.pref.passwd</string>
     <string name="pref_key_lock_message">com.twinone.locker.pref.message_key</string>
@@ -12,7 +13,15 @@
     <string name="pref_key_delay_status">com.twinone.locker.pref.delay_status</string>
     <string name="pref_key_delay_time">com.twinone.locker.pref.delay_time</string>
     <string name="pref_key_show_notification">com.twinone.locker.pref.show_notification</string>
-
+    <string name="pref_key_hide_launcher_icon">com.twinone.locker.pref.hide_icon</string>
+    <string name="pref_key_dial_launch">com.twinone.locker.pref.dial_launch</string>
+    <string name="pref_key_transparent_notification">com.twinone.locker.pref.transparent_notification</string>
+    <string name="pref_key_cat_general">com.twinone.locker.pref.category_general</string>
+    <string name="pref_key_cat_notification">com.twinone.locker.pref.category_notification</string>
+    <string name="pref_key_cat_launcher">com.twinone.locker.pref.category_launcher</string>
+    <string name="pref_key_cat_about">com.twinone.locker.pref.category_about</string>
+    <string name="pref_key_changelog">com.twinone.locker.pref.changelog</string>
+    
     <!-- Values -->
     <string name="pref_val_perf_very_high">75</string>
     <string name="pref_val_perf_high">125</string>
@@ -26,5 +35,8 @@
     <string name="pref_def_delay_time">60</string>
     <!-- For Android 4.2 and lower, don't show a notification by default -->
     <string name="pref_def_show_notification">false</string>
+    <string name="pref_def_hide_launcher_icon">false</string>
+    <string name="pref_def_dial_launch">false</string>
+    <string name="pref_def_transparent_notification">false</string>
 
 </resources>

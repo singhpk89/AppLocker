@@ -1,9 +1,14 @@
-package com.twinone.locker;
+package com.twinone.locker.prefs;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import com.twinone.locker.LockActivityBase;
+import com.twinone.locker.MainActivity;
+import com.twinone.locker.ObserverService;
+import com.twinone.locker.R;
 
 public class ChangePasswordActivity extends LockActivityBase {
 

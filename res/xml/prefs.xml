@@ -1,59 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <!-- Start at boot -->
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="@string/pref_key_start_boot"
-        android:summary="@string/pref_desc_start_boot"
-        android:title="@string/pref_tit_start_boot" />
-    <!-- Relock screenoff -->
-    <CheckBoxPreference
-        android:defaultValue="@string/pref_def_relock_after_screenoff"
-        android:key="@string/pref_key_relock_after_screenoff"
-        android:summary="@string/pref_desc_relock_after_screenoff"
-        android:title="@string/pref_tit_relock_after_screenoff" />
-    <CheckBoxPreference
-        android:defaultValue="@string/pref_def_show_notification"
-        android:key="@string/pref_key_show_notification"
-        android:summary="@string/pref_desc_show_notification"
-        android:title="@string/pref_tit_show_notification" />
-    <!-- Vibration -->
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="@string/pref_key_vibrate_keypress"
-        android:summary="@string/pref_desc_vibrate_keypress"
-        android:title="@string/pref_tit_vibrate_keypress" />
+    <PreferenceCategory
+        android:key="@string/pref_key_cat_general"
+        android:title="@string/pref_tit_cat_general" >
 
-    <!-- Message -->
-    <EditTextPreference
-        android:defaultValue="@string/pref_def_lock_message"
-        android:dialogMessage="@string/pref_dlgmsg_lock_message"
-        android:dialogTitle="@string/pref_tit_lock_message"
-        android:key="@string/pref_key_lock_message"
-        android:selectAllOnFocus="true"
-        android:summary="@string/pref_desc_lock_message"
-        android:title="@string/pref_tit_lock_message" />
+        <!-- Start at boot -->
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_start_boot"
+            android:summary="@string/pref_desc_start_boot"
+            android:title="@string/pref_tit_start_boot" />
+        <!-- Relock screenoff -->
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_def_relock_after_screenoff"
+            android:key="@string/pref_key_relock_after_screenoff"
+            android:summary="@string/pref_desc_relock_after_screenoff"
+            android:title="@string/pref_tit_relock_after_screenoff" />
+        <!-- Message -->
+        <EditTextPreference
+            android:defaultValue="@string/pref_def_lock_message"
+            android:dialogMessage="@string/pref_dlgmsg_lock_message"
+            android:dialogTitle="@string/pref_tit_lock_message"
+            android:key="@string/pref_key_lock_message"
+            android:selectAllOnFocus="true"
+            android:summary="@string/pref_desc_lock_message"
+            android:title="@string/pref_tit_lock_message" />
+        <!-- Vibration -->
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_vibrate_keypress"
+            android:summary="@string/pref_desc_vibrate_keypress"
+            android:title="@string/pref_tit_vibrate_keypress" />
 
-    <ListPreference
-        android:defaultValue="@string/pref_val_perf_normal"
-        android:entries="@array/performance_names"
-        android:entryValues="@array/performance_values"
-        android:summary="@string/pref_desc_performance"
-        android:title="@string/pref_tit_performance" />
+        <!-- Performance -->
+        <ListPreference
+            android:defaultValue="@string/pref_val_perf_normal"
+            android:entries="@array/performance_names"
+            android:entryValues="@array/performance_values"
+            android:summary="@string/pref_desc_performance"
+            android:title="@string/pref_tit_performance" />
+        <!-- Delay -->
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_def_delay_status"
+            android:key="@string/pref_key_delay_status"
+            android:summary="@string/pref_desc_delay_status"
+            android:title="@string/pref_tit_delay_status" />
+        <!-- Delay time -->
+        <EditTextPreference
+            android:defaultValue="@string/pref_def_delay_time"
+            android:dependency="@string/pref_key_delay_status"
+            android:dialogMessage="@string/pref_dlgmsg_delay_time"
+            android:key="@string/pref_key_delay_time"
+            android:numeric="integer"
+            android:title="@string/pref_tit_delay_time" />
+    </PreferenceCategory>
 
-    <CheckBoxPreference
-        android:defaultValue="@string/pref_def_delay_status"
-        android:key="@string/pref_key_delay_status"
-        android:summary="@string/pref_desc_delay_status"
-        android:title="@string/pref_tit_delay_status" />
+    <!-- Notification related preferences -->
+    <PreferenceCategory
+        android:key="@string/pref_key_cat_notification"
+        android:title="@string/pref_tit_cat_notification" >
 
-    <EditTextPreference
-        android:defaultValue="@string/pref_def_delay_time"
-        android:dependency="@string/pref_key_delay_status"
-        android:dialogMessage="@string/pref_dlgmsg_delay_time"
-        android:key="@string/pref_key_delay_time"
-        android:numeric="integer"
-        android:title="@string/pref_tit_delay_time" />
+        <!-- Show notification -->
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_def_show_notification"
+            android:key="@string/pref_key_show_notification"
+            android:summary="@string/pref_desc_show_notification"
+            android:title="@string/pref_tit_show_notification" />
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_def_transparent_notification"
+            android:dependency="@string/pref_key_show_notification"
+            android:key="@string/pref_key_transparent_notification"
+            android:summary="@string/pref_desc_transparent_notification"
+            android:title="@string/pref_tit_transparent_notification" />
+    </PreferenceCategory>
+
+    <!-- Launcher related preferences -->
+    <PreferenceCategory
+        android:key="@string/pref_key_cat_launcher"
+        android:title="@string/pref_tit_cat_launcher" >
+
+        <!-- Dial launch status -->
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_def_dial_launch"
+            android:key="@string/pref_key_dial_launch"
+            android:summary="@string/pref_desc_dial_launch"
+            android:title="@string/pref_tit_dial_launch" />
+        <!-- Hide icon -->
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_def_hide_launcher_icon"
+            android:key="@string/pref_key_hide_launcher_icon"
+            android:summary="@string/pref_desc_hide_launcher_icon"
+            android:title="@string/pref_tit_hide_launcher_icon" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="@string/pref_key_cat_about"
+        android:title="@string/pref_tit_cat_about" >
+        <Preference
+            android:key="@string/pref_key_changelog"
+            android:title="@string/cl_title" >
+        </Preference>
+    </PreferenceCategory>
 
 </PreferenceScreen>

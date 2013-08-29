@@ -51,7 +51,7 @@ public class AppInfo implements Serializable {
 
 		if (object == null)
 			return false;
-		// Compare to another lockinfo
+		// Compare to another LockInfo
 		if (object instanceof AppInfo) {
 			return this.packageName.equals(((AppInfo) object).packageName);
 		}
@@ -69,20 +69,4 @@ public class AppInfo implements Serializable {
 	public String toString() {
 		return "LI:" + (className == null ? packageName : className);
 	}
-
-	// @Override
-	// public int compareTo(LockInfo o) {
-	// // Log.d("TEST", this.label + " " + ((LockInfo) o).label + " "
-	// // + this.label.compareTo(((LockInfo) o).label));
-	// // if (this.label.equals("Contacts")
-	// // || ((LockInfo) o).label.equals("Contacts")) {
-	// // }
-	// return this.label.compareTo(((LockInfo) o).label);
-	//
-	// // if (this.tracked != ((LockInfo) o).tracked) {
-	// // return this.tracked ? -1 : 1;
-	// // } else {
-	// // return this.label.compareTo(((LockInfo) o).label);
-	// // }
-	// }
 }

@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.app.ActivityOptions;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -19,6 +20,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -30,7 +32,7 @@ public class ObserverService extends Service {
 	public static final String PREF_FILE_DEFAULT = "com.twinone.locker.prefs.default";
 	private static final String PREF_FILE_APPS = "com.twinone.locker.prefs.apps";
 	public static final String EXTRA_MESSAGE = "com.twinone.locker.extra.Message";
-	public static final String EXTRA_TARGET_PACKAGENAME = "com.twinone.locker.extra.Info";
+	public static final String EXTRA_TARGET_PACKAGENAME = "com.twinone.locker.extra.packageName";
 	private static final String LOCKER_CLASS = LockActivity.class.getName();
 	private static final boolean WHATSAPP_WORKAROUND = true; // TODO remove
 	private static final long WHATSAPP_WAIT_DELAY = 500;
@@ -51,6 +53,9 @@ public class ObserverService extends Service {
 	private long mDelayUnlockRelockMillis;
 	private Handler mDelayUnlockHandler;
 	private boolean mShowNotification;
+	/** Used for transparent notification icon */
+	private int mNotificationPriority;
+	private boolean mExplicitStarted;
 
 	@Override
 	public IBinder onBind(Intent i) {
@@ -63,20 +68,28 @@ public class ObserverService extends Service {
 		}
 	}
 
-	@SuppressLint("NewApi")
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		Log.v(TAG, "onCreate");
 		mAM = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-		loadPreferences();
-		startScheduler();
-
 		mScreenReceiver = new ScreenReceiver();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(Intent.ACTION_SCREEN_ON);
 		filter.addAction(Intent.ACTION_SCREEN_OFF);
 		registerReceiver(mScreenReceiver, filter);
+	}
+
+	/**
+	 * Shows the notification and starts the service foreground
+	 */
+	private void startNotification() {
+		// Cancel previous notifications
+		// NotificationManager does not work.
+		// NotificationManager nm = (NotificationManager)
+		// getSystemService(NOTIFICATION_SERVICE);
+		// nm.cancel(NOTIFICATION_ID);
+		stopForeground(true);
 
 		if (mShowNotification) {
 			Intent i = new Intent(this, MainActivity.class);
@@ -91,8 +104,8 @@ public class ObserverService extends Service {
 			nb.setWhen(System.currentTimeMillis());
 			nb.setContentIntent(pi);
 			nb.setOngoing(true);
+			nb.setPriority(mNotificationPriority);
 			startForeground(NOTIFICATION_ID, nb.build());
-
 		} else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
 			// Hack for 4.2 and below to get system priority
 			@SuppressWarnings("deprecation")
@@ -103,8 +116,32 @@ public class ObserverService extends Service {
 		}
 	}
 
+	/** Checks whether this service is in foreground (StackOverflow) */
+	// private void checkForeground() {
+	// ActivityManager am = (ActivityManager) this
+	// .getSystemService(ACTIVITY_SERVICE);
+	// List<RunningServiceInfo> l = am.getRunningServices(Integer.MAX_VALUE);
+	// Iterator<RunningServiceInfo> i = l.iterator();
+	// while (i.hasNext()) {
+	// RunningServiceInfo rsi = (RunningServiceInfo) i.next();
+	// if (rsi.service.getPackageName().equals(this.getPackageName())) {
+	// if (rsi.foreground) {
+	// Log.d(TAG, "Service is in foreground");
+	// return;
+	// }
+	// }
+	// }
+	// Log.d(TAG, "Service is NOT in foreground");
+	// }
+
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		Log.d(TAG, "onStartCommand");
+
+		mExplicitStarted = true;
+		loadPreferences();
+		restart();
+
 		return START_STICKY;
 	}
 
@@ -120,10 +157,14 @@ public class ObserverService extends Service {
 	}
 
 	/**
-	 * Loads or reloads the preferences at runtime.<br>
-	 * If the scheduler is running, it will also reset its delay.
+	 * Loads or reloads the preferences at runtime and automatically adapts the
+	 * service to match the new preferences.
 	 */
-	private void loadPreferences() {
+	public void loadPreferences() {
+
+		/*
+		 * VARIABLES:
+		 */
 		SharedPreferences sp = getSharedPreferences(PREF_FILE_DEFAULT,
 				MODE_PRIVATE);
 		boolean defaultDelay = Boolean
@@ -156,11 +197,26 @@ public class ObserverService extends Service {
 				defaultShowNotification);
 		mShowNotification = showNotification;
 
+		boolean defaultTransparentNotification = Boolean
+				.parseBoolean(getString(R.string.pref_def_transparent_notification));
+		boolean transparentNotification = sp.getBoolean(
+				getString(R.string.pref_key_transparent_notification),
+				defaultTransparentNotification);
+		mNotificationPriority = transparentNotification ? Notification.PRIORITY_MIN
+				: Notification.PRIORITY_DEFAULT;
+
 		mPassword = getPassword(this);
 		loadTrackedApps();
-		if (mScheduledExecutor != null) {
-			// Only restart scheduler if it was running.
+	}
+
+	/**
+	 * Restarts everything in the service if the service was started manually.
+	 * (Notification, Scheduler)
+	 */
+	public void restart() {
+		if (mExplicitStarted) {
 			startScheduler();
+			startNotification();
 		}
 	}
 
@@ -361,6 +417,7 @@ public class ObserverService extends Service {
 	 * @param lockInfo
 	 *            The {@link AppInfo} to lock.
 	 */
+	@SuppressLint("NewApi")
 	private void showLocker(AppInfo lockInfo) {
 		if (mPassword.length() == 0) {
 			Log.w(TAG, "Not showing lock for empty password:"
@@ -371,11 +428,17 @@ public class ObserverService extends Service {
 		whatsappWorkaround(lockInfo); // TODO remove when whatsapp fix
 		Intent intent = new Intent(ObserverService.this, LockActivity.class);
 		intent.setAction(Intent.ACTION_VIEW);
-		// intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 		intent.putExtra(EXTRA_TARGET_PACKAGENAME, lockInfo.packageName);
-		startActivity(intent);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+			Bundle b = ActivityOptions.makeCustomAnimation(this,
+					android.R.anim.fade_in, 0).toBundle();
+			startActivity(intent, b);
+		} else {
+			startActivity(intent);
+
+		}
+
 	}
 
 	/**

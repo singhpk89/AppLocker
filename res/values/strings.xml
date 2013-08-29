@@ -5,7 +5,8 @@
     Added in Locker v1.0
     Author: TwinoneDevs
     -->
-    <string name="app_name">Locker</string>
+    <string name="application_name">Secure App Locker Free</string>
+    <string name="launcher_name">Secure Locker</string>
     <string name="action_settings">Settings</string>
 
     <!-- All strings for MainActivity -->
@@ -84,7 +85,6 @@
 
 
     <!-- BEGIN v2.0 Strings -->
-    <string name="pref_tit_show_notification">Notification</string>
     <!-- For android 4.2 and below, the system will not kill Locker -->
     <string name="pref_desc_show_notification">Show a notification while apps are locked</string>
     <!-- Since Android 4.3, system kills app if it doesn't show a notification, we should warnt he users about this -->
@@ -92,5 +92,27 @@
     <string name="notification_title">Locker is active</string>
     <string name="notification_state_locked">Click here to disable the lock</string>
     <!-- END v2.0 Strings -->
+
+
+    <!-- BEGIN v2.0.6 Strings -->
+    <!-- All pref_tit_xxx must be short (2 words max || length < 20) -->
+    <!-- pref_desc_xxx can be like 3 lines or more if neccesary -->
+    <!-- Preference categories (Keep short) -->
+    <string name="pref_tit_cat_general">General</string>
+    <string name="pref_tit_cat_notification">Notification</string>
+    <string name="pref_tit_cat_launcher">Start</string>
+    <!--  -->
+    <string name="pref_tit_dial_launch">Start with call</string>
+    <string name="pref_desc_dial_launch">When this option is enabled, you can access Locker by dialing #YOURPASSWORD\nThis means that if your password is 1111, you can dial #1111 to open Locker.</string>
+    <string name="pref_tit_hide_launcher_icon">Hide icon</string>
+    <string name="pref_desc_hide_launcher_icon">When this option is active, Locker will hide it\'s icon from the apps. You can remove shortcuts on your home screen manually (Requires reboot. Forces Start with call)</string>
+    <string name="pref_tit_transparent_notification">Transparent notification</string>
+    <string name="pref_desc_transparent_notification">The notification icon will be transparent</string>
+    <!-- Updated text for "Notification" -->
+    <string name="pref_tit_show_notification">Show notification</string>
+    <!-- Changelog -->
+    <string name="cl_title">What\'s New</string>
+    <string name="pref_tit_cat_about">About this app</string>
+    <!-- END v2.0.6 Strings -->
 
 </resources>

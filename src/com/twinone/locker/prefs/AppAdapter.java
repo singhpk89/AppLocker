@@ -1,4 +1,4 @@
-package com.twinone.locker;
+package com.twinone.locker.prefs;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +17,9 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.twinone.locker.ObserverService;
+import com.twinone.locker.R;
 
 public class AppAdapter extends BaseAdapter {
 

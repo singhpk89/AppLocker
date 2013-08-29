@@ -1,4 +1,4 @@
-package com.twinone.locker;
+package com.twinone.locker.prefs;
 
 import java.util.ArrayList;
 
@@ -17,8 +17,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.twinone.locker.AppAdapter.AppHolder;
+import com.twinone.locker.MainActivity;
+import com.twinone.locker.ObserverService;
 import com.twinone.locker.ObserverService.LocalBinder;
+import com.twinone.locker.R;
+import com.twinone.locker.prefs.AppAdapter.AppHolder;
 
 public class SelectActivity extends Activity implements OnItemClickListener,
 		OnClickListener {
@@ -50,8 +53,8 @@ public class SelectActivity extends Activity implements OnItemClickListener,
 	}
 
 	@Override
-	protected void onStart() {
-		super.onStart();
+	protected void onResume() {
+		super.onResume();
 		Intent i = new Intent(this, ObserverService.class);
 		bindService(i, mConnection, Context.BIND_AUTO_CREATE);
 	}
@@ -72,8 +75,8 @@ public class SelectActivity extends Activity implements OnItemClickListener,
 	};
 
 	@Override
-	protected void onStop() {
-		super.onStop();
+	protected void onPause() {
+		super.onPause();
 		if (mBound) {
 			unbindService(mConnection);
 			mBound = false;
@@ -119,7 +122,7 @@ public class SelectActivity extends Activity implements OnItemClickListener,
 				apps.add(ah.ri.activityInfo.packageName);
 			}
 			mService.setTracking(track, apps.toArray(new String[apps.size()]));
-			
+
 			mAppAdapter.loadAppsIntoList(this);
 			mAppAdapter.sort();
 			mAppAdapter.notifyDataSetChanged();

@@ -5,7 +5,7 @@
     Added in Locker v1.0
     Author: TwinoneDevs
     -->
-    <string name="app_name">Locker</string>
+    <string name="launcher_name">Locker</string>
     <string name="action_settings">Instellingen</string>
 
     <!-- All strings for MainActivity -->
@@ -84,7 +84,6 @@
 
 
     <!-- BEGIN v2.0 Strings -->
-    <string name="pref_tit_show_notification">Melding</string>
     <!-- For android 4.2 and below, the system will not kill Locker -->
     <string name="pref_desc_show_notification">Laat een melding zien wanneer apps geblokkeerd zijn</string>
     <!-- Since Android 4.3, system kills app if it doesn't show a notification, we should warnt he users about this -->
@@ -92,5 +91,27 @@
     <string name="notification_title">Locker is actief</string>
     <string name="notification_state_locked">Klik hier om de vergrendeling uit te schakelen</string>
     <!-- END v2.0 Strings -->
+
+
+    <!-- BEGIN v2.0.6 Strings -->
+    <!-- All pref_tit_xxx must be short (2 words max || length < 20) -->
+    <!-- pref_desc_xxx can be like 3 lines or more if neccesary -->
+    <!-- Preference categories (Keep short) -->
+    <string name="pref_tit_cat_general">Algemeen</string>
+    <string name="pref_tit_cat_notification">Melding</string>
+    <string name="pref_tit_cat_launcher">Start</string>
+    <!--  -->
+    <string name="pref_tit_dial_launch">Start met oproep</string>
+    <string name="pref_desc_dial_launch">Als deze optie aan is, kan je Locker starten door naar #WACHTWOORD te bellen.\nBijvoorbeeld, als je wachtwoord 1111 is, kun je #1111 bellen om Locker te starten</string>
+    <string name="pref_tit_hide_launcher_icon">Icoon verbergen</string>
+    <string name="pref_desc_hide_launcher_icon">Deze optie verbergt het iccon van de lijst met geïnstalleerde apps. (Opnieuw opstarten nodig. Start met oproep verplicht)</string>
+    <string name="pref_tit_transparent_notification">Doorzichtige melding</string>
+    <string name="pref_desc_transparent_notification">De melding wordt doorzichtig</string>
+    <!-- Updated text for "Notification" -->
+    <string name="pref_tit_show_notification">Melding weergeven</string>
+    <!-- Changelog -->
+    <string name="cl_title">Wat is nieuw</string>
+    <string name="pref_tit_cat_about">Over de app</string>
+    <!-- END v2.0.6 Strings -->
 
 </resources>

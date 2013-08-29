@@ -4,8 +4,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,7 +24,7 @@ public class LockActivity extends LockActivityBase {
 	private String savedPassword;
 
 	/** The application which we are showing this locker for */
-	private String target;
+	private String packageName;
 
 	private ObserverService mService;
 	boolean mBound = false;
@@ -44,13 +44,11 @@ public class LockActivity extends LockActivityBase {
 	void loadApplicationInfo(Intent i) {
 		savedPassword = ObserverService.getPassword(this);
 
-		// Get the packagename
-		target = (String) i.getExtras().getSerializable(
+		packageName = i.getExtras().getString(
 				ObserverService.EXTRA_TARGET_PACKAGENAME);
+		Log.d(TAG, "TARGET:" + packageName);
 
-		Log.d(TAG, "TARGET:" + target);
-		// load icon or hide the ImageView
-		ApplicationInfo ai = getAI(target);
+		ApplicationInfo ai = getAI(packageName);
 		if (ai != null) {
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
 				ivAppIcon.setBackgroundDrawable(ai
@@ -60,6 +58,8 @@ public class LockActivity extends LockActivityBase {
 			}
 			tvHeader.setText(ai.loadLabel(getPackageManager()));
 		} else {
+			// If icon could not be loaded, hide ImageView because it takes a
+			// little space
 			Log.w(TAG, "Could not load ApplicationInfo image");
 			ivAppIcon.setVisibility(View.GONE);
 		}
@@ -67,7 +67,7 @@ public class LockActivity extends LockActivityBase {
 		tvFooter.setText(getMessage.replace("%s",
 				ai.loadLabel(getPackageManager())));
 		setPassword("");
-		Log.w(TAG, "LockerActivity for " + target);
+		Log.w(TAG, "LockerActivity for " + packageName);
 	}
 
 	@Override
@@ -76,14 +76,12 @@ public class LockActivity extends LockActivityBase {
 		Intent i = new Intent(this, ObserverService.class);
 		bindService(i, mConnection, Context.BIND_AUTO_CREATE);
 		Log.d(TAG, "OnStart");
-
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-		// TODO Auto-generated method stub
 		super.onNewIntent(intent);
-		Log.d(TAG, "onNewIntent " + intent.hashCode());
+		// Log.d(TAG, "onNewIntent " + intent.hashCode());
 		loadApplicationInfo(intent);
 		overridePendingTransition(android.R.anim.fade_in,
 				android.R.anim.fade_out);
@@ -120,15 +118,14 @@ public class LockActivity extends LockActivityBase {
 	}
 
 	/**
-	 * Utility method to get an {@link ApplicationInfo} for a packageName.
+	 * Utility method to get an {@link ActivityInfo} for a packageName.
 	 * 
 	 * @param packageName
-	 * @return an {@link ApplicationInfo} or null if not found.
+	 * @return an {@link ActivityInfo} or null if not found.
 	 */
 	public ApplicationInfo getAI(String packageName) {
 		try {
-			return this.getPackageManager().getApplicationInfo(packageName,
-					PackageManager.GET_META_DATA);
+			return this.getPackageManager().getApplicationInfo(packageName, 0);
 		} catch (NameNotFoundException e) {
 			return null;
 		}
@@ -173,7 +170,7 @@ public class LockActivity extends LockActivityBase {
 	 */
 	private void unlock() {
 		if (mBound) {
-			mService.unlock(target);
+			mService.unlock(packageName);
 		} else {
 			Log.w(TAG, "Service not bound, cannot unlock");
 		}
@@ -183,7 +180,8 @@ public class LockActivity extends LockActivityBase {
 	private void leaveLockActivity() {
 		// finish();
 		moveTaskToBack(true);
-		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+		overridePendingTransition(android.R.anim.fade_in,
+				android.R.anim.fade_out);
 
 	}
 }

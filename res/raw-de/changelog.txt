@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <style type='text/css'>
+      a            { color:#a0a0e0 }
+      div.title    { 
+          color:#C0F0C0; 
+          font-size:1.2em; 
+          font-weight:bold; 
+          margin-top:1em; 
+          margin-bottom:0.5em; 
+          text-align:center }
+      div.subtitle { 
+          color:#C0F0C0; 
+          font-size:0.8em; 
+          margin-bottom:1em; 
+          text-align:center }
+      div.freetext { color:#F0F0F0 }
+      div.list     { color:#C0C0F0 }
+    </style>
+  </head>
+  <body>
+$ 2.0.6
+  % Version 2.0.6
+    * Zeige oder verstecke die Benachrichtigungen
+    * Bessere Unterstützung für kleinere Bildschirme
+    * Verstecke das Icon vom Launcher
+    * Starte Locker mit einem Anruf an #DEINPASSWORT
+$ 2.0.5
+  % Version 2.0.5
+    * Bessere Leistung
+$ END_OF_CHANGE_LOG
+  </body>
+</html>

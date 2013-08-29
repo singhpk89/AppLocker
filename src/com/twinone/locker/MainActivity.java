@@ -16,6 +16,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.twinone.locker.prefs.ChangePasswordActivity;
+import com.twinone.locker.prefs.PrefsActivity;
+import com.twinone.locker.prefs.SelectActivity;
+
 public class MainActivity extends Activity implements View.OnClickListener {
 
 	private static final String TAG = "Main";
@@ -53,6 +57,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		bRate.setOnClickListener(this);
 		// Show welcome message
 		firstTime();
+
 	}
 
 	@Override
@@ -97,23 +102,48 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// Log.w(TAG, "onResume");
+		Log.d(TAG, "onResume");
 
 		// If there is no password, don't show locker
 		// If it's already unlocked, don't show locker
 		boolean unlocked = getIntent().getBooleanExtra(EXTRA_UNLOCKED, false);
+		Log.d(TAG, "EXTRA_UNLOCKED = " + unlocked);
 		boolean emptyPassword = (ObserverService.getPassword(this).length() == 0);
-		// Log.d(TAG, "unlocked: " + unlocked + " emptyPassword: " +
-		// emptyPassword);
+		Log.d(TAG, "unlocked: " + unlocked + " emptyPassword: " + emptyPassword);
 		if (!unlocked && !emptyPassword) {
+			// Activity was not unlocked
+			Log.d(TAG, "a");
 			Intent i = new Intent(this, LockOwnActivity.class);
 			startActivity(i);
 			finish();
 			return;
+		} else {
+			// This is the point where the user enters the activity
+			// Show ChangeLog
+			Log.d(TAG, "b");
+			if (!emptyPassword
+					&& ChangeLog.isUpdated(this,
+							ObserverService.PREF_FILE_DEFAULT)) {
+				Log.d(TAG, "showing Changelog");
+				Intent i = new Intent(MainActivity.this, StagingActivity.class);
+				i.putExtra(StagingActivity.EXTRA_ACTION,
+						StagingActivity.ACTION_CHANGELOG);
+				startActivity(i);
+			}
 		}
 		// Reset the layout if the service has changed while not at activity.
 		updateLayout(isServiceRunning());
+	}
 
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		Log.d(TAG,
+				"onNewIntent " + intent.getBooleanExtra(EXTRA_UNLOCKED, false)
+						+ " " + intent.getBooleanExtra(EXTRA_UNLOCKED, true));
+		// Pass the UNLOCKED state to the activity's intent
+		getIntent().putExtra(EXTRA_UNLOCKED,
+				intent.getBooleanExtra(EXTRA_UNLOCKED, false));
 	}
 
 	private void showShareDialog() {

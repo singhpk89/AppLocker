@@ -5,7 +5,7 @@
     Added in Locker v1.0
     Author: TwinoneDevs
     -->
-    <string name="app_name">Locker</string>
+    <string name="launcher_name">Locker</string>
     <string name="action_settings">Ajustes</string>
 
     <!-- All strings for MainActivity -->
@@ -84,7 +84,6 @@
 
 
     <!-- BEGIN v2.0 Strings -->
-    <string name="pref_tit_show_notification">Notificación</string>
     <!-- For android 4.2 and below, the system will not kill Locker -->
     <string name="pref_desc_show_notification">Mostrar una notificación mientras se bloquean aplicaciones</string>
     <!-- Since Android 4.3, system kills app if it doesn't show a notification, we should warnt he users about this -->
@@ -92,5 +91,26 @@
     <string name="notification_title">Locker está activo</string>
     <string name="notification_state_locked">Haz clic aquí para desactivar el bloqueo</string>
     <!-- END v2.0 Strings -->
+    
+    <!-- BEGIN v2.0.6 Strings -->
+    <!-- All pref_tit_xxx must be short (2 words max || length < 20) -->
+    <!-- pref_desc_xxx can be like 3 lines or more if neccesary -->
+    <!-- Preference categories (Keep short) -->
+    <string name="pref_tit_cat_general">General</string>
+    <string name="pref_tit_cat_notification">Notificación</string>
+    <string name="pref_tit_cat_launcher">Inicio</string>
+    <!--  -->
+    <string name="pref_tit_dial_launch">Iniciar con llamada</string>
+    <string name="pref_desc_dial_launch">Cuando esta opción está encendida, puedes iniciar Locker llamando a #CONTRASEÑA.\nEs decir, si tu contraseña es 1111, puedes llamar a #1111 para inciar Locker</string>
+    <string name="pref_tit_hide_launcher_icon">Ocultar icono</string>
+    <string name="pref_desc_hide_launcher_icon">Con esta opción se oculta el icono de Locker de las aplicaciones instaladas (Necesita reinicio. Obliga activar Iniciar con llamada")</string>
+    <string name="pref_tit_transparent_notification">Notificación transparente</string>
+    <string name="pref_desc_transparent_notification">El icono de notificación será transparente</string>
+    <!-- Updated text for "Notification" -->
+    <string name="pref_tit_show_notification">Mostrar notificación</string>
+    <!-- Changelog -->
+    <string name="cl_title">Qué hay nuevo</string>
+        <string name="pref_tit_cat_about">Sobre la aplicación</string>
+    <!-- END v2.0.6 Strings -->
 
 </resources>

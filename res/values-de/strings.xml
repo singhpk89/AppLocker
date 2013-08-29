@@ -5,7 +5,7 @@
 -->
 <resources>
 
-    <string name="app_name">Locker</string>
+    <string name="launcher_name">Locker</string>
     <string name="action_settings">Einstellungen</string>
 
     <!-- All strings for MainActivity -->
@@ -84,12 +84,34 @@
 
 
     <!-- BEGIN v2.0 Strings -->
-    <string name="pref_tit_show_notification">Benachrichtigungen</string>
     <!-- For android 4.2 and below, the system will not kill Locker -->
     <string name="pref_desc_show_notification">Zeige Benachrichtigungen in der Statusleiste</string>
     <!-- Since Android 4.3, system kills app if it doesn't show a notification, we should warnt he users about this -->
     <string name="pref_desc_show_notification_v18">Zeige Benachrichtigungen in der Statusleiste. Wird diese Option deaktiviert, kann es vorkommen dass sich Android Locker beendet</string>
     <string name="notification_title">Locker ist aktiv</string>
     <string name="notification_state_locked">Klicke hier um Locker zu deaktivieren</string>
+    <!-- END v2.0 Strings -->
+
+
+    <!-- BEGIN v2.0.6 Strings -->
+    <!-- All pref_tit_xxx must be short (2 words max || length < 20) -->
+    <!-- pref_desc_xxx can be like 3 lines or more if neccesary -->
+    <!-- Preference categories (Keep short) -->
+    <string name="pref_tit_cat_general">Allgemein</string>
+    <string name="pref_tit_cat_notification">Benachrichtigung</string>
+    <string name="pref_tit_cat_launcher">Start</string>
+    <!--  -->
+    <string name="pref_tit_dial_launch">Mit Anruf starten</string>
+    <string name="pref_desc_dial_launch">Wenn diese Einstellung aktiviert ist, kannst du Locker starten indem du einen Anruf an #DEINPASSWORT startest.\nWenn dein Passwort zum Beispiel 1111 ist, kannst du Locker öffnen indem du #1111 anrufst.</string>
+    <string name="pref_tit_hide_launcher_icon">Verstecke Icon</string>
+    <string name="pref_desc_hide_launcher_icon">Sobald diese Option aktiviert ist, wird das Icon zum Starten von Locker aus dem Launcher versteckt. Die abgelegten Verknüpfungen am Homescreen müssen hingegen manuell entfernt werden (Benötigt evtl. einen Neustart. Aktiviert die Option "Mit Anruf starten")</string>
+    <string name="pref_tit_transparent_notification">Transparente Benachrichtigungen</string>
+    <string name="pref_desc_transparent_notification">Das Benachrichtigungsicon wird transparent sein</string>
+    <!-- Updated text for "Notification" -->
+    <string name="pref_tit_show_notification">Zeige Benachrichtigung</string>
+    <!-- Changelog -->
+    <string name="cl_title">Was ist neu</string>
+    <string name="pref_tit_cat_about">Über die App</string>
+    <!-- END v2.0.6 Strings -->
 
 </resources>

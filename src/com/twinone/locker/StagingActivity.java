@@ -12,6 +12,8 @@ public class StagingActivity extends Activity {
 
 	public static final String ACTION_SHARE = "com.twinone.locker.action.share";
 	public static final String ACTION_RATE = "com.twinone.locker.action.rate";
+	public static final String ACTION_CHANGELOG = "com.twinone.locker.action.changelog";
+	public static final String ACTION_CHANGELOG_FORCE = "com.twinone.locker.action.changelog_force";
 	public static final String EXTRA_TEXT = "com.twinone.locker.extra.text";
 	public static final String EXTRA_ACTION = "com.twinone.locker.extra.action";
 
@@ -31,6 +33,24 @@ public class StagingActivity extends Activity {
 			String str = "https://play.google.com/store/apps/details?id="
 					+ getPackageName();
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(str)));
+		} else if (ACTION_CHANGELOG.equals(action)) {
+			ChangeLog cl = new ChangeLog(this, ObserverService.PREF_FILE_DEFAULT);
+			cl.setOnChangeLogViewedListener(new ChangeLog.OnChangeLogViewedListener() {
+				@Override
+				public void onChangeLogViewed() {
+					MainActivity.showWithoutPassword(StagingActivity.this);
+				}
+			});
+			cl.showIfUpdated(true);
+		}else if (ACTION_CHANGELOG_FORCE.equals(action)) {
+			ChangeLog cl = new ChangeLog(this, ObserverService.PREF_FILE_DEFAULT);
+			cl.setOnChangeLogViewedListener(new ChangeLog.OnChangeLogViewedListener() {
+				@Override
+				public void onChangeLogViewed() {
+					MainActivity.showWithoutPassword(StagingActivity.this);
+				}
+			});
+			cl.show(true);
 		}
 
 	}
@@ -42,7 +62,6 @@ public class StagingActivity extends Activity {
 			mJustCreated = false;
 		} else {
 			MainActivity.showWithoutPassword(this);
-			finish();
 		}
 	}
 }

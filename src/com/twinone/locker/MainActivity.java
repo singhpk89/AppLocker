@@ -22,6 +22,17 @@ import com.twinone.locker.prefs.SelectActivity;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
+	// TODO Add a recovery option
+	// - Secret number Dial (Share)
+	
+	// TODO PRO add Tasker functionality - extend to other app
+	// - Wifi / data enables / disables lock
+	// - GPS enables / disables lock
+	// - Time enables / disables lock
+	
+	// TODO Label Pro features with "PRO".
+	// - Allow free users to use it until pro is available
+	
 	private static final String TAG = "Main";
 
 	Button bStartChangePass;
@@ -192,8 +203,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	}
 
 	/**
-	 * 
-	 * @return True if it's the first time, false if not.
+	 * Show a Welcome dialog that offers to create a new password
+	 * @return True if password is empty, false if not.
 	 */
 	private final boolean firstTime() {
 		boolean isEmpty = (ObserverService.getPassword(this).length() == 0);

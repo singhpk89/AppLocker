@@ -25,7 +25,7 @@
         <activity
             android:name="com.twinone.locker.MainActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/launcher_name"
+            android:label="@string/application_name"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,7 +35,7 @@
         <activity-alias
             android:name="com.twinone.locker.MainActivityAlias"
             android:enabled="true"
-            android:label="@string/launcher_name"
+            android:label="@string/application_name"
             android:targetActivity="com.twinone.locker.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

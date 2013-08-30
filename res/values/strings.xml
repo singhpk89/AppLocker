@@ -5,8 +5,7 @@
     Added in Locker v1.0
     Author: TwinoneDevs
     -->
-    <string name="application_name">Secure App Locker Free</string>
-    <string name="launcher_name">Secure Locker</string>
+    <string name="application_name">App Locker</string>
     <string name="action_settings">Settings</string>
 
     <!-- All strings for MainActivity -->
@@ -114,5 +113,15 @@
     <string name="cl_title">What\'s New</string>
     <string name="pref_tit_cat_about">About this app</string>
     <!-- END v2.0.6 Strings -->
+
+
+    <!-- BEGIN v2.0.7 Strings -->
+    <string name="recovery_tit">Important</string>
+    <string name="recovery_dlgmsg">If you ever forget your password, you can recover access to your device by dialing to your recovery code.\nPlease take 30 seconds to send this code to yourself or write it down somewhere\nYour code is:\n</string>
+    <string name="recovery_code_send_button">Send</string>
+    <string name="pref_tit_recovery_code">Recovery code</string>
+    <string name="pref_desc_recovery_code">If you call this number you will be able to access Locker when you forget your password</string>
+    <string name="pref_desc_recovery_code_2">Current code: %s</string>
+    <!-- END v2.0.7 Strings -->
 
 </resources>

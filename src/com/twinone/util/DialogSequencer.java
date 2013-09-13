@@ -39,14 +39,18 @@ public class DialogSequencer {
 	}
 
 	public DialogSequencer addDialog(Dialog dialog) {
-		mDialogs.add(dialog);
-		dialog.setOnDismissListener(mOnDismissListener);
+		if (dialog != null) {
+			mDialogs.add(dialog);
+			dialog.setOnDismissListener(mOnDismissListener);
+		}
 		return this;
 	}
 
 	public DialogSequencer addDialogs(Dialog... dialogs) {
-		for (Dialog d : dialogs) {
-			addDialog(d);
+		if (dialogs != null) {
+			for (Dialog d : dialogs) {
+				addDialog(d);
+			}
 		}
 		return this;
 	}

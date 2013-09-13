@@ -445,7 +445,7 @@ public class LockActivity extends Activity implements View.OnClickListener {
 			mViewMessage.setText(R.string.password_change_head);
 			mNewPassword = null;
 		}
-		mLeftButton.setText(R.string.button_cancel);
+		mLeftButton.setText(android.R.string.cancel);
 		mRightButton.setText(R.string.button_continue);
 		mLeftButtonAction = LeftButtonAction.CANCEL;
 		mRightButtonAction = RightButtonAction.CONTINUE;

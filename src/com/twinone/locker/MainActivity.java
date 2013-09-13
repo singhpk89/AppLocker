@@ -22,8 +22,6 @@ import com.twinone.locker.lock.AppLockService;
 import com.twinone.locker.lock.LockActivity;
 import com.twinone.util.ChangeLog;
 import com.twinone.util.DialogSequencer;
-import com.twinone.util.VersionChecker;
-import com.twinone.util.VersionChecker.VersionInfo;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -69,31 +67,49 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		bRate.setOnClickListener(this);
 		mUnlocked = getIntent().getBooleanExtra(EXTRA_UNLOCKED, false);
 
-		VersionChecker gvt = new VersionChecker(this,
-				"http://pastebin.com/raw.php?i=ikTisCpF",
-				new VersionChecker.Listener() {
+		// VersionChecker gvt = new VersionChecker(this,
+		// "http://twinone.mooo.com/version.txt?");
+		// gvt.addFlags(VersionChecker.DENY_DEPRECATED
+		// | VersionChecker.NOTIFY_UPDATE);
+		// gvt.execute();
 
-					@Override
-					public void onVersionInfoReceived(VersionInfo vi) {
-						Log.d(TAG,
-								"installedVersion():" + vi.installedVersion());
-						Log.d(TAG,
-								"isUpdateavAilable():" + vi.isUpdateAvailable());
-						Log.d(TAG, "isDeprecated():" + vi.isDeprecated());
-					}
-				});
-		gvt.execute();
-
+		DialogSequencer ds = new DialogSequencer();
+		ds.addDialog(getChangelogDialog());
+		ds.addDialogs(getEmptyPasswordDialogs());
+		ds.startDisplaying();
 	}
 
-	private void checkChangelog() {
-		if (ChangeLog.isUpdated(this, UtilPref.PREF_FILE_DEFAULT)) {
-			Log.d(TAG, "showing Changelog");
-			Intent i = new Intent(MainActivity.this, StagingActivity.class);
-			i.putExtra(StagingActivity.EXTRA_ACTION,
-					StagingActivity.ACTION_CHANGELOG);
-			startActivity(i);
+	private AlertDialog getChangelogDialog() {
+		ChangeLog cl = new ChangeLog(this);
+		return cl.shouldShow() ? cl.getDialog(true) : null;
+	}
+
+	private AlertDialog[] getEmptyPasswordDialogs() {
+		if (UtilPref.isPasswordEmpty(this)) {
+			AlertDialog.Builder ab = new AlertDialog.Builder(this);
+			ab.setTitle("Hello moto");
+			ab.setMessage("It seems you don't have an unlock method");
+			ab.setPositiveButton(android.R.string.ok, null);
+
+			AlertDialog.Builder ab2 = new AlertDialog.Builder(this);
+			ab2.setItems(R.array.lock_type_names, new OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					int lockType = LockActivity.LOCK_TYPE_DEFAULT;
+					switch (which) {
+					case 0:
+
+					}
+					Intent i = LockActivity.getDefaultIntent(MainActivity.this);
+					i.setAction(LockActivity.ACTION_CREATE);
+					i.putExtra(LockActivity.EXTRA_VIEW_TYPE, lockType);
+				}
+			});
+
+			return new AlertDialog[] { ab.create(), ab2.create() };
 		}
+		return null;
 	}
 
 	@Override
@@ -156,25 +172,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		updateLayout();
 		if (!mUnlocked) {
 
-		}
-
-	}
-
-	private void showDialogs() {
-		DialogSequencer ds = new DialogSequencer();
-		if (UtilPref.isPasswordEmpty(this)) {
-			ds.addDialog(new AlertDialog.Builder(this)
-					.setTitle(R.string.welcome_tit)
-					.setMessage(R.string.welcome_message)
-					.setNegativeButton(android.R.string.no, null)
-					.setPositiveButton(android.R.string.yes,
-							new OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									changePassword();
-								}
-							}).create());
 		}
 
 	}

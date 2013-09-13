@@ -21,6 +21,7 @@ import com.twinone.locker.R;
 public class ChangeLog {
 
 	private static final String TAG = "ChangeLog";
+	private static final String PREF_FILE_EXTENSION = ".changelog";
 	private static final String VERSION_EMPTY = "";
 	private static final String VERSION_KEY = "com.twinone.changelog.key";
 
@@ -37,18 +38,19 @@ public class ChangeLog {
 	 * @param c
 	 */
 	public ChangeLog(Context c) {
-		this(c, PreferenceManager.getDefaultSharedPreferences(c));
+		this(c, c.getSharedPreferences(
+				c.getPackageName() + PREF_FILE_EXTENSION, Context.MODE_PRIVATE));
 	}
 
-	/**
-	 * Use this constructor to use different SharedPreference file name
-	 * 
-	 * @param c
-	 * @param prefFile
-	 */
-	public ChangeLog(Context c, String prefFile) {
-		this(c, c.getSharedPreferences(prefFile, Context.MODE_PRIVATE));
-	}
+	// /**
+	// * Use this constructor to use different SharedPreference file name
+	// *
+	// * @param c
+	// * @param prefFile
+	// */
+	// public ChangeLog(Context c, String prefFile) {
+	// this(c, c.getSharedPreferences(prefFile, Context.MODE_PRIVATE));
+	// }
 
 	private ChangeLog(Context c, SharedPreferences sp) {
 		mContext = c;
@@ -98,7 +100,7 @@ public class ChangeLog {
 	 * @return True if the app version is not the same as the current version
 	 *         (if the version changed, or with a new install)
 	 */
-	public boolean isUpdated() {
+	public boolean shouldShow() {
 		return !oldVersion.equals(currentVersion);
 	}
 
@@ -109,12 +111,12 @@ public class ChangeLog {
 		return VERSION_EMPTY.equals(oldVersion);
 	}
 
-	public static final boolean isUpdated(Context c, String prefFile) {
-		String current = getCurrentVersion(c);
-		String old = getOldVersion(c, prefFile);
-		Log.d(TAG, "old: " + old + " current: " + current);
-		return !current.equals(old);
-	}
+	// public static final boolean shouldShowDialog(Context c) {
+	// String current = getCurrentVersion(c);
+	// String old = getOldVersion(c, pref);
+	// Log.d(TAG, "old: " + old + " current: " + current);
+	// return !current.equals(old);
+	// }
 
 	public static final boolean isFirstInstall(Context c, String prefFile) {
 		String old = getOldVersion(c, prefFile);
@@ -190,8 +192,8 @@ public class ChangeLog {
 		return builder.create();
 	}
 
-	public void showIfUpdated(boolean full) {
-		if (isUpdated()) {
+	public void showIfNeeded(boolean full) {
+		if (shouldShow()) {
 			AlertDialog ad = getDialog(full);
 			ad.show();
 		}

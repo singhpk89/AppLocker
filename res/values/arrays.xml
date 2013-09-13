@@ -15,5 +15,14 @@
         <item>@string/pref_val_perf_low</item>
         <item>@string/pref_val_perf_very_low</item>
     </string-array>
+    
+    <string-array name="lock_type_names">
+        <item>@string/pref_list_name_lock_type_password</item>
+        <item>@string/pref_list_name_lock_type_pattern</item>
+    </string-array>
+    <string-array name="lock_type_values">
+        <item>@string/pref_val_lock_type_password</item>
+        <item>@string/pref_val_lock_type_pattern</item>
+    </string-array>
 
 </resources>

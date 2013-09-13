@@ -16,26 +16,11 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme"></style>
 
-    <!-- For showing and hiding locker -->
-    <style name="LockerAnimation">
-        <item name="android:inAnimation">@anim/fade_in</item>
-        <item name="android:outAnimation">@anim/fade_out</item>
-    </style>
-
     <!-- Themes for locker -->
 
     <style name="Theme_Dark" parent="@android:style/Theme.Black">
-        <item name="android:windowAnimationStyle">@style/LockerAnimation</item>
-        <item name="android:buttonStyle">@style/Button_Dark_Bold</item>
-        <item name="android:windowBackground">@drawable/background_dark</item>
+        <item name="android:buttonStyle">@style/Button_Dark</item>
         <item name="android:textColor">@color/white</item>
-    </style>
-
-    <style name="Button_Dark_Bold" parent="@android:style/Widget.Button">
-        <item name="android:background">@drawable/button_dark</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:padding">10dp</item>
     </style>
 
     <style name="Button_Dark" parent="@android:style/Widget.Button">
@@ -44,12 +29,12 @@
         <item name="android:padding">10dp</item>
     </style>
 
-    <style name="TextView_Dark_Bold" parent="@android:style/Widget.TextView">
+    <style name="TextView_Dark" parent="@android:style/Widget.TextView">
         <item name="android:background">@drawable/button_dark</item>
-        <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <!-- For StagingActivity -->
     <style name="Theme_Transparent" parent="android:Theme">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>

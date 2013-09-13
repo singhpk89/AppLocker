@@ -14,6 +14,8 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
     <!-- v2.1.0 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <!--
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -25,8 +27,7 @@
         <activity
             android:name="com.twinone.locker.MainActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/application_name"
-            android:screenOrientation="portrait" >
+            android:label="@string/application_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -44,27 +45,14 @@
             </intent-filter>
         </activity-alias>
 
-        <!-- Derived activities will return to MainActivity -->
         <activity
-            android:name="com.twinone.locker.LockOwnActivity"
-            android:configChanges="orientation|screenSize"
-            android:noHistory="true"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.twinone.locker.prefs.ChangePasswordActivity"
-            android:configChanges="orientation|screenSize"
-            android:noHistory="true"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.twinone.locker.prefs.SelectActivity"
+            android:name="com.twinone.locker.SelectActivity"
             android:label="@string/applist_tit"
             android:noHistory="true"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.twinone.locker.prefs.PrefsActivity"
+            android:name="com.twinone.locker.PrefsActivity"
             android:label="@string/preferences_tit"
             android:noHistory="true" >
         </activity>
@@ -74,7 +62,7 @@
         <!-- ExcludeFromRecents will hide it in task switcher -->
         <!-- NoHistory will finish in onPause -->
         <activity
-            android:name="com.twinone.locker.LockActivity"
+            android:name="com.twinone.locker.lock.LockActivity"
             android:configChanges="orientation|screenSize"
             android:excludeFromRecents="true"
             android:launchMode="singleInstance"
@@ -85,7 +73,7 @@
             android:theme="@style/Theme_Transparent" >
         </activity>
 
-        <service android:name="com.twinone.locker.ObserverService" />
+        <service android:name="com.twinone.locker.lock.AppLockService" />
 
         <receiver android:name="com.twinone.locker.EventReceiver" >
             <intent-filter>

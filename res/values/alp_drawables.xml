@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="drawable_btn_code_lock_default_holo" format="reference" />
+    <attr name="drawable_btn_code_lock_touched_holo" format="reference" />
+    <attr name="drawable_indicator_code_lock_point_area_default_holo" format="reference" />
+    <attr name="aosp_drawable_indicator_code_lock_point_area_normal" format="reference" />
+
+</resources>

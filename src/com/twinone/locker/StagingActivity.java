@@ -1,5 +1,7 @@
 package com.twinone.locker;
 
+import com.twinone.util.ChangeLog;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -34,7 +36,7 @@ public class StagingActivity extends Activity {
 					+ getPackageName();
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(str)));
 		} else if (ACTION_CHANGELOG.equals(action)) {
-			ChangeLog cl = new ChangeLog(this, ObserverService.PREF_FILE_DEFAULT);
+			ChangeLog cl = new ChangeLog(this, UtilPref.PREF_FILE_DEFAULT);
 			cl.setOnChangeLogViewedListener(new ChangeLog.OnChangeLogViewedListener() {
 				@Override
 				public void onChangeLogViewed() {
@@ -42,8 +44,8 @@ public class StagingActivity extends Activity {
 				}
 			});
 			cl.showIfUpdated(true);
-		}else if (ACTION_CHANGELOG_FORCE.equals(action)) {
-			ChangeLog cl = new ChangeLog(this, ObserverService.PREF_FILE_DEFAULT);
+		} else if (ACTION_CHANGELOG_FORCE.equals(action)) {
+			ChangeLog cl = new ChangeLog(this, UtilPref.PREF_FILE_DEFAULT);
 			cl.setOnChangeLogViewedListener(new ChangeLog.OnChangeLogViewedListener() {
 				@Override
 				public void onChangeLogViewed() {

@@ -1,88 +1,112 @@
 package com.twinone.locker;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
+import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.twinone.locker.prefs.ChangePasswordActivity;
-import com.twinone.locker.prefs.PrefsActivity;
-import com.twinone.locker.prefs.SelectActivity;
+import com.twinone.locker.lock.AppLockService;
+import com.twinone.locker.lock.LockActivity;
+import com.twinone.util.ChangeLog;
+import com.twinone.util.DialogSequencer;
+import com.twinone.util.VersionChecker;
+import com.twinone.util.VersionChecker.VersionInfo;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
 	// TODO Add a recovery option
 	// - Secret number Dial (Share)
-	
+
 	// TODO PRO add Tasker functionality - extend to other app
 	// - Wifi / data enables / disables lock
 	// - GPS enables / disables lock
 	// - Time enables / disables lock
-	
+
 	// TODO Label Pro features with "PRO".
 	// - Allow free users to use it until pro is available
-	
+
 	private static final String TAG = "Main";
 
-	Button bStartChangePass;
-	Button bToggleService;
-	Button bStartSelect;
-	Button bChangeMessage;
-	Button bShare;
-	Button bRate;
+	private boolean mUnlocked;
+	private Button bChangePass;
+	private Button bToggleService;
+	private Button bSelectApps;
+	private Button bChangeMessage;
+	private Button bShare;
+	private Button bRate;
 	public static final String EXTRA_UNLOCKED = "com.twinone.locker.Unlocked";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		PreferenceManager.setDefaultValues(this,
-				ObserverService.PREF_FILE_DEFAULT, MODE_PRIVATE, R.xml.prefs,
-				false);
-
 		setTheme(R.style.Theme_Dark);
-
 		setContentView(R.layout.activity_main);
 		bToggleService = (Button) findViewById(R.id.bToggleService);
-		bStartChangePass = (Button) findViewById(R.id.bChangePassword);
-		bStartSelect = (Button) findViewById(R.id.bSelect);
+		bChangePass = (Button) findViewById(R.id.bChangePassword);
+		bSelectApps = (Button) findViewById(R.id.bSelect);
 		bChangeMessage = (Button) findViewById(R.id.bPrefs);
 		bShare = (Button) findViewById(R.id.bShare);
 		bRate = (Button) findViewById(R.id.bRate);
 
 		bToggleService.setOnClickListener(this);
-		bStartChangePass.setOnClickListener(this);
-		bStartSelect.setOnClickListener(this);
+		bChangePass.setOnClickListener(this);
+		bSelectApps.setOnClickListener(this);
 		bChangeMessage.setOnClickListener(this);
 		bShare.setOnClickListener(this);
 		bRate.setOnClickListener(this);
-		// Show welcome message
-		firstTime();
+		mUnlocked = getIntent().getBooleanExtra(EXTRA_UNLOCKED, false);
 
+		VersionChecker gvt = new VersionChecker(this,
+				"http://pastebin.com/raw.php?i=ikTisCpF",
+				new VersionChecker.Listener() {
+
+					@Override
+					public void onVersionInfoReceived(VersionInfo vi) {
+						Log.d(TAG,
+								"installedVersion():" + vi.installedVersion());
+						Log.d(TAG,
+								"isUpdateavAilable():" + vi.isUpdateAvailable());
+						Log.d(TAG, "isDeprecated():" + vi.isDeprecated());
+					}
+				});
+		gvt.execute();
+
+	}
+
+	private void checkChangelog() {
+		if (ChangeLog.isUpdated(this, UtilPref.PREF_FILE_DEFAULT)) {
+			Log.d(TAG, "showing Changelog");
+			Intent i = new Intent(MainActivity.this, StagingActivity.class);
+			i.putExtra(StagingActivity.EXTRA_ACTION,
+					StagingActivity.ACTION_CHANGELOG);
+			startActivity(i);
+		}
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.bChangePassword:
-			Log.d(TAG, "Changing password from button");
-			startChangePasswordActivity();
+			changePassword();
 			break;
 		case R.id.bToggleService:
 			if (isServiceRunning()) {
-				stopObserverService();
+				doStopService();
 			} else {
-				startObserverService();
+				doStartService();
 			}
 			break;
 		case R.id.bSelect:
@@ -96,9 +120,23 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			showShareDialog();
 			break;
 		case R.id.bRate:
-			Intent i = new Intent(MainActivity.this, StagingActivity.class);
-			i.putExtra(StagingActivity.EXTRA_ACTION,
-					StagingActivity.ACTION_RATE);
+
+			// Intent i = new Intent(MainActivity.this, StagingActivity.class);
+			// i.putExtra(StagingActivity.EXTRA_ACTION,
+			// StagingActivity.ACTION_RATE);
+			// startActivity(i);
+			//
+
+			Intent i = new Intent(MainActivity.this, LockActivity.class);
+			i.setAction(LockActivity.ACTION_CREATE);
+			// i.putExtra(LockActivity.EXTRA_PASSWORD, "1234");
+			// i.putExtra(LockActivity.EXTRA_PATTERN, "0125");
+			i.putExtra(LockActivity.EXTRA_VIEW_TYPE,
+					LockActivity.LOCK_TYPE_PATTERN);
+			i.putExtra(LockActivity.EXTRA_PACKAGENAME, getPackageName());
+			i.putExtra(LockActivity.EXTRA_VIEW_TYPES,
+					LockActivity.LOCK_TYPE_PASSWORD
+							| LockActivity.LOCK_TYPE_PATTERN);
 			startActivity(i);
 			break;
 		}
@@ -107,54 +145,72 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		getIntent().putExtra(EXTRA_UNLOCKED, false);
+		mUnlocked = false;
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.d(TAG, "onResume");
 
-		// If there is no password, don't show locker
-		// If it's already unlocked, don't show locker
-		boolean unlocked = getIntent().getBooleanExtra(EXTRA_UNLOCKED, false);
-		Log.d(TAG, "EXTRA_UNLOCKED = " + unlocked);
-		boolean emptyPassword = (ObserverService.getPassword(this).length() == 0);
-		Log.d(TAG, "unlocked: " + unlocked + " emptyPassword: " + emptyPassword);
-		if (!unlocked && !emptyPassword) {
-			// Activity was not unlocked
-			Log.d(TAG, "a");
-			Intent i = new Intent(this, LockOwnActivity.class);
-			startActivity(i);
-			finish();
-			return;
-		} else {
-			// This is the point where the user enters the activity
-			// Show ChangeLog
-			Log.d(TAG, "b");
-			if (!emptyPassword
-					&& ChangeLog.isUpdated(this,
-							ObserverService.PREF_FILE_DEFAULT)) {
-				Log.d(TAG, "showing Changelog");
-				Intent i = new Intent(MainActivity.this, StagingActivity.class);
-				i.putExtra(StagingActivity.EXTRA_ACTION,
-						StagingActivity.ACTION_CHANGELOG);
-				startActivity(i);
-			}
+		// Log.d(TAG, "onResume");
+		updateLayout();
+		if (!mUnlocked) {
+
 		}
-		// Reset the layout if the service has changed while not at activity.
-		updateLayout(isServiceRunning());
+
+	}
+
+	private void showDialogs() {
+		DialogSequencer ds = new DialogSequencer();
+		if (UtilPref.isPasswordEmpty(this)) {
+			ds.addDialog(new AlertDialog.Builder(this)
+					.setTitle(R.string.welcome_tit)
+					.setMessage(R.string.welcome_message)
+					.setNegativeButton(android.R.string.no, null)
+					.setPositiveButton(android.R.string.yes,
+							new OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									changePassword();
+								}
+							}).create());
+		}
+
+	}
+
+	private void updateLayout() {
+
+		bToggleService.setText(isServiceRunning() ? R.string.main_stop_service
+				: R.string.main_start_service);
+
+		if (UtilPref.getLockTypeInt(this) == LockActivity.LOCK_TYPE_PASSWORD) {
+			bChangePass.setText(R.string.main_button_set_password);
+		} else {
+			bChangePass.setText(R.string.main_button_set_pattern);
+		}
+	}
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	private void showLockActivity() {
+		Intent intent = new Intent(this, LockActivity.class);
+		intent.setAction(LockActivity.ACTION_COMPARE);
+		intent.putExtra(LockActivity.EXTRA_PACKAGENAME, getPackageName());
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+			Bundle b = ActivityOptions.makeCustomAnimation(this,
+					android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+			startActivity(intent, b);
+		} else {
+			startActivity(intent);
+		}
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		Log.d(TAG,
-				"onNewIntent " + intent.getBooleanExtra(EXTRA_UNLOCKED, false)
-						+ " " + intent.getBooleanExtra(EXTRA_UNLOCKED, true));
-		// Pass the UNLOCKED state to the activity's intent
-		getIntent().putExtra(EXTRA_UNLOCKED,
-				intent.getBooleanExtra(EXTRA_UNLOCKED, false));
+		Log.d(TAG, "onNewIntent");
+		mUnlocked = intent.getBooleanExtra(EXTRA_UNLOCKED, false);
 	}
 
 	private void showShareDialog() {
@@ -186,7 +242,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
 		for (RunningServiceInfo service : manager
 				.getRunningServices(Integer.MAX_VALUE)) {
-			if (ObserverService.class.getName().equals(
+			if (AppLockService.class.getName().equals(
 					service.service.getClassName())) {
 				return true;
 			}
@@ -194,50 +250,21 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		return false;
 	}
 
-	private final void startObserverService() {
-		if (!firstTime()) {
-			Intent i = new Intent(this, ObserverService.class);
-			startService(i);
-			updateLayout(true);
-		}
+	private final void doStartService() {
+		Intent i = new Intent(this, AppLockService.class);
+		startService(i);
+		bToggleService.setText(R.string.main_stop_service);
 	}
 
-	/**
-	 * Show a Welcome dialog that offers to create a new password
-	 * @return True if password is empty, false if not.
-	 */
-	private final boolean firstTime() {
-		boolean isEmpty = (ObserverService.getPassword(this).length() == 0);
-		if (isEmpty) {
-			new AlertDialog.Builder(this)
-					.setTitle(R.string.welcome_tit)
-					.setMessage(R.string.welcome_message)
-					.setPositiveButton(android.R.string.yes,
-							new OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									startChangePasswordActivity();
-								}
-							}).setNegativeButton(android.R.string.no, null)
-					.show();
-		}
-		return isEmpty;
-	}
-
-	private final void stopObserverService() {
-		Intent i = new Intent(this, ObserverService.class);
+	private final void doStopService() {
+		Intent i = new Intent(this, AppLockService.class);
 		stopService(i);
-		updateLayout(false);
+		bToggleService.setText(R.string.main_start_service);
 	}
 
-	private final void updateLayout(boolean isServiceRunning) {
-		bToggleService.setText(isServiceRunning ? R.string.main_stop_service
-				: R.string.main_start_service);
-	}
-
-	private final void startChangePasswordActivity() {
-		Intent i = new Intent(this, ChangePasswordActivity.class);
+	private final void changePassword() {
+		Intent i = LockActivity.getDefaultIntent(this);
+		i.setAction(LockActivity.ACTION_CREATE);
 		startActivity(i);
 	}
 

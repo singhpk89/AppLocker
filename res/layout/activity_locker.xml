@@ -1,19 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/llLockerRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/activity_vertical_margin"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4" >
+        android:layout_weight="2" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,8 +25,6 @@
             android:paddingLeft="@dimen/main_horizontal_padding"
             android:paddingRight="@dimen/main_horizontal_padding"
             android:paddingTop="@dimen/main_vertical_padding" >
-
-            <!-- This is actually an edittext but for the styling a button is used. -->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -47,27 +46,6 @@
                     android:textAppearance="@android:style/TextAppearance.Large" />
             </LinearLayout>
 
-            <!-- inputType="textPassword" gives the keyboard disabled bug ? -->
-
-            <TextView
-                android:id="@+id/tvPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginBottom="@dimen/password_bottom_margin"
-                android:layout_marginTop="@dimen/password_top_margin"
-                android:background="@drawable/button_dark"
-                android:enabled="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:gravity="center"
-                android:maxLength="6"
-                android:paddingLeft="@dimen/password_horizontal_padding"
-                android:paddingRight="@dimen/password_horizontal_padding"
-                android:textColor="@color/white"
-                android:textSize="50sp" >
-            </TextView>
-
             <TextView
                 android:id="@+id/tvFooter"
                 android:layout_width="match_parent"
@@ -76,167 +54,56 @@
         </LinearLayout>
     </ScrollView>
 
-    <TableLayout
+    <LinearLayout
+        android:id="@+id/lockView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="6" >
+        android:layout_weight="5"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
 
-        <TableRow
+        <!-- This view dynamically adapts to the LockType chosen by the user -->
+
+        <TextView
+            android:id="@+id/tvPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:enabled="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:gravity="center"
+            android:inputType="textPassword"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            android:visibility="gone" >
+        </TextView>
+    </LinearLayout>
 
-            <Button
-                android:id="@+id/b1"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/locker_button_margin"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="0px"
-                android:text="1"
-                android:textSize="@dimen/locker_button_text_size" />
+    <LinearLayout
+        android:id="@+id/llBottomButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone" >
 
-            <Button
-                android:id="@+id/b2"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/locker_button_margin"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="0px"
-                android:text="2"
-                android:textSize="@dimen/locker_button_text_size" />
-
-            <Button
-                android:id="@+id/b3"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/locker_button_margin"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="0px"
-                android:text="3"
-                android:textSize="@dimen/locker_button_text_size" />
-        </TableRow>
-
-        <TableRow
+        <Button
+            android:id="@+id/bFooterLeft"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" >
-
-            <Button
-                android:id="@+id/b4"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/locker_button_margin"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="0px"
-                android:text="4"
-                android:textSize="@dimen/locker_button_text_size" />
-
-            <Button
-                android:id="@+id/b5"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/locker_button_margin"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="0px"
-                android:text="5"
-                android:textSize="@dimen/locker_button_text_size" />
-
-            <Button
-                android:id="@+id/b6"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/locker_button_margin"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="0px"
-                android:text="6"
-                android:textSize="@dimen/locker_button_text_size" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" >
-
-            <Button
-                android:id="@+id/b7"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/locker_button_margin"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="0px"
-                android:text="7"
-                android:textSize="@dimen/locker_button_text_size" />
-
-            <Button
-                android:id="@+id/b8"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/locker_button_margin"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="0px"
-                android:text="8"
-                android:textSize="@dimen/locker_button_text_size" />
-
-            <Button
-                android:id="@+id/b9"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/locker_button_margin"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="0px"
-                android:text="9"
-                android:textSize="@dimen/locker_button_text_size" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="3dp"
             android:layout_weight="1"
-            android:weightSum="3" >
+            android:text="@string/button_cancel" />
 
-            <Button
-                android:id="@+id/bOK"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/locker_button_margin"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="0px"
-                android:text="@string/upper_ok"
-                android:textSize="@dimen/locker_button_small" />
-
-            <Button
-                android:id="@+id/b0"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/locker_button_margin"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="0px"
-                android:text="0"
-                android:textSize="@dimen/locker_button_text_size" />
-
-            <Button
-                android:id="@+id/bBack"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/locker_button_margin"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="0px"
-                android:text="&lt;"
-                android:textSize="@dimen/locker_button_text_size" />
-        </TableRow>
-    </TableLayout>
+        <Button
+            android:id="@+id/bFooterRight"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="3dp"
+            android:layout_weight="1"
+            android:text="@string/button_continue" >
+        </Button>
+    </LinearLayout>
 
 </LinearLayout>

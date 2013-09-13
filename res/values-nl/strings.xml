@@ -37,7 +37,7 @@
 
     <!-- All strings for LockActivity -->
     <string name="locker_footer_default">Voer het wachtwoord in om te ontgrendelen</string>
-    <string name="locker_enter_password">Voet wachtwoord in</string>
+    <string name="locker_enter_password">Voer wachtwoord in</string>
     <string name="locker_invalid_password">Contraseña incorrecta</string>
     <string name="upper_ok">OK</string>
     <string name="upper_back">TERUG</string>

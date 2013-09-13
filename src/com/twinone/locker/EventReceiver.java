@@ -1,5 +1,7 @@
 package com.twinone.locker;
 
+import com.twinone.locker.lock.AppLockService;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,13 +13,12 @@ public class EventReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context c, Intent i) {
 		String a = i.getAction();
-		SharedPreferences sp = c.getSharedPreferences(
-				ObserverService.PREF_FILE_DEFAULT, Context.MODE_PRIVATE);
+		SharedPreferences sp = UtilPref.prefs(c);
 		if (Intent.ACTION_BOOT_COMPLETED.equals(a)) {
 			boolean startAtBoot = sp.getBoolean(
 					c.getString(R.string.pref_key_start_boot), true);
 			if (startAtBoot) {
-				Intent startServiceIntent = new Intent(c, ObserverService.class);
+				Intent startServiceIntent = new Intent(c, AppLockService.class);
 				c.startService(startServiceIntent);
 			}
 		} else if (Intent.ACTION_NEW_OUTGOING_CALL.equals(a)) {
@@ -27,7 +28,12 @@ public class EventReceiver extends BroadcastReceiver {
 					c.getString(R.string.pref_key_dial_launch), dialLaunchDef);
 			if (dialLaunch
 					&& i.getStringExtra(Intent.EXTRA_PHONE_NUMBER).equals(
-							"#" + ObserverService.getPassword(c))) {
+							"#"
+									+ UtilPref.getPassword(
+											UtilPref.prefs(c),
+											c))) {
+				// TODO very important change to custom number because we've
+				// implemented a pattern now.
 				Log.d("Receiver", "OUTGOING CALL MATCHED");
 				setResultData(null);
 				// MainActivity.showWithoutPassword(c);

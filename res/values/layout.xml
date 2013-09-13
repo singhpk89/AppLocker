@@ -1,0 +1,5 @@
+<resources>
+
+    <item name="layout_alias_locker" type="layout">@layout/activity_locker</item>
+
+</resources>

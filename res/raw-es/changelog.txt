@@ -20,12 +20,12 @@
   </head>
   <body>
 $ 2.0.6
-  % Versi&oacute;n 2.0.6
-    * Mostrar/Ocultar notificaci&oacute;n
+  % Versión 2.0.6
+    * Mostrar/Ocultar notificación
     * Ocultar el icono del resto de aplicaciones
-    * Iniciar Locker llamando a #CONTRASE&Ntilde;A
+    * Iniciar Locker llamando a #CONTRASEÑA
 $ 2.0.5
-  % Versi&oacute;n 2.0.5
+  % Versión 2.0.5
     * Mejor rendimiento
 $ END_OF_CHANGE_LOG
   </body>

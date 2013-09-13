@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
+    <ListPreference
+        android:key="@string/pref_key_lock_type"
+        android:defaultValue="@string/pref_val_lock_type_password"
+        android:entries="@array/lock_type_names"
+        android:entryValues="@array/lock_type_values"
+        android:title="@string/pref_tit_lock_type" />
+
     <PreferenceCategory
         android:key="@string/pref_key_cat_general"
         android:title="@string/pref_tit_cat_general" >

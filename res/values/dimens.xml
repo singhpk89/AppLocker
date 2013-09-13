@@ -3,6 +3,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">8dp</dimen>
     <dimen name="activity_vertical_margin">8dp</dimen>
+    
     <dimen name="locker_button_margin">5dp</dimen>
     <dimen name="locker_button_text_size">30sp</dimen>
     <dimen name="locker_button_radius">3dp</dimen>

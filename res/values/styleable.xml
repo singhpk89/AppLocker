@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="NumberLockView">
+
+        <!-- This is the spacing between each column -->
+        <attr name="horizontalSpacing" format="dimension" />
+
+        <!-- This is the spacing between each row -->
+        <attr name="verticalSpacing" format="dimension" />
+
+        <!-- This is the maximum width the view will take in wrap_content mode -->
+        <attr name="maxWidth" format="dimension" />
+
+        <!-- This is the maximum height the view will take in wrap_content mode -->
+        <attr name="maxHeight" format="dimension" />
+
+        <!-- The view can be this many times taller than wide at most -->
+        <attr name="maxVScale" format="float" />
+
+        <!-- The view can be this many times wider than tall at most -->
+        <attr name="maxHScale" format="float" />
+
+        <!-- Number of rows of this view -->
+        <attr name="rows" format="integer" />
+
+        <!-- Number of columns of this view -->
+        <attr name="cols" format="integer" />
+
+        <!-- Ignore maxHScale and maxVScale, and make all children square (requires horizontalSpacing and verticalSpacing to be the same -->
+        <attr name="squareChildren" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="PatternLockView">
+
+        <!-- This is the maximum size the view will take in wrap_content mode -->
+        <attr name="maxSize" format="dimension"></attr>
+
+        <!-- Number of rows and columns in the matrix -->
+        <attr name="size" format="integer"></attr>
+    </declare-styleable>
+
+</resources>

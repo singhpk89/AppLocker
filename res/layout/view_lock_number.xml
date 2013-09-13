@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.twinone.locker.lock.NumberLockView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:numlock="http://schemas.android.com/apk/res/com.twinone.locker"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    numlock:cols="3"
+    numlock:horizontalSpacing="7dp"
+    numlock:maxHScale="1.5"
+    numlock:maxVScale="1.2"
+    numlock:maxWidth="400dp"
+    numlock:rows="4"
+    numlock:verticalSpacing="7dp" >
+
+    <Button
+        android:id="@+id/numlock_b1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="0px"
+        android:gravity="center"
+        android:padding="0px"
+        android:text="@string/num1"
+        android:textSize="@dimen/locker_button_text_size"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/numlock_b2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="0px"
+        android:gravity="center"
+        android:padding="0px"
+        android:text="@string/num2"
+        android:textSize="@dimen/locker_button_text_size"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/numlock_b3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="0px"
+        android:text="@string/num3"
+        android:textSize="@dimen/locker_button_text_size"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/numlock_b4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/num4"
+        android:textSize="@dimen/locker_button_text_size"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/numlock_b5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="0px"
+        android:text="@string/num5"
+        android:textSize="@dimen/locker_button_text_size"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/numlock_b6"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="0px"
+        android:text="@string/num6"
+        android:textSize="@dimen/locker_button_text_size"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/numlock_b7"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="0px"
+        android:text="@string/num7"
+        android:textSize="@dimen/locker_button_text_size"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/numlock_b8"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="0px"
+        android:text="@string/num8"
+        android:textSize="@dimen/locker_button_text_size"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/numlock_b9"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="0px"
+        android:text="@string/num9"
+        android:textSize="@dimen/locker_button_text_size"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/numlock_bLeft"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="0px"
+        android:textSize="@dimen/locker_button_text_size" />
+
+    <Button
+        android:id="@+id/numlock_b0"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="0px"
+        android:text="@string/num0"
+        android:textSize="@dimen/locker_button_text_size"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/numlock_bRight"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="0px"
+        android:textSize="@dimen/locker_button_text_size" />
+
+</com.twinone.locker.lock.NumberLockView>

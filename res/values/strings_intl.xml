@@ -4,6 +4,7 @@
     <string name="pref_key_version">com.twinone.locker.old_version</string>
     <!-- Keys -->
     <string name="pref_key_passwd">com.twinone.locker.pref.passwd</string>
+    <string name="pref_key_pattern">com.twinone.locker.pref.pattern</string>
     <string name="pref_key_lock_message">com.twinone.locker.pref.message_key</string>
     <string name="pref_key_start_boot">com.twinone.locker.pref.start_boot</string>
     <string name="pref_key_relock_after_screenoff">com.twinone.locker.pref.relock_after_screenoff</string>
@@ -22,16 +23,21 @@
     <string name="pref_key_cat_about">com.twinone.locker.pref.category_about</string>
     <string name="pref_key_changelog">com.twinone.locker.pref.changelog</string>
     <string name="pref_key_recovery_code">com.twinone.locker.pref.recovery_code</string>
-    
+    <string name="pref_key_lock_type">com.twinone.locker.pref.lock_type</string>
+
     <!-- Values -->
     <string name="pref_val_perf_very_high">75</string>
     <string name="pref_val_perf_high">125</string>
     <string name="pref_val_perf_normal">200</string>
     <string name="pref_val_perf_low">250</string>
     <string name="pref_val_perf_very_low">300</string>
+    <!--  -->
+    <string name="pref_val_lock_type_password">PASSWORD</string>
+    <string name="pref_val_lock_type_pattern">PATTERN</string>
 
     <!-- Defaults -->
     <string name="pref_def_delay_status">false</string>
+    <string name="pref_def_vibrate_keypress">false</string>
     <string name="pref_def_relock_after_screenoff">true</string>
     <string name="pref_def_delay_time">60</string>
     <!-- For Android 4.2 and lower, don't show a notification by default -->
@@ -40,5 +46,21 @@
     <string name="pref_def_hide_launcher_icon">false</string>
     <string name="pref_def_dial_launch">false</string>
     <string name="pref_def_transparent_notification">false</string>
+
+    <!--
+    Next are numbers on buttons, only translate if your language 
+    doesn't have decimal numbers (also please contact me in that case)
+    -->
+    <string name="num0">0</string>
+    <string name="num1">1</string>
+    <string name="num2">2</string>
+    <string name="num3">3</string>
+    <string name="num4">4</string>
+    <string name="num5">5</string>
+    <string name="num6">6</string>
+    <string name="num7">7</string>
+    <string name="num8">8</string>
+    <string name="num9">9</string>
+    <string name="numBack">&lt;</string>
 
 </resources>

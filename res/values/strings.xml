@@ -124,4 +124,37 @@
     <string name="pref_desc_recovery_code_2">Current code: %s</string>
     <!-- END v2.0.7 Strings -->
 
+
+    <!-- BEGIN v2.0.8 Strings -->
+    <!-- PASSWORD -->
+    <string name="password_change_tit">Change password</string>
+    <string name="password_change_head">Enter a new unlock password</string>
+    <string name="password_change_confirm">Enter the password again to confirm</string>
+    <string name="password_change_saved">Password changed successfully</string>
+    <string name="password_change_error">Error saving password</string>
+    <string name="password_change_not_match">Passwords do not match</string>
+    <string name="password_empty">Password cannot be empty</string>
+    <!-- PATTERN -->
+    <string name="pattern_change_tit">Change pattern</string>
+    <string name="pattern_detected">Pattern detected</string>
+    <string name="pattern_change_head">Draw a new unlock pattern</string>
+    <string name="pattern_change_confirm">Draw the pattern again to confirm</string>
+    <string name="pattern_change_saved">Pattern changed successfully</string>
+    <string name="pattern_change_error">Error saving pattern</string>
+    <string name="pattern_change_not_match">Patterns do not match</string>
+    <!--  -->
+    <string name="button_confirm">Confirm</string>
+    <string name="button_continue">Next</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_back">Back</string>
+    <!-- Buttons have short text! (2 words or so) -->
+    <string name="main_button_set_password">Change password</string>
+    <string name="main_button_set_pattern">Change pattern</string>
+    <string name="pref_list_name_lock_type_password">Password</string>
+    <string name="pref_list_name_lock_type_pattern">Pattern</string>
+    <string name="pref_tit_lock_type">Lock Type</string>
+    <string name="pref_desc_lock_type">Currently: %s</string>
+
+    <!-- END v2.0.8 Strings -->
+
 </resources>

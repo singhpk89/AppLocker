@@ -1,0 +1,9 @@
+<resources>
+
+    <!--
+    	Set the default land layout.
+    	This is overriden in values-large-land and values-sw600dp-land
+    -->
+    <item name="layout_alias_locker" type="layout">@layout/activity_locker_twopanes</item>
+
+</resources>

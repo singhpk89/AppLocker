@@ -1,0 +1,7 @@
+<resources>
+
+    <!-- This affects tablets of Android below 3.2 -->
+    <!-- Remap activity_locker to activity_locker_twopanes -->
+    <item name="layout_alias_locker" type="layout">@layout/activity_locker</item>
+
+</resources>

@@ -20,8 +20,10 @@ import android.widget.EditText;
 
 import com.twinone.locker.lock.AppLockService;
 import com.twinone.locker.lock.LockActivity;
+import com.twinone.locker.util.PrefUtil;
 import com.twinone.util.ChangeLog;
 import com.twinone.util.DialogSequencer;
+import com.twinone.util.VersionChecker;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -65,18 +67,25 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		bChangeMessage.setOnClickListener(this);
 		bShare.setOnClickListener(this);
 		bRate.setOnClickListener(this);
+		Log.i(TAG, "onCreate");
+
 		mUnlocked = getIntent().getBooleanExtra(EXTRA_UNLOCKED, false);
 
-		// VersionChecker gvt = new VersionChecker(this,
-		// "http://twinone.mooo.com/version.txt?");
-		// gvt.addFlags(VersionChecker.DENY_DEPRECATED
-		// | VersionChecker.NOTIFY_UPDATE);
-		// gvt.execute();
+		new VersionChecker(this, "http://twinone.pkern.at/version.txt")
+				.execute();
+	}
 
+	private void showDialogs() {
 		DialogSequencer ds = new DialogSequencer();
 		ds.addDialog(getChangelogDialog());
-		ds.addDialogs(getEmptyPasswordDialogs());
-		ds.startDisplaying();
+		if (PrefUtil.isCurrentPasswordEmpty(this)) {
+			ds.addDialog(getEmptyPasswordDialog(this));
+			ds.addDialog(getLockChooseDialog(this));
+		}
+		if (PrefUtil.getTrackedApps(this).isEmpty()) {
+			ds.addDialog(getEmptyAppsDialog(this));
+		}
+		ds.start();
 	}
 
 	private AlertDialog getChangelogDialog() {
@@ -84,32 +93,48 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		return cl.shouldShow() ? cl.getDialog(true) : null;
 	}
 
-	private AlertDialog[] getEmptyPasswordDialogs() {
-		if (UtilPref.isPasswordEmpty(this)) {
-			AlertDialog.Builder ab = new AlertDialog.Builder(this);
-			ab.setTitle("Hello moto");
-			ab.setMessage("It seems you don't have an unlock method");
-			ab.setPositiveButton(android.R.string.ok, null);
+	public static final AlertDialog getEmptyPasswordDialog(final Context c) {
+		AlertDialog.Builder ab = new AlertDialog.Builder(c);
+		ab.setTitle("Hello moto");
+		ab.setMessage("");
 
-			AlertDialog.Builder ab2 = new AlertDialog.Builder(this);
-			ab2.setItems(R.array.lock_type_names, new OnClickListener() {
+		ab.setPositiveButton(android.R.string.ok, null);
+		return ab.create();
+	}
 
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					int lockType = LockActivity.LOCK_TYPE_DEFAULT;
-					switch (which) {
-					case 0:
+	public static final AlertDialog getLockChooseDialog(final Context c) {
 
-					}
-					Intent i = LockActivity.getDefaultIntent(MainActivity.this);
-					i.setAction(LockActivity.ACTION_CREATE);
-					i.putExtra(LockActivity.EXTRA_VIEW_TYPE, lockType);
-				}
-			});
+		AlertDialog.Builder ab = new AlertDialog.Builder(c);
+		ab.setCancelable(false);
+		ab.setTitle("Choose Lock Type");
+		ab.setItems(R.array.lock_type_names, new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				final int lockType = which == 0 ? LockActivity.LOCK_TYPE_PASSWORD
+						: LockActivity.LOCK_TYPE_PATTERN;
+				Intent i = LockActivity.getDefaultIntent(c);
+				i.setAction(LockActivity.ACTION_CREATE);
+				i.putExtra(LockActivity.EXTRA_VIEW_TYPE, lockType);
+				c.startActivity(i);
+			}
+		});
+		return ab.create();
+	}
 
-			return new AlertDialog[] { ab.create(), ab2.create() };
-		}
-		return null;
+	public static final AlertDialog getEmptyAppsDialog(final Context c) {
+		AlertDialog.Builder ab = new AlertDialog.Builder(c);
+		ab.setTitle("You have no apps locked");
+		ab.setMessage("Please add some apps");
+		ab.setCancelable(false);
+		ab.setNegativeButton(android.R.string.cancel, null);
+		ab.setPositiveButton(android.R.string.ok, new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Intent i = new Intent(c, SelectActivity.class);
+				c.startActivity(i);
+			}
+		});
+		return ab.create();
 	}
 
 	@Override
@@ -137,43 +162,32 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			break;
 		case R.id.bRate:
 
-			// Intent i = new Intent(MainActivity.this, StagingActivity.class);
-			// i.putExtra(StagingActivity.EXTRA_ACTION,
-			// StagingActivity.ACTION_RATE);
-			// startActivity(i);
-			//
-
-			Intent i = new Intent(MainActivity.this, LockActivity.class);
-			i.setAction(LockActivity.ACTION_CREATE);
-			// i.putExtra(LockActivity.EXTRA_PASSWORD, "1234");
-			// i.putExtra(LockActivity.EXTRA_PATTERN, "0125");
-			i.putExtra(LockActivity.EXTRA_VIEW_TYPE,
-					LockActivity.LOCK_TYPE_PATTERN);
-			i.putExtra(LockActivity.EXTRA_PACKAGENAME, getPackageName());
-			i.putExtra(LockActivity.EXTRA_VIEW_TYPES,
-					LockActivity.LOCK_TYPE_PASSWORD
-							| LockActivity.LOCK_TYPE_PATTERN);
+			Intent i = new Intent(MainActivity.this, StagingActivity.class);
+			i.setAction(StagingActivity.ACTION_RATE);
 			startActivity(i);
 			break;
 		}
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
-		mUnlocked = false;
-	}
-
-	@Override
 	protected void onResume() {
 		super.onResume();
-
-		// Log.d(TAG, "onResume");
-		updateLayout();
-		if (!mUnlocked) {
-
+		Log.i(TAG, "onResume");
+		if (PrefUtil.isCurrentPasswordEmpty(this)) {
+			mUnlocked = true;
+			showDialogs();
 		}
-
+		if (!mUnlocked) {
+			Log.d(TAG, "Locking own activity again");
+			Intent i = LockActivity.getDefaultIntent(this);
+			i.setAction(LockActivity.ACTION_COMPARE);
+			i.putExtra(LockActivity.EXTRA_MESSAGE, "");
+			i.putExtra(LockActivity.EXTRA_PACKAGENAME, getPackageName());
+			startActivity(i);
+			finish();
+		}
+		mUnlocked = false;
+		updateLayout();
 	}
 
 	private void updateLayout() {
@@ -181,7 +195,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		bToggleService.setText(isServiceRunning() ? R.string.main_stop_service
 				: R.string.main_start_service);
 
-		if (UtilPref.getLockTypeInt(this) == LockActivity.LOCK_TYPE_PASSWORD) {
+		if (PrefUtil.getLockTypeInt(this) == LockActivity.LOCK_TYPE_PASSWORD) {
 			bChangePass.setText(R.string.main_button_set_password);
 		} else {
 			bChangePass.setText(R.string.main_button_set_pattern);
@@ -206,7 +220,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		Log.d(TAG, "onNewIntent");
+		Log.i(TAG, "onNewIntent");
 		mUnlocked = intent.getBooleanExtra(EXTRA_UNLOCKED, false);
 	}
 
@@ -223,8 +237,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				Intent i = new Intent(MainActivity.this, StagingActivity.class);
-				i.putExtra(StagingActivity.EXTRA_ACTION,
-						StagingActivity.ACTION_SHARE);
+				i.setAction(StagingActivity.ACTION_SHARE);
 				i.putExtra(StagingActivity.EXTRA_TEXT, etShareText.getText()
 						.toString());
 				startActivity(i);
@@ -248,7 +261,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	}
 
 	private final void doStartService() {
-		Intent i = new Intent(this, AppLockService.class);
+		Intent i = AppLockService.getStartIntent(this);
 		startService(i);
 		bToggleService.setText(R.string.main_stop_service);
 	}
@@ -285,6 +298,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	public static final void showWithoutPassword(Context context) {
 		Intent i = new Intent(context, MainActivity.class);
 		i.putExtra(EXTRA_UNLOCKED, true);
+		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		if (context instanceof Activity) {
 			if (!((Activity) context).isFinishing()) {
 				((Activity) context).finish();

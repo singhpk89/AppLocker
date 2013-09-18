@@ -55,7 +55,7 @@ public class DialogSequencer {
 		return this;
 	}
 
-	public DialogSequencer startDisplaying() {
+	public DialogSequencer start() {
 		displayNext();
 		return this;
 	}
@@ -74,7 +74,7 @@ public class DialogSequencer {
 	}
 
 	/**
-	 * Don't show any more dialogs until {@link #startDisplaying()} is called
+	 * Don't show any more dialogs until {@link #start()} is called
 	 * again.
 	 */
 	public void cancel() {

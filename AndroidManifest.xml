@@ -16,10 +16,8 @@
     <!-- v2.1.0 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    -->
+    <!--  -->
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -48,8 +46,7 @@
         <activity
             android:name="com.twinone.locker.SelectActivity"
             android:label="@string/applist_tit"
-            android:noHistory="true"
-            android:screenOrientation="portrait" >
+            android:noHistory="true" >
         </activity>
         <activity
             android:name="com.twinone.locker.PrefsActivity"
@@ -65,8 +62,7 @@
             android:name="com.twinone.locker.lock.LockActivity"
             android:configChanges="orientation|screenSize"
             android:excludeFromRecents="true"
-            android:launchMode="singleInstance"
-            android:screenOrientation="portrait" >
+            android:launchMode="singleInstance" >
         </activity>
         <activity
             android:name="com.twinone.locker.StagingActivity"
@@ -77,8 +73,11 @@
 
         <receiver android:name="com.twinone.locker.EventReceiver" >
             <intent-filter>
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.wifi.STATE_CHANGE" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
     </application>

@@ -15,13 +15,12 @@ public class StagingActivity extends Activity {
 	public static final String ACTION_CHANGELOG = "com.twinone.locker.action.changelog";
 	public static final String ACTION_CHANGELOG_FORCE = "com.twinone.locker.action.changelog_force";
 	public static final String EXTRA_TEXT = "com.twinone.locker.extra.text";
-	public static final String EXTRA_ACTION = "com.twinone.locker.extra.action";
 
 	@Override
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		Log.w("Stager", "onCreate");
-		String action = getIntent().getExtras().getString(EXTRA_ACTION);
+		String action = getIntent().getAction();
 		if (ACTION_SHARE.equals(action)) {
 			String shareText = getIntent().getExtras().getString(EXTRA_TEXT);
 			Intent i = new Intent(android.content.Intent.ACTION_SEND);

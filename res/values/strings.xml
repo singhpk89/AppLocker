@@ -64,19 +64,19 @@
     <string name="pref_desc_start_boot">Start locking apps when your device starts</string>
     <string name="pref_tit_relock_after_screenoff">Relock after screen off</string>
     <string name="pref_desc_relock_after_screenoff">Ask for a password again after screen is turned off</string>
-    <string name="pref_tit_vibrate_keypress">Vibration</string>
-    <string name="pref_desc_vibrate_keypress">Vibrate when you press keys</string>
+    <string name="old_pref_tit_vibrate_password">Vibration</string>
+    <string name="old_pref_desc_vibrate_password">Vibrate when you press keys</string>
     <string name="pref_tit_performance">Performance</string>
     <string name="pref_desc_performance">Higher performance will be faster, but will consume more battery. Lower performance will be slower but saves battery.</string>
-    <string name="performance_very_high">Very high</string>
-    <string name="performance_high">High</string>
-    <string name="performance_normal">Normal</string>
-    <string name="performance_low">Low</string>
-    <string name="performance_very_low">Powersave</string>
-    <string name="pref_tit_delay_status">Delay lock</string>
-    <string name="pref_desc_delay_status">When you enter the correct password, next password will be asked after a delay</string>
-    <string name="pref_tit_delay_time">Delay time</string>
-    <string name="pref_dlgmsg_delay_time">After this time the password will be asked again (Seconds)</string>
+    <string name="pref_list_perf_very_high">Very high</string>
+    <string name="pref_list_perf_high">High</string>
+    <string name="pref_list_perf_normal">Normal</string>
+    <string name="pref_list_perf_low">Low</string>
+    <string name="pref_list_perf_very_low">Powersave</string>
+    <string name="old_pref_tit_delay_status">Delay lock</string>
+    <string name="old_pref_desc_delay_status">When you enter the correct password, next password will be asked after a delay</string>
+    <string name="old_pref_tit_delay_time">Delay time</string>
+    <string name="old_pref_dlgmsg_delay_time">After this time the password will be asked again (Seconds)</string>
     <string name="applist_lock_all">All</string>
     <string name="applist_unlock_all">None</string>
     <string name="main_rate">Rate</string>
@@ -145,8 +145,8 @@
     <!-- Buttons have short text! (2 words or so) -->
     <string name="main_button_set_password">Change password</string>
     <string name="main_button_set_pattern">Change pattern</string>
-    <string name="pref_list_name_lock_type_password">Password</string>
-    <string name="pref_list_name_lock_type_pattern">Pattern</string>
+    <string name="pref_list_lock_type_password">Password</string>
+    <string name="pref_list_lock_type_pattern">Pattern</string>
     <string name="pref_tit_lock_type">Lock Type</string>
     <string name="pref_desc_lock_type">Currently: %s</string>
     <!-- VersionChecker -->
@@ -157,6 +157,44 @@
     <string name="vc_msg_new_version">There is a new version available, do you want to update now?</string>
     <string name="vc_msg_unsupported">The version you are using of this app is too old and needs to be updated. Please update the app or exit. Sorry for the inconvenience.</string>
 
+    <!-- Settings -->
+    <string name="pref_tit_cat_password">Password settings</string>
+    <string name="pref_tit_cat_pattern">Pattern settings</string>
+    <string name="pref_tit_delay_status">Short exit</string>
+    <string name="pref_desc_delay_status">You can exit an app and go back in the limit time without entering a password</string>
+    <string name="pref_tit_delay_time">Short exit time</string>
+    <!-- Seconds is important, not just "time" -->
+    <string name="pref_dlgmsg_delay_time">Enter the number of seconds after which the apps will be locked again</string>
+    <string name="pref_tit_orientation">Orientation</string>
+
+    <!-- Password specific settings -->
+    <string name="pref_tit_vibrate_password">Vibration</string>
+    <string name="pref_desc_vibrate_password">Vibrate when you press keys</string>
+    <string name="pref_tit_hide_dots">Hide dots</string>
+    <string name="pref_desc_hide_dots">When you type your password, the dots will not show on screen</string>
+
+    <!-- Pattern specific settings -->
+    <string name="pref_tit_vibrate_pattern">Vibration</string>
+    <string name="pref_desc_vibrate_pattern">Vibrate when you slide over the pattern</string>
+    <string name="pref_tit_pattern_stealth">Invisible mode</string>
+    <string name="pref_desc_pattern_stealth">The pattern will be invisible</string>
+    <string name="pref_tit_switch_buttons">Switch buttons</string>
+    <string name="pref_desc_switch_buttons">Change the position of the OK and Back buttons</string>
+    <string name="pref_list_orientation_portrait">Portrait</string>
+    <!-- TODO: Use android standards -->
+    <string name="pref_list_orientation_landscape">Landscape</string>
+    <string name="pref_list_orientation_auto_rotate">Auto-rotate</string>
+    <string name="pref_list_orientation_system">System setting</string>
     <!-- END v2.0.8 Strings -->
+
+
+    <!-- BEGIN v2.1.1 -->
+    <string name="pref_tit_password_expiry">Maximum time</string>
+    <string name="pref_desc_password_expiry">The time you have to enter the correct password</string>
+    <string name="pref_dlgmsg_password_expiry">Time is in seconds, 0 is unlimited</string>
+    <string name="pref_tit_max_password_retries">Maximum attempts</string>
+    <string name="pref_desc_max_password_retries">The number of attempts you have to enter the correct password</string>
+    <string name="pref_dlgmsg_max_password_retries">0 is unlimited</string>
+    <!-- END v2.1.1 -->
 
 </resources>

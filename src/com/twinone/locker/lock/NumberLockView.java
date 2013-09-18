@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,7 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.twinone.locker.R;
-import com.twinone.locker.Util;
+import com.twinone.locker.util.Util;
 
 public class NumberLockView extends ViewGroup implements OnClickListener,
 		OnLongClickListener {
@@ -23,10 +24,10 @@ public class NumberLockView extends ViewGroup implements OnClickListener,
 	/** The current numbers that the user has input */
 	private String mPassword = "";
 
-	private Button[] mNumberButtons;
+	private Button[] mButtons;
 
 	/** The default is left for back, right for OK */
-	private boolean mSwapActionButtons = false;
+	// private boolean mSwapActionButtons = false;
 
 	private Button mBackButton;
 	private Button mOkButton;
@@ -138,7 +139,7 @@ public class NumberLockView extends ViewGroup implements OnClickListener,
 	protected void onFinishInflate() {
 		super.onFinishInflate();
 
-		mNumberButtons = new Button[] { (Button) findViewById(R.id.numlock_b0),
+		mButtons = new Button[] { (Button) findViewById(R.id.numlock_b0),
 				(Button) findViewById(R.id.numlock_b1),
 				(Button) findViewById(R.id.numlock_b2),
 				(Button) findViewById(R.id.numlock_b3),
@@ -148,29 +149,31 @@ public class NumberLockView extends ViewGroup implements OnClickListener,
 				(Button) findViewById(R.id.numlock_b7),
 				(Button) findViewById(R.id.numlock_b8),
 				(Button) findViewById(R.id.numlock_b9) };
-		for (Button b : mNumberButtons)
+		for (Button b : mButtons)
 			b.setOnClickListener(this);
 
-		if (mSwapActionButtons) {
-			mBackButton = (Button) findViewById(R.id.numlock_bRight);
-			mOkButton = (Button) findViewById(R.id.numlock_bLeft);
-		} else {
-			mBackButton = (Button) findViewById(R.id.numlock_bLeft);
-			mOkButton = (Button) findViewById(R.id.numlock_bRight);
-		}
+		// if (mSwapActionButtons) {
+		// mBackButton = (Button) findViewById(R.id.numlock_bRight);
+		// mOkButton = (Button) findViewById(R.id.numlock_bLeft);
+		// } else {
+		mBackButton = (Button) findViewById(R.id.numlock_bLeft);
+		mOkButton = (Button) findViewById(R.id.numlock_bRight);
+		// }
 
 		mBackButton.setText(R.string.numBack);
+		mBackButton.setTextSize(new Button(getContext()).getTextSize());
+		mOkButton.setText(android.R.string.ok);
+		mOkButton.setTextSize(15.0F);
+
 		mBackButton.setOnClickListener(this);
 		mBackButton.setOnLongClickListener(this);
 
-		mOkButton.setText(android.R.string.ok);
-		mOkButton.setTextSize(15.0F);
 		mOkButton.setOnClickListener(this);
 		mOkButton.setOnLongClickListener(this);
 	}
 
 	public void setButtonBackgrounds(int backgroundResId) {
-		for (Button b : mNumberButtons) {
+		for (Button b : mButtons) {
 			b.setBackgroundResource(backgroundResId);
 		}
 		mBackButton.setBackgroundResource(backgroundResId);
@@ -178,7 +181,7 @@ public class NumberLockView extends ViewGroup implements OnClickListener,
 	}
 
 	public void setButtonBackgrounds(Drawable backgroundDrawable) {
-		for (Button b : mNumberButtons) {
+		for (Button b : mButtons) {
 			Util.setBackgroundDrawable(b, backgroundDrawable);
 		}
 		Util.setBackgroundDrawable(mBackButton, backgroundDrawable);
@@ -186,7 +189,7 @@ public class NumberLockView extends ViewGroup implements OnClickListener,
 	}
 
 	public interface OnNumberListener {
-		public void onNumberButton(String newNumber);
+		public void onPasswordChange(String newNumber);
 
 		public void onOkButton();
 
@@ -270,12 +273,19 @@ public class NumberLockView extends ViewGroup implements OnClickListener,
 	 */
 	private void onNumberButtonImpl(View v) {
 		Button b = (Button) v;
-		String newPassword = new StringBuilder().append(mPassword)
+		final String newPassword = new StringBuilder().append(mPassword)
 				.append(b.getText()).toString();
 		setPassword(newPassword);
-		if (mListener != null) {
-			mListener.onNumberButton(newPassword);
-		}
+		// post instead of executing, so that the
+		// last dot in the password gets displayed
+		post(new Runnable() {
+			@Override
+			public void run() {
+				if (mListener != null) {
+					mListener.onPasswordChange(newPassword);
+				}
+			}
+		});
 	}
 
 	public String getCurrentNumbers() {
@@ -435,12 +445,6 @@ public class NumberLockView extends ViewGroup implements OnClickListener,
 		this.mTextView = tv;
 	}
 
-	// TODO remove?
-	// private void resizeTextView() {
-	// removeCallbacks(mResizeRunnable);
-	// post(mResizeRunnable);
-	// }
-
 	final Runnable mResizeRunnable = new Runnable() {
 
 		@Override
@@ -470,8 +474,22 @@ public class NumberLockView extends ViewGroup implements OnClickListener,
 	 * @param swap
 	 *            True if the buttons should be swapped
 	 */
-	public void setSwapActionButtons(boolean swap) {
-		this.mSwapActionButtons = swap;
+	public void setSwitchButtons(boolean swap) {
+		if (swap) {
+			mBackButton = (Button) findViewById(R.id.numlock_bRight);
+			mOkButton = (Button) findViewById(R.id.numlock_bLeft);
+		} else {
+			mBackButton = (Button) findViewById(R.id.numlock_bLeft);
+			mOkButton = (Button) findViewById(R.id.numlock_bRight);
+		}
+
+		mBackButton.setText(R.string.numBack);
+
+		mBackButton.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+				mButtons[0].getTextSize());
+		mOkButton.setText(android.R.string.ok);
+		mOkButton.setTextSize(15.0F);
+
 	}
 
 	public void onShow() {

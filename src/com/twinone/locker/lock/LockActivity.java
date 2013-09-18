@@ -3,17 +3,15 @@ package com.twinone.locker.lock;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.WallpaperManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,12 +27,12 @@ import android.widget.Toast;
 import com.twinone.locker.BuildConfig;
 import com.twinone.locker.MainActivity;
 import com.twinone.locker.R;
-import com.twinone.locker.Util;
-import com.twinone.locker.UtilPref;
 import com.twinone.locker.lock.LockPatternView.Cell;
 import com.twinone.locker.lock.LockPatternView.DisplayMode;
 import com.twinone.locker.lock.LockPatternView.OnPatternListener;
 import com.twinone.locker.lock.NumberLockView.OnNumberListener;
+import com.twinone.locker.util.PrefUtil;
+import com.twinone.locker.util.Util;
 
 /**
  * Takes care of the layout updating of any locker screen, independent of it's
@@ -79,7 +77,15 @@ public class LockActivity extends Activity implements View.OnClickListener {
 	 * Boolean extra<br>
 	 * Specifies whether to vibrate or not
 	 */
-	public static final String EXTRA_VIBRATE = CLASSNAME + ".extra.vibrate";
+	public static final String EXTRA_PASSWORD_VIBRATE = CLASSNAME
+			+ ".extra.vibrate.password";
+
+	/**
+	 * Boolean extra<br>
+	 * Specifies whether to vibrate or not
+	 */
+	public static final String EXTRA_PATTERN_VIBRATE = CLASSNAME
+			+ ".extra.vibrate.pattern";
 
 	/**
 	 * Use in conjunction with {@link #LOCK_TYPE_PASSWORD}<br>
@@ -105,14 +111,34 @@ public class LockActivity extends Activity implements View.OnClickListener {
 	/**
 	 * Boolean, true when pattern is in stealth mode
 	 */
-	public static final String EXTRA_PATTERN_STEALTH_MODE = CLASSNAME
-			+ "extra.pattern_stealth_mode";
+	public static final String EXTRA_PATTERN_STEALTH = CLASSNAME
+			+ ".extra.pattern_stealth_mode";
 
 	/**
 	 * Boolean, true when password is in stealth mode
 	 */
-	public static final String EXTRA_PASSWORD_STEALTH_MODE = CLASSNAME
-			+ "extra.password_stealth_mode";
+	public static final String EXTRA_PASSWORD_STEALTH = CLASSNAME
+			+ ".extra.password_stealth_mode";
+
+	/**
+	 * Boolean, Swap the action buttons in password
+	 */
+	public static final String EXTRA_PASSWORD_SWITCH_BUTTONS = CLASSNAME
+			+ ".extra.swap_buttons";
+
+	/**
+	 * String, The message to display to the user. If {@link #ACTION_CREATE} is
+	 * specified, this will be overriden
+	 */
+	public static final String EXTRA_MESSAGE = CLASSNAME
+			+ ".extra.unlock_message";
+
+	/**
+	 * Integer value, one of {@link ActivityInfo#SCREEN_ORIENTATION_SENSOR} or
+	 * {@link ActivityInfo#SCREEN_ORIENTATION_PORTRAIT}
+	 */
+	public static final String EXTRA_ORIENTATION = CLASSNAME
+			+ ".extra.orientation_mode";
 
 	public static final int LOCK_TYPE_PASSWORD = 1 << 0; // 1
 	public static final int LOCK_TYPE_PATTERN = 1 << 1; // 2
@@ -121,8 +147,7 @@ public class LockActivity extends Activity implements View.OnClickListener {
 
 	//
 
-	private static final long PATTERN_ERROR_DELAY = 700;
-	private static final long PATTERN_CONFIRM_DELAY = 500;
+	private static final long PATTERN_DELAY = 600;
 
 	/**
 	 * The packageName this LockActivity is called for<br>
@@ -165,7 +190,8 @@ public class LockActivity extends Activity implements View.OnClickListener {
 	private AppLockService mService;
 	private boolean mBound;
 
-	private boolean mHapticFeedbackEnabled;
+	private boolean mPasswordVibrate;
+	private boolean mPatternVibrate;
 
 	private int mAllowedViewTypes;
 	private int mLockViewType = LOCK_TYPE_DEFAULT;
@@ -176,15 +202,14 @@ public class LockActivity extends Activity implements View.OnClickListener {
 	private OnNumberListener mPasswordListener;
 
 	private int mMaxPasswordLength = 8;
+	private boolean mSwitchButtons;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		Log.d(TAG, "OnCreate");
 		overridePendingTransition(android.R.anim.fade_in,
 				android.R.anim.fade_out);
 
 		setTheme(R.style.Theme_Dark);
-
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.layout_alias_locker);
@@ -204,12 +229,12 @@ public class LockActivity extends Activity implements View.OnClickListener {
 
 		mRightButton.setOnClickListener(this);
 		mLeftButton.setOnClickListener(this);
-		loadIntentData(getIntent());
-
+		loadIntentData();
 
 	}
 
 	private final boolean showPasswordView() {
+		Log.w(TAG, "showPasswordView");
 		if ((mAllowedViewTypes & LOCK_TYPE_PASSWORD) == 0) {
 			Log.w(TAG, "Called showNumberView but not allowed");
 			return false;
@@ -226,13 +251,14 @@ public class LockActivity extends Activity implements View.OnClickListener {
 					mLockPasswordView = (NumberLockView) v;
 					mLockPasswordView.setListener(mPasswordListener);
 					mLockPasswordView.setTextView(mViewPassword);
-					if (ACTION_CREATE.equals(mAction))
+					if (ACTION_CREATE.equals(mAction)) {
 						mLockPasswordView.setOkButtonVisibility(View.INVISIBLE);
-					mLockPasswordView
-							.setTactileFeedbackEnabled(mHapticFeedbackEnabled);
+					}
 				}
 			}
 		}
+		mLockPasswordView.setTactileFeedbackEnabled(mPasswordVibrate);
+		mLockPasswordView.setSwitchButtons(mSwitchButtons);
 		mLockPasswordView.onShow();
 		mLockPasswordView.setVisibility(View.VISIBLE);
 		if (mLockPatternView != null) {
@@ -246,6 +272,8 @@ public class LockActivity extends Activity implements View.OnClickListener {
 	}
 
 	private final boolean showPatternView() {
+		Log.w(TAG, "showPatternView");
+
 		if ((mAllowedViewTypes & LOCK_TYPE_PATTERN) == 0) {
 			Log.w(TAG, "Called showPatternView but not allowed");
 			return false;
@@ -260,12 +288,11 @@ public class LockActivity extends Activity implements View.OnClickListener {
 				if (v instanceof LockPatternView) {
 					mLockPatternView = (LockPatternView) v;
 					mLockPatternView.setOnPatternListener(mPatternListener);
-					mLockPatternView
-							.setTactileFeedbackEnabled(mHapticFeedbackEnabled);
-					mLockPatternView.setInStealthMode(mPatternStealthMode);
 				}
 			}
 		}
+		mLockPatternView.setTactileFeedbackEnabled(mPatternVibrate);
+		mLockPatternView.setInStealthMode(mPatternStealthMode);
 		mLockPatternView.onShow();
 		mLockPatternView.setVisibility(View.VISIBLE);
 		if (mLockPasswordView != null) {
@@ -288,9 +315,11 @@ public class LockActivity extends Activity implements View.OnClickListener {
 		}
 
 		@Override
-		public void onNumberButton(String newNumber) {
-			// Log.d(TAG, "new Number: " + newNumber);
-			// updatePassword();
+		public void onPasswordChange(final String newPassword) {
+			if (newPassword.length() > mMaxPasswordLength) {
+				mLockPasswordView.setPassword(newPassword.substring(0,
+						mMaxPasswordLength));
+			}
 			if (ACTION_COMPARE.equals(mAction)) {
 				doComparePassword(false);
 			}
@@ -352,8 +381,8 @@ public class LockActivity extends Activity implements View.OnClickListener {
 		}
 	};
 
-	public void setMaxNumberPasswordLength(int mMaxPasswordLength) {
-		this.mMaxPasswordLength = mMaxPasswordLength;
+	public void setMaxNumberPasswordLength(int maxPasswordLength) {
+		this.mMaxPasswordLength = maxPasswordLength;
 	}
 
 	public int getMaxNumberPasswordLength() {
@@ -361,7 +390,7 @@ public class LockActivity extends Activity implements View.OnClickListener {
 	}
 
 	@Override
-	public void onClick(View v) {
+	public void onClick(final View v) {
 		switch (v.getId()) {
 		case R.id.bFooterLeft:
 			if (ACTION_CREATE.equals(mAction)) {
@@ -388,15 +417,19 @@ public class LockActivity extends Activity implements View.OnClickListener {
 
 	private void doConfirm() {
 		if (mLockViewType == LOCK_TYPE_PATTERN) {
-			String newValue = mLockPatternView.getPatternString();
+			final String newValue = mLockPatternView.getPatternString();
 			// if (mNewPattern == null) {
 			// mNewPattern = newValue;
 			// setupSecond();
 			// } else
 			if (newValue.equals(mNewPattern)) {
-				boolean success = UtilPref.setPattern(
-						UtilPref.prefs(this).edit(), this, newValue).commit();
-				String toast = getString(success ? R.string.pattern_change_saved
+				final SharedPreferences.Editor editor = PrefUtil.prefs(this)
+						.edit();
+				PrefUtil.setPattern(editor, this, newValue);
+				PrefUtil.setLockType(editor, this,
+						getString(R.string.pref_val_lock_type_pattern));
+				final boolean success = editor.commit();
+				final String toast = getString(success ? R.string.pattern_change_saved
 						: R.string.pattern_change_error);
 				Toast.makeText(this, toast, Toast.LENGTH_SHORT).show();
 				exitCreate();
@@ -414,9 +447,13 @@ public class LockActivity extends Activity implements View.OnClickListener {
 			// }
 			// else
 			if (newValue.equals(mNewPassword)) {
-				boolean success = UtilPref.setPassword(
-						UtilPref.prefs(this).edit(), this, newValue).commit();
-				String toast = getString(success ? R.string.password_change_saved
+				final SharedPreferences.Editor editor = PrefUtil.prefs(this)
+						.edit();
+				PrefUtil.setPassword(editor, this, newValue);
+				PrefUtil.setLockType(editor, this,
+						getString(R.string.pref_val_lock_type_password));
+				final boolean success = editor.commit();
+				final String toast = getString(success ? R.string.password_change_saved
 						: R.string.password_change_error);
 				Toast.makeText(this, toast, Toast.LENGTH_SHORT).show();
 				exitCreate();
@@ -435,11 +472,13 @@ public class LockActivity extends Activity implements View.OnClickListener {
 
 	private void setupFirst() {
 		if (mLockViewType == LOCK_TYPE_PATTERN) {
-			mLockPatternView.clearPattern(PATTERN_ERROR_DELAY);
+			mLockPatternView.setInStealthMode(false);
+			mLockPatternView.clearPattern(PATTERN_DELAY);
 			mViewTitle.setText(R.string.pattern_change_tit);
 			mViewMessage.setText(R.string.pattern_change_head);
 			mNewPattern = null;
 		} else {
+			mLockPasswordView.setTextView(mViewPassword);
 			mLockPasswordView.clearPassword();
 			mViewTitle.setText(R.string.password_change_tit);
 			mViewMessage.setText(R.string.password_change_head);
@@ -475,7 +514,7 @@ public class LockActivity extends Activity implements View.OnClickListener {
 	 */
 	private void doComparePassword(boolean hasPressedOkButton) {
 
-		String currentPassword = mLockPasswordView.getPassword();
+		final String currentPassword = mLockPasswordView.getPassword();
 		Log.d(TAG, "Checking password: " + mPassword + ", " + currentPassword);
 		if (currentPassword.equals(mPassword)) {
 			exitSuccessCompare();
@@ -492,12 +531,12 @@ public class LockActivity extends Activity implements View.OnClickListener {
 	 * was {@link #ACTION_COMPARE}
 	 */
 	private void doComparePattern() {
-		String currentPattern = mLockPatternView.getPatternString();
+		final String currentPattern = mLockPatternView.getPatternString();
 		if (currentPattern.equals(mPattern)) {
 			exitSuccessCompare();
 		} else {
 			mLockPatternView.setDisplayMode(DisplayMode.Wrong);
-			mLockPatternView.clearPattern(PATTERN_ERROR_DELAY);
+			mLockPatternView.clearPattern(PATTERN_DELAY);
 		}
 	}
 
@@ -505,28 +544,29 @@ public class LockActivity extends Activity implements View.OnClickListener {
 	 * Exit when an app has been unlocked successfully
 	 */
 	private void exitSuccessCompare() {
-
-		(new Handler()).postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				if (mPackageName == null) {
-					// Should never happen, but avoid NPE
-					finish();
-					return;
-				}
-				if (mPackageName.equals(getPackageName())) { // lock own app
-					MainActivity.showWithoutPassword(LockActivity.this);
-				} else {
-					if (mBound) {
-						mService.unlock(mPackageName);
-					}
-					// finish();
-					moveTaskToBack(true);
-					overridePendingTransition(android.R.anim.fade_in,
-							android.R.anim.fade_out);
-				}
+		if (mPackageName == null) {
+			// Should never happen, but avoid NPE
+			finish();
+			return;
+		}
+		if (mPackageName.equals(getPackageName())) { // lock own app
+			Log.d(TAG, "Unlocking own app");
+			MainActivity.showWithoutPassword(LockActivity.this);
+		} else {
+			if (mBound) {
+				mService.unlockApp(mPackageName);
 			}
-		}, 50);
+			// finish();
+			if (mPackageName.equals("com.whatsapp")) {
+				Intent i = getPackageManager().getLaunchIntentForPackage(
+						"com.whatsapp");
+				startActivity(i);
+
+			}
+			moveTaskToBack(true);
+			overridePendingTransition(android.R.anim.fade_in,
+					android.R.anim.fade_out);
+		}
 	}
 
 	private void exitCreate() {
@@ -536,18 +576,18 @@ public class LockActivity extends Activity implements View.OnClickListener {
 
 	@Override
 	public void onBackPressed() {
-		super.onBackPressed();
-		// Go home
-		Intent i = new Intent(Intent.ACTION_MAIN);
+		// Commented out because Activity.onBackPressed() calls finish()
+		// super.onBackPressed();
+		final Intent i = new Intent(Intent.ACTION_MAIN);
 		i.addCategory(Intent.CATEGORY_HOME);
 		startActivity(i);
 	}
 
-	private ServiceConnection mConnection = new ServiceConnection() {
+	private final ServiceConnection mConnection = new ServiceConnection() {
 
 		@Override
 		public void onServiceConnected(ComponentName cn, IBinder binder) {
-			AppLockService.LocalBinder b = (AppLockService.LocalBinder) binder;
+			final AppLockService.LocalBinder b = (AppLockService.LocalBinder) binder;
 			mService = b.getInstance();
 			mBound = true;
 		}
@@ -561,9 +601,6 @@ public class LockActivity extends Activity implements View.OnClickListener {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		// @Override
-		// protected void onStop() {
-		// super.onStop();
 		if (mBound) {
 			unbindService(mConnection);
 			mBound = false;
@@ -571,12 +608,11 @@ public class LockActivity extends Activity implements View.OnClickListener {
 	};
 
 	@Override
+	// not onStart because when the user sets up a new password and he exits
+	// this screen going back to MainActivity, the service will be "started"
 	protected void onResume() {
 		super.onResume();
-		// @Override
-		// protected void onStart() {
-		// super.onStart();
-		Intent i = new Intent(this, AppLockService.class);
+		final Intent i = new Intent(this, AppLockService.class);
 		bindService(i, mConnection, Context.BIND_AUTO_CREATE);
 	}
 
@@ -584,50 +620,78 @@ public class LockActivity extends Activity implements View.OnClickListener {
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		// Log.d(TAG, "onNewIntent " + intent.hashCode());
-		loadIntentData(intent);
+		setIntent(intent);
+		loadIntentData();
 		overridePendingTransition(android.R.anim.fade_in,
 				android.R.anim.fade_out);
 	}
 
-	private void loadIntentData(Intent i) {
+	private void loadIntentData() {
 
-		Log.d(TAG, "loadIntentData");
-		mAction = i.getAction();
-		mLockViewType = i.getIntExtra(EXTRA_VIEW_TYPE, LOCK_TYPE_DEFAULT);
-		mAllowedViewTypes = i.getIntExtra(EXTRA_VIEW_TYPES, 0);
-		Log.i(TAG, Integer.toBinaryString(mAllowedViewTypes));
-		mAllowedViewTypes |= mLockViewType;// Add primary if the user forgets it
-		Log.i(TAG, Integer.toBinaryString(mAllowedViewTypes));
-		mPackageName = i.getStringExtra(EXTRA_PACKAGENAME);
-
-		mHapticFeedbackEnabled = i.getBooleanExtra(EXTRA_VIBRATE, false);
-
-		if (i.hasExtra(EXTRA_PASSWORD)) {
-			mPassword = i.getStringExtra(EXTRA_PASSWORD);
+		final Intent intent = getIntent();
+		if (intent == null){
+			return;
 		}
-		if (i.hasExtra(EXTRA_PATTERN)) {
-			mPattern = i.getStringExtra(EXTRA_PATTERN);
+		mAction = intent.getAction();
+		if (mAction == null) {
+			if (BuildConfig.DEBUG) {
+				Log.e(TAG, "Finishing: No action specified");
+			}
+			finish();
+			return;
+		}
+		
+		setRequestedOrientation(intent.getIntExtra(EXTRA_ORIENTATION,
+				ActivityInfo.SCREEN_ORIENTATION_SENSOR));
+
+		mLockViewType = intent.getIntExtra(EXTRA_VIEW_TYPE, LOCK_TYPE_DEFAULT);
+		mAllowedViewTypes = intent.getIntExtra(EXTRA_VIEW_TYPES, 0);
+		// Add primary if the user forgets it
+		mAllowedViewTypes |= mLockViewType;
+		mPackageName = intent.getStringExtra(EXTRA_PACKAGENAME);
+
+		mPasswordVibrate = intent
+				.getBooleanExtra(EXTRA_PASSWORD_VIBRATE, false);
+		mPatternVibrate = intent.getBooleanExtra(EXTRA_PATTERN_VIBRATE, false);
+		mSwitchButtons = intent.getBooleanExtra(EXTRA_PASSWORD_SWITCH_BUTTONS,
+				false);
+
+		if (intent.hasExtra(EXTRA_PASSWORD)) {
+			mPassword = intent.getStringExtra(EXTRA_PASSWORD);
+		}
+		if (intent.hasExtra(EXTRA_PATTERN)) {
+			mPattern = intent.getStringExtra(EXTRA_PATTERN);
 		}
 
-		mPasswordStealthMode = i.getBooleanExtra(EXTRA_PASSWORD_STEALTH_MODE,
+		// Stealth modes
+		mPasswordStealthMode = intent.getBooleanExtra(EXTRA_PASSWORD_STEALTH,
 				false);
-		mPatternStealthMode = i.getBooleanExtra(EXTRA_PATTERN_STEALTH_MODE,
+		mPatternStealthMode = intent.getBooleanExtra(EXTRA_PATTERN_STEALTH,
 				false);
+		if (ACTION_CREATE.equals(mAction)) {
+			mPasswordStealthMode = false;
+			mPatternStealthMode = false;
+		}
+		mViewPassword.setVisibility(mPasswordStealthMode ? View.GONE
+				: View.VISIBLE);
 
+		// Views
 		if (ACTION_COMPARE.equals(mAction)) {
 			mViewIcon.setVisibility(View.VISIBLE);
 			mFooter.setVisibility(View.GONE);
-			mViewMessage.setText(""); // TODO change to message
-			ApplicationInfo ai = Util.getaApplicationInfo(mPackageName, this);
+			final ApplicationInfo ai = Util.getaApplicationInfo(mPackageName,
+					this);
 			if (ai != null) {
 				// Load info of this application
-				String label = ai.loadLabel(getPackageManager()).toString();
-				Drawable icon = ai.loadIcon(getPackageManager());
+				final String label = ai.loadLabel(getPackageManager())
+						.toString();
+				final Drawable icon = ai.loadIcon(getPackageManager());
 				Util.setBackgroundDrawable(mViewIcon, icon);
 				mViewTitle.setText(label);
-				// TODO MEssage from intent
-				// mViewMessage.setText(UtilPref.getMessage(mSP, this).replace(
-				// "%s", label));
+				if (intent.hasExtra(EXTRA_MESSAGE)) {
+					mViewMessage.setText(intent.getStringExtra(EXTRA_MESSAGE)
+							.replace("%s", label));
+				}
 			} else {
 				// App isn't installed or it's reference was not provided
 				mViewIcon.setVisibility(View.GONE);
@@ -645,25 +709,25 @@ public class LockActivity extends Activity implements View.OnClickListener {
 			showPasswordView();
 			break;
 		}
-		if (mAction == null) {
-			if (BuildConfig.DEBUG) {
-				Log.e(TAG, "Finishing: No action specified");
-			}
-			finish();
-			return;
-		}
 		if (ACTION_CREATE.equals(mAction)) {
 			setupFirst();
 		}
 	}
 
-	public static final Intent getDefaultIntent(Context c) {
-		SharedPreferences sp = UtilPref.prefs(c);
-		Intent i = new Intent(c, LockActivity.class);
-		i.putExtra(LockActivity.EXTRA_PASSWORD, UtilPref.getPassword(sp, c));
-		i.putExtra(LockActivity.EXTRA_PATTERN, UtilPref.getPattern(sp, c));
-		i.putExtra(LockActivity.EXTRA_VIEW_TYPE, UtilPref.getLockTypeInt(sp, c));
-		i.putExtra(LockActivity.EXTRA_VIBRATE, UtilPref.getVibrate(sp, c));
+	public static final Intent getDefaultIntent(final Context c) {
+		final SharedPreferences sp = PrefUtil.prefs(c);
+		final Intent i = new Intent(c, LockActivity.class);
+		i.putExtra(EXTRA_PASSWORD, PrefUtil.getPassword(sp, c));
+		i.putExtra(EXTRA_PATTERN, PrefUtil.getPattern(sp, c));
+		i.putExtra(EXTRA_VIEW_TYPE, PrefUtil.getLockTypeInt(sp, c));
+		i.putExtra(EXTRA_MESSAGE, PrefUtil.getMessage(sp, c));
+		i.putExtra(EXTRA_PASSWORD_VIBRATE, PrefUtil.getPasswordVibrate(sp, c));
+		i.putExtra(EXTRA_PASSWORD_STEALTH, PrefUtil.getPasswordStealth(sp, c));
+		i.putExtra(EXTRA_PATTERN_VIBRATE, PrefUtil.getPatternVibrate(sp, c));
+		i.putExtra(EXTRA_PATTERN_STEALTH, PrefUtil.getPatternStealth(sp, c));
+		i.putExtra(EXTRA_PASSWORD_SWITCH_BUTTONS,
+				PrefUtil.getPasswordSwitchButtons(sp, c));
+		i.putExtra(EXTRA_ORIENTATION, PrefUtil.getLockOrientation(sp, c));
 		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		return i;
 	}

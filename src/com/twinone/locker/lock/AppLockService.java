@@ -1,14 +1,13 @@
 package com.twinone.locker.lock;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import android.annotation.SuppressLint;
 import android.app.ActivityManager;
-import android.app.ActivityOptions;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -20,7 +19,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -29,35 +27,39 @@ import android.util.Log;
 import com.twinone.locker.AppInfo;
 import com.twinone.locker.MainActivity;
 import com.twinone.locker.R;
-import com.twinone.locker.UtilPref;
+import com.twinone.locker.util.PrefUtil;
+import com.twinone.util.VersionChecker;
 
 public class AppLockService extends Service {
 
-	public static final String TAG = "Observer";
+	public static final String TAG = "Service";
 	private static final String LOCKER_CLASS = LockActivity.class.getName();
-	private static final boolean WHATSAPP_WORKAROUND = true; // TODO remove
-	private static final long WHATSAPP_WAIT_DELAY = 500;
 	private static final int NOTIFICATION_ID = 1337;
+
+	public static final String ACTION_START = "com.twinone.locker.service.action_start";
+	/**
+	 * Reloads the preferences, and stops the service if it was NOT running
+	 * before this call
+	 */
+	public static final String ACTION_RELOAD_PREFERENCES = "com.twinoen.locker.service.action.reload";
 
 	private ActivityManager mAM;
 	private ScheduledExecutorService mScheduledExecutor;
 	private BroadcastReceiver mScreenReceiver;
 	private HashSet<AppInfo> mTrackedApps;
 
-	private String mPassword;
-	private String mPattern;
-
 	private String mLastApp = "";
 	private String mLastClass = "";
 
-	private boolean mPrefVibrateEnabled;
-	private int mPrefLockType = LockActivity.LOCK_TYPE_PASSWORD;
 	private boolean mPrefRelockAfterScreenOff;
 	private boolean mPrefDelayUnlockEnabled;
 	private long mPrefDelayUnlockMillis;
-	private Handler mDelayUnlockHandler;
+	private Handler mUnlockHandler;
 	private boolean mPrefShowNotification;
 	private int mPrefNotificationPriority;
+	private HashMap<String, Runnable> mUnlockMap;
+
+	private Intent mUnlockIntent;
 
 	@SuppressWarnings("unused")
 	private boolean mScreenOn = true;
@@ -122,33 +124,66 @@ public class AppLockService extends Service {
 		}
 	}
 
-	/** Checks whether this service is in foreground (StackOverflow) */
-	// private void checkForeground() {
-	// ActivityManager am = (ActivityManager) this
-	// .getSystemService(ACTIVITY_SERVICE);
-	// List<RunningServiceInfo> l = am.getRunningServices(Integer.MAX_VALUE);
-	// Iterator<RunningServiceInfo> i = l.iterator();
-	// while (i.hasNext()) {
-	// RunningServiceInfo rsi = (RunningServiceInfo) i.next();
-	// if (rsi.service.getPackageName().equals(this.getPackageName())) {
-	// if (rsi.foreground) {
-	// Log.d(TAG, "Service is in foreground");
-	// return;
-	// }
-	// }
-	// }
-	// Log.d(TAG, "Service is NOT in foreground");
-	// }
-
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(TAG, "onStartCommand");
+		if (VersionChecker.isDeprecated(this)) {
+			Log.d(TAG, "Service not started, this version is deprecated");
+			stopSelf();
+			return START_NOT_STICKY;
+		}
 
-		mExplicitStarted = true;
-		loadPreferences();
-		restart();
+		if (intent == null || ACTION_START.equals(intent.getAction())) {
+			Log.i(TAG, "Starting service");
+			if (!mExplicitStarted) {
+				mExplicitStarted = true;
+				mUnlockMap = new HashMap<String, Runnable>();
+				mUnlockHandler = new Handler();
+				loadPreferences();
+				restart();
+			}
+		} else if (ACTION_RELOAD_PREFERENCES.equals(intent.getAction())) {
+			if (mExplicitStarted) {
+				Log.i(TAG, "Reloading prefs, service was running");
+				loadPreferences();
+				restart();
+			} else {
+				Log.i(TAG, "Stopping self, service was not running");
+				stopSelf();
+				return START_NOT_STICKY;
+			}
+		} else {
+			Log.w(TAG, "no action specified");
+		}
 
 		return START_STICKY;
+	}
+
+	/**
+	 * Use this intent to start the service
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public static final Intent getStartIntent(final Context context) {
+		final Intent intent = new Intent(context, AppLockService.class);
+		intent.setAction(ACTION_START);
+		return intent;
+	}
+
+	/**
+	 * This intent can be used to update the service when some configuration
+	 * change has happened. If {@link AppLockService} receives this
+	 * {@link Intent} and it was not explicitly started before, the service will
+	 * exit doing nothing.
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public static final Intent getReloadIntent(final Context context) {
+		final Intent intent = new Intent(context, AppLockService.class);
+		intent.setAction(ACTION_RELOAD_PREFERENCES);
+		return intent;
 	}
 
 	@Override
@@ -171,7 +206,7 @@ public class AppLockService extends Service {
 		/*
 		 * VARIABLES:
 		 */
-		SharedPreferences sp = UtilPref.prefs(this);
+		SharedPreferences sp = PrefUtil.prefs(this);
 		boolean defaultDelay = Boolean
 				.parseBoolean(getString(R.string.pref_def_delay_status));
 		boolean delayEnabled = sp.getBoolean(
@@ -210,26 +245,18 @@ public class AppLockService extends Service {
 		mPrefNotificationPriority = transparentNotification ? Notification.PRIORITY_MIN
 				: Notification.PRIORITY_DEFAULT;
 
-		mPassword = UtilPref.getPassword(sp, this);
-		mPattern = UtilPref.getPattern(sp, this);
+		mUnlockIntent = LockActivity.getDefaultIntent(this);
+		mUnlockIntent.setAction(LockActivity.ACTION_COMPARE);
+		mUnlockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-		// String lockType =
-		// sp.getString(getString(R.string.pref_key_lock_type),
-		// getString(R.string.pref_val_lock_type_password));
-		// if (lockType.equals(getString(R.string.pref_val_lock_type_password)))
-		// {
-		// mPrefLockType = LockActivity.LOCK_TYPE_PASSWORD;
-		// } else if (lockType
-		// .equals(getString(R.string.pref_val_lock_type_pattern))) {
-		// mPrefLockType = LockActivity.LOCK_TYPE_PATTERN;
-		// }
-		mPrefLockType = UtilPref.getLockTypeInt(sp, this);
-		boolean vibdef = Boolean
-				.parseBoolean(getString(R.string.pref_def_vibrate_keypress));
-		mPrefVibrateEnabled = sp.getBoolean(
-				getString(R.string.pref_key_vibrate_keypress), vibdef);
+		// Apps
+		Set<String> apps = PrefUtil.getTrackedApps(PrefUtil.appsPrefs(this),
+				this);
+		mTrackedApps = new HashSet<AppInfo>();
+		for (String s : apps) {
+			mTrackedApps.add(new AppInfo(s));
+		}
 
-		loadTrackedApps();
 	}
 
 	/**
@@ -254,7 +281,7 @@ public class AppLockService extends Service {
 			mScheduledExecutor = null;
 		}
 		String defaultDelay = getString(R.string.pref_val_perf_normal);
-		SharedPreferences sp = UtilPref.prefs(this);
+		SharedPreferences sp = PrefUtil.prefs(this);
 		String s = sp.getString(getString(R.string.pref_key_performance),
 				defaultDelay);
 		long delay = Long.parseLong(s);
@@ -267,8 +294,6 @@ public class AppLockService extends Service {
 		if (mScheduledExecutor != null) {
 			mScheduledExecutor.shutdownNow();
 			mScheduledExecutor = null;
-		} else {
-			Log.w(TAG, "Attempted to stop scheduler, but it was already null");
 		}
 	}
 
@@ -280,6 +305,7 @@ public class AppLockService extends Service {
 				Log.i("TAG", "Screen ON");
 				mScreenOn = true;
 				startScheduler();
+
 			}
 			if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
 				Log.i("TAG", "Screen OFF");
@@ -298,34 +324,24 @@ public class AppLockService extends Service {
 	private class PackageMonitor implements Runnable {
 		@Override
 		public void run() {
-			// long mBegin = System.nanoTime();
-			// long mBegin = System.currentTimeMillis();
-
 			ComponentName app = mAM.getRunningTasks(1).get(0).topActivity;
 			String appName = app.getPackageName();
 			String className = app.getClassName();
 
 			boolean appChanged = !appName.equals(mLastApp);
-			boolean classChanged = !className.equals(mLastClass);
+			// boolean classChanged = !className.equals(mLastClass);
 
-			if (classChanged || appChanged) {
-				Log.d(TAG, "" + appName + " " + className);
+			if (appChanged) {
+				// Log.d(TAG, "Close: " + mLastClass);
+				// Log.d(TAG, "Open: " + className);
+				if (!className.equals(LOCKER_CLASS)) {
+					Log.d(TAG, "Open: " + className);
+					onOpen(appName, className);
+					onClose(mLastApp, mLastClass);
+				}
 			}
-			onObserve(appName, className);
-
-			mLastClass = className;
 			mLastApp = appName;
-
-			// long mEnd = System.nanoTime();
-			// long mEnd = System.currentTimeMillis();
-			// if (classChanged || appChanged) {
-			// Log.d(TAG, "" + mBegin);
-			// Log.d(TAG, "" + mEnd);
-			// Log.d(TAG, "" + (double) ((mEnd - mBegin)) + " ms");
-			// // Log.d(TAG, "" + (double) ((mEnd - mBegin) / 1000000) +
-			// // " ms");
-			// Log.d(TAG, "----------------------");
-			// }
+			mLastClass = className;
 		}
 
 		/**
@@ -335,23 +351,45 @@ public class AppLockService extends Service {
 		 * @param appName
 		 * @param className
 		 */
-		private void onObserve(String appName, String className) {
+		private void onOpen(final String appName, final String className) {
 			// Log.v(TAG, "Package: " + appName);
-			if (className.equals(LOCKER_CLASS)) {
-				return;
-			}
-			AppInfo app = getLockInfoByPackageName(appName);
+			AppInfo app = getAppInfo(appName);
 			if (app != null) {
+				if (mPrefDelayUnlockEnabled) {
+					mUnlockHandler.removeCallbacks(mUnlockMap.get(appName));
+				}
 				if (app.locked) {
 					app.className = className;
-					Log.v(TAG,
-							"Show locker for " + app.packageName
-									+ app.hashCode());
+					// Log.v(TAG,
+					// "Show locker for " + app.packageName
+					// + app.hashCode());
 					showLocker(app);
 				}
 			}
-			// lock all other apps because they're not in front anymore
-			lock(appName);
+			// This was here before because onClose was not implemented
+			// // lock all other apps because they're not in front anymore
+			// lockAppExcept(appName);
+		}
+
+		private void onClose(final String appName, final String className) {
+
+			final AppInfo ai = getAppInfo(appName);
+			if (ai != null) {
+				if (mPrefDelayUnlockEnabled) {
+					Runnable r = new Runnable() {
+						@Override
+						public void run() {
+							Log.i(TAG, "Closing after delay:" + appName);
+							ai.locked = true;
+						}
+					};
+					mUnlockMap.put(appName, r);
+					mUnlockHandler.postDelayed(r, mPrefDelayUnlockMillis);
+				} else {
+					ai.locked = true;
+				}
+			}
+
 		}
 	}
 
@@ -359,9 +397,10 @@ public class AppLockService extends Service {
 	 * Locks ALL apps (Useful when screen is turned off)
 	 */
 	private void lockAll() {
+		mUnlockHandler.removeCallbacksAndMessages(null);
 		for (AppInfo li : mTrackedApps) {
 			if (li.locked == false) {
-				Log.v(TAG, "relockAll() " + li.packageName);
+				Log.v(TAG, "relockAll() matched: " + li.packageName);
 				li.locked = true;
 
 			}
@@ -369,17 +408,14 @@ public class AppLockService extends Service {
 	}
 
 	/**
-	 * Locks all apps except the one matching the provided string.
-	 * 
-	 * @param appToExclude
-	 *            The app that must NOT be locked.
+	 * Locks an app in the current list
 	 */
-	private void lock(String appToExclude) {
-		// TODO timing
+	@SuppressWarnings("unused")
+	private void lockApp(final String app) {
 		for (AppInfo li : mTrackedApps) {
-			if (!li.packageName.equals(appToExclude)) {
-				if (li.locked == false) {
-					Log.v(TAG, "relock() " + li.packageName);
+			if (li.packageName.equals(app)) {
+				if (!li.locked) {
+					Log.v(TAG, "lockApp() " + li.packageName);
 					li.locked = true;
 				}
 			}
@@ -391,37 +427,18 @@ public class AppLockService extends Service {
 	 * 
 	 * @param appName
 	 */
-	public void unlock(String appName) {
-		Log.d(TAG, "doUnlock called");
-		AppInfo li = getLockInfoByPackageName(appName);
-		if (li != null) {
-			if (li.locked == true) {
-				Log.i(TAG, "Unlocked in list: " + li.packageName);
-			} else {
-				Log.w(TAG, "Tried to unlock " + li.hashCode()
-						+ " but was not locked");
-			}
-			li.locked = false;
-		} else {
-			Log.w(TAG, "Not unlocked " + appName + ": not in list.");
-		}
-		if (mPrefDelayUnlockEnabled) {
-			stopScheduler();
-			if (mDelayUnlockHandler == null) {
-				mDelayUnlockHandler = new Handler();
-			}
-			mDelayUnlockHandler.removeCallbacksAndMessages(null);
-			mDelayUnlockHandler.postDelayed(new Runnable() {
-
-				@Override
-				public void run() {
-					startScheduler();
+	public void unlockApp(final String appName) {
+		for (AppInfo li : mTrackedApps) {
+			if (li.packageName.equals(appName)) {
+				if (li.locked) {
+					Log.v(TAG, "unlockApp() " + li.packageName);
+					li.locked = false;
 				}
-			}, mPrefDelayUnlockMillis);
+			}
 		}
 	}
 
-	private AppInfo getLockInfoByPackageName(String packageName) {
+	private AppInfo getAppInfo(String packageName) {
 		if (mTrackedApps == null) {
 			return null;
 		}
@@ -439,59 +456,22 @@ public class AppLockService extends Service {
 	 * @param lockInfo
 	 *            The {@link AppInfo} to lock.
 	 */
-	@SuppressLint("NewApi")
 	private void showLocker(AppInfo lockInfo) {
-		if (mPassword.length() == 0) {
-			Log.w(TAG, "Not showing lock for empty password:"
-					+ lockInfo.packageName);
-			return;
-		}
-		Log.d(TAG, "Starting locker for " + lockInfo.packageName);
-		whatsappWorkaround(lockInfo); // TODO remove when whatsapp fix
 
-		Intent intent = new Intent(AppLockService.this, LockActivity.class);
-		intent.setAction(LockActivity.ACTION_COMPARE);
-		intent.putExtra(LockActivity.EXTRA_PASSWORD, mPassword);
-		intent.putExtra(LockActivity.EXTRA_PATTERN, mPattern);
-		intent.putExtra(LockActivity.EXTRA_PACKAGENAME, lockInfo.packageName);
-		intent.putExtra(LockActivity.EXTRA_VIEW_TYPE, mPrefLockType);
-		intent.putExtra(LockActivity.EXTRA_VIBRATE, mPrefVibrateEnabled);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-			Bundle b = ActivityOptions.makeCustomAnimation(this,
-					android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
-			startActivity(intent, b);
-		} else {
-			startActivity(intent);
-		}
-
-	}
-
-	/**
-	 * BugFix for Whatsapp's lose focus.
-	 * 
-	 * @param li
-	 */
-	private void whatsappWorkaround(AppInfo li) {
-		if (WHATSAPP_WORKAROUND) {
-			if (li.className.equals("com.whatsapp.Conversation")) {
-				try {
-					Log.i(TAG, "Sleeping for whatsapp bug");
-					Thread.sleep(WHATSAPP_WAIT_DELAY);
-				} catch (InterruptedException e) {
-					Log.e(TAG, "Interrupted while whatsapp workaround");
-				}
+		if (lockInfo.className.equals("com.whatsapp.Conversation")) {
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
-	}
+		Log.d(TAG, "Starting locker for " + lockInfo.packageName);
 
-	public final void loadTrackedApps() {
-		Set<String> apps = UtilPref.getTrackedApps(UtilPref.appsPrefs(this),
-				this);
-		mTrackedApps = new HashSet<AppInfo>();
-		for (String s : apps) {
-			mTrackedApps.add(new AppInfo(s));
-		}
+		mUnlockIntent.putExtra(LockActivity.EXTRA_PACKAGENAME,
+				lockInfo.packageName);
+		startActivity(mUnlockIntent);
+
 	}
 
 	/**
@@ -502,7 +482,7 @@ public class AppLockService extends Service {
 	 *            True if the new state will be tracking, false if not
 	 */
 	public final void setTracking(boolean shouldTrack, String... packageNames) {
-		SharedPreferences.Editor editor = UtilPref.appsPrefs(this).edit();
+		SharedPreferences.Editor editor = PrefUtil.appsPrefs(this).edit();
 		for (String packageName : packageNames) {
 			if (shouldTrack) {
 				editor.putBoolean(packageName, true);
@@ -510,11 +490,6 @@ public class AppLockService extends Service {
 				editor.remove(packageName);
 			}
 		}
-		boolean commited = editor.commit();
-		Log.d(TAG, "Editor.commit: " + commited);
-		if (!commited) {
-			Log.w(TAG, "Not commited!");
-		}
-		loadTrackedApps();
+		PrefUtil.apply(editor);
 	}
 }

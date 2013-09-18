@@ -1,19 +1,25 @@
 package com.twinone.locker;
 
-import com.twinone.locker.lock.AppLockService;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.util.Log;
+
+import com.twinone.locker.lock.AppLockService;
+import com.twinone.locker.util.PrefUtil;
 
 public class EventReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context c, Intent i) {
+		Log.w("", "Received: " + i.getAction());
 		String a = i.getAction();
-		SharedPreferences sp = UtilPref.prefs(c);
+		SharedPreferences sp = PrefUtil.prefs(c);
 		if (Intent.ACTION_BOOT_COMPLETED.equals(a)) {
 			boolean startAtBoot = sp.getBoolean(
 					c.getString(R.string.pref_key_start_boot), true);
@@ -28,10 +34,7 @@ public class EventReceiver extends BroadcastReceiver {
 					c.getString(R.string.pref_key_dial_launch), dialLaunchDef);
 			if (dialLaunch
 					&& i.getStringExtra(Intent.EXTRA_PHONE_NUMBER).equals(
-							"#"
-									+ UtilPref.getPassword(
-											UtilPref.prefs(c),
-											c))) {
+							"#" + PrefUtil.getPassword(PrefUtil.prefs(c), c))) {
 				// TODO very important change to custom number because we've
 				// implemented a pattern now.
 				Log.d("Receiver", "OUTGOING CALL MATCHED");
@@ -45,21 +48,29 @@ public class EventReceiver extends BroadcastReceiver {
 			}
 		}
 
-		// else if (WifiManager.NETWORK_STATE_CHANGED_ACTION.equals(a)) {
-		// ConnectivityManager cm = (ConnectivityManager) c
-		// .getSystemService(Context.CONNECTIVITY_SERVICE);
-		// WifiManager wm = (WifiManager) c
-		// .getSystemService(Context.WIFI_SERVICE);
-		// NetworkInfo ni = cm.getActiveNetworkInfo();
-		// if (ni != null && ni.isConnected()) {
-		// switch (ni.getType()) {
-		// case ConnectivityManager.TYPE_WIFI:
-		// WifiInfo wi = wm.getConnectionInfo();
-		// Log.d("RECEIVER", "SSID: " + wi.getSSID());
-		// break;
-		// }
-		// }
-		// }
+		else if (ConnectivityManager.CONNECTIVITY_ACTION.equals(a)) {
+			processConnectivityEvent(i, c);
+		}
+	}
+
+	private static final void processConnectivityEvent(Intent intent, Context c) {
+		boolean disconnected = intent.getBooleanExtra(
+				ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
+		if (!disconnected) {
+			ConnectivityManager cm = (ConnectivityManager) c
+					.getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo ni = cm.getActiveNetworkInfo();
+			if (ni != null && ni.isConnected()) {
+				switch (ni.getType()) {
+				case ConnectivityManager.TYPE_WIFI:
+					WifiManager wm = (WifiManager) c
+							.getSystemService(Context.WIFI_SERVICE);
+					WifiInfo wi = wm.getConnectionInfo();
+					Log.d("RECEIVER", "SSID: " + wi.getSSID());
+					break;
+				}
+			}
+		}
 	}
 
 }

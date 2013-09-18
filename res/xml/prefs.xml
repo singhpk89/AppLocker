@@ -1,13 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="@string/pref_key_screen" >
 
     <ListPreference
-        android:key="@string/pref_key_lock_type"
         android:defaultValue="@string/pref_val_lock_type_password"
         android:entries="@array/lock_type_names"
         android:entryValues="@array/lock_type_values"
+        android:key="@string/pref_key_lock_type"
         android:title="@string/pref_tit_lock_type" />
 
+    <!-- PASSWORD -->
+    <PreferenceCategory
+        android:key="@string/pref_key_cat_password"
+        android:title="@string/pref_tit_cat_password" >
+
+        <!-- Vibration -->
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_def_vibrate_password"
+            android:key="@string/pref_key_vibrate_password"
+            android:summary="@string/pref_desc_vibrate_password"
+            android:title="@string/pref_tit_vibrate_password" />
+        <!-- Hide dots -->
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_def_hide_dots"
+            android:key="@string/pref_key_hide_dots"
+            android:summary="@string/pref_desc_hide_dots"
+            android:title="@string/pref_tit_hide_dots" />
+        <!-- Switch buttons -->
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_def_switch_buttons"
+            android:key="@string/pref_key_switch_buttons"
+            android:summary="@string/pref_desc_switch_buttons"
+            android:title="@string/pref_tit_switch_buttons" />
+    </PreferenceCategory>
+    <!-- PATTERN -->
+    <PreferenceCategory
+        android:key="@string/pref_key_cat_pattern"
+        android:title="@string/pref_tit_cat_pattern" >
+
+        <!-- Vibration -->
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_def_vibrate_pattern"
+            android:key="@string/pref_key_vibrate_pattern"
+            android:summary="@string/pref_desc_vibrate_pattern"
+            android:title="@string/pref_tit_vibrate_pattern" />
+        <!-- Stealth mode -->
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_def_pattern_stealth"
+            android:key="@string/pref_key_pattern_stealth"
+            android:summary="@string/pref_desc_pattern_stealth"
+            android:title="@string/pref_tit_pattern_stealth" />
+    </PreferenceCategory>
     <PreferenceCategory
         android:key="@string/pref_key_cat_general"
         android:title="@string/pref_tit_cat_general" >
@@ -33,20 +76,22 @@
             android:selectAllOnFocus="true"
             android:summary="@string/pref_desc_lock_message"
             android:title="@string/pref_tit_lock_message" />
-        <!-- Vibration -->
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/pref_key_vibrate_keypress"
-            android:summary="@string/pref_desc_vibrate_keypress"
-            android:title="@string/pref_tit_vibrate_keypress" />
 
         <!-- Performance -->
         <ListPreference
+            android:key="@string/pref_key_performance"
             android:defaultValue="@string/pref_val_perf_normal"
             android:entries="@array/performance_names"
             android:entryValues="@array/performance_values"
             android:summary="@string/pref_desc_performance"
             android:title="@string/pref_tit_performance" />
+         <!-- Orientation -->
+        <ListPreference
+            android:key="@string/pref_key_orientation"
+            android:defaultValue="@string/pref_val_orientation_system"
+            android:entries="@array/orientation_names"
+            android:entryValues="@array/orientation_values"
+            android:title="@string/pref_tit_orientation" />
         <!-- Delay -->
         <CheckBoxPreference
             android:defaultValue="@string/pref_def_delay_status"

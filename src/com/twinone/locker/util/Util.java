@@ -1,4 +1,4 @@
-package com.twinone.locker;
+package com.twinone.locker.util;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;

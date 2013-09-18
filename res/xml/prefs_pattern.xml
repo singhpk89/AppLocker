@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+   
+    <!--
+    <EditTextPreference
+        android:defaultValue="@string/pref_def_password_expiry"
+        android:dialogMessage="@string/pref_dlgmsg_password_expiry"
+        android:key="@string/pref_key_password_expiry"
+        android:numeric="integer"
+        android:title="@string/pref_tit_password_expiry" />
+
+    <EditTextPreference
+        android:defaultValue="@string/pref_def_max_password_retries"
+        android:dialogMessage="@string/pref_dlgmsg_max_password_retries"
+        android:key="@string/pref_key_max_password_retries"
+        android:numeric="integer"
+        android:title="@string/pref_tit_max_password_retries" />
+    -->
+
+</PreferenceScreen>

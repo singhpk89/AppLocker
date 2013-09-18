@@ -28,17 +28,14 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Debug;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.SystemClock;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.accessibility.AccessibilityEvent;
 
 import com.twinone.locker.R;
 
@@ -342,33 +339,12 @@ public class LockPatternView extends View {
 		void onPatternDetected(List<Cell> pattern);
 	}
 
-	private final Context mContext;
-
 	public LockPatternView(Context context) {
 		this(context, null);
 	}
 
 	public LockPatternView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		Log.d("PatternLock", "constructor");
-
-		mContext = context;
-
-		// TypedArray a = context.obtainStyledAttributes(attrs,
-		// R.styleable.LockPatternView);
-
-		// final String aspect = "";//
-		// a.getString(R.styleable.LockPatternView_aspect);
-
-		// if ("square".equals(aspect)) {
-		// mAspect = ASPECT_SQUARE;
-		// } else if ("lock_width".equals(aspect)) {
-		// mAspect = ASPECT_LOCK_WIDTH;
-		// } else if ("lock_height".equals(aspect)) {
-		// mAspect = ASPECT_LOCK_HEIGHT;
-		// } else {
-		// mAspect = ASPECT_SQUARE;
-		// }
 
 		setClickable(true);
 
@@ -380,25 +356,6 @@ public class LockPatternView extends View {
 		mPathPaint.setStrokeJoin(Paint.Join.ROUND);
 		mPathPaint.setStrokeCap(Paint.Cap.ROUND);
 
-		// lot's of bitmaps!
-		// mBitmapBtnDefault = getBitmapFor(UI.resolveAttribute(getContext(),
-		// R.attr.alp_drawable_btn_code_lock_default_holo));
-		// mBitmapBtnTouched = getBitmapFor(UI.resolveAttribute(getContext(),
-		// R.attr.alp_drawable_btn_code_lock_touched_holo));
-		// mBitmapCircleDefault = getBitmapFor(UI
-		// .resolveAttribute(
-		// getContext(),
-		// R.attr.alp_drawable_indicator_code_lock_point_area_default_holo));
-		//
-		// mBitmapCircleGreen = getBitmapFor(UI.resolveAttribute(getContext(),
-		// R.attr.aosp_drawable_indicator_code_lock_point_area_normal));
-		// mBitmapCircleRed =
-		// getBitmapFor(R.drawable.aosp_indicator_code_lock_point_area_red_holo);
-		//
-		// mBitmapArrowGreenUp =
-		// getBitmapFor(R.drawable.aosp_indicator_code_lock_drag_direction_green_up);
-		// mBitmapArrowRedUp =
-		// getBitmapFor(R.drawable.aosp_indicator_code_lock_drag_direction_red_up);
 		mBitmapBtnDefault = getBitmapFor(R.drawable.btn_code_lock_default_holo);
 		mBitmapBtnTouched = getBitmapFor(R.drawable.btn_code_lock_touched_holo);
 		mBitmapCircleDefault = getBitmapFor(R.drawable.indicator_code_lock_point_area_default_holo);
@@ -548,28 +505,24 @@ public class LockPatternView extends View {
 	}
 
 	private void notifyCellAdded() {
-		sendAccessEvent(R.string.alp_lockscreen_access_pattern_cell_added);
 		if (mOnPatternListener != null) {
 			mOnPatternListener.onPatternCellAdded(mPattern);
 		}
 	}
 
 	private void notifyPatternStarted() {
-		sendAccessEvent(R.string.alp_lockscreen_access_pattern_start);
 		if (mOnPatternListener != null) {
 			mOnPatternListener.onPatternStart();
 		}
 	}
 
 	private void notifyPatternDetected() {
-		sendAccessEvent(R.string.alp_lockscreen_access_pattern_detected);
 		if (mOnPatternListener != null) {
 			mOnPatternListener.onPatternDetected(mPattern);
 		}
 	}
 
 	private void notifyPatternCleared() {
-		sendAccessEvent(R.string.alp_lockscreen_access_pattern_cleared);
 		if (mOnPatternListener != null) {
 			mOnPatternListener.onPatternCleared();
 		}
@@ -648,16 +601,6 @@ public class LockPatternView extends View {
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		// final int minimumWidth = getSuggestedMinimumWidth();
-		// final int minimumHeight = getSuggestedMinimumHeight();
-		// int viewWidth = resolveMeasured(widthMeasureSpec, minimumWidth);
-		// int viewHeight = resolveMeasured(heightMeasureSpec, minimumHeight);
-
-		// viewWidth = viewHeight = Math.min(viewWidth, viewHeight);
-		// Log.v(TAG, "LockPatternView dimensions: " + viewWidth + "x" +
-		// viewHeight);
-		// setMeasuredDimension(viewWidth, viewHeight);
-
 		int height = MeasureSpec.getSize(heightMeasureSpec);
 		int width = MeasureSpec.getSize(widthMeasureSpec);
 		int size = Math.min(width, height);
@@ -666,23 +609,6 @@ public class LockPatternView extends View {
 		}
 		setMeasuredDimension(size, size);
 	}
-
-	// private int resolveMeasured(int measureSpec, int desired) {
-	// int result = 0;
-	// int specSize = MeasureSpec.getSize(measureSpec);
-	// switch (MeasureSpec.getMode(measureSpec)) {
-	// case MeasureSpec.UNSPECIFIED:
-	// result = desired;
-	// break;
-	// case MeasureSpec.AT_MOST:
-	// result = Math.max(specSize, desired);
-	// break;
-	// case MeasureSpec.EXACTLY:
-	// default:
-	// result = specSize;
-	// }
-	// return result;
-	// }
 
 	/**
 	 * Determines whether the point x, y will add a new point to the current
@@ -978,16 +904,6 @@ public class LockPatternView extends View {
 					invalidate();
 				}
 			}
-		}
-	}
-
-	private void sendAccessEvent(int resId) {
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-			setContentDescription(mContext.getString(resId));
-			sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_SELECTED);
-			setContentDescription(null);
-		} else {
-			announceForAccessibility(mContext.getString(resId));
 		}
 	}
 

@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.twinone.locker.R;
+import com.twinone.locker.util.PrefUtil;
 
 public class AppAdapter extends BaseAdapter {
 
@@ -76,8 +77,8 @@ public class AppAdapter extends BaseAdapter {
 	 */
 	public void updateLockSwitches(Context c) {
 		for (AppHolder ah : mApps) {
-			Set<String> trackedApps = UtilPref.getTrackedApps(
-					UtilPref.appsPrefs(c), c);
+			Set<String> trackedApps = PrefUtil.getTrackedApps(
+					PrefUtil.appsPrefs(c), c);
 			ah.tracked = trackedApps.contains(ah.ri.activityInfo.packageName);
 		}
 	}

@@ -2,11 +2,11 @@
 <resources>
 
     <string-array name="performance_names">
-        <item>@string/performance_very_high</item>
-        <item>@string/performance_high</item>
-        <item>@string/performance_normal</item>
-        <item>@string/performance_low</item>
-        <item>@string/performance_very_low</item>
+        <item>@string/pref_list_perf_very_high</item>
+        <item>@string/pref_list_perf_high</item>
+        <item>@string/pref_list_perf_normal</item>
+        <item>@string/pref_list_perf_low</item>
+        <item>@string/pref_list_perf_very_low</item>
     </string-array>
     <string-array name="performance_values">
         <item>@string/pref_val_perf_very_high</item>
@@ -15,14 +15,27 @@
         <item>@string/pref_val_perf_low</item>
         <item>@string/pref_val_perf_very_low</item>
     </string-array>
-    
+    <!--  -->
     <string-array name="lock_type_names">
-        <item>@string/pref_list_name_lock_type_password</item>
-        <item>@string/pref_list_name_lock_type_pattern</item>
+        <item>@string/pref_list_lock_type_password</item>
+        <item>@string/pref_list_lock_type_pattern</item>
     </string-array>
     <string-array name="lock_type_values">
         <item>@string/pref_val_lock_type_password</item>
         <item>@string/pref_val_lock_type_pattern</item>
+    </string-array>
+    <!--  -->
+    <string-array name="orientation_names">
+        <item>@string/pref_list_orientation_system</item>
+        <item>@string/pref_list_orientation_auto_rotate</item>
+        <item>@string/pref_list_orientation_portrait</item>
+        <item>@string/pref_list_orientation_landscape</item>
+    </string-array>
+    <string-array name="orientation_values">
+        <item>@string/pref_val_orientation_system</item>
+        <item>@string/pref_val_orientation_auto_rotate</item>
+        <item>@string/pref_val_orientation_portrait</item>
+        <item>@string/pref_val_orientation_landscape</item>
     </string-array>
 
 </resources>

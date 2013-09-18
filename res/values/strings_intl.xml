@@ -9,7 +9,7 @@
     <string name="pref_key_start_boot">com.twinone.locker.pref.start_boot</string>
     <string name="pref_key_relock_after_screenoff">com.twinone.locker.pref.relock_after_screenoff</string>
     <string name="pref_key_relock_between_switch_delay">com.twinone.locker.pref.relock_delay</string>
-    <string name="pref_key_vibrate_keypress">com.twinone.locker.pref.vibrate_keypress</string>
+    <string name="pref_key_vibrate_password">com.twinone.locker.pref.vibrate_keypress</string>
     <string name="pref_key_performance">com.twinone.locker.pref.performance</string>
     <string name="pref_key_delay_status">com.twinone.locker.pref.delay_status</string>
     <string name="pref_key_delay_time">com.twinone.locker.pref.delay_time</string>
@@ -24,7 +24,18 @@
     <string name="pref_key_changelog">com.twinone.locker.pref.changelog</string>
     <string name="pref_key_recovery_code">com.twinone.locker.pref.recovery_code</string>
     <string name="pref_key_lock_type">com.twinone.locker.pref.lock_type</string>
-
+    <string name="pref_key_hide_dots">com.twinone.locker.pref.hide_dots</string>
+    <string name="pref_key_password_expiry">com.twinone.locker.pref.password_expiry</string>
+    <string name="pref_key_max_password_retries">com.twinone.locker.pref.max_password_retries</string>
+    <string name="pref_key_pattern_stealth">com.twinone.locker.pref.pattern_stealth</string>
+    <string name="pref_key_vibrate_pattern">com.twinone.locker.pref.vibrate_pattern</string>
+    <string name="pref_key_screen">com.twinone.locker.pref.main_preference_screen</string>
+    <string name="pref_key_show_specific_settings">com.twinone.locker.pref.show_specific_settings</string>
+    <string name="pref_key_switch_buttons">com.twinone.locker.pref.switch_buttons</string>
+    <string name="pref_key_cat_password">com.twinone.locker.pref.category_password</string>
+    <string name="pref_key_cat_pattern">com.twinone.locker.pref.category_pattern</string>
+    <string name="pref_key_orientation">com.twinone.locker.pref.orientation</string>
+    
     <!-- Values -->
     <string name="pref_val_perf_very_high">75</string>
     <string name="pref_val_perf_high">125</string>
@@ -32,12 +43,17 @@
     <string name="pref_val_perf_low">250</string>
     <string name="pref_val_perf_very_low">300</string>
     <!--  -->
-    <string name="pref_val_lock_type_password">PASSWORD</string>
-    <string name="pref_val_lock_type_pattern">PATTERN</string>
-
+    <string name="pref_val_lock_type_password">password</string>
+    <string name="pref_val_lock_type_pattern">pattern</string>
+    <!--  -->
+    <string name="pref_val_orientation_system">system</string>
+    <string name="pref_val_orientation_auto_rotate">autorotate</string>
+    <string name="pref_val_orientation_portrait">portrait</string>
+    <string name="pref_val_orientation_landscape">landscape</string>
+    
     <!-- Defaults -->
     <string name="pref_def_delay_status">false</string>
-    <string name="pref_def_vibrate_keypress">false</string>
+    <string name="pref_def_vibrate_password">false</string>
     <string name="pref_def_relock_after_screenoff">true</string>
     <string name="pref_def_delay_time">60</string>
     <!-- For Android 4.2 and lower, don't show a notification by default -->
@@ -46,6 +62,12 @@
     <string name="pref_def_hide_launcher_icon">false</string>
     <string name="pref_def_dial_launch">false</string>
     <string name="pref_def_transparent_notification">false</string>
+    <string name="pref_def_hide_dots">false</string>
+    <string name="pref_def_password_expiry">0</string>
+    <string name="pref_def_max_password_retries">0</string>
+    <string name="pref_def_vibrate_pattern">false</string>
+    <string name="pref_def_pattern_stealth">false</string>
+    <string name="pref_def_switch_buttons">false</string>
 
     <!--
     Next are numbers on buttons, only translate if your language 

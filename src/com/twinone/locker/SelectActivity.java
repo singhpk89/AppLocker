@@ -28,6 +28,7 @@ public class SelectActivity extends Activity implements OnItemClickListener,
 	AppAdapter mAppAdapter;
 	Button bAll;
 	Button bNone;
+	Button bFinish;
 
 	private AppLockService mService;
 	boolean mBound = false;
@@ -45,9 +46,11 @@ public class SelectActivity extends Activity implements OnItemClickListener,
 		mListView.setOnItemClickListener(this);
 
 		bAll = (Button) findViewById(R.id.bLockAll);
-		bNone = (Button) findViewById(R.id.bUnlockAll);
 		bAll.setOnClickListener(this);
+		bNone = (Button) findViewById(R.id.bUnlockAll);
 		bNone.setOnClickListener(this);
+		bFinish = (Button) findViewById(R.id.bFinish);
+		bFinish.setOnClickListener(this);
 	}
 
 	@Override
@@ -76,6 +79,9 @@ public class SelectActivity extends Activity implements OnItemClickListener,
 	protected void onPause() {
 		super.onPause();
 		if (mBound) {
+			// We don't need mService.restart()
+			// because this only changes apps
+			mService.loadPreferences();
 			unbindService(mConnection);
 			mBound = false;
 		}
@@ -109,6 +115,9 @@ public class SelectActivity extends Activity implements OnItemClickListener,
 			break;
 		case R.id.bUnlockAll:
 			setAllTracking(false);
+			break;
+		case R.id.bFinish:
+			MainActivity.showWithoutPassword(this);
 			break;
 		}
 	}

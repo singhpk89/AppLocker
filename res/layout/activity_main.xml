@@ -97,6 +97,16 @@
                 android:padding="10dp"
                 android:text="@string/main_preferences" >
             </Button>
+
+            <Button
+                android:id="@+id/bBeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:padding="10dp"
+                android:text="@string/beta_tit" >
+            </Button>
         </LinearLayout>
     </ScrollView>
 

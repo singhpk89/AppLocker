@@ -79,18 +79,18 @@
 
         <!-- Performance -->
         <ListPreference
-            android:key="@string/pref_key_performance"
             android:defaultValue="@string/pref_val_perf_normal"
             android:entries="@array/performance_names"
             android:entryValues="@array/performance_values"
+            android:key="@string/pref_key_performance"
             android:summary="@string/pref_desc_performance"
             android:title="@string/pref_tit_performance" />
-         <!-- Orientation -->
+        <!-- Orientation -->
         <ListPreference
-            android:key="@string/pref_key_orientation"
             android:defaultValue="@string/pref_val_orientation_system"
             android:entries="@array/orientation_names"
             android:entryValues="@array/orientation_values"
+            android:key="@string/pref_key_orientation"
             android:title="@string/pref_tit_orientation" />
         <!-- Delay -->
         <CheckBoxPreference
@@ -151,6 +151,12 @@
         <Preference
             android:key="@string/pref_key_changelog"
             android:title="@string/cl_title" >
+        </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_tit_recovery_code" >
+        <Preference
+            android:key="@string/pref_key_recovery_code"
+            android:title="@string/pref_tit_recovery_code" >
         </Preference>
     </PreferenceCategory>
 

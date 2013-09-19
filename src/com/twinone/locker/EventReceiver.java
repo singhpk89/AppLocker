@@ -11,6 +11,7 @@ import android.net.wifi.WifiManager;
 import android.util.Log;
 
 import com.twinone.locker.lock.AppLockService;
+import com.twinone.locker.lock.LockActivity;
 import com.twinone.locker.util.PrefUtil;
 
 public class EventReceiver extends BroadcastReceiver {
@@ -34,17 +35,11 @@ public class EventReceiver extends BroadcastReceiver {
 					c.getString(R.string.pref_key_dial_launch), dialLaunchDef);
 			if (dialLaunch
 					&& i.getStringExtra(Intent.EXTRA_PHONE_NUMBER).equals(
-							"#" + PrefUtil.getPassword(PrefUtil.prefs(c), c))) {
-				// TODO very important change to custom number because we've
-				// implemented a pattern now.
+							PrefUtil.getRecoveryCode(c))) {
 				Log.d("Receiver", "OUTGOING CALL MATCHED");
 				setResultData(null);
-				// MainActivity.showWithoutPassword(c);
-				Intent main = new Intent(c, MainActivity.class);
-				main.putExtra(MainActivity.EXTRA_UNLOCKED, true);
-				main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				c.startActivity(main);
+				Intent intent = LockActivity.getDefaultIntent(c);
+				intent.setAction(LockActivity.ACTION_CREATE);
 			}
 		}
 
@@ -54,6 +49,14 @@ public class EventReceiver extends BroadcastReceiver {
 	}
 
 	private static final void processConnectivityEvent(Intent intent, Context c) {
+		SharedPreferences sp = c.getSharedPreferences("beta",
+				Context.MODE_PRIVATE);
+		final boolean should = sp.getBoolean(
+				c.getString(R.string.pref_key_temp_wifi_unlock_state), false);
+		if (!should)
+			return;
+		String savedSSID = sp.getString(
+				c.getString(R.string.pref_key_temp_wifi_ssid), "");
 		boolean disconnected = intent.getBooleanExtra(
 				ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
 		if (!disconnected) {
@@ -66,7 +69,24 @@ public class EventReceiver extends BroadcastReceiver {
 					WifiManager wm = (WifiManager) c
 							.getSystemService(Context.WIFI_SERVICE);
 					WifiInfo wi = wm.getConnectionInfo();
-					Log.d("RECEIVER", "SSID: " + wi.getSSID());
+					String ssid = wi.getSSID();
+					Log.d("RECEIVER", "SSID: " + ssid + " saved: " + savedSSID);
+					if (ssid != null && ssid.length() != 0) {
+						// 4.2+ have quotes, remove them if it has!
+						if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
+							ssid = ssid.substring(1, ssid.length() - 1);
+						}
+						if (savedSSID.startsWith("\"")
+								&& savedSSID.endsWith("\"")) {
+							savedSSID = savedSSID.substring(1,
+									savedSSID.length() - 1);
+						}
+						if (ssid.equals(savedSSID)) {
+							Log.d("RECEIVER", "Stopping service, ssid matched");
+							Intent i = new Intent(c, AppLockService.class);
+							c.stopService(i);
+						}
+					}
 					break;
 				}
 			}

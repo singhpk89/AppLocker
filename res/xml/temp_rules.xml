@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/pref_key_temp_wifi_unlock_state"
+        android:summary="@string/pref_desc_temp_wifi_unlock_state"
+        android:title="@string/pref_tit_temp_wifi_unlock_state" />
+
+    <EditTextPreference
+        android:defaultValue="none"
+        android:key="@string/pref_key_temp_wifi_ssid"
+        android:summary="@string/pref_desc_temp_wifi_ssid"
+        android:title="@string/pref_tit_temp_wifi_ssid" />
+
+</PreferenceScreen>

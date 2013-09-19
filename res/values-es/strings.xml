@@ -91,7 +91,8 @@
     <string name="notification_title">Locker está activo</string>
     <string name="notification_state_locked">Haz clic aquí para desactivar el bloqueo</string>
     <!-- END v2.0 Strings -->
-    
+
+
     <!-- BEGIN v2.0.6 Strings -->
     <!-- All pref_tit_xxx must be short (2 words max || length < 20) -->
     <!-- pref_desc_xxx can be like 3 lines or more if neccesary -->
@@ -110,7 +111,88 @@
     <string name="pref_tit_show_notification">Mostrar notificación</string>
     <!-- Changelog -->
     <string name="cl_title">Qué hay nuevo</string>
-        <string name="pref_tit_cat_about">Sobre la aplicación</string>
+    <string name="pref_tit_cat_about">Sobre la aplicación</string>
     <!-- END v2.0.6 Strings -->
+
+
+    <!-- BEGIN v2.0.8 Strings -->
+    <string name="recovery_tit">Importante</string>
+    <string name="recovery_dlgmsg">Si te olvidas de tu contraseña, podrás recuperarla escribiendo este código. Por favor, escríbela o envíatela a ti mismo.\nTu código es:\n</string>
+    <string name="recovery_code_send_button">Enviar</string>
+    <string name="pref_tit_recovery_code">Código de recuperación</string>
+    <string name="old_pref_desc_recovery_code">Podrás acceder a tu contraseña si la pierdes llamando a este numero</string>
+    <string name="pref_desc_recovery_code">Código actual: %s</string>
+    <!-- PASSWORD -->
+    <string name="password_change_tit">Cambiar contraseña</string>
+    <string name="password_change_head">Introduce una nueva contraseña</string>
+    <string name="password_change_confirm">Confirma la nueva contraseña</string>
+    <string name="password_change_saved">Contraseña cambiada correctamente</string>
+    <string name="password_change_error">Error al guardar la contraseña</string>
+    <string name="password_change_not_match">Las contraseñas no coinciden</string>
+    <string name="password_empty">La contraseña no puede estar vacía</string>
+    <!-- PATTERN -->
+    <string name="pattern_change_tit">Cambiar patrón</string>
+    <string name="pattern_detected">Patrón detectado</string>
+    <string name="pattern_change_head">Dibuja un nuevo patrón</string>
+    <string name="pattern_change_confirm">Dibuja el patrón de nuevo para confirmar</string>
+    <string name="pattern_change_saved">Patrón cambiado correctamente</string>
+    <string name="pattern_change_error">Error al cambiar el patrón</string>
+    <string name="pattern_change_not_match">Los patrones no coinciden</string>
+    <!--  -->
+    <string name="button_confirm">Confirmar</string>
+    <string name="button_continue">Siguiente</string>
+    <string name="button_back">Atrás</string>
+    <!-- Buttons have short text! (2 words or so) -->
+    <string name="main_button_set_password">Cambiar contraseña</string>
+    <string name="main_button_set_pattern">Cambiar patrón</string>
+    <string name="pref_list_lock_type_password">Contraseña</string>
+    <string name="pref_list_lock_type_pattern">Patrón</string>
+    <string name="pref_tit_lock_type">Tipo de bloqueo</string>
+    <string name="pref_desc_lock_type">Actualmente: %s</string>
+    <!-- VersionChecker -->
+    <string name="vc_update">Actualizar</string>
+    <string name="vc_exit">Salir</string>
+    <string name="vc_tit_new_version">Actualización</string>
+    <string name="vc_tit_unsupported">Lo sentimos</string>
+    <string name="vc_msg_new_version">Hay una nueva versión disponible, ¿quieres actualizar ahora?</string>
+    <string name="vc_msg_unsupported">La versión que utilizas de esta aplicación es demasiado vieja y tiene que actualizarse. Por favor actualiza la aplicación o pulsa salir. Disculpa las molestias.</string>
+
+    <!-- Settings -->
+    <string name="pref_tit_cat_password">Ajustes de contraseña</string>
+    <string name="pref_tit_cat_pattern">Ajustes de patrón</string>
+    <string name="pref_tit_delay_status">Salida breve</string>
+    <string name="pref_desc_delay_status">Puedes salir de una aplicación y volver en el límite de tiempo sin contraseña</string>
+    <string name="pref_tit_delay_time">Tiempo de salida breve</string>
+    <!-- Seconds is important, not just "time" -->
+    <string name="pref_dlgmsg_delay_time">Introduce el numero de segundos tras el que se volverá a activar el bloqueo</string>
+    <string name="pref_tit_orientation">Orientación</string>
+
+    <!-- Password specific settings -->
+    <string name="pref_tit_vibrate_password">Vibration</string>
+    <string name="pref_desc_vibrate_password">Vibrate when you press keys</string>
+    <string name="pref_tit_hide_dots">Hide dots</string>
+    <string name="pref_desc_hide_dots">When you type your password, the dots will not show on screen</string>
+
+    <!-- Pattern specific settings -->
+    <string name="pref_tit_vibrate_pattern">Vibración</string>
+    <string name="pref_desc_vibrate_pattern">Vibrar mientras dibujas el patrón</string>
+    <string name="pref_tit_pattern_stealth">Modo invisible</string>
+    <string name="pref_desc_pattern_stealth">El patrón será invisible</string>
+    <string name="pref_tit_switch_buttons">Cambiar botones</string>
+    <string name="pref_desc_switch_buttons">Cambia la posición de los botones de OK y Atrás</string>
+    <string name="pref_list_orientation_portrait">Vertical</string>
+    <!-- TODO: Use android standards -->
+    <string name="pref_list_orientation_landscape">Horizontal</string>
+    <string name="pref_list_orientation_auto_rotate">Auto-rotación</string>
+    <string name="pref_list_orientation_system">Sistema</string>
+
+    <!-- Beta -->
+    <string name="pref_tit_temp_wifi_unlock_state">Detener con wifi</string>
+    <string name="pref_desc_temp_wifi_unlock_state">Cuando te conectas a una red especifica (como la de tu casa), se desactivará el bloqueo</string>
+    <string name="pref_tit_temp_wifi_ssid">SSID (Nombre de la red)</string>
+    <string name="pref_desc_temp_wifi_ssid">El nombre de la red wifi</string>
+    <string name="beta_tit">Beta</string>
+    <string name="beta_desc">Esta es la sección beta, las opciones funcionan y puedes experimentar, pero no están probadas en todos los dispositivos..</string>
+    <!-- END v2.0.8 Strings -->
 
 </resources>

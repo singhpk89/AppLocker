@@ -114,4 +114,85 @@
     <string name="pref_tit_cat_about">Over de app</string>
     <!-- END v2.0.6 Strings -->
 
+
+    <!-- BEGIN v2.0.8 Strings -->
+    <string name="recovery_tit">Belangrijk</string>
+    <string name="recovery_dlgmsg">Als je ooir je wachtwoord vergeet, kun je je herstelcode bellen om toegang terug te krijgen. Je kunt de code opschrijven, of naar jezelf e-mailen.\nJe code is:\n</string>
+    <string name="recovery_code_send_button">Versturen</string>
+    <string name="pref_tit_recovery_code">Herstel code</string>
+    <string name="old_pref_desc_recovery_code">Door dit nummer te bellen krijg je weer toegang.</string>
+    <string name="pref_desc_recovery_code">Code: %s</string>
+    <!-- PASSWORD -->
+    <string name="password_change_tit">Wachtwoord veranderen</string>
+    <string name="password_change_head">Typ een nieuw wachtwoord</string>
+    <string name="password_change_confirm">Bevestig het nieuwe wachtwoord</string>
+    <string name="password_change_saved">Wachtwoord opgeslagen</string>
+    <string name="password_change_error">Fout bij opslaan van het wachtwoord</string>
+    <string name="password_change_not_match">Wachtwoorden komen niet overeen</string>
+    <string name="password_empty">Wachtwoord kan niet leeg zijn</string>
+    <!-- PATTERN -->
+    <string name="pattern_change_tit">Patroon veranderen</string>
+    <string name="pattern_detected">Patroon gedetecteerd</string>
+    <string name="pattern_change_head">Teken een nieuw patroon</string>
+    <string name="pattern_change_confirm">Teken het patroon opnieuw om te bevestigen</string>
+    <string name="pattern_change_saved">Patroon opgeslagen</string>
+    <string name="pattern_change_error">Fout bij opslaan van patroon</string>
+    <string name="pattern_change_not_match">Patronen komen niet overeen</string>
+    <!--  -->
+    <string name="button_confirm">Bevestig</string>
+    <string name="button_continue">Volgende</string>
+    <string name="button_back">Terug</string>
+    <!-- Buttons have short text! (2 words or so) -->
+    <string name="main_button_set_password">Wachtwoord wijzigen</string>
+    <string name="main_button_set_pattern">Patroon wijzigen</string>
+    <string name="pref_list_lock_type_password">Wachtwoord</string>
+    <string name="pref_list_lock_type_pattern">Patroon</string>
+    <string name="pref_tit_lock_type">Ontgrendelings methode</string>
+    <string name="pref_desc_lock_type">Huidig: %s</string>
+    <!-- VersionChecker -->
+    <string name="vc_update">Update</string>
+    <string name="vc_exit">Afsluiten</string>
+    <string name="vc_tit_new_version">Nieuwe versie</string>
+    <string name="vc_tit_unsupported">Sorry</string>
+    <string name="vc_msg_new_version">Er is een nieuwe versie beschikbaar, wil je deze nu installeren?</string>
+    <string name="vc_msg_unsupported">De versie van deze app die je gebruikt is te oud om nog te kunnen werken. Installeer nu de nieuwe versie of druk op afsluiten. Excuses voor het ongemak.</string>
+
+    <!-- Settings -->
+    <string name="pref_tit_cat_password">Wachtwoord instellingen</string>
+    <string name="pref_tit_cat_pattern">Patroon instellingen</string>
+    <string name="pref_tit_delay_status">Korte uitgang</string>
+    <string name="pref_desc_delay_status">Je kunt uit een app gaan en binnen de limiet-tijd teruggaan zonder wachtwoord te hoeven invoeren.</string>
+    <string name="pref_tit_delay_time">Korte uitgang tijd</string>
+    <!-- Seconds is important, not just "time" -->
+    <string name="pref_dlgmsg_delay_time">Na dit aantal seconden worden apps weer geblokkeerd</string>
+    <string name="pref_tit_orientation">Orientatië</string>
+
+    <!-- Password specific settings -->
+    <string name="pref_tit_vibrate_password">Vibratie</string>
+    <string name="pref_desc_vibrate_password">Vibrate when you press keys</string>
+    <string name="pref_tit_hide_dots">Hide dots</string>
+    <string name="pref_desc_hide_dots">When you type your password, the dots will not show on screen</string>
+
+    <!-- Pattern specific settings -->
+    <string name="pref_tit_vibrate_pattern">Vibration</string>
+    <string name="pref_desc_vibrate_pattern">Tril als je een patroon tekent</string>
+    <string name="pref_tit_pattern_stealth">Onzichtbare modus</string>
+    <string name="pref_desc_pattern_stealth">Het patroon wordt onzichtbaar</string>
+    <string name="pref_tit_switch_buttons">Knoppen omwisselen</string>
+    <string name="pref_desc_switch_buttons">De OK en terug knoppen worden omgewisseld</string>
+    <string name="pref_list_orientation_portrait">Staand</string>
+    <!-- TODO: Use android standards -->
+    <string name="pref_list_orientation_landscape">Landschap</string>
+    <string name="pref_list_orientation_auto_rotate">Auto-rotatie</string>
+    <string name="pref_list_orientation_system">Systeem instelling</string>
+
+    <!-- Beta -->
+    <string name="pref_tit_temp_wifi_unlock_state">Stop met wifi</string>
+    <string name="pref_desc_temp_wifi_unlock_state">Als je met een bepaald wifi netwerk bent verbonden, (zoals thuis), wordt de blokkering automatisch gestopt</string>
+    <string name="pref_tit_temp_wifi_ssid">SSID (Netwerk naam)</string>
+    <string name="pref_desc_temp_wifi_ssid">De naam van het wifi netwerk</string>
+    <string name="beta_tit">Beta</string>
+    <string name="beta_desc">Dit is de beta sectie, deze opties zouden moeten werken, en je kunt ze uitproberen, maar ze zijn niet getest op alle apparaten.</string>
+    <!-- END v2.0.8 Strings -->
+
 </resources>

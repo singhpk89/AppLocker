@@ -12,8 +12,8 @@ public class StagingActivity extends Activity {
 
 	public static final String ACTION_SHARE = "com.twinone.locker.action.share";
 	public static final String ACTION_RATE = "com.twinone.locker.action.rate";
-	public static final String ACTION_CHANGELOG = "com.twinone.locker.action.changelog";
-	public static final String ACTION_CHANGELOG_FORCE = "com.twinone.locker.action.changelog_force";
+//	public static final String ACTION_CHANGELOG = "com.twinone.locker.action.changelog";
+//	public static final String ACTION_CHANGELOG_FORCE = "com.twinone.locker.action.changelog_force";
 	public static final String EXTRA_TEXT = "com.twinone.locker.extra.text";
 
 	@Override
@@ -32,8 +32,9 @@ public class StagingActivity extends Activity {
 			String str = "https://play.google.com/store/apps/details?id="
 					+ getPackageName();
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(str)));
+		} else {
+			Log.w("Staging", "Unknown action!");
 		}
-
 	}
 
 	@Override

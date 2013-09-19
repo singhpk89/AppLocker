@@ -1,6 +1,7 @@
 package com.twinone.locker.util;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 import android.content.Context;
@@ -221,10 +222,14 @@ public abstract class PrefUtil {
 
 	public static final boolean isCurrentPasswordEmpty(SharedPreferences sp,
 			Context c) {
-		if (getLockTypeInt(sp, c) == LockActivity.LOCK_TYPE_PASSWORD) {
+		final int lockType = getLockTypeInt(sp, c);
+		switch (lockType) {
+		case LockActivity.LOCK_TYPE_PASSWORD:
 			return (PrefUtil.getPassword(sp, c).length() == 0);
-		} else {
+		case LockActivity.LOCK_TYPE_PATTERN:
 			return (PrefUtil.getPattern(sp, c).length() == 0);
+		default:
+			return true;
 		}
 	}
 
@@ -260,6 +265,22 @@ public abstract class PrefUtil {
 			return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 		}
 		return ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+	}
+
+	public static final String getRecoveryCode(Context c) {
+		return getRecoveryCode(prefs(c), c);
+	}
+
+	public static final String getRecoveryCode(SharedPreferences sp, Context c) {
+		return sp.getString(c.getString(R.string.pref_key_recovery_code), null);
+	}
+
+	public static final String generateNewCode() {
+		final int min = 10000000;
+		final int max = 99999999;
+		final Random rand = new Random();
+		final int newRandom = rand.nextInt((max - min) + 1) + min;
+		return "#" + String.valueOf(newRandom);
 	}
 
 	public static final void apply(SharedPreferences.Editor editor) {

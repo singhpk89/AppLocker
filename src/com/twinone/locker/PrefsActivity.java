@@ -25,6 +25,7 @@ import android.util.Log;
 import com.twinone.locker.lock.AppLockService;
 import com.twinone.locker.lock.LockActivity;
 import com.twinone.locker.util.PrefUtil;
+import com.twinone.util.ChangeLog;
 
 public class PrefsActivity extends PreferenceActivity implements
 		OnPreferenceChangeListener, OnSharedPreferenceChangeListener,
@@ -46,6 +47,7 @@ public class PrefsActivity extends PreferenceActivity implements
 	protected ListPreference mLockTypePref;
 	protected PreferenceCategory mCatPassword;
 	protected PreferenceCategory mCatPattern;
+	protected Preference mRecoveryPref;
 
 	private Handler mHandler = new Handler();
 
@@ -74,6 +76,7 @@ public class PrefsActivity extends PreferenceActivity implements
 			mPrefScreen = (PreferenceScreen) findPreference(getString(R.string.pref_key_screen));
 			mCatPassword = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_password));
 			mCatPattern = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_pattern));
+			mRecoveryPref = (Preference) findPreference(getString(R.string.pref_key_recovery_code));
 
 			initialize();
 		} else {
@@ -115,6 +118,7 @@ public class PrefsActivity extends PreferenceActivity implements
 			parent.mPrefScreen = (PreferenceScreen) findPreference(getString(R.string.pref_key_screen));
 			parent.mCatPassword = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_password));
 			parent.mCatPattern = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_pattern));
+			parent.mRecoveryPref = (Preference) findPreference(getString(R.string.pref_key_recovery_code));
 
 			parent.initialize();
 		}
@@ -138,11 +142,15 @@ public class PrefsActivity extends PreferenceActivity implements
 			mNotifOnPref.setSummary(R.string.pref_desc_show_notification_v18);
 		}
 
-		// If less than API Level 16, remove the "Transparent Notification"
-		// feature.
+		// transparent notification is only available on api level 16+
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
 			mCatNotif.removePreference(mTransparentPref);
 		}
+
+		final String code = PrefUtil.getRecoveryCode(this);
+		if (code != null)
+			mRecoveryPref.setSummary(String.format(
+					getString(R.string.pref_desc_recovery_code), code));
 		setupMessagesAndViews();
 	}
 
@@ -283,9 +291,8 @@ public class PrefsActivity extends PreferenceActivity implements
 	@Override
 	public boolean onPreferenceClick(Preference preference) {
 		if (preference.getKey().equals(getString(R.string.pref_key_changelog))) {
-			Intent i = new Intent(PrefsActivity.this, StagingActivity.class);
-			i.setAction(StagingActivity.ACTION_CHANGELOG_FORCE);
-			startActivity(i);
+			ChangeLog cl = new ChangeLog(this);
+			cl.show(true);
 		}
 		return false;
 	}

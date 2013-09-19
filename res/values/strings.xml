@@ -117,11 +117,11 @@
 
     <!-- BEGIN v2.0.8 Strings -->
     <string name="recovery_tit">Important</string>
-    <string name="recovery_dlgmsg">If you ever forget your password, you can recover access to your device by dialing to your recovery code.\nPlease take 30 seconds to send this code to yourself or write it down somewhere\nYour code is:\n</string>
+    <string name="recovery_dlgmsg">If you ever forget your password, you can recover access to your device by dialing to your recovery code.\nPlease take 30 seconds to send this code to yourself or write it down somewhere\nYour code is: %s\n</string>
     <string name="recovery_code_send_button">Send</string>
     <string name="pref_tit_recovery_code">Recovery code</string>
-    <string name="pref_desc_recovery_code">If you call this number you will be able to access Locker when you forget your password</string>
-    <string name="pref_desc_recovery_code_2">Current code: %s</string>
+    <string name="old_pref_desc_recovery_code">If you call this number you will be able to access Locker when you forget your password</string>
+    <string name="pref_desc_recovery_code">Current code: %s</string>
     <!-- PASSWORD -->
     <string name="password_change_tit">Change password</string>
     <string name="password_change_head">Enter a new unlock password</string>
@@ -185,6 +185,14 @@
     <string name="pref_list_orientation_landscape">Landscape</string>
     <string name="pref_list_orientation_auto_rotate">Auto-rotate</string>
     <string name="pref_list_orientation_system">System setting</string>
+
+    <!-- Beta -->
+    <string name="pref_tit_temp_wifi_unlock_state">Stop with wifi</string>
+    <string name="pref_desc_temp_wifi_unlock_state">When you connect to a specific wifi network, (such as home), the lock automatically stops</string>
+    <string name="pref_tit_temp_wifi_ssid">SSID (Network name)</string>
+    <string name="pref_desc_temp_wifi_ssid">The name of the wifi network</string>
+    <string name="beta_tit">Beta</string>
+    <string name="beta_desc">This is the beta section, this options should work, and you can try them out, but they\'re not tested on all devices.</string>
     <!-- END v2.0.8 Strings -->
 
 

@@ -68,6 +68,8 @@
             android:name="com.twinone.locker.StagingActivity"
             android:theme="@style/Theme_Transparent" >
         </activity>
+        <activity android:name="com.twinone.locker.automation.TempRuleActivity" >
+        </activity>
 
         <service android:name="com.twinone.locker.lock.AppLockService" />
 

@@ -3,10 +3,10 @@ package com.twinone.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
-import android.util.Log;
 
 /**
  * Utility class to display some Android dialogs in sequence.
@@ -20,13 +20,13 @@ import android.util.Log;
 public class DialogSequencer {
 
 	// private Context mContext;
-	private List<Dialog> mDialogs;
+	private List<DialogInterface> mDialogs;
 	private DialogSequenceListener mListener;
 	private int mCurrentDialog = 0;
 
 	public DialogSequencer() {
 		// mContext = context;
-		mDialogs = new ArrayList<Dialog>();
+		mDialogs = new ArrayList<DialogInterface>();
 	}
 
 	public DialogSequencer(DialogSequenceListener listener) {
@@ -38,6 +38,17 @@ public class DialogSequencer {
 		mListener = listener;
 	}
 
+	/**
+	 * @param dialog
+	 *            The dialog to add. <br>
+	 *            <b>Warning: </b> Don't use this {@link Dialog}'s
+	 *            {@link Dialog#setOnDismissListener(OnDismissListener)} This
+	 *            library needs the listener know when the dialog has been
+	 *            dismissed. use
+	 *            {@link DialogSequenceListener#onDismiss(DialogInterface, int)}
+	 *            .
+	 * @return
+	 */
 	public DialogSequencer addDialog(Dialog dialog) {
 		if (dialog != null) {
 			mDialogs.add(dialog);
@@ -55,6 +66,12 @@ public class DialogSequencer {
 		return this;
 	}
 
+	/**
+	 * Always call stop in {@link Activity#onResume()}, to hide dialogs that
+	 * were still open.
+	 * 
+	 * @return
+	 */
 	public DialogSequencer start() {
 		displayNext();
 		return this;
@@ -64,9 +81,9 @@ public class DialogSequencer {
 		if (mCurrentDialog == mDialogs.size()) {
 			return;
 		}
-		Log.d("ODM", "Displaying dialog" + mCurrentDialog);
-		Dialog d = mDialogs.get(mCurrentDialog);
-		d.show();
+		DialogInterface d = mDialogs.get(mCurrentDialog);
+		((Dialog) d).show();
+
 		if (mListener != null) {
 			mListener.onShow(d, mCurrentDialog);
 		}
@@ -74,11 +91,27 @@ public class DialogSequencer {
 	}
 
 	/**
-	 * Don't show any more dialogs until {@link #start()} is called
-	 * again.
+	 * Remove next dialog in the {@link DialogSequencer} <br>
+	 * If you're running this from in a #{@link DialogInterface.OnClickListener}
+	 * you can use the {@link DialogInterface} provided to you.
+	 * 
+	 * @param dialog
+	 *            A reference to the current Dialog to determine its position
+	 */
+	public void removeNext(DialogInterface dialog) {
+		mDialogs.remove(mDialogs.indexOf(dialog) + 1);
+	}
+
+	public int indexOf(DialogInterface dialog) {
+		return mDialogs.indexOf(dialog);
+	}
+
+	/**
+	 * Don't show any more dialogs.
 	 */
 	public void cancel() {
 		mCurrentDialog = mDialogs.size();
+
 	}
 
 	public void remove(int index) {
@@ -91,6 +124,14 @@ public class DialogSequencer {
 		mDialogs.remove(index);
 	}
 
+	/**
+	 * Go to this position in the list
+	 * 
+	 * @param index
+	 * @param wait
+	 *            False to go directly to the specified dialog, false to wait
+	 *            until current dialog is dismissed.
+	 */
 	public void gotoDialog(int index, boolean wait) {
 		int oldIndex = mCurrentDialog;
 		mCurrentDialog = index;
@@ -99,6 +140,16 @@ public class DialogSequencer {
 		}
 	}
 
+	/**
+	 * Go to this dialog in the list
+	 * 
+	 * @param dialog
+	 *            The dialog to go to, if the same dialog was added multiple
+	 *            times, this will go to the first occurrence.
+	 * @param wait
+	 *            False to go directly to the specified dialog, false to wait
+	 *            until current dialog is dismissed.
+	 */
 	public void gotoDialog(Dialog dialog, boolean wait) {
 		gotoDialog(mDialogs.indexOf(dialog), wait);
 	}
@@ -123,6 +174,13 @@ public class DialogSequencer {
 		remove(mDialogs.indexOf(d));
 	}
 
+	public void stop() {
+		cancel();
+		for (DialogInterface d : mDialogs) {
+			d.dismiss();
+		}
+	}
+
 	public interface DialogSequenceListener {
 		/**
 		 * A dialog has been shown
@@ -131,7 +189,7 @@ public class DialogSequencer {
 		 * @param dialogId
 		 *            The position of this dialog in the queue
 		 */
-		public void onShow(Dialog dialog, int position);
+		public void onShow(DialogInterface dialog, int position);
 
 		public void onDismiss(DialogInterface dialog, int position);
 	}
@@ -140,7 +198,6 @@ public class DialogSequencer {
 
 		@Override
 		public void onDismiss(DialogInterface dialog) {
-			Log.d("ODM", "Dismissed a dialog" + mDialogs.indexOf(dialog));
 			if (mListener != null) {
 				mListener.onDismiss(dialog, mCurrentDialog);
 			}

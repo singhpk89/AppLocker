@@ -35,6 +35,12 @@
     <string name="pref_key_cat_password">com.twinone.locker.pref.category_password</string>
     <string name="pref_key_cat_pattern">com.twinone.locker.pref.category_pattern</string>
     <string name="pref_key_orientation">com.twinone.locker.pref.orientation</string>
+    <string name="pref_key_security_number">com.twinone.locker.pref_security_number</string>
+    
+    <!-- Temp -->
+    <string name="pref_key_temp_wifi_unlock_state">temp.unlockstate</string>
+    <string name="pref_key_temp_wifi_ssid">temp.ssid</string>
+    
     
     <!-- Values -->
     <string name="pref_val_perf_very_high">75</string>

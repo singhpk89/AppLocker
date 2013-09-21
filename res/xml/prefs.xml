@@ -57,7 +57,7 @@
 
         <!-- Start at boot -->
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="@string/pref_def_start_boot"
             android:key="@string/pref_key_start_boot"
             android:summary="@string/pref_desc_start_boot"
             android:title="@string/pref_tit_start_boot" />
@@ -138,6 +138,13 @@
             android:key="@string/pref_key_dial_launch"
             android:summary="@string/pref_desc_dial_launch"
             android:title="@string/pref_tit_dial_launch" />
+        <!-- Dial launch number -->
+        <EditTextPreference
+            android:defaultValue="@string/pref_def_dial_launch_number"
+            android:dependency="@string/pref_key_dial_launch"
+            android:key="@string/pref_key_dial_launch_number"
+            android:summary="@string/pref_desc_dial_launch_number"
+            android:title="@string/pref_tit_dial_launch_number" />
         <!-- Hide icon -->
         <CheckBoxPreference
             android:defaultValue="@string/pref_def_hide_launcher_icon"

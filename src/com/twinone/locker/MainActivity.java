@@ -9,12 +9,14 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.twinone.locker.automation.TempRuleActivity;
 import com.twinone.locker.lock.AppLockService;
@@ -26,6 +28,9 @@ import com.twinone.util.VersionChecker;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
+	public static final String PUBLISHER_ID = "63db1a5b579e6c250d9c7d7ed6c3efd5";
+	public static final boolean SHOW_ADS = true;
+
 	// TODO PRO add Tasker functionality - extend to other app
 	// - Wifi / data enables / disables lock
 	// - GPS enables / disables lock
@@ -33,12 +38,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 	// TODO FIXME
 	// - Add custom number dial to open app
-	// - 
-	
+	// -
+
 	private static final String TAG = "Main";
 
+	private TextView tvState;
 	private Button bChangePass;
-	private Button bToggleService;
+	private Button bStart;
 	private Button bSelectApps;
 	private Button bChangeMessage;
 	private Button bShare;
@@ -52,15 +58,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.Theme_Dark);
 		setContentView(R.layout.activity_main);
-		bToggleService = (Button) findViewById(R.id.bToggleService);
+		bStart = (Button) findViewById(R.id.bToggleService);
 		bChangePass = (Button) findViewById(R.id.bChangePassword);
 		bSelectApps = (Button) findViewById(R.id.bSelect);
 		bChangeMessage = (Button) findViewById(R.id.bPrefs);
 		bShare = (Button) findViewById(R.id.bShare);
 		bRate = (Button) findViewById(R.id.bRate);
 		bBeta = (Button) findViewById(R.id.bBeta);
-
-		bToggleService.setOnClickListener(this);
+		tvState = (TextView) findViewById(R.id.tvState);
+		bStart.setOnClickListener(this);
 		bChangePass.setOnClickListener(this);
 		bSelectApps.setOnClickListener(this);
 		bChangeMessage.setOnClickListener(this);
@@ -68,8 +74,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		bRate.setOnClickListener(this);
 		bBeta.setOnClickListener(this);
 		mSequencer = new DialogSequencer();
-		new VersionChecker(this, "http://twinone.pkern.at/version.txt")
-				.execute();
 	}
 
 	/**
@@ -86,10 +90,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		// Recovery code
 		String code = PrefUtil.getRecoveryCode(this);
 		if (code == null) {
-			final String newCode = PrefUtil.generateNewCode();
+			final String newCode = PrefUtil.generateRecoveryCode();
 			AlertDialog.Builder ab = new AlertDialog.Builder(this);
 			ab.setCancelable(false);
-			ab.setNegativeButton(android.R.string.cancel, null);
+			ab.setNegativeButton(R.string.vc_later, null);
 			ab.setNeutralButton(R.string.recovery_code_send_button,
 					new OnClickListener() {
 						@Override
@@ -221,23 +225,29 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
+
 		boolean unlocked = getIntent().getBooleanExtra(EXTRA_UNLOCKED, false);
+		Log.d(TAG, "onResume unlocked:" + unlocked);
 		if (PrefUtil.isCurrentPasswordEmpty(this)) {
+			Log.d(TAG, "Current password empty");
 			unlocked = true;
 		}
 		if (!unlocked) {
 			Log.d(TAG, "Locking own activity again");
-			Intent i = LockActivity.getDefaultIntent(this);
+			final Intent i = LockActivity.getDefaultIntent(this);
 			i.setAction(LockActivity.ACTION_COMPARE);
-			i.putExtra(LockActivity.EXTRA_MESSAGE, "");
+			i.putExtra(LockActivity.EXTRA_MESSAGE,
+					getString(R.string.locker_footer_default));
 			i.putExtra(LockActivity.EXTRA_PACKAGENAME, getPackageName());
 			startActivity(i);
 			finish();
 		} else {
+			new VersionChecker(this, "http://twinone.pkern.at/version.txt")
+					.execute();
 			showDialogs();
 		}
-		unlocked = false;
-		updateLayout();
+		getIntent().putExtra(EXTRA_UNLOCKED, false);
+		updateLayout(isServiceRunning());
 	}
 
 	@Override
@@ -246,15 +256,22 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		mSequencer.stop();
 	}
 
-	private void updateLayout() {
-		bToggleService.setText(isServiceRunning() ? R.string.main_stop_service
-				: R.string.main_start_service);
-
+	private void updateLayout(boolean running) {
+		if (running) {
+			tvState.setText(R.string.main_state_running);
+			tvState.setTextColor(Color.GREEN);
+			bStart.setText(R.string.main_stop_service);
+		} else {
+			tvState.setText(R.string.main_state_not_running);
+			tvState.setTextColor(Color.RED);
+			bStart.setText(R.string.main_start_service);
+		}
 		if (PrefUtil.getLockTypeInt(this) == LockActivity.LOCK_TYPE_PASSWORD) {
 			bChangePass.setText(R.string.main_button_set_password);
 		} else {
 			bChangePass.setText(R.string.main_button_set_pattern);
 		}
+
 	}
 
 	@Override
@@ -304,14 +321,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		if (showDialogs()) {
 			Intent i = AppLockService.getStartIntent(this);
 			startService(i);
-			bToggleService.setText(R.string.main_stop_service);
+			updateLayout(true);
 		}
 	}
 
 	private final void doStopService() {
 		Intent i = new Intent(this, AppLockService.class);
 		stopService(i);
-		bToggleService.setText(R.string.main_start_service);
+		updateLayout(false);
 	}
 
 	private final void changePassword() {
@@ -340,7 +357,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	public static final void showWithoutPassword(Context context) {
 		Intent i = new Intent(context, MainActivity.class);
 		i.putExtra(EXTRA_UNLOCKED, true);
-		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		// i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		if (context instanceof Activity) {
 			if (!((Activity) context).isFinishing()) {
 				((Activity) context).finish();

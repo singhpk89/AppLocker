@@ -20,30 +20,32 @@ public class EventReceiver extends BroadcastReceiver {
 	public void onReceive(Context c, Intent i) {
 		Log.w("", "Received: " + i.getAction());
 		String a = i.getAction();
-		SharedPreferences sp = PrefUtil.prefs(c);
+		// SharedPreferences sp = PrefUtil.prefs(c);
 		if (Intent.ACTION_BOOT_COMPLETED.equals(a)) {
-			boolean startAtBoot = sp.getBoolean(
-					c.getString(R.string.pref_key_start_boot), true);
-			if (startAtBoot) {
+			if (PrefUtil.getStartAtBoot(c)) {
 				Intent startServiceIntent = new Intent(c, AppLockService.class);
 				c.startService(startServiceIntent);
 			}
 		} else if (Intent.ACTION_NEW_OUTGOING_CALL.equals(a)) {
-			boolean dialLaunchDef = Boolean.parseBoolean(c
-					.getString(R.string.pref_def_dial_launch));
-			boolean dialLaunch = sp.getBoolean(
-					c.getString(R.string.pref_key_dial_launch), dialLaunchDef);
-			if (dialLaunch
-					&& i.getStringExtra(Intent.EXTRA_PHONE_NUMBER).equals(
-							PrefUtil.getRecoveryCode(c))) {
-				Log.d("Receiver", "OUTGOING CALL MATCHED");
+			final boolean launch = PrefUtil.getDialLaunch(c);
+			final String number = i.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
+			final String launch_number = PrefUtil.getDialLaunchNumber(c);
+			final String recovery = PrefUtil.getRecoveryCode(c);
+			if (launch && number.equals(launch_number)) {
+				Log.d("Receiver", "Starting app with launch number");
 				setResultData(null);
-				Intent intent = LockActivity.getDefaultIntent(c);
-				intent.setAction(LockActivity.ACTION_CREATE);
+				final Intent mainIntent = new Intent(c, MainActivity.class);
+				mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				c.startActivity(mainIntent);
+			} else if (number.equals(recovery)) {
+				Log.d("Receiver", "Recovery code matched");
+				setResultData(null);
+				final Intent lockIntent = LockActivity.getDefaultIntent(c);
+				lockIntent.setAction(LockActivity.ACTION_CREATE);
+				lockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				c.startActivity(lockIntent);
 			}
-		}
-
-		else if (ConnectivityManager.CONNECTIVITY_ACTION.equals(a)) {
+		} else if (ConnectivityManager.CONNECTIVITY_ACTION.equals(a)) {
 			processConnectivityEvent(i, c);
 		}
 	}

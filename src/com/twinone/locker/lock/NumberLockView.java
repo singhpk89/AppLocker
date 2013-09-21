@@ -475,6 +475,8 @@ public class NumberLockView extends ViewGroup implements OnClickListener,
 	 *            True if the buttons should be swapped
 	 */
 	public void setSwitchButtons(boolean swap) {
+		int okVisibility = mOkButton.getVisibility();
+		int backVisibility = mBackButton.getVisibility();
 		if (swap) {
 			mBackButton = (Button) findViewById(R.id.numlock_bRight);
 			mOkButton = (Button) findViewById(R.id.numlock_bLeft);
@@ -482,7 +484,8 @@ public class NumberLockView extends ViewGroup implements OnClickListener,
 			mBackButton = (Button) findViewById(R.id.numlock_bLeft);
 			mOkButton = (Button) findViewById(R.id.numlock_bRight);
 		}
-
+		mOkButton.setVisibility(okVisibility);
+		mBackButton.setVisibility(backVisibility);
 		mBackButton.setText(R.string.numBack);
 
 		mBackButton.setTextSize(TypedValue.COMPLEX_UNIT_PX,

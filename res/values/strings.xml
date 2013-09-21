@@ -101,8 +101,8 @@
     <string name="pref_tit_cat_notification">Notification</string>
     <string name="pref_tit_cat_launcher">Start</string>
     <!--  -->
-    <string name="pref_tit_dial_launch">Start with call</string>
-    <string name="pref_desc_dial_launch">When this option is enabled, you can access Locker by dialing #YOURPASSWORD\nThis means that if your password is 1111, you can dial #1111 to open Locker.</string>
+    <string name="old_pref_tit_dial_launch">Start with call</string>
+    <string name="old_pref_desc_dial_launch">When this option is enabled, you can access Locker by dialing #YOURPASSWORD\nThis means that if your password is 1111, you can dial #1111 to open Locker.</string>
     <string name="pref_tit_hide_launcher_icon">Hide icon</string>
     <string name="pref_desc_hide_launcher_icon">When this option is active, Locker will hide it\'s icon from the apps. You can remove shortcuts on your home screen manually (Requires reboot. Forces Start with call)</string>
     <string name="pref_tit_transparent_notification">Transparent notification</string>
@@ -155,7 +155,7 @@
     <string name="vc_tit_new_version">Update</string>
     <string name="vc_tit_unsupported">Sorry</string>
     <string name="vc_msg_new_version">There is a new version available, do you want to update now?</string>
-    <string name="vc_msg_unsupported">The version you are using of this app is too old and needs to be updated. Please update the app or exit. Sorry for the inconvenience.</string>
+    <string name="vc_msg_unsupported">The version you are using of this app is too old and needs to be updated. Please update the app to continue using it.</string>
 
     <!-- Settings -->
     <string name="pref_tit_cat_password">Password settings</string>
@@ -192,7 +192,19 @@
     <string name="pref_tit_temp_wifi_ssid">SSID (Network name)</string>
     <string name="pref_desc_temp_wifi_ssid">The name of the wifi network</string>
     <string name="beta_tit">Beta</string>
-    <string name="beta_desc">This is the beta section, this options should work, and you can try them out, but they\'re not tested on all devices.</string>
+    <string name="beta_desc">This are experimental features which will be available in the future, but you can test them now.</string>
+
+    <!-- MainActivity -->
+    <string name="main_state_running">Running</string>
+    <string name="main_state_not_running">Not running</string>
+
+    <!-- More prefs -->
+    <string name="pref_tit_dial_launch">Start with call</string>
+    <string name="pref_desc_dial_launch">Access Locker by calling to a custom number.</string>
+    <string name="pref_tit_dial_launch_number">Number</string>
+    <string name="pref_desc_dial_launch_number">The number you have to call to start Locker (We recommend to start it with a #).</string>
+<string name="vc_later">Later</string>
+    
     <!-- END v2.0.8 Strings -->
 
 

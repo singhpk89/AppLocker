@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.twinone.locker"
-    android:versionCode="206"
-    android:versionName="2.0.6" >
+    android:versionCode="208"
+    android:versionName="2.0.8" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -25,7 +25,8 @@
         <activity
             android:name="com.twinone.locker.MainActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/application_name" >
+            android:label="@string/application_name"
+            android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -60,7 +61,6 @@
         <!-- NoHistory will finish in onPause -->
         <activity
             android:name="com.twinone.locker.lock.LockActivity"
-            android:configChanges="orientation|screenSize"
             android:excludeFromRecents="true"
             android:launchMode="singleInstance" >
         </activity>
@@ -70,7 +70,14 @@
         </activity>
         <activity android:name="com.twinone.locker.automation.TempRuleActivity" >
         </activity>
-
+        <!-- ADS -->
+        <activity
+            android:name="com.adsdk.sdk.banner.InAppWebView"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+        <activity
+            android:name="com.adsdk.sdk.mraid.MraidActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+        <!-- END ADS -->
         <service android:name="com.twinone.locker.lock.AppLockService" />
 
         <receiver android:name="com.twinone.locker.EventReceiver" >

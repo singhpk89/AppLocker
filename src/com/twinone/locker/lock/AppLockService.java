@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -201,6 +202,7 @@ public class AppLockService extends Service {
 	 * Loads or reloads the preferences at runtime and automatically adapts the
 	 * service to match the new preferences.
 	 */
+	@SuppressLint("InlinedApi")
 	public void loadPreferences() {
 
 		/*
@@ -250,8 +252,7 @@ public class AppLockService extends Service {
 		mUnlockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 		// Apps
-		Set<String> apps = PrefUtil.getTrackedApps(PrefUtil.appsPrefs(this),
-				this);
+		final Set<String> apps = PrefUtil.getTrackedApps(this);
 		mTrackedApps = new HashSet<AppInfo>();
 		for (String s : apps) {
 			mTrackedApps.add(new AppInfo(s));

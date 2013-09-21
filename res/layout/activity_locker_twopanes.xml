@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/llLockerRoot"
+    android:id="@+id/rlLockerRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -12,16 +11,19 @@
     tools:context=".MainActivity" >
 
     <LinearLayout
+        android:id="@+id/llLeftPanel"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_above="@id/adContainer"
         android:orientation="vertical" >
 
         <ScrollView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:orientation="vertical"
@@ -30,10 +32,8 @@
                 android:paddingRight="@dimen/main_horizontal_padding"
                 android:paddingTop="@dimen/main_vertical_padding" >
 
-                <!-- This is actually an edittext but for the styling a button is used. -->
-
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal" >
@@ -54,7 +54,7 @@
 
                 <TextView
                     android:id="@+id/tvFooter"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@android:style/TextAppearance.Small" />
             </LinearLayout>
@@ -62,8 +62,8 @@
 
         <LinearLayout
             android:id="@+id/llBottomButtons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical" >
 
             <Button
@@ -83,9 +83,12 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/llRightPanel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/adContainer"
         android:layout_gravity="center"
+        android:layout_toRightOf="@id/llLeftPanel"
         android:orientation="vertical" >
 
         <!-- This view dynamically adapts to the password type chosen by the user -->
@@ -99,20 +102,28 @@
 
             <TextView
                 android:id="@+id/tvPassword"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/button_dark"
+                android:background="@android:color/transparent"
                 android:enabled="false"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:gravity="center"
                 android:inputType="textPassword"
                 android:textColor="@color/white"
-                android:textSize="40dp"
+                android:textSize="30dp"
                 android:visibility="gone" >
             </TextView>
         </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+    <RelativeLayout
+        android:id="@+id/adContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" >
+    </RelativeLayout>
+
+</RelativeLayout>

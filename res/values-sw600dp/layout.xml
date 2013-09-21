@@ -1,0 +1,5 @@
+<resources>
+
+    <item name="isTablet" type="bool">true</item>
+
+</resources>

@@ -42,14 +42,14 @@ public class VersionChecker extends AsyncTask<String, Void, VersionInfo> {
 	/**
 	 * If this flag is set, the user will not be allowed to use the app if it's
 	 * deprecated. <br>
-	 * <b>Note:</b> This automatically enables {@link #NOTIFY_UPDATE}
+	 * <b>Note:</b> This automatically enables {@link #SHOW_UPDATE}
 	 */
 	public static final int DENY_DEPRECATED = 1 << 0;
 	/**
 	 * If this flag is set and an update is available, a dialog will be shown to
 	 * the user.
 	 */
-	public static final int NOTIFY_UPDATE = 1 << 1;
+	public static final int SHOW_UPDATE = 1 << 1;
 	/**
 	 * If you provide this flag, a checksum must be used in the file in order
 	 * for this {@link VersionChecker} to complete.
@@ -77,9 +77,9 @@ public class VersionChecker extends AsyncTask<String, Void, VersionInfo> {
 	private Context mContext;
 	private int mInstalledVersion;
 	private int mNumRedirects;
-	private int mFlags = NOTIFY_UPDATE | DENY_DEPRECATED;
+	private int mFlags = SHOW_UPDATE | DENY_DEPRECATED;
 	private int mPrefsDeprecatedVersion;
-	private int mPrefsCurrentVersion;
+//	private int mPrefsCurrentVersion;
 	private long mInterval = INTERVAL_BI_DAILY;
 	private long mLastUpdate;
 
@@ -89,8 +89,8 @@ public class VersionChecker extends AsyncTask<String, Void, VersionInfo> {
 		mInstalledVersion = getInstalledVersion(context);
 		mPrefsDeprecatedVersion = getPrefs(context).getInt(
 				PREF_KEY_DEPRECATED_VERSION, 0);
-		mPrefsCurrentVersion = getPrefs(context).getInt(
-				PREF_KEY_AVAILABLE_VERSION, 0);
+		// mPrefsCurrentVersion = getPrefs(context).getInt(
+		// PREF_KEY_AVAILABLE_VERSION, 0);
 		mLastUpdate = getPrefs(context).getLong(PREF_KEY_LAST_CHECK, 0);
 	}
 
@@ -133,28 +133,17 @@ public class VersionChecker extends AsyncTask<String, Void, VersionInfo> {
 		 */
 		public int deprecated;
 
-		public boolean isUpdateAvailable() {
-			return mInstalledVersion < current;
-		}
-
-		public boolean isDeprecated() {
-			return deprecated != 0 && mInstalledVersion <= deprecated;
-		}
-
-		public int installedVersion() {
-			return mInstalledVersion;
-		}
 	}
 
 	@Override
 	protected VersionInfo doInBackground(String... params) {
-		if (mLastUpdate != 0 && mLastUpdate + mInterval < timeSinceEpoch()) {
+		if (mLastUpdate == 0 || mLastUpdate + mInterval < timeSinceEpoch()) {
 			Log.d(TAG, "Executing...");
 			return getVersionInfoFromHttp(mUrl);
 		}
 		Log.d(TAG, "Waiting " + (mLastUpdate + mInterval - timeSinceEpoch())
 				+ " Seconds");
-		return null;
+		return new VersionInfo();
 	}
 
 	@Override
@@ -167,18 +156,54 @@ public class VersionChecker extends AsyncTask<String, Void, VersionInfo> {
 		}
 		// Only write to preferences if connection succeeded
 		savePreferences(result);
-		if ((mFlags & DENY_DEPRECATED) != 0
-				&& mPrefsDeprecatedVersion >= mInstalledVersion) {
-			Log.d(TAG, "Deprecated from preferences");
-			showDeprecationDialog();
-		} else if ((mFlags & DENY_DEPRECATED) != 0 && result.isDeprecated()) {
-			showDeprecationDialog();
-		} else if ((mFlags & NOTIFY_UPDATE) != 0
-				&& result.current < mPrefsCurrentVersion) {
-			showUpdateAvailableDialog();
-		} else if ((mFlags & NOTIFY_UPDATE) != 0 && result.isUpdateAvailable()) {
-			showUpdateAvailableDialog();
+
+		Log.d(TAG, "result.current: " + result.current + " result.deprecated: "
+				+ result.deprecated);
+		Log.d(TAG, "installed version: " + mInstalledVersion);
+		if ((mFlags & DENY_DEPRECATED) != 0) {
+			if (isDeprecated(result.deprecated, mInstalledVersion)
+					|| isDeprecated(mPrefsDeprecatedVersion, mInstalledVersion)) {
+				showDeprecationDialog();
+			}
 		}
+		if ((mFlags & SHOW_UPDATE) != 0) {
+			if (isUpdateAvailable(result.current, mInstalledVersion)
+			// ||
+			// isUpdateAvailable(mPrefsCurrentVersion,
+			// mInstalledVersion)
+			) {
+				showUpdateAvailableDialog();
+			}
+		}
+
+		// if ((mFlags & DENY_DEPRECATED) != 0
+		// && mPrefsDeprecatedVersion >= mInstalledVersion) {
+		// Log.d(TAG, "Deprecated from preferences");
+		// showDeprecationDialog();
+		// } else if ((mFlags & DENY_DEPRECATED) != 0 && result.isDeprecated())
+		// {
+		// showDeprecationDialog();
+		// } else if ((mFlags & NOTIFY_UPDATE) != 0
+		// && result.current < mPrefsCurrentVersion) {
+		// Log.d(TAG, "" + result.current + ", " + mPrefsCurrentVersion);
+		// showUpdateAvailableDialog();
+		// } else if ((mFlags & NOTIFY_UPDATE) != 0 &&
+		// result.isUpdateAvailable()) {
+		// Log.d(TAG, "show update dialog 2");
+		// showUpdateAvailableDialog();
+		// }
+	}
+
+	private static final boolean isUpdateAvailable(int current, int installed) {
+		if (current == 0)
+			return false;
+		return installed < current;
+	}
+
+	private static final boolean isDeprecated(int deprecated, int installed) {
+		if (deprecated == 0)
+			return false;
+		return installed <= deprecated;
 	}
 
 	private void savePreferences(VersionInfo vi) {
@@ -189,7 +214,7 @@ public class VersionChecker extends AsyncTask<String, Void, VersionInfo> {
 		}
 		if (vi.current != 0) {
 			editor.putInt(PREF_KEY_DEPRECATED_VERSION, vi.deprecated);
-			mPrefsCurrentVersion = vi.current;
+//			mPrefsCurrentVersion = vi.current;
 		}
 		editor.putLong(PREF_KEY_LAST_CHECK, timeSinceEpoch());
 		editor.commit();
@@ -226,7 +251,7 @@ public class VersionChecker extends AsyncTask<String, Void, VersionInfo> {
 		AlertDialog.Builder ab = new AlertDialog.Builder(mContext);
 		ab.setTitle(R.string.vc_tit_new_version);
 		ab.setMessage(R.string.vc_msg_new_version);
-		ab.setNegativeButton(android.R.string.cancel, null);
+		ab.setNegativeButton(R.string.vc_later, null);
 		ab.setPositiveButton(R.string.vc_update, mUpdateListener);
 		ab.show();
 	}
@@ -339,17 +364,17 @@ public class VersionChecker extends AsyncTask<String, Void, VersionInfo> {
 	}
 
 	public static final boolean isDeprecated(Context c) {
-		int dep = c.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE)
-				.getInt(PREF_KEY_DEPRECATED_VERSION, 0);
-		int cur = getInstalledVersion(c);
-		return dep <= cur && dep != 0;
+		int deprecated = c.getSharedPreferences(PREF_FILE_NAME,
+				Context.MODE_PRIVATE).getInt(PREF_KEY_DEPRECATED_VERSION, 0);
+		int installed = getInstalledVersion(c);
+		return isDeprecated(deprecated, installed);
 	}
 
 	public static final boolean isUpdateAvailable(Context c) {
 		int available = c.getSharedPreferences(PREF_FILE_NAME,
 				Context.MODE_PRIVATE).getInt(PREF_KEY_AVAILABLE_VERSION, 0);
-		int cur = getInstalledVersion(c);
-		return available > cur;
+		int installed = getInstalledVersion(c);
+		return isUpdateAvailable(available, installed);
 
 	}
 }

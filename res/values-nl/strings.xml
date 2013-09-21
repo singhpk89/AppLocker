@@ -101,8 +101,8 @@
     <string name="pref_tit_cat_notification">Melding</string>
     <string name="pref_tit_cat_launcher">Start</string>
     <!--  -->
-    <string name="pref_tit_dial_launch">Start met oproep</string>
-    <string name="pref_desc_dial_launch">Als deze optie aan is, kan je Locker starten door naar #WACHTWOORD te bellen.\nBijvoorbeeld, als je wachtwoord 1111 is, kun je #1111 bellen om Locker te starten</string>
+    <string name="old_pref_tit_dial_launch">Start met oproep</string>
+    <string name="old_pref_desc_dial_launch">Als deze optie aan is, kan je Locker starten door naar #WACHTWOORD te bellen.\nBijvoorbeeld, als je wachtwoord 1111 is, kun je #1111 bellen om Locker te starten</string>
     <string name="pref_tit_hide_launcher_icon">Icoon verbergen</string>
     <string name="pref_desc_hide_launcher_icon">Deze optie verbergt het iccon van de lijst met geïnstalleerde apps. (Opnieuw opstarten nodig. Start met oproep verplicht)</string>
     <string name="pref_tit_transparent_notification">Doorzichtige melding</string>
@@ -192,7 +192,18 @@
     <string name="pref_tit_temp_wifi_ssid">SSID (Netwerk naam)</string>
     <string name="pref_desc_temp_wifi_ssid">De naam van het wifi netwerk</string>
     <string name="beta_tit">Beta</string>
-    <string name="beta_desc">Dit is de beta sectie, deze opties zouden moeten werken, en je kunt ze uitproberen, maar ze zijn niet getest op alle apparaten.</string>
+    <string name="beta_desc">Dit zijn functies die in volgende versies beschikbaar worden, maar nu alvast klaar zijn om te testen.</string>
+
+    <!-- MainActivity -->
+    <string name="main_state_running">Locker is aan</string>
+    <string name="main_state_not_running">Locker is uit</string>
+
+    <!-- More prefs -->
+    <string name="pref_tit_dial_launch">Start met oproep</string>
+    <string name="pref_desc_dial_launch">Bel een speciaal nummer om Locker te starten.</string>
+    <string name="pref_tit_dial_launch_number">Nummer</string>
+    <string name="pref_desc_dial_launch_number">Als je dit nummer belt wordt Locker gestart (Het is aanbevolen een # voor het nummer te zetten).</string>
+    <string name="vc_later">Later</string>
     <!-- END v2.0.8 Strings -->
 
 </resources>

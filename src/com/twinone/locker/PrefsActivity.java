@@ -8,7 +8,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -49,7 +48,7 @@ public class PrefsActivity extends PreferenceActivity implements
 	protected PreferenceCategory mCatPattern;
 	protected Preference mRecoveryPref;
 
-	private Handler mHandler = new Handler();
+//	private Handler mHandler = new Handler();
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -240,41 +239,41 @@ public class PrefsActivity extends PreferenceActivity implements
 
 	}
 
+	//
+	// private void setupMessagesAndViews() {
+	// mHandler.post(new Runnable() {
+	//
+	// @Override
+	// public void run() {
+	// doSetupMessagesAndViews();
+	// }
+
 	private void setupMessagesAndViews() {
-		mHandler.post(new Runnable() {
+		// Dial and hide icon
+		final boolean dialCheck = mDialStatusPref.isChecked();
+		final boolean hideCheck = mHideIconPref.isChecked();
 
-			@Override
-			public void run() {
-				doSetupMessagesAndViews();
-			}
+		mHideIconPref.setEnabled(dialCheck);
+		mDialStatusPref.setEnabled(!hideCheck);
+		if (hideCheck) {
+			mHideIconPref.setEnabled(true);
+		}
+		// Password/pattern categories
+		if (mLockTypePref.getValue().equals(
+				getString(R.string.pref_val_lock_type_password))) {
+			mLockTypePref.setSummary(R.string.pref_list_lock_type_password);
+			mPrefScreen.removePreference(mCatPattern);
+			mPrefScreen.addPreference(mCatPassword);
+		} else {
+			mLockTypePref.setSummary(R.string.pref_list_lock_type_pattern);
+			mPrefScreen.removePreference(mCatPassword);
+			mPrefScreen.addPreference(mCatPattern);
+		}
 
-			private void doSetupMessagesAndViews() {
-				// Dial and hide icon
-				final boolean dialCheck = mDialStatusPref.isChecked();
-				final boolean hideCheck = mHideIconPref.isChecked();
-
-				mHideIconPref.setEnabled(dialCheck);
-				mDialStatusPref.setEnabled(!hideCheck);
-				if (hideCheck) {
-					mHideIconPref.setEnabled(true);
-				}
-				// Password/pattern categories
-				if (mLockTypePref.getValue().equals(
-						getString(R.string.pref_val_lock_type_password))) {
-					mLockTypePref
-							.setSummary(R.string.pref_list_lock_type_password);
-					mPrefScreen.removePreference(mCatPattern);
-					mPrefScreen.addPreference(mCatPassword);
-				} else {
-					mLockTypePref
-							.setSummary(R.string.pref_list_lock_type_pattern);
-					mPrefScreen.removePreference(mCatPassword);
-					mPrefScreen.addPreference(mCatPattern);
-				}
-
-			}
-		});
 	}
+
+	// });
+	// }
 
 	@Override
 	protected void onDestroy() {

@@ -10,6 +10,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -21,9 +22,14 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.adsdk.sdk.Ad;
+import com.adsdk.sdk.AdListener;
+import com.adsdk.sdk.AdManager;
+import com.adsdk.sdk.banner.AdView;
 import com.twinone.locker.BuildConfig;
 import com.twinone.locker.MainActivity;
 import com.twinone.locker.R;
@@ -41,7 +47,8 @@ import com.twinone.locker.util.Util;
  * @author twinone
  * 
  */
-public class LockActivity extends Activity implements View.OnClickListener {
+public class LockActivity extends Activity implements View.OnClickListener,
+		AdListener {
 
 	public static final String CLASSNAME = LockActivity.class.getName();
 
@@ -177,6 +184,15 @@ public class LockActivity extends Activity implements View.OnClickListener {
 	private RightButtonAction mRightButtonAction;
 	private LeftButtonAction mLeftButtonAction;
 
+	// / ADS
+
+	private RelativeLayout mAdContainer;
+	private AdView mAdView;
+	private AdManager mManager;
+
+	// TODO customizable background
+	// private ImageView ivBackground;
+
 	private enum RightButtonAction {
 		CONTINUE, CONFIRM
 	}
@@ -203,7 +219,6 @@ public class LockActivity extends Activity implements View.OnClickListener {
 
 	private int mMaxPasswordLength = 8;
 	private boolean mSwitchButtons;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		overridePendingTransition(android.R.anim.fade_in,
@@ -229,8 +244,22 @@ public class LockActivity extends Activity implements View.OnClickListener {
 
 		mRightButton.setOnClickListener(this);
 		mLeftButton.setOnClickListener(this);
+
+		// ivBackground = (ImageView)findViewById(R.id.ivBackground);
+		// ivBackground
+		// .setImageURI(Uri
+		// .fromFile(new File(
+		// "/sdcard/Pictures/Screenshots/Screenshot_2013-09-21-16-44-21.png")));
+
 		loadIntentData();
 
+		if (MainActivity.SHOW_ADS) {
+			mAdContainer = (RelativeLayout) findViewById(R.id.adContainer);
+			mManager = new AdManager(this, "http://my.mobfox.com/vrequest.php",
+					MainActivity.PUBLISHER_ID, true);
+			mManager.setListener(this);
+			showBanner();
+		}
 	}
 
 	private final boolean showPasswordView() {
@@ -253,6 +282,8 @@ public class LockActivity extends Activity implements View.OnClickListener {
 					mLockPasswordView.setTextView(mViewPassword);
 					if (ACTION_CREATE.equals(mAction)) {
 						mLockPasswordView.setOkButtonVisibility(View.INVISIBLE);
+					} else {
+						mLockPasswordView.setOkButtonVisibility(View.VISIBLE);
 					}
 				}
 			}
@@ -545,7 +576,6 @@ public class LockActivity extends Activity implements View.OnClickListener {
 	 */
 	private void exitSuccessCompare() {
 		if (mPackageName == null) {
-			// Should never happen, but avoid NPE
 			finish();
 			return;
 		}
@@ -557,12 +587,6 @@ public class LockActivity extends Activity implements View.OnClickListener {
 				mService.unlockApp(mPackageName);
 			}
 			// finish();
-			if (mPackageName.equals("com.whatsapp")) {
-				Intent i = getPackageManager().getLaunchIntentForPackage(
-						"com.whatsapp");
-				startActivity(i);
-
-			}
 			moveTaskToBack(true);
 			overridePendingTransition(android.R.anim.fade_in,
 					android.R.anim.fade_out);
@@ -578,9 +602,13 @@ public class LockActivity extends Activity implements View.OnClickListener {
 	public void onBackPressed() {
 		// Commented out because Activity.onBackPressed() calls finish()
 		// super.onBackPressed();
-		final Intent i = new Intent(Intent.ACTION_MAIN);
-		i.addCategory(Intent.CATEGORY_HOME);
-		startActivity(i);
+		if (ACTION_COMPARE.equals(mAction)) {
+			final Intent i = new Intent(Intent.ACTION_MAIN);
+			i.addCategory(Intent.CATEGORY_HOME);
+			startActivity(i);
+		} else if (ACTION_CREATE.equals(mAction)) {
+			MainActivity.showWithoutPassword(this);
+		}
 	}
 
 	private final ServiceConnection mConnection = new ServiceConnection() {
@@ -627,9 +655,8 @@ public class LockActivity extends Activity implements View.OnClickListener {
 	}
 
 	private void loadIntentData() {
-
 		final Intent intent = getIntent();
-		if (intent == null){
+		if (intent == null) {
 			return;
 		}
 		mAction = intent.getAction();
@@ -640,7 +667,7 @@ public class LockActivity extends Activity implements View.OnClickListener {
 			finish();
 			return;
 		}
-		
+
 		setRequestedOrientation(intent.getIntExtra(EXTRA_ORIENTATION,
 				ActivityInfo.SCREEN_ORIENTATION_SENSOR));
 
@@ -714,21 +741,102 @@ public class LockActivity extends Activity implements View.OnClickListener {
 		}
 	}
 
+	@Override
+	protected void onSaveInstanceState(Bundle bundle) {
+		Log.d(TAG, "onSaveInstanceState");
+		super.onSaveInstanceState(bundle);
+	}
+
 	public static final Intent getDefaultIntent(final Context c) {
-		final SharedPreferences sp = PrefUtil.prefs(c);
 		final Intent i = new Intent(c, LockActivity.class);
-		i.putExtra(EXTRA_PASSWORD, PrefUtil.getPassword(sp, c));
-		i.putExtra(EXTRA_PATTERN, PrefUtil.getPattern(sp, c));
-		i.putExtra(EXTRA_VIEW_TYPE, PrefUtil.getLockTypeInt(sp, c));
-		i.putExtra(EXTRA_MESSAGE, PrefUtil.getMessage(sp, c));
-		i.putExtra(EXTRA_PASSWORD_VIBRATE, PrefUtil.getPasswordVibrate(sp, c));
-		i.putExtra(EXTRA_PASSWORD_STEALTH, PrefUtil.getPasswordStealth(sp, c));
-		i.putExtra(EXTRA_PATTERN_VIBRATE, PrefUtil.getPatternVibrate(sp, c));
-		i.putExtra(EXTRA_PATTERN_STEALTH, PrefUtil.getPatternStealth(sp, c));
+		i.putExtra(EXTRA_PASSWORD, PrefUtil.getPassword(c));
+		i.putExtra(EXTRA_PATTERN, PrefUtil.getPattern(c));
+		i.putExtra(EXTRA_VIEW_TYPE, PrefUtil.getLockTypeInt(c));
+		i.putExtra(EXTRA_MESSAGE, PrefUtil.getMessage(c));
+		i.putExtra(EXTRA_PASSWORD_VIBRATE, PrefUtil.getPasswordVibrate(c));
+		i.putExtra(EXTRA_PASSWORD_STEALTH, PrefUtil.getPasswordStealth(c));
+		i.putExtra(EXTRA_PATTERN_VIBRATE, PrefUtil.getPatternVibrate(c));
+		i.putExtra(EXTRA_PATTERN_STEALTH, PrefUtil.getPatternStealth(c));
 		i.putExtra(EXTRA_PASSWORD_SWITCH_BUTTONS,
-				PrefUtil.getPasswordSwitchButtons(sp, c));
-		i.putExtra(EXTRA_ORIENTATION, PrefUtil.getLockOrientation(sp, c));
+				PrefUtil.getPasswordSwitchButtons(c));
+		i.putExtra(EXTRA_ORIENTATION, PrefUtil.getLockOrientation(c));
 		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		return i;
+	}
+
+	/****
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * ADS
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
+	/**
+	 * 
+	 */
+
+	@Override
+	public void adClicked() {
+		Log.i(TAG, "adClicked");
+	}
+
+	@Override
+	public void adClosed(Ad arg0, boolean arg1) {
+		Log.i(TAG, "adClosed");
+	}
+
+	@Override
+	public void adLoadSucceeded(Ad arg0) {
+		Log.i(TAG, "adLoadSucceeded");
+		if (mManager != null && mManager.isAdLoaded())
+			mManager.showAd();
+	}
+
+	@Override
+	public void adShown(Ad arg0, boolean arg1) {
+		Log.i(TAG, "adShown");
+	}
+
+	@Override
+	public void noAdFound() {
+		Log.i(TAG, "noAdFound");
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (MainActivity.SHOW_ADS) {
+			if (mManager != null)
+				mManager.release();
+			if (mAdView != null)
+				mAdView.release();
+		}
+	}
+
+	private void showBanner() {
+		Log.i(TAG, "showBanner");
+		if (mAdView != null) {
+			removeBanner();
+		}
+		mAdView = new AdView(this, "http://my.mobfox.com/request.php",
+				MainActivity.PUBLISHER_ID, true, true);
+		mAdView.setAdListener(this);
+		mAdContainer.addView(mAdView);
+
+	}
+
+	private void removeBanner() {
+		Log.i(TAG, "removeBanner");
+		if (mAdView != null) {
+			mAdContainer.removeView(mAdView);
+			mAdView = null;
+		}
 	}
 }

@@ -62,8 +62,6 @@ public class ChangeLog {
 			currentVersion = VERSION_EMPTY;
 			Log.e(TAG, "No version name in manifest");
 		}
-		Log.d(TAG, "oldVersion: " + oldVersion);
-		Log.d(TAG, "newVersion: " + currentVersion);
 	}
 
 	/** The version that was installed on the device before the update */

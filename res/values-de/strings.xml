@@ -101,8 +101,8 @@
     <string name="pref_tit_cat_notification">Benachrichtigung</string>
     <string name="pref_tit_cat_launcher">Start</string>
     <!--  -->
-    <string name="pref_tit_dial_launch">Mit Anruf starten</string>
-    <string name="pref_desc_dial_launch">Wenn diese Einstellung aktiviert ist, kannst du Locker starten indem du einen Anruf an #DEINPASSWORT startest.\nWenn dein Passwort zum Beispiel 1111 ist, kannst du Locker öffnen indem du #1111 anrufst.</string>
+    <string name="old_pref_tit_dial_launch">Mit Anruf starten</string>
+    <string name="old_pref_desc_dial_launch">Wenn diese Einstellung aktiviert ist, kannst du Locker starten indem du einen Anruf an #DEINPASSWORT startest.\nWenn dein Passwort zum Beispiel 1111 ist, kannst du Locker öffnen indem du #1111 anrufst.</string>
     <string name="pref_tit_hide_launcher_icon">Verstecke Icon</string>
     <string name="pref_desc_hide_launcher_icon">Sobald diese Option aktiviert ist, wird das Icon zum Starten von Locker aus dem Launcher versteckt. Die abgelegten Verknüpfungen am Homescreen müssen hingegen manuell entfernt werden (Benötigt evtl. einen Neustart. Aktiviert die Option "Mit Anruf starten")</string>
     <string name="pref_tit_transparent_notification">Transparente Benachrichtigungen</string>
@@ -113,5 +113,96 @@
     <string name="cl_title">Was ist neu</string>
     <string name="pref_tit_cat_about">Über die App</string>
     <!-- END v2.0.6 Strings -->
+
+
+    <!-- BEGIN v2.0.8 Strings -->
+    <string name="recovery_tit">Wichtig</string>
+    <string name="recovery_dlgmsg">Solltest du dein Passwort vergessen, kannst du durch einen Anruf an den Wiederherstellungscode das Passwort zurücksetzen.\nBitte nimm dir kurz Zeit, den Code abzuspeichern oder niederzuschreiben.\nDein Code ist: %s\n</string>
+    <string name="recovery_code_send_button">Senden</string>
+    <string name="pref_tit_recovery_code">Code wiederherstellen</string>
+    <string name="old_pref_desc_recovery_code">Wenn du dein Passwort vergessen hast, kannst du diese Nummer anrufen, um wieder Zugriff auf die App zu erhalten</string>
+    <string name="pref_desc_recovery_code">Derzeitiger Code: %s</string>
+    <!-- PASSWORD -->
+    <string name="password_change_tit">Passwort ändern</string>
+    <string name="password_change_head">Gib ein neues Passwort ein</string>
+    <string name="password_change_confirm">Gib das Passwort erneut ein</string>
+    <string name="password_change_saved">Passwort erfolgreich geändert</string>
+    <string name="password_change_error">Fehler beim Speichern des Passwortes</string>
+    <string name="password_change_not_match">Die Passwörter sind nicht identisch</string>
+    <string name="password_empty">Passwort darf nicht leer sein</string>
+    <!-- PATTERN -->
+    <string name="pattern_change_tit">Muster ändern</string>
+    <string name="pattern_detected">Muster erkannt</string>
+    <string name="pattern_change_head">Neues Muster aufzeichnen</string>
+    <string name="pattern_change_confirm">Wähle das Muster erneut zur Bestätigung aus</string>
+    <string name="pattern_change_saved">Muster erfolgreich geändert</string>
+    <string name="pattern_change_error">Fehler beim Speichern des Musters</string>
+    <string name="pattern_change_not_match">Die beiden Muster waren nicht identisch</string>
+    <!--  -->
+    <string name="button_confirm">Fortfahren</string>
+    <string name="button_continue">Weiter</string>
+    <string name="button_back">Zurück</string>
+    <!-- Buttons have short text! (2 words or so) -->
+    <string name="main_button_set_password">Passwort ändern</string>
+    <string name="main_button_set_pattern">Muster ändern</string>
+    <string name="pref_list_lock_type_password">Passwort</string>
+    <string name="pref_list_lock_type_pattern">Muster</string>
+    <string name="pref_tit_lock_type">Sperr-Typ</string>
+    <string name="pref_desc_lock_type">Derzeit: %s</string>
+    <!-- VersionChecker -->
+    <string name="vc_update">Aktualisieren</string>
+    <string name="vc_exit">Beenden</string>
+    <string name="vc_tit_new_version">Aktualisieren</string>
+    <string name="vc_tit_unsupported">Tut mir Leid</string>
+    <string name="vc_msg_new_version">Es ist eine neue Version verfügbar. Möchtest du nun aktualisieren?</string>
+    <string name="vc_msg_unsupported">Die Version dieser App ist alt und muss aktualisiert werden. Bitte aktualisiere, um die App weiterhin nutzen zu können.</string>
+
+    <!-- Settings -->
+    <string name="pref_tit_cat_password">Passwort-Einstellungen</string>
+    <string name="pref_tit_cat_pattern">Muster-Einstellungen</string>
+    <string name="pref_tit_delay_status">Kurzes Verlassen</string>
+    <string name="pref_desc_delay_status">Du kannst eine App verlassen und innerhalb der Zeitspanne zurück in die App gehen, ohne das Passwort ein weiteres Mal eingeben zu müssen</string>
+    <string name="pref_tit_delay_time">Kurze Verlassen-Zeit</string>
+    <!-- Seconds is important, not just "time" -->
+    <string name="pref_dlgmsg_delay_time">Gib die Anzahl der Sekunden ein, nachdem ein App wieder gesperrt werden soll</string>
+    <string name="pref_tit_orientation">Orientierung</string>
+
+    <!-- Password specific settings -->
+    <string name="pref_tit_vibrate_password">Vibration</string>
+    <string name="pref_desc_vibrate_password">Vibriere beim Drücken einer Taste</string>
+    <string name="pref_tit_hide_dots">Verstecke Punkte</string>
+    <string name="pref_desc_hide_dots">Versteckt die Punkte bei der Passworteingabe</string>
+
+    <!-- Pattern specific settings -->
+    <string name="pref_tit_vibrate_pattern">Vibration</string>
+    <string name="pref_desc_vibrate_pattern">Vibriere, wenn du das Muster eingibst</string>
+    <string name="pref_tit_pattern_stealth">Unsichtbar-Modus</string>
+    <string name="pref_desc_pattern_stealth">Das Auswahl des Musters ist unsichtbar</string>
+    <string name="pref_tit_switch_buttons">Tausche Knöpfe</string>
+    <string name="pref_desc_switch_buttons">Tauscht die Position der "OK" und "Beenden" Knöpfe</string>
+    <string name="pref_list_orientation_portrait">Portrait</string>
+    <string name="pref_list_orientation_landscape">Querformat</string>
+    <string name="pref_list_orientation_auto_rotate">Auto-Rotate</string>
+    <string name="pref_list_orientation_system">System-Einstellungen</string>
+
+    <!-- Beta -->
+    <string name="pref_tit_temp_wifi_unlock_state">Bei WLAN beenden</string>
+    <string name="pref_desc_temp_wifi_unlock_state">Wenn du dich zu einem der angegebenen WLAN-Netzwerke verbindest, wird die Sperre deaktiviert</string>
+    <string name="pref_tit_temp_wifi_ssid">SSID (Netzwerkname)</string>
+    <string name="pref_desc_temp_wifi_ssid">Der Name des WLAN-Netzwerkes</string>
+    <string name="beta_tit">Beta</string>
+    <string name="beta_desc">Das ist der Beta-Bereich dieser App. Diese experimentellen Funktionen wurden noch nicht auf allen Geräten getestet und könnte durchaus auch einige Fehler beinhalten.</string>
+
+    <!-- MainActivity -->
+    <string name="main_state_running">Läuft</string>
+    <string name="main_state_not_running">Gestoppt</string>
+
+    <!-- More prefs -->
+    <string name="pref_tit_dial_launch">Starte mit einem Anruf</string>
+    <string name="pref_desc_dial_launch">Greife mit Hilfe eines Anrufes auf Locker zu</string>
+    <string name="pref_tit_dial_launch_number">Nummer</string>
+    <string name="pref_desc_dial_launch_number">Die Nummer, die zum Öffnen der App notwendig ist (Wir empfehlen, die Nummer mit # zu beginnen)</string>
+    <string name="vc_later">Später</string>
+    <!-- END v2.0.8 Strings -->
 
 </resources>

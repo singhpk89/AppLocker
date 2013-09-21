@@ -101,8 +101,8 @@
     <string name="pref_tit_cat_notification">Notificación</string>
     <string name="pref_tit_cat_launcher">Inicio</string>
     <!--  -->
-    <string name="pref_tit_dial_launch">Iniciar con llamada</string>
-    <string name="pref_desc_dial_launch">Cuando esta opción está encendida, puedes iniciar Locker llamando a #CONTRASEÑA.\nEs decir, si tu contraseña es 1111, puedes llamar a #1111 para inciar Locker</string>
+    <string name="old_pref_tit_dial_launch">Iniciar con llamada</string>
+    <string name="old_pref_desc_dial_launch">Cuando esta opción está encendida, puedes iniciar Locker llamando a #CONTRASEÑA.\nEs decir, si tu contraseña es 1111, puedes llamar a #1111 para inciar Locker</string>
     <string name="pref_tit_hide_launcher_icon">Ocultar icono</string>
     <string name="pref_desc_hide_launcher_icon">Con esta opción se oculta el icono de Locker de las aplicaciones instaladas (Necesita reinicio. Obliga activar Iniciar con llamada")</string>
     <string name="pref_tit_transparent_notification">Notificación transparente</string>
@@ -192,7 +192,16 @@
     <string name="pref_tit_temp_wifi_ssid">SSID (Nombre de la red)</string>
     <string name="pref_desc_temp_wifi_ssid">El nombre de la red wifi</string>
     <string name="beta_tit">Beta</string>
-    <string name="beta_desc">Esta es la sección beta, las opciones funcionan y puedes experimentar, pero no están probadas en todos los dispositivos..</string>
-    <!-- END v2.0.8 Strings -->
+    <string name="beta_desc">Aquí hay funciones para futuras versiones, que ya están incluidas para que puedas probarlas.</string>
+    <!-- MainActivity -->
+    <string name="main_state_running">Activo</string>
+    <string name="main_state_not_running">Detenido</string>
+
+    <!-- More prefs -->
+    <string name="pref_tit_dial_launch">Iniciar con llamada</string>
+    <string name="pref_desc_dial_launch">Acceder a Locker llamando a un número.</string>
+    <string name="pref_tit_dial_launch_number">Número</string>
+    <string name="pref_desc_dial_launch_number">Cuando llamas a este número, Locker se abrirá. (Recomendamos que empieze por #)</string>
+    <string name="vc_later">Más tarde</string> <!-- END v2.0.8 Strings -->
 
 </resources>

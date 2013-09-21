@@ -4,10 +4,12 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
+import android.util.Log;
 
 import com.twinone.locker.R;
 import com.twinone.locker.lock.LockActivity;
@@ -46,74 +48,74 @@ public abstract class PrefUtil {
 		return c.getSharedPreferences(PREF_FILE_APPS, Context.MODE_PRIVATE);
 	}
 
-	// public String getPassword() {
-	// return getPassword(mSP, mContext);
-	// }
+	private static final int getInt(Context c, int prefKeyResId,
+			int prefDefResId) {
+		return prefs(c).getInt(c.getString(prefKeyResId),
+				Integer.parseInt(c.getString(prefDefResId)));
+	}
+
+	private static final boolean getBoolean(Context c, int prefKeyResId,
+			int prefDefResId) {
+		return prefs(c).getBoolean(c.getString(prefKeyResId),
+				Boolean.parseBoolean(c.getString(prefDefResId)));
+	}
+
+	private static final String getString(Context c, int prefKeyResId,
+			int prefDefResId) {
+		return prefs(c).getString(c.getString(prefKeyResId),
+				c.getString(prefDefResId));
+	}
+
+	private static final String getStringOrNull(Context c, int prefKeyResId) {
+		return prefs(c).getString(c.getString(prefKeyResId), null);
+	}
+
+	private static final float getFloat(Context c, int prefKeyResId,
+			int prefDefResId) {
+		return prefs(c).getFloat(c.getString(prefKeyResId),
+				Float.parseFloat(c.getString(prefDefResId)));
+	}
+
+	private static final long getLong(Context c, int prefKeyResId,
+			int prefDefResId) {
+		return prefs(c).getLong(c.getString(prefKeyResId),
+				Long.parseLong(c.getString(prefDefResId)));
+	}
+
+	public static final boolean getStartAtBoot(Context c) {
+		return getBoolean(c, R.string.pref_key_start_boot,
+				R.string.pref_def_start_boot);
+	}
 
 	public static final String getPassword(Context c) {
-		return getPassword(prefs(c), c);
+		return getStringOrNull(c, R.string.pref_key_passwd);
 	}
 
-	public static final String getPassword(SharedPreferences sp, Context c) {
-		return sp.getString(c.getString(R.string.pref_key_passwd), "");
+	public static final String getPattern(Context c) {
+		return getStringOrNull(c, R.string.pref_key_pattern);
 	}
-
-	// public boolean getVibrate() {
-	// return getVibrate(mSP, mContext);
-	// }
 
 	public static final boolean getPasswordVibrate(Context c) {
-		return getPasswordVibrate(prefs(c), c);
-	}
-
-	public static final boolean getPasswordVibrate(SharedPreferences sp,
-			Context c) {
-		return sp.getBoolean(c.getString(R.string.pref_key_vibrate_password),
-				Boolean.parseBoolean(c
-						.getString(R.string.pref_def_vibrate_password)));
+		return getBoolean(c, R.string.pref_key_vibrate_password,
+				R.string.pref_def_vibrate_password);
 	}
 
 	public static final boolean getPatternVibrate(Context c) {
-		return getPatternVibrate(prefs(c), c);
+		return getBoolean(c, R.string.pref_key_vibrate_pattern,
+				R.string.pref_def_vibrate_pattern);
 	}
 
-	public static final boolean getPatternVibrate(SharedPreferences sp,
-			Context c) {
-		return sp.getBoolean(c.getString(R.string.pref_key_vibrate_pattern),
-				Boolean.parseBoolean(c
-						.getString(R.string.pref_def_vibrate_pattern)));
-	}
-
-	// Stealth
 	public static final boolean getPasswordStealth(Context c) {
-		return getPasswordStealth(prefs(c), c);
-	}
-
-	public static final boolean getPasswordStealth(SharedPreferences sp,
-			Context c) {
-		return sp.getBoolean(c.getString(R.string.pref_key_hide_dots),
-				Boolean.parseBoolean(c.getString(R.string.pref_def_hide_dots)));
+		return getBoolean(c, R.string.pref_key_hide_dots,
+				R.string.pref_def_hide_dots);
 	}
 
 	public static final boolean getPatternStealth(Context c) {
-		return getPatternStealth(prefs(c), c);
+		return getBoolean(c, R.string.pref_key_pattern_stealth,
+				R.string.pref_def_pattern_stealth);
 	}
 
-	public static final boolean getPatternStealth(SharedPreferences sp,
-			Context c) {
-		return sp.getBoolean(c.getString(R.string.pref_key_pattern_stealth),
-				Boolean.parseBoolean(c
-						.getString(R.string.pref_def_pattern_stealth)));
-	}
-
-	// public void setPassword(String password) {
-	// setPassword(mEditor, mContext, password);
-	// }
-
-	// public static final SharedPreferences.Editor setPassword(Context c,
-	// String password) {
-	// return setPassword(prefs(c).edit(), c, password);
-	// }
+	// SETTERS
 
 	public static final SharedPreferences.Editor setPassword(
 			SharedPreferences.Editor editor, Context c, String password) {
@@ -121,42 +123,26 @@ public abstract class PrefUtil {
 		return editor;
 	}
 
-	// public String getPattern() {
-	// return getPattern(mSP, mContext);
-	// }
-	public static final String getPattern(Context c) {
-		return getPattern(prefs(c), c);
-	}
-
-	public static final String getPattern(SharedPreferences sp, Context c) {
-		return sp.getString(c.getString(R.string.pref_key_pattern), "");
-	}
-
-	// public void setPattern(String pattern) {
-	// setPattern(mEditor, mContext, pattern);
-	// }
-
 	public static final SharedPreferences.Editor setPattern(
 			SharedPreferences.Editor editor, Context c, String pattern) {
 		editor.putString(c.getString(R.string.pref_key_pattern), pattern);
 		return editor;
 	}
 
-	// public String getMessage() {
-	// return getMessage(mSP, mContext);
-	// }
 	public static final String getMessage(Context c) {
-		return getMessage(prefs(c), c);
+		return getString(c, R.string.pref_key_lock_message,
+				R.string.locker_footer_default);
 	}
 
-	public static final String getMessage(SharedPreferences sp, Context c) {
-		return sp.getString(c.getString(R.string.pref_key_lock_message),
-				c.getString(R.string.locker_footer_default));
+	public static final boolean getDialLaunch(Context c) {
+		return getBoolean(c, R.string.pref_key_dial_launch,
+				R.string.pref_def_dial_launch);
 	}
 
-	// public void setMessage(String message) {
-	// setMessage(mEditor, mContext, message);
-	// }
+	public static final String getDialLaunchNumber(Context c) {
+		return getString(c, R.string.pref_key_dial_launch_number,
+				R.string.pref_def_dial_launch_number);
+	}
 
 	public static final SharedPreferences.Editor setMessage(
 			SharedPreferences.Editor editor, Context c, String value) {
@@ -165,31 +151,16 @@ public abstract class PrefUtil {
 
 	}
 
-	// public Set<String> getTrackedApps() {
-	// return getTrackedApps(mSP, mContext);
-	// }
-
 	public static final Set<String> getTrackedApps(Context c) {
-		return getTrackedApps(appsPrefs(c), c);
-	}
-
-	public static final Set<String> getTrackedApps(SharedPreferences sp,
-			Context c) {
+		SharedPreferences sp = appsPrefs(c);
 		Set<String> apps = new HashSet<String>(sp.getAll().keySet());
 		return apps;
+
 	}
 
-	private static final String getLockType(SharedPreferences sp, Context c) {
-		return sp.getString(c.getString(R.string.pref_key_lock_type),
-				c.getString(R.string.pref_val_lock_type_password));
-	}
-
-	// public int getLockTypeInt() {
-	// return getLockTypeInt(mSP, mContext);
-	// }
-
-	public static final int getLockTypeInt(Context c) {
-		return getLockTypeInt(prefs(c), c);
+	private static final String getLockType(Context c) {
+		return getString(c, R.string.pref_key_lock_type,
+				R.string.pref_val_lock_type_password);
 	}
 
 	/**
@@ -197,8 +168,8 @@ public abstract class PrefUtil {
 	 *         {@link LockActivity#LOCK_TYPE_PATTERN} or 0 if none was in
 	 *         preferences
 	 */
-	public static final int getLockTypeInt(SharedPreferences sp, Context c) {
-		String lockType = getLockType(sp, c);
+	public static final int getLockTypeInt(Context c) {
+		String lockType = getLockType(c);
 		if (lockType.equals(c.getString(R.string.pref_val_lock_type_password))) {
 			return LockActivity.LOCK_TYPE_PASSWORD;
 		} else if (lockType.equals(c
@@ -217,49 +188,38 @@ public abstract class PrefUtil {
 	}
 
 	public static final boolean isCurrentPasswordEmpty(Context c) {
-		return isCurrentPasswordEmpty(prefs(c), c);
-	}
-
-	public static final boolean isCurrentPasswordEmpty(SharedPreferences sp,
-			Context c) {
-		final int lockType = getLockTypeInt(sp, c);
+		final int lockType = getLockTypeInt(c);
 		switch (lockType) {
 		case LockActivity.LOCK_TYPE_PASSWORD:
-			return (PrefUtil.getPassword(sp, c).length() == 0);
+			Log.d("", "Currentlocktype:passwd " + lockType);
+			final String password = getPassword(c);
+			return password == null || password.length() == 0;
 		case LockActivity.LOCK_TYPE_PATTERN:
-			return (PrefUtil.getPattern(sp, c).length() == 0);
+			Log.d("", "Currentlocktype:2 " + lockType);
+			final String pattern = getPattern(c);
+			return pattern == null || pattern.length() == 0;
 		default:
 			return true;
 		}
 	}
 
 	public static final boolean getPasswordSwitchButtons(Context c) {
-		return getPasswordSwitchButtons(prefs(c), c);
+		return getBoolean(c, R.string.pref_key_switch_buttons,
+				R.string.pref_def_switch_buttons);
 	}
 
-	public static final boolean getPasswordSwitchButtons(SharedPreferences sp,
-			Context c) {
-		return sp.getBoolean(c.getString(R.string.pref_key_switch_buttons),
-				Boolean.parseBoolean(c
-						.getString(R.string.pref_def_switch_buttons)));
-	}
-
+	@SuppressLint("InlinedApi")
 	public static final int getLockOrientation(Context c) {
-		return getLockOrientation(prefs(c), c);
-	}
-
-	public static final int getLockOrientation(SharedPreferences sp, Context c) {
-		final String ori = sp.getString(
-				c.getString(R.string.pref_key_orientation),
-				c.getString(R.string.pref_val_orientation_system));
-		if (ori.equals(c.getString(R.string.pref_val_orientation_system))) {
+		final String ori = getString(c, R.string.pref_key_orientation,
+				R.string.pref_val_orientation_system);
+		if (ori.equals(c.getString(R.string.pref_val_orientation_auto_rotate))) {
 			return ActivityInfo.SCREEN_ORIENTATION_SENSOR;
 		} else if (ori.equals(c
 				.getString(R.string.pref_val_orientation_landscape))) {
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD)
-				return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-			else
-				return ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
+			// if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD)
+			return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+			// else
+			// return ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
 		} else if (ori.equals(c
 				.getString(R.string.pref_val_orientation_portrait))) {
 			return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
@@ -268,14 +228,11 @@ public abstract class PrefUtil {
 	}
 
 	public static final String getRecoveryCode(Context c) {
-		return getRecoveryCode(prefs(c), c);
+		return getStringOrNull(c, R.string.pref_key_recovery_code);
+
 	}
 
-	public static final String getRecoveryCode(SharedPreferences sp, Context c) {
-		return sp.getString(c.getString(R.string.pref_key_recovery_code), null);
-	}
-
-	public static final String generateNewCode() {
+	public static final String generateRecoveryCode() {
 		final int min = 10000000;
 		final int max = 99999999;
 		final Random rand = new Random();
@@ -283,6 +240,7 @@ public abstract class PrefUtil {
 		return "#" + String.valueOf(newRandom);
 	}
 
+	@SuppressLint("NewApi")
 	public static final void apply(SharedPreferences.Editor editor) {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
 			editor.commit();

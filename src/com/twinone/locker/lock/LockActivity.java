@@ -10,7 +10,6 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
-import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -219,6 +218,7 @@ public class LockActivity extends Activity implements View.OnClickListener,
 
 	private int mMaxPasswordLength = 8;
 	private boolean mSwitchButtons;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		overridePendingTransition(android.R.anim.fade_in,
@@ -488,10 +488,6 @@ public class LockActivity extends Activity implements View.OnClickListener,
 						: R.string.password_change_error);
 				Toast.makeText(this, toast, Toast.LENGTH_SHORT).show();
 				exitCreate();
-			} else if (newValue.length() == 0) {
-				Toast.makeText(this, R.string.password_empty,
-						Toast.LENGTH_SHORT).show();
-				setupFirst();
 			} else {
 				Toast.makeText(this, R.string.password_change_not_match,
 						Toast.LENGTH_SHORT).show();
@@ -524,10 +520,18 @@ public class LockActivity extends Activity implements View.OnClickListener,
 	private void setupSecond() {
 		if (mLockViewType == LOCK_TYPE_PATTERN) {
 			mNewPattern = mLockPatternView.getPatternString();
+			if (mNewPattern.length() == 0) {
+				return;
+			}
 			mViewMessage.setText(R.string.pattern_change_confirm);
 			mLockPatternView.clearPattern();
 		} else {
 			mNewPassword = mLockPasswordView.getPassword();
+			if (mNewPassword.length() == 0) {
+				Toast.makeText(this, R.string.password_empty,
+						Toast.LENGTH_SHORT).show();
+				return;
+			}
 			mLockPasswordView.clearPassword();
 			mViewMessage.setText(R.string.password_change_confirm);
 		}
@@ -595,6 +599,8 @@ public class LockActivity extends Activity implements View.OnClickListener,
 
 	private void exitCreate() {
 		// Always go back to our app
+		Intent i = AppLockService.getReloadIntent(this);
+		startService(i);
 		MainActivity.showWithoutPassword(this);
 	}
 

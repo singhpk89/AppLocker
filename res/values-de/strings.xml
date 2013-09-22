@@ -5,7 +5,7 @@
 -->
 <resources>
 
-    <string name="application_name">Locker</string>
+    <string name="application_name">App Locker</string>
     <string name="action_settings">Einstellungen</string>
 
     <!-- All strings for MainActivity -->

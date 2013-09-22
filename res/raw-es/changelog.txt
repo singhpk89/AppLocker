@@ -19,6 +19,9 @@
     </style>
   </head>
   <body>
+$ 2.1.0
+  % Versión 2.1.0
+    * Patrón
 $ 2.0.6
   % Versión 2.0.6
     * Mostrar/Ocultar notificación

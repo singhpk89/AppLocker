@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.twinone.analytics.Analytics;
 import com.twinone.locker.automation.TempRuleActivity;
 import com.twinone.locker.lock.AppLockService;
 import com.twinone.locker.lock.LockActivity;
@@ -29,16 +30,7 @@ import com.twinone.util.VersionChecker;
 public class MainActivity extends Activity implements View.OnClickListener {
 
 	public static final String PUBLISHER_ID = "63db1a5b579e6c250d9c7d7ed6c3efd5";
-	public static final boolean SHOW_ADS = true;
-
-	// TODO PRO add Tasker functionality - extend to other app
-	// - Wifi / data enables / disables lock
-	// - GPS enables / disables lock
-	// - Time enables / disables lock
-
-	// TODO FIXME
-	// - Add custom number dial to open app
-	// -
+	public static final boolean SHOW_ADS = false;
 
 	private static final String TAG = "Main";
 
@@ -50,12 +42,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	private Button bShare;
 	private Button bRate;
 	private Button bBeta;
+
 	private DialogSequencer mSequencer;
-	public static final String EXTRA_UNLOCKED = "com.twinone.locker.Unlocked";
+	private Analytics mAnalytics;
+
+	public static final String EXTRA_UNLOCKED = "com.twinone.locker.unlocked";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mAnalytics = new Analytics(this);
+		mAnalytics.increment(AnalyticsKeys.MAIN_OPENED);
+
 		setTheme(R.style.Theme_Dark);
 		setContentView(R.layout.activity_main);
 		bStart = (Button) findViewById(R.id.bToggleService);
@@ -204,6 +202,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			startSelectActivity();
 			break;
 		case R.id.bPrefs:
+			mAnalytics.increment(AnalyticsKeys.MAIN_LAUNCH_PREFS);
 			Intent prefsIntent = new Intent(this, PrefsActivity.class);
 			startActivity(prefsIntent);
 			break;
@@ -211,11 +210,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			showShareDialog();
 			break;
 		case R.id.bRate:
+			mAnalytics.increment(AnalyticsKeys.RATE);
 			Intent i = new Intent(MainActivity.this, StagingActivity.class);
 			i.setAction(StagingActivity.ACTION_RATE);
 			startActivity(i);
 			break;
 		case R.id.bBeta:
+			mAnalytics.increment(AnalyticsKeys.MAIN_BETA);
 			Intent i2 = new Intent(MainActivity.this, TempRuleActivity.class);
 			startActivity(i2);
 			break;
@@ -293,6 +294,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		builder.setPositiveButton(android.R.string.ok, new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+				mAnalytics.increment(AnalyticsKeys.SHARE);
 				Intent i = new Intent(MainActivity.this, StagingActivity.class);
 				i.setAction(StagingActivity.ACTION_SHARE);
 				i.putExtra(StagingActivity.EXTRA_TEXT, etShareText.getText()
@@ -319,6 +321,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 	private final void doStartService() {
 		if (showDialogs()) {
+			mAnalytics.increment(AnalyticsKeys.MAIN_START);
 			Intent i = AppLockService.getStartIntent(this);
 			startService(i);
 			updateLayout(true);
@@ -338,6 +341,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	}
 
 	private final void startSelectActivity() {
+		mAnalytics.increment(AnalyticsKeys.MAIN_SELECT_APPS);
 		Intent i = new Intent(this, SelectActivity.class);
 		startActivity(i);
 	}

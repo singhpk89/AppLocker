@@ -5,7 +5,7 @@
     Added in Locker v1.0
     Author: TwinoneDevs
     -->
-    <string name="application_name">Locker</string>
+    <string name="application_name">App Locker</string>
     <string name="action_settings">Instellingen</string>
 
     <!-- All strings for MainActivity -->

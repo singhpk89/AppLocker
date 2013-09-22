@@ -19,6 +19,9 @@
     </style>
   </head>
   <body>
+$ 2.1.0
+  % Versie 2.1.0
+    * Patroon
 $ 2.0.6
   % Versie 2.0.6
     * Melding weergeven/verbergen

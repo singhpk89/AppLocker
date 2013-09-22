@@ -34,7 +34,7 @@ import com.twinone.util.VersionChecker.VersionInfo;
  */
 public class VersionChecker extends AsyncTask<String, Void, VersionInfo> {
 
-	private static final String PREF_FILE_NAME = "com.twinone.util.version_check";
+	private static final String PREF_FILE_NAME = "com.twinone.version";
 	private static final String PREF_KEY_DEPRECATED_VERSION = "com.twinone.util.version.deprecated_version";
 	private static final String PREF_KEY_AVAILABLE_VERSION = "com.twinone.util.version.current_version";
 	private static final String PREF_KEY_LAST_CHECK = "com.twinone.util.version.last_check";

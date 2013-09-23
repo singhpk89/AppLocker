@@ -29,13 +29,15 @@ import com.adsdk.sdk.Ad;
 import com.adsdk.sdk.AdListener;
 import com.adsdk.sdk.AdManager;
 import com.adsdk.sdk.banner.AdView;
+import com.twinone.analytics.Analytics;
+import com.twinone.locker.AnalyticsKeys;
 import com.twinone.locker.BuildConfig;
 import com.twinone.locker.MainActivity;
 import com.twinone.locker.R;
-import com.twinone.locker.lock.LockPatternView.Cell;
-import com.twinone.locker.lock.LockPatternView.DisplayMode;
-import com.twinone.locker.lock.LockPatternView.OnPatternListener;
-import com.twinone.locker.lock.NumberLockView.OnNumberListener;
+import com.twinone.locker.lock.PasswordView.OnNumberListener;
+import com.twinone.locker.lock.PatternView.Cell;
+import com.twinone.locker.lock.PatternView.DisplayMode;
+import com.twinone.locker.lock.PatternView.OnPatternListener;
 import com.twinone.locker.util.PrefUtil;
 import com.twinone.locker.util.Util;
 
@@ -188,6 +190,8 @@ public class LockActivity extends Activity implements View.OnClickListener,
 	private RelativeLayout mAdContainer;
 	private AdView mAdView;
 	private AdManager mManager;
+	
+	private Analytics mAnalytics;
 
 	// TODO customizable background
 	// private ImageView ivBackground;
@@ -211,9 +215,9 @@ public class LockActivity extends Activity implements View.OnClickListener,
 	private int mAllowedViewTypes;
 	private int mLockViewType = LOCK_TYPE_DEFAULT;
 
-	private LockPatternView mLockPatternView;
+	private PatternView mLockPatternView;
 	private OnPatternListener mPatternListener;
-	private NumberLockView mLockPasswordView;
+	private PasswordView mLockPasswordView;
 	private OnNumberListener mPasswordListener;
 
 	private int mMaxPasswordLength = 8;
@@ -229,6 +233,9 @@ public class LockActivity extends Activity implements View.OnClickListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.layout_alias_locker);
 
+		mAnalytics = new Analytics(this);
+		
+		
 		mPasswordListener = new MyOnNumberListener();
 		mPatternListener = new MyOnPatternListener();
 
@@ -276,8 +283,8 @@ public class LockActivity extends Activity implements View.OnClickListener,
 			final int childCount = mLockView.getChildCount();
 			for (int i = 0; i < childCount; i++) {
 				final View v = mLockView.getChildAt(i);
-				if (v instanceof NumberLockView) {
-					mLockPasswordView = (NumberLockView) v;
+				if (v instanceof PasswordView) {
+					mLockPasswordView = (PasswordView) v;
 					mLockPasswordView.setListener(mPasswordListener);
 					mLockPasswordView.setTextView(mViewPassword);
 					if (ACTION_CREATE.equals(mAction)) {
@@ -316,8 +323,8 @@ public class LockActivity extends Activity implements View.OnClickListener,
 			final int childCount = mLockView.getChildCount();
 			for (int i = 0; i < childCount; i++) {
 				final View v = mLockView.getChildAt(i);
-				if (v instanceof LockPatternView) {
-					mLockPatternView = (LockPatternView) v;
+				if (v instanceof PatternView) {
+					mLockPatternView = (PatternView) v;
 					mLockPatternView.setOnPatternListener(mPatternListener);
 				}
 			}
@@ -790,6 +797,7 @@ public class LockActivity extends Activity implements View.OnClickListener,
 
 	@Override
 	public void adClicked() {
+		mAnalytics.increment(AnalyticsKeys.AD_CLICKED);
 		Log.i(TAG, "adClicked");
 	}
 
@@ -800,6 +808,7 @@ public class LockActivity extends Activity implements View.OnClickListener,
 
 	@Override
 	public void adLoadSucceeded(Ad arg0) {
+		mAnalytics.increment(AnalyticsKeys.AD_LOAD_SUCCEEDED);
 		Log.i(TAG, "adLoadSucceeded");
 		if (mManager != null && mManager.isAdLoaded())
 			mManager.showAd();

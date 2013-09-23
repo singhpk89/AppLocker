@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.twinone.locker.lock.NumberLockView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.twinone.locker.lock.PasswordView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:numlock="http://schemas.android.com/apk/res/com.twinone.locker"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -128,4 +128,4 @@
         android:padding="0px"
         android:textSize="@dimen/locker_button_text_size" />
 
-</com.twinone.locker.lock.NumberLockView>
+</com.twinone.locker.lock.PasswordView>

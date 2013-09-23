@@ -27,4 +27,8 @@ public abstract class AnalyticsKeys {
 	// Other
 	public static final String START_BOOT = "start_boot";
 	
+	public static final String AD_LOAD_SUCCEEDED = "ad_load_succeeded";
+	
+	public static final String AD_CLICKED = "ad_clicked";
+	
 }

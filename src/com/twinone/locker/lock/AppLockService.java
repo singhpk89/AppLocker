@@ -276,6 +276,11 @@ public class AppLockService extends Service {
 	 * delay.
 	 */
 	private void startScheduler() {
+		// Trigger a change on the first active package
+		mLastApp = null;
+		mLastClass = null;
+
+		
 		// Shutdown first if it's not running
 		if (mScheduledExecutor != null) {
 			mScheduledExecutor.shutdownNow();
@@ -298,7 +303,7 @@ public class AppLockService extends Service {
 		}
 	}
 
-	class ScreenReceiver extends BroadcastReceiver {
+	private final class ScreenReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {

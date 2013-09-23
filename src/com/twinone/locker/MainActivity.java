@@ -30,7 +30,7 @@ import com.twinone.util.VersionChecker;
 public class MainActivity extends Activity implements View.OnClickListener {
 
 	public static final String PUBLISHER_ID = "63db1a5b579e6c250d9c7d7ed6c3efd5";
-	public static final boolean SHOW_ADS = false;
+	public static final boolean SHOW_ADS = true;
 
 	private static final String TAG = "Main";
 
@@ -362,11 +362,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		Intent i = new Intent(context, MainActivity.class);
 		i.putExtra(EXTRA_UNLOCKED, true);
 		// i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		if (context instanceof Activity) {
-			if (!((Activity) context).isFinishing()) {
-				((Activity) context).finish();
-			}
-		}
+//		if (context instanceof Activity
+//				&& context instanceof LockActivity == false) {
+//			if (!((Activity) context).isFinishing()) {
+//				((Activity) context).finish();
+//			}
+//		}
 		context.startActivity(i);
 	}
 

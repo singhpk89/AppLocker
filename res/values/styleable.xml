@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="NumberLockView">
+    <declare-styleable name="PasswordView">
 
         <!-- This is the spacing between each column -->
         <attr name="horizontalSpacing" format="dimension" />
@@ -30,7 +30,7 @@
         <!-- Ignore maxHScale and maxVScale, and make all children square (requires horizontalSpacing and verticalSpacing to be the same -->
         <attr name="squareChildren" format="boolean" />
     </declare-styleable>
-    <declare-styleable name="PatternLockView">
+    <declare-styleable name="PatternView">
 
         <!-- This is the maximum size the view will take in wrap_content mode -->
         <attr name="maxSize" format="dimension"></attr>

@@ -133,8 +133,21 @@ public class AppLockService extends Service {
 			stopSelf();
 			return START_NOT_STICKY;
 		}
-
-		if (intent == null || ACTION_START.equals(intent.getAction())) {
+		if (intent == null) {
+			// We got killed and restarted
+			Log.w(TAG, "------------");
+			Log.w(TAG, "------------");
+			Log.w(TAG, "SERVICE STARTED WITH INTENT = null");
+			Log.w(TAG, "mExplicitStarted: " + mExplicitStarted);
+			Log.w(TAG, "------------");
+			Log.w(TAG, "------------");
+			stopSelf();
+			// return START_NOT_STICKY;
+		}
+		if (
+		// TODO Check if this is the cause of the service randomly starting
+		// intent == null ||
+		ACTION_START.equals(intent.getAction())) {
 			Log.i(TAG, "Starting service");
 			if (!mExplicitStarted) {
 				mExplicitStarted = true;
@@ -280,7 +293,6 @@ public class AppLockService extends Service {
 		mLastApp = null;
 		mLastClass = null;
 
-		
 		// Shutdown first if it's not running
 		if (mScheduledExecutor != null) {
 			mScheduledExecutor.shutdownNow();
@@ -434,6 +446,9 @@ public class AppLockService extends Service {
 	 * @param appName
 	 */
 	public void unlockApp(final String appName) {
+		if (mTrackedApps == null) {
+			return;
+		}
 		for (AppInfo li : mTrackedApps) {
 			if (li.packageName.equals(appName)) {
 				if (li.locked) {

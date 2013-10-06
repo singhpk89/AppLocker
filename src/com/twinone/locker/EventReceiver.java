@@ -23,8 +23,8 @@ public class EventReceiver extends BroadcastReceiver {
 		// SharedPreferences sp = PrefUtil.prefs(c);
 		if (Intent.ACTION_BOOT_COMPLETED.equals(a)) {
 			if (PrefUtil.getStartAtBoot(c)) {
-				Intent startServiceIntent = new Intent(c, AppLockService.class);
-				c.startService(startServiceIntent);
+				Intent startIntent = AppLockService.getStartIntent(c);
+				c.startActivity(startIntent);
 			}
 		} else if (Intent.ACTION_NEW_OUTGOING_CALL.equals(a)) {
 			final boolean launch = PrefUtil.getDialLaunch(c);

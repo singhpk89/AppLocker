@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    
+    <!-- ACTIVITY LAYOUT -->
+    <color name="activity_background">#10599D</color>
+    
+    <dimen name="content_radius">0dp</dimen>
+    <color name="content_background">#ffffff</color>
+    <color name="content_border_color">#ffffff</color>
+    <!-- BUTTONS -->
+    
+    
+    <!-- BUTTON MEDIUM: #10599D -->
+    <dimen name="button_radius">0dp</dimen>
+    <color name="button_top">#1370c7</color>
+    <color name="button_bottom">#0e518f</color>
+    <color name="button_border">#06266f</color>
+
+    <!--  -->
+    <color name="old_blue_dark">#4fa5d5</color>
+    <color name="ics_bg_start">#020202</color>
+    <color name="ics_bg_end">#272D33</color>
+
+    <!--  -->
+    <color name="blue_1">#06266f</color>
+    <color name="blue_2">#1240ab</color>
+    <color name="blue_3">#4671d5</color>
+    <color name="blue_4">#6c8cd5</color>
+    <color name="white">#ffffff</color>
+
+    <!-- Color pallete http://www.colourlovers.com/palette/92095/Giant_Goldfish -->
+    <color name="primary">#69D2E7</color>
+    <color name="secondary">#A7DBD8</color>
+    <color name="middle">#E0E4CC</color>
+    <color name="background_secondary">#F38630</color>
+    <color name="background">#FA6900</color>
+
+    <!-- http://www.colorcombos.com/color-schemes/12/ColorCombo12.html -->
+    <color name="midnight_blue">#003366</color>
+    <color name="gray">#CCCCCC</color>
+    <color name="pine">#cccc99</color>
+
+</resources>

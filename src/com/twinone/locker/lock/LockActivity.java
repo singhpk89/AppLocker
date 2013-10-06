@@ -29,7 +29,8 @@ import com.adsdk.sdk.Ad;
 import com.adsdk.sdk.AdListener;
 import com.adsdk.sdk.AdManager;
 import com.adsdk.sdk.banner.AdView;
-import com.twinone.analytics.Analytics;
+import com.google.ads.AdRequest;
+import com.google.ads.AdSize;
 import com.twinone.locker.AnalyticsKeys;
 import com.twinone.locker.BuildConfig;
 import com.twinone.locker.MainActivity;
@@ -40,6 +41,7 @@ import com.twinone.locker.lock.PatternView.DisplayMode;
 import com.twinone.locker.lock.PatternView.OnPatternListener;
 import com.twinone.locker.util.PrefUtil;
 import com.twinone.locker.util.Util;
+import com.twinone.util.Analytics;
 
 /**
  * Takes care of the layout updating of any locker screen, independent of it's
@@ -188,9 +190,11 @@ public class LockActivity extends Activity implements View.OnClickListener,
 	// / ADS
 
 	private RelativeLayout mAdContainer;
-	private AdView mAdView;
-	private AdManager mManager;
-	
+	private com.adsdk.sdk.banner.AdView mMobFoxAdView;
+	private com.google.ads.AdView mAdMobAdView;
+
+	private AdManager mMobFoxManager;
+
 	private Analytics mAnalytics;
 
 	// TODO customizable background
@@ -227,15 +231,12 @@ public class LockActivity extends Activity implements View.OnClickListener,
 	protected void onCreate(Bundle savedInstanceState) {
 		overridePendingTransition(android.R.anim.fade_in,
 				android.R.anim.fade_out);
-
-		setTheme(R.style.Theme_Dark);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.layout_alias_locker);
 
 		mAnalytics = new Analytics(this);
-		
-		
+
 		mPasswordListener = new MyOnNumberListener();
 		mPatternListener = new MyOnPatternListener();
 
@@ -262,9 +263,10 @@ public class LockActivity extends Activity implements View.OnClickListener,
 
 		if (MainActivity.SHOW_ADS) {
 			mAdContainer = (RelativeLayout) findViewById(R.id.adContainer);
-			mManager = new AdManager(this, "http://my.mobfox.com/vrequest.php",
-					MainActivity.PUBLISHER_ID, true);
-			mManager.setListener(this);
+			mMobFoxManager = new AdManager(this,
+					"http://my.mobfox.com/vrequest.php",
+					MainActivity.getMobFoxId(), true);
+			mMobFoxManager.setListener(this);
 			showBanner();
 		}
 	}
@@ -593,6 +595,7 @@ public class LockActivity extends Activity implements View.OnClickListener,
 		if (mPackageName.equals(getPackageName())) { // lock own app
 			Log.d(TAG, "Unlocking own app");
 			MainActivity.showWithoutPassword(LockActivity.this);
+			finish();
 		} else {
 			if (mBound) {
 				mService.unlockApp(mPackageName);
@@ -609,6 +612,7 @@ public class LockActivity extends Activity implements View.OnClickListener,
 		Intent i = AppLockService.getReloadIntent(this);
 		startService(i);
 		MainActivity.showWithoutPassword(this);
+		finish();
 	}
 
 	@Override
@@ -621,6 +625,7 @@ public class LockActivity extends Activity implements View.OnClickListener,
 			startActivity(i);
 		} else if (ACTION_CREATE.equals(mAction)) {
 			MainActivity.showWithoutPassword(this);
+			finish();
 		}
 	}
 
@@ -810,8 +815,8 @@ public class LockActivity extends Activity implements View.OnClickListener,
 	public void adLoadSucceeded(Ad arg0) {
 		mAnalytics.increment(AnalyticsKeys.AD_LOAD_SUCCEEDED);
 		Log.i(TAG, "adLoadSucceeded");
-		if (mManager != null && mManager.isAdLoaded())
-			mManager.showAd();
+		if (mMobFoxManager != null && mMobFoxManager.isAdLoaded())
+			mMobFoxManager.showAd();
 	}
 
 	@Override
@@ -821,37 +826,51 @@ public class LockActivity extends Activity implements View.OnClickListener,
 
 	@Override
 	public void noAdFound() {
-		Log.i(TAG, "noAdFound");
+		showFallbackAd();
+	}
+
+	private void showFallbackAd() {
+		removeBanners();
+		Log.w(TAG, "no ad found in mobfox, falling back to admob");
+		mAdMobAdView = new com.google.ads.AdView(this, AdSize.BANNER,
+				MainActivity.getAdMobId());
+		mAdContainer.addView(mAdMobAdView);
+		mAdMobAdView.loadAd(new AdRequest());
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		if (MainActivity.SHOW_ADS) {
-			if (mManager != null)
-				mManager.release();
-			if (mAdView != null)
-				mAdView.release();
+			if (mMobFoxManager != null)
+				mMobFoxManager.release();
+			if (mMobFoxAdView != null)
+				mMobFoxAdView.release();
+			if (mAdMobAdView != null) {
+				mAdMobAdView.destroy();
+			}
 		}
 	}
 
 	private void showBanner() {
 		Log.i(TAG, "showBanner");
-		if (mAdView != null) {
-			removeBanner();
-		}
-		mAdView = new AdView(this, "http://my.mobfox.com/request.php",
-				MainActivity.PUBLISHER_ID, true, true);
-		mAdView.setAdListener(this);
-		mAdContainer.addView(mAdView);
+		removeBanners();
+		mMobFoxAdView = new AdView(this, "http://my.mobfox.com/request.php",
+				MainActivity.getMobFoxId(), true, true);
+		mMobFoxAdView.setAdListener(this);
+		mAdContainer.addView(mMobFoxAdView);
 
 	}
 
-	private void removeBanner() {
+	private void removeBanners() {
 		Log.i(TAG, "removeBanner");
-		if (mAdView != null) {
-			mAdContainer.removeView(mAdView);
-			mAdView = null;
+		mAdContainer.removeAllViews();
+		if (mMobFoxAdView != null) {
+			mMobFoxAdView = null;
+		}
+		if (mAdMobAdView != null) {
+			mAdMobAdView.destroy();
+			mAdMobAdView = null;
 		}
 	}
 }

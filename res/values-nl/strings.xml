@@ -117,7 +117,7 @@
 
     <!-- BEGIN v2.0.8 Strings -->
     <string name="recovery_tit">Belangrijk</string>
-    <string name="recovery_dlgmsg">Als je ooir je wachtwoord vergeet, kun je je herstelcode bellen om toegang terug te krijgen. Je kunt de code opschrijven, of naar jezelf e-mailen.\nJe code is:\n</string>
+    <string name="recovery_dlgmsg">Als je ooit je wachtwoord vergeet, kun je je herstelcode bellen om toegang terug te krijgen. Je kunt de code opschrijven, of naar jezelf e-mailen.\nJe code is: %s\n</string>
     <string name="recovery_code_send_button">Versturen</string>
     <string name="pref_tit_recovery_code">Herstel code</string>
     <string name="old_pref_desc_recovery_code">Door dit nummer te bellen krijg je weer toegang.</string>

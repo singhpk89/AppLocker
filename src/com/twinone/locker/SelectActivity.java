@@ -37,7 +37,6 @@ public class SelectActivity extends Activity implements OnItemClickListener,
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setTheme(R.style.Theme_Dark);
 		setContentView(R.layout.activity_applist);
 
 		mListView = (ListView) findViewById(R.id.lvAppList);

@@ -12,7 +12,6 @@
 
         <Button
             android:id="@+id/bLockAll"
-            style="@style/Button_Dark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -22,7 +21,6 @@
 
         <Button
             android:id="@+id/bUnlockAll"
-            style="@style/Button_Dark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -32,7 +30,6 @@
 
         <Button
             android:id="@+id/bFinish"
-            style="@style/Button_Dark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"

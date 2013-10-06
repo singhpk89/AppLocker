@@ -117,7 +117,7 @@
 
     <!-- BEGIN v2.0.8 Strings -->
     <string name="recovery_tit">Importante</string>
-    <string name="recovery_dlgmsg">Si te olvidas de tu contraseña, podrás recuperarla escribiendo este código. Por favor, escríbela o envíatela a ti mismo.\nTu código es:\n</string>
+    <string name="recovery_dlgmsg">Si te olvidas de tu contraseña, podrás recuperarla escribiendo este código. Por favor, escríbela o envíatela a ti mismo.\nTu código es: %s\n</string>
     <string name="recovery_code_send_button">Enviar</string>
     <string name="pref_tit_recovery_code">Código de recuperación</string>
     <string name="old_pref_desc_recovery_code">Podrás acceder a tu contraseña si la pierdes llamando a este numero</string>

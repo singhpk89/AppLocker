@@ -8,6 +8,7 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
 
+
     <!-- v1.0.0 -->
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -21,6 +22,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
+        android:theme="@style/AppTheme"
         android:label="@string/application_name" >
         <activity
             android:name="com.twinone.locker.MainActivity"
@@ -77,6 +79,11 @@
         <activity
             android:name="com.adsdk.sdk.mraid.MraidActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+        <!-- Admob -->
+        <activity
+            android:name="com.google.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+
         <!-- END ADS -->
         <service android:name="com.twinone.locker.lock.AppLockService" />
 

@@ -203,9 +203,18 @@
     <string name="pref_desc_dial_launch">Access Locker by calling to a custom number.</string>
     <string name="pref_tit_dial_launch_number">Number</string>
     <string name="pref_desc_dial_launch_number">The number you have to call to start Locker (We recommend to start it with a #).</string>
-<string name="vc_later">Later</string>
-    
+    <string name="vc_later">Later</string>
+
     <!-- END v2.0.8 Strings -->
+
+
+    <!-- BEGIN v2.0.2 -->
+
+    <string name="main_no_password">You have not setup a password yet.\nDo you want to setup a password now?</string>
+    <string name="main_setup">Setup</string>
+    <string name="main_choose_lock_type">Choose Lock Type</string>
+    <string name="main_no_locked_apps">You have no apps locked.\nDo you want to add some apps now?</string>
+    <!-- END v2.0.2 -->
 
 
     <!-- BEGIN v2.1.1 -->

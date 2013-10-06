@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.res.ColorStateList;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -18,19 +19,28 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.twinone.analytics.Analytics;
 import com.twinone.locker.automation.TempRuleActivity;
 import com.twinone.locker.lock.AppLockService;
 import com.twinone.locker.lock.LockActivity;
 import com.twinone.locker.util.PrefUtil;
+import com.twinone.util.Analytics;
 import com.twinone.util.ChangeLog;
 import com.twinone.util.DialogSequencer;
 import com.twinone.util.VersionChecker;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
-	public static final String PUBLISHER_ID = "63db1a5b579e6c250d9c7d7ed6c3efd5";
-	public static final boolean SHOW_ADS = true;
+	public static String getMobFoxId() {
+		return "63db1a5b579e6c250d9c7d7ed6c3efd5";
+	}
+
+	public static String getAdMobId() {
+		return "a152407835a94a7";
+	}
+	
+	// TODO Service starts randomly (onStartCommand() return START_NOT_STICKY?)
+
+	public static final boolean SHOW_ADS = false;
 
 	private static final String TAG = "Main";
 
@@ -54,7 +64,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		mAnalytics = new Analytics(this);
 		mAnalytics.increment(AnalyticsKeys.MAIN_OPENED);
 
-		setTheme(R.style.Theme_Dark);
 		setContentView(R.layout.activity_main);
 		bStart = (Button) findViewById(R.id.bToggleService);
 		bChangePass = (Button) findViewById(R.id.bChangePassword);
@@ -125,8 +134,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		if (empty) {
 			// setup two dialogs, one to ask the user if he wants to use it
 			final AlertDialog.Builder msg = new AlertDialog.Builder(this);
-			msg.setTitle("Setup");
-			msg.setMessage("You have not setup a password yet.\nDo you want to setup a password now?");
+			msg.setTitle(R.string.main_setup);
+			msg.setMessage(R.string.main_no_password);
 			msg.setCancelable(false);
 			msg.setPositiveButton(android.R.string.ok, null);
 			msg.setNegativeButton(android.R.string.cancel,
@@ -139,7 +148,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			mSequencer.addDialog(msg.create());
 			final AlertDialog.Builder choose = new AlertDialog.Builder(this);
 			choose.setCancelable(false);
-			choose.setTitle("Choose Lock Type");
+			choose.setTitle(R.string.main_choose_lock_type);
 			choose.setItems(R.array.lock_type_names, new OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -158,8 +167,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		// No apps
 		if (PrefUtil.getTrackedApps(this).isEmpty()) {
 			final AlertDialog.Builder ab = new AlertDialog.Builder(this);
-			ab.setTitle("You have no apps locked");
-			ab.setMessage("Please add some apps");
+			ab.setTitle(R.string.main_setup);
+			ab.setMessage(R.string.main_no_locked_apps);
 			ab.setCancelable(false);
 			ab.setNegativeButton(android.R.string.cancel, null);
 			ab.setPositiveButton(android.R.string.ok, new OnClickListener() {
@@ -260,7 +269,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	private void updateLayout(boolean running) {
 		if (running) {
 			tvState.setText(R.string.main_state_running);
-			tvState.setTextColor(Color.GREEN);
+			tvState.setTextColor(Color.parseColor("#10599D"));
 			bStart.setText(R.string.main_stop_service);
 		} else {
 			tvState.setText(R.string.main_state_not_running);
@@ -362,12 +371,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		Intent i = new Intent(context, MainActivity.class);
 		i.putExtra(EXTRA_UNLOCKED, true);
 		// i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//		if (context instanceof Activity
-//				&& context instanceof LockActivity == false) {
-//			if (!((Activity) context).isFinishing()) {
-//				((Activity) context).finish();
-//			}
-//		}
+		// if (context instanceof Activity
+		// && context instanceof LockActivity == false) {
+		// if (!((Activity) context).isFinishing()) {
+		// ((Activity) context).finish();
+		// }
+		// }
 		context.startActivity(i);
 	}
 

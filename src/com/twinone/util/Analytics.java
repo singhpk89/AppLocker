@@ -1,4 +1,4 @@
-package com.twinone.analytics;
+package com.twinone.util;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -21,13 +21,13 @@ public class Analytics {
 		// mContext = c;
 		mPrefs = c.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE);
 		mEditor = mPrefs.edit();
-		mEnableAnalytics = mPrefs.getBoolean(PREF_KEY_ENABLE_ANALYTICS, false);
+		mEnableAnalytics = mPrefs.getBoolean(PREF_KEY_ENABLE_ANALYTICS, true);
 		if (!mEnableAnalytics) {
 			mPrefs = null;
 			mEditor = null;
 		}
 	}
-
+// #57288504
 	/**
 	 * Utility method for when the user decides to allow or decline analytics.
 	 * You should respect the preference of the user.

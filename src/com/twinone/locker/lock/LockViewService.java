@@ -1,0 +1,974 @@
+package com.twinone.locker.lock;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.List;
+
+import android.annotation.SuppressLint;
+import android.app.Service;
+import android.content.ComponentName;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PixelFormat;
+import android.graphics.Point;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
+import android.os.IBinder;
+import android.util.Log;
+import android.view.Display;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.twinone.locker.MainActivity;
+import com.twinone.locker.R;
+import com.twinone.locker.lock.PasswordView.OnNumberListener;
+import com.twinone.locker.lock.PatternView.Cell;
+import com.twinone.locker.lock.PatternView.DisplayMode;
+import com.twinone.locker.lock.PatternView.OnPatternListener;
+import com.twinone.locker.util.PrefUtil;
+import com.twinone.locker.util.Util;
+
+/*
+ * TODO
+ * Add show / hide animation
+ * Orientation settings
+ * When package changed we should hide rootView
+ * 
+ */
+
+@SuppressLint("NewApi")
+public class LockViewService extends Service implements View.OnClickListener,
+		View.OnKeyListener {
+
+	public static final String CLASSNAME = LockViewService.class.getName();
+
+	private static final String TAG = CLASSNAME;
+
+	/**
+	 * Check a currently set password, (either number or pattern)
+	 */
+	public static final String ACTION_COMPARE = CLASSNAME + ".action.compare";
+
+	/**
+	 * Create a new password by asking the user to enter it twice (either number
+	 * or pattern)
+	 */
+	public static final String ACTION_CREATE = CLASSNAME + ".action.create";
+
+	public static final String ACTION_NOTIFY_PACKAGE_CHANGED = CLASSNAME
+			+ ".action.notify_package_changed";
+	public static final String EXTRA_LOCK = CLASSNAME + ".action.extra_lock";
+	/**
+	 * int extra<br>
+	 * Specifies what lock type to display to the user at first, one of
+	 * {@link #LOCK_TYPE_PASSWORD}, {@link #LOCK_TYPE_PATTERN}
+	 */
+	public static final String EXTRA_VIEW_TYPE = CLASSNAME + ".extra.lock_type";
+
+	/**
+	 * The bitwise or-ed lock types that are allowed to be displayed
+	 */
+	public static final String EXTRA_VIEW_TYPES = CLASSNAME
+			+ ".extra.allowed_locktypes";
+
+	/**
+	 * Boolean extra<br>
+	 * Specifies whether to vibrate or not
+	 */
+	public static final String EXTRA_VIBRATE = CLASSNAME
+			+ ".extra.vibrate.password";
+
+	/**
+	 * Use in conjunction with {@link #LOCK_TYPE_PASSWORD}<br>
+	 * Specifies the correct password that the number lock must match in order
+	 * to unlock this lock screen
+	 */
+	public static final String EXTRA_PASSWORD = CLASSNAME
+			+ ".extra.number_password";
+	/**
+	 * Use in conjunction with {@link #LOCK_TYPE_PATTERN}<br>
+	 * Specifies the correct pattern that the user must draw in order to unlock
+	 * this lock screen
+	 */
+	public static final String EXTRA_PATTERN = CLASSNAME + ".extra.pattern";
+
+	/**
+	 * When the action is {@link #ACTION_COMPARE} use {@link #EXTRA_PACKAGENAME}
+	 * for specifying the target app.
+	 */
+	public static final String EXTRA_PACKAGENAME = CLASSNAME
+			+ ".extra.target_packagename";
+
+	/**
+	 * Boolean, true when pattern is in stealth mode
+	 */
+	public static final String EXTRA_PATTERN_STEALTH = CLASSNAME
+			+ ".extra.pattern_stealth_mode";
+
+	/**
+	 * Boolean, true when password is in stealth mode
+	 */
+	public static final String EXTRA_PASSWORD_STEALTH = CLASSNAME
+			+ ".extra.password_stealth_mode";
+
+	/**
+	 * Boolean, Swap the action buttons in password
+	 */
+	public static final String EXTRA_PASSWORD_SWITCH_BUTTONS = CLASSNAME
+			+ ".extra.swap_buttons";
+
+	/**
+	 * String, The message to display to the user. If {@link #ACTION_CREATE} is
+	 * specified, this will be overriden
+	 */
+	public static final String EXTRA_MESSAGE = CLASSNAME
+			+ ".extra.unlock_message";
+
+	public static final String EXTRA_PATTERN_CIRCLE_COLOR = CLASSNAME
+			+ ".extra.pattern_circle_color";
+
+	/**
+	 * If this is set, the specified {@link Uri} will be used as image for the
+	 * {@link LockActivity}
+	 */
+	public static final String EXTRA_BACKGROUND_URI = CLASSNAME
+			+ ".extra.background_uri";
+
+	/**
+	 * Integer value, one of {@link ActivityInfo#SCREEN_ORIENTATION_SENSOR} or
+	 * {@link ActivityInfo#SCREEN_ORIENTATION_PORTRAIT}
+	 */
+	public static final String EXTRA_ORIENTATION = CLASSNAME
+			+ ".extra.orientation_mode";
+
+	public static final int LOCK_TYPE_PASSWORD = 1 << 0; // 1
+	public static final int LOCK_TYPE_PATTERN = 1 << 1; // 2
+	/** The default lock type if none was specified */
+	public static final int LOCK_TYPE_DEFAULT = LOCK_TYPE_PASSWORD;
+
+	public static final int PATTERN_COLOR_WHITE = 0;
+	public static final int PATTERN_COLOR_BLUE = 2;
+	public static final int PATTERN_COLOR_GREEN = 1;
+	private static final long PATTERN_DELAY = 600;
+
+	// options
+	// private boolean mExplicitStarted;
+	private String mPackageName;
+	private String mAction;
+
+	private String mNewPassword;
+	private String mNewPattern;
+	private boolean mPasswordStealthMode;
+	private boolean mPatternStealthMode;
+	private int mPatternCircleResId = PATTERN_COLOR_WHITE;
+	private String mPassword;
+	private String mPattern;
+	// private AppLockService mService;
+
+	private boolean mEnableVibration;
+
+	private int mAllowedViewTypes;
+	private int mLockViewType = LOCK_TYPE_DEFAULT;
+
+	private int mMaxPasswordLength = 8;
+	private boolean mSwitchButtons;
+	private Uri mCurrentBackgroundUri = null;
+
+	// view
+	private RelativeLayout mContainer;
+	private ImageView mViewBackground;
+	private TextView mViewPassword;
+	private TextView mViewTitle;
+	private TextView mViewMessage;
+	private ImageView mAppIcon;
+	private ViewGroup mLockView;
+	private LinearLayout mFooterButtons;
+	private Button mLeftButton;
+	private Button mRightButton;
+	private RightButtonAction mRightButtonAction;
+	private LeftButtonAction mLeftButtonAction;
+
+	private PatternView mLockPatternView;
+	private PasswordView mLockPasswordView;
+	private OnPatternListener mPatternListener;
+	private OnNumberListener mPasswordListener;
+
+	private AppLockService mAppLockService;
+	private boolean mBound;
+
+	private enum RightButtonAction {
+		CONTINUE, CONFIRM
+	}
+
+	private enum LeftButtonAction {
+		BACK, CANCEL
+	}
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		return null;
+	}
+
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		Log.d(TAG, "VIEWSERVICE onStartCommand");
+		if (intent == null) {
+			return START_NOT_STICKY;
+		}
+		if (ACTION_NOTIFY_PACKAGE_CHANGED.equals(intent.getAction())) {
+			Log.d(TAG,
+					"notify package changed: "
+							+ intent.getStringExtra(EXTRA_PACKAGENAME));
+			String newPackageName = intent.getStringExtra(EXTRA_PACKAGENAME);
+			if (newPackageName == null) {
+				finish(true);
+				return START_NOT_STICKY;
+			} else if (!newPackageName.equals(mPackageName)
+					&& (!getPackageName().equals(newPackageName))) {
+				finish(true);
+				return START_NOT_STICKY;
+			}
+			if (newPackageName == null || newPackageName.equals(mPackageName)) {
+				if (!getPackageName().equals(newPackageName)) {
+					finish(true);
+				}
+				return START_NOT_STICKY;
+			}
+		} else {
+			showView();
+			loadIntentData(intent);
+		}
+		return super.onStartCommand(intent, flags, startId);
+	}
+
+	/**
+	 * WindowManager stuff here
+	 */
+	private WindowManager mWindowManager;
+	private View mRootView;
+	private WindowManager.LayoutParams mLayoutParams;
+	private boolean mViewDisplayed;
+
+	private void showView() {
+		if (!mViewDisplayed) {
+			if (mRootView == null) {
+				mRootView = inflateRootView();
+			}
+			mWindowManager.addView(mRootView, mLayoutParams);
+			showAnimation();
+			mViewDisplayed = true;
+		}
+	}
+
+	private View inflateRootView() {
+		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+		LayoutInflater li = LayoutInflater.from(this);
+		setTheme(R.style.LockActivityTheme);
+		View root = (View) li.inflate(R.layout.activity_locker, null);
+		mContainer = (RelativeLayout) root.findViewById(R.id.rlContainer);
+		mViewBackground = (ImageView) root.findViewById(R.id.ivBackground);
+		root.setOnKeyListener(this);
+		root.setFocusable(true);
+		root.setFocusableInTouchMode(true);
+
+		mLayoutParams = new WindowManager.LayoutParams(
+				WindowManager.LayoutParams.MATCH_PARENT,
+				WindowManager.LayoutParams.MATCH_PARENT,
+				WindowManager.LayoutParams.TYPE_PHONE,
+				// Whatsapp bug fixed!
+				WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM
+						| WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+						| WindowManager.LayoutParams.FLAG_FULLSCREEN
+						| WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+				PixelFormat.TRANSLUCENT);
+
+		mViewTitle = (TextView) root.findViewById(R.id.tvHeader);
+		mViewMessage = (TextView) root.findViewById(R.id.tvFooter);
+		mAppIcon = (ImageView) root.findViewById(R.id.ivAppIcon);
+		mLockView = (ViewGroup) root.findViewById(R.id.lockView);
+		mViewPassword = (TextView) mLockView.findViewById(R.id.tvPassword);
+
+		mFooterButtons = (LinearLayout) root.findViewById(R.id.llBottomButtons);
+		mLeftButton = (Button) root.findViewById(R.id.bFooterLeft);
+		mRightButton = (Button) root.findViewById(R.id.bFooterRight);
+
+		mRightButton.setOnClickListener(this);
+		mLeftButton.setOnClickListener(this);
+
+		mPasswordListener = new MyOnNumberListener();
+		mPatternListener = new MyOnPatternListener();
+		return root;
+	}
+
+	private void hideView() {
+		Log.d(TAG, "hideView");
+		if (mViewDisplayed) {
+			mWindowManager.removeView(mRootView);
+			mViewDisplayed = false;
+		}
+	}
+
+	private void showAnimation() {
+		Log.d(TAG, "Show Animating");
+
+		Animation slide = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+		slide.setDuration(200);
+		slide.setFillEnabled(true);
+
+		mContainer.startAnimation(slide);
+
+		Log.d(TAG, "Show Animate end");
+	}
+
+	private void hideAnimation() {
+		Log.d(TAG, "Hide Animating");
+		Animation slide = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+		slide.setDuration(400);
+		slide.setFillEnabled(true);
+		slide.setDetachWallpaper(false);
+		slide.setAnimationListener(new AnimationListener() {
+
+			@Override
+			public void onAnimationStart(Animation animation) {
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+			}
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				hideView();
+			}
+		});
+		mContainer.startAnimation(slide);
+
+		Log.d(TAG, "Animate end");
+	}
+
+	private class MyOnNumberListener implements OnNumberListener {
+
+		@Override
+		public void onBackButtonLong() {
+			showAnimation();
+		}
+
+		@Override
+		public void onBackButton() {
+			updatePassword();
+		}
+
+		@Override
+		public void onNumberButton(final String newPassword) {
+			if (newPassword.length() > mMaxPasswordLength) {
+				mLockPasswordView.setPassword(newPassword.substring(0,
+						mMaxPasswordLength));
+			}
+			if (ACTION_COMPARE.equals(mAction)) {
+				doComparePassword(false);
+			}
+		}
+
+		@Override
+		public void onOkButtonLong() {
+		}
+
+		@Override
+		public void onOkButton() {
+			if (ACTION_COMPARE.equals(mAction)) {
+				doComparePassword(true);
+			}
+		}
+	};
+
+	private void updatePassword() {
+		String pwd = mLockPasswordView.getPassword();
+		if (mMaxPasswordLength != 0) {
+			if (pwd.length() >= mMaxPasswordLength) {
+				mLockPasswordView.setPassword(pwd.substring(0,
+						mMaxPasswordLength));
+			}
+		}
+		mViewPassword.setText(mLockPasswordView.getPassword());
+	}
+
+	private class MyOnPatternListener implements OnPatternListener {
+
+		@Override
+		public void onPatternStart() {
+			mLockPatternView.cancelClearDelay();
+			mLockPatternView.setDisplayMode(DisplayMode.Correct);
+			if (ACTION_CREATE.equals(mAction)) {
+				if (mRightButtonAction == RightButtonAction.CONTINUE) {
+					mViewMessage.setText(R.string.pattern_change_head);
+				} else {
+					mViewMessage.setText(R.string.pattern_change_confirm);
+				}
+			}
+		}
+
+		@Override
+		public void onPatternDetected(List<Cell> pattern) {
+			if (ACTION_COMPARE.equals(mAction)) {
+				doComparePattern();
+			} else if (ACTION_CREATE.equals(mAction)) {
+				mViewMessage.setText(R.string.pattern_detected);
+			}
+		}
+
+		@Override
+		public void onPatternCleared() {
+		}
+
+		@Override
+		public void onPatternCellAdded(List<Cell> pattern) {
+		}
+	};
+
+	/**
+	 * 
+	 * @param explicit
+	 *            true if the user has clicked the OK button to explicitly ask
+	 *            for a password check (this should never happen)
+	 */
+	private void doComparePassword(boolean explicit) {
+		Log.d(TAG, "Comparig password");
+		final String currentPassword = mLockPasswordView.getPassword();
+		if (currentPassword.equals(mPassword)) {
+			exitSuccessCompare();
+		} else if (explicit) {
+			mLockPasswordView.clearPassword();
+			Toast.makeText(this, R.string.locker_invalid_password,
+					Toast.LENGTH_SHORT).show();
+
+		}
+	}
+
+	/**
+	 * Called every time a pattern has been detected by the user and the action
+	 * was {@link #ACTION_COMPARE}
+	 */
+	private void doComparePattern() {
+		final String currentPattern = mLockPatternView.getPatternString();
+		if (currentPattern.equals(mPattern)) {
+			exitSuccessCompare();
+		} else {
+			mLockPatternView.setDisplayMode(DisplayMode.Wrong);
+			mLockPatternView.clearPattern(PATTERN_DELAY);
+		}
+	}
+
+	/**
+	 * Exit when an app has been unlocked successfully
+	 */
+	private void exitSuccessCompare() {
+		Log.d(TAG, "exitSuccessCompare");
+		if (mPackageName == null || mPackageName.equals(getPackageName())) {
+			finish(true);
+			return;
+		}
+		if (mBound) {
+			mAppLockService.unlockApp(mPackageName);
+			finish(true);
+		} else {
+			Log.w(TAG, "Not bound to lockservice");
+			mViewTitle.setText("Not bound :(");
+		}
+	}
+
+	private Bitmap decodeUri(Uri uri, int desiredHeight, int desiredWidth)
+			throws FileNotFoundException {
+		if (desiredWidth == 0 || desiredHeight == 0) {
+			throw new IllegalArgumentException("Width or height = 0");
+		}
+		BitmapFactory.Options o = new BitmapFactory.Options();
+		o.inJustDecodeBounds = true;
+		InputStream is = getContentResolver().openInputStream(uri);
+		BitmapFactory.decodeStream(is, null, o);
+		// we have to find the scale value (should be power of 2)
+		int w = o.outWidth;
+		int h = o.outHeight;
+		int scale = 1;
+		while (true) {
+			if (w / 2 < desiredWidth || h / 2 < desiredHeight) {
+				break;
+			}
+			w /= 2;
+			h /= 2;
+			scale *= 2;
+		}
+		BitmapFactory.Options o2 = new BitmapFactory.Options();
+		o2.inSampleSize = scale;
+		InputStream is2 = getContentResolver().openInputStream(uri);
+		// With optimization
+		Bitmap b = BitmapFactory.decodeStream(is2, null, o2);
+		// Without optimization
+		// Bitmap b = BitmapFactory.decodeStream(is2);
+		return b;
+	}
+
+	@Override
+	public void onClick(final View v) {
+		switch (v.getId()) {
+		case R.id.bFooterLeft:
+			if (ACTION_CREATE.equals(mAction)) {
+				if (mLeftButtonAction == LeftButtonAction.BACK) {
+					setupFirst();
+				} else {
+					Log.d(TAG, "Cancelled by user");
+					exitCreate();
+				}
+			}
+			break;
+		case R.id.bFooterRight:
+			if (ACTION_CREATE.equals(mAction)) {
+				if (mRightButtonAction == RightButtonAction.CONTINUE) {
+					setupSecond();
+				} else {
+					doConfirm();
+				}
+			}
+			break;
+		}
+	}
+
+	private void doConfirm() {
+		if (mLockViewType == LOCK_TYPE_PATTERN) {
+			final String newValue = mLockPatternView.getPatternString();
+			if (newValue.equals(mNewPattern)) {
+				final SharedPreferences.Editor editor = PrefUtil.prefs(this)
+						.edit();
+				PrefUtil.setPattern(editor, this, newValue);
+				PrefUtil.setLockType(editor, this,
+						getString(R.string.pref_val_lock_type_pattern));
+				final boolean success = editor.commit();
+				final String toast = getString(success ? R.string.pattern_change_saved
+						: R.string.pattern_change_error);
+				Toast.makeText(this, toast, Toast.LENGTH_SHORT).show();
+				exitCreate();
+			} else {
+				Toast.makeText(this, R.string.pattern_change_not_match,
+						Toast.LENGTH_SHORT).show();
+				mLockPatternView.setDisplayMode(DisplayMode.Wrong);
+				setupFirst();
+			}
+		} else {
+			String newValue = mLockPasswordView.getPassword();
+			if (newValue.equals(mNewPassword)) {
+				final SharedPreferences.Editor editor = PrefUtil.prefs(this)
+						.edit();
+				PrefUtil.setPassword(editor, this, newValue);
+				PrefUtil.setLockType(editor, this,
+						getString(R.string.pref_val_lock_type_password));
+				final boolean success = editor.commit();
+				final String toast = getString(success ? R.string.password_change_saved
+						: R.string.password_change_error);
+				Toast.makeText(this, toast, Toast.LENGTH_SHORT).show();
+				exitCreate();
+			} else {
+				Toast.makeText(this, R.string.password_change_not_match,
+						Toast.LENGTH_SHORT).show();
+				setupFirst();
+			}
+
+		}
+	}
+
+	private void setupFirst() {
+		if (mLockViewType == LOCK_TYPE_PATTERN) {
+			mLockPatternView.setInStealthMode(false);
+			mLockPatternView.clearPattern(PATTERN_DELAY);
+			mViewTitle.setText(R.string.pattern_change_tit);
+			mViewMessage.setText(R.string.pattern_change_head);
+			mNewPattern = null;
+		} else {
+			mLockPasswordView.setTextView(mViewPassword);
+			mLockPasswordView.clearPassword();
+			mViewTitle.setText(R.string.password_change_tit);
+			mViewMessage.setText(R.string.password_change_head);
+			mNewPassword = null;
+		}
+		mLeftButton.setText(android.R.string.cancel);
+		mRightButton.setText(R.string.button_continue);
+		mLeftButtonAction = LeftButtonAction.CANCEL;
+		mRightButtonAction = RightButtonAction.CONTINUE;
+	}
+
+	private void setupSecond() {
+		if (mLockViewType == LOCK_TYPE_PATTERN) {
+			mNewPattern = mLockPatternView.getPatternString();
+			if (mNewPattern.length() == 0) {
+				return;
+			}
+			mViewMessage.setText(R.string.pattern_change_confirm);
+			mLockPatternView.clearPattern();
+		} else {
+			mNewPassword = mLockPasswordView.getPassword();
+			if (mNewPassword.length() == 0) {
+				Toast.makeText(this, R.string.password_empty,
+						Toast.LENGTH_SHORT).show();
+				return;
+			}
+			mLockPasswordView.clearPassword();
+			mViewMessage.setText(R.string.password_change_confirm);
+		}
+		mLeftButton.setText(R.string.button_back);
+		mRightButton.setText(R.string.button_confirm);
+		mLeftButtonAction = LeftButtonAction.BACK;
+		mRightButtonAction = RightButtonAction.CONFIRM;
+	}
+
+	private final boolean showPasswordView() {
+		Log.w(TAG, "showPasswordView");
+		if ((mAllowedViewTypes & LOCK_TYPE_PASSWORD) == 0) {
+			Log.w(TAG, "Called showNumberView but not allowed");
+			return false;
+		}
+		// Lazy inflation:
+		if (mLockPasswordView == null) {
+			LayoutInflater li = LayoutInflater.from(this);
+			li.inflate(R.layout.view_lock_number, mLockView, true);
+
+			final int childCount = mLockView.getChildCount();
+			for (int i = 0; i < childCount; i++) {
+				final View v = mLockView.getChildAt(i);
+				if (v instanceof PasswordView) {
+					mLockPasswordView = (PasswordView) v;
+					mLockPasswordView.setListener(mPasswordListener);
+					mLockPasswordView.setTextView(mViewPassword);
+					if (ACTION_CREATE.equals(mAction)) {
+						mLockPasswordView.setOkButtonVisibility(View.INVISIBLE);
+					} else {
+						mLockPasswordView.setOkButtonVisibility(View.VISIBLE);
+					}
+				}
+			}
+		}
+		// Hide patternview
+		if (mLockPatternView != null) {
+			mLockPatternView.onHide();
+			mLockPatternView.setVisibility(View.GONE);
+		}
+		mLockPasswordView.setTactileFeedbackEnabled(mEnableVibration);
+		mLockPasswordView.setSwitchButtons(mSwitchButtons);
+		mLockPasswordView.onShow();
+		mLockPasswordView.setVisibility(View.VISIBLE);
+		mViewPassword.setVisibility(mPasswordStealthMode ? View.GONE
+				: View.VISIBLE);
+		mLockViewType = LOCK_TYPE_PASSWORD;
+		return true;
+	}
+
+	private final boolean showPatternView() {
+		Log.w(TAG, "showPatternView");
+		if ((mAllowedViewTypes & LOCK_TYPE_PATTERN) == 0) {
+			Log.w(TAG, "Called showPatternView but not allowed");
+			return false;
+		}
+		// Lazy inflation:
+		if (mLockPatternView == null) {
+			LayoutInflater li = LayoutInflater.from(this);
+			li.inflate(R.layout.view_lock_pattern, mLockView, true);
+			final int childCount = mLockView.getChildCount();
+			for (int i = 0; i < childCount; i++) {
+				final View v = mLockView.getChildAt(i);
+				if (v instanceof PatternView) {
+					mLockPatternView = (PatternView) v;
+					mLockPatternView.setOnPatternListener(mPatternListener);
+					mLockPatternView.setSelectedBitmap(mPatternCircleResId);
+					Drawable gd = getResources().getDrawable(
+							R.drawable.passwordview_button_background);
+					Util.setBackgroundDrawable(mLockPatternView, gd);
+				}
+			}
+		}
+		// hide passwordview
+		if (mLockPasswordView != null) {
+			mLockPasswordView.onHide();
+			mLockPasswordView.setVisibility(View.GONE);
+		}
+		mLockPatternView.setTactileFeedbackEnabled(mEnableVibration);
+		mLockPatternView.setInStealthMode(mPatternStealthMode);
+		mLockPatternView.onShow();
+		mLockPatternView.setVisibility(View.VISIBLE);
+		mLockViewType = LOCK_TYPE_PATTERN;
+		return true;
+	}
+
+	@SuppressLint("NewApi")
+	/**
+	 * 
+	 * @param intent
+	 * @return whether it has successfully returned the data
+	 */
+	private boolean loadIntentData(Intent intent) {
+		Log.d(TAG, "LoadIntentData()");
+		if (intent == null) {
+			return false;
+		}
+		mAction = intent.getAction();
+		if (mAction == null) {
+			Log.d(TAG, "Finishing: No action specified");
+			return false;
+		}
+		// when changing password we don't want custom backgrounds
+		String uriString = intent.getStringExtra(EXTRA_BACKGROUND_URI);
+		Uri uri = null;
+		boolean changeImage = true;
+		Log.d(TAG, "uriString: " + uriString);
+		if (uriString == null) {
+			changeImage = false;
+			mViewBackground.setImageBitmap(null);
+			mViewBackground.setBackgroundColor(Color.BLACK);
+		} else {
+			uri = Uri.parse(uriString);
+
+			if (uri == null) {
+				Log.d(TAG, "null uri");
+				changeImage = false;
+			}
+			if (uri.equals(mCurrentBackgroundUri))
+				changeImage = false;
+		}
+		if (changeImage) {
+			try {
+				if (uri.getScheme().equals(
+						ContentResolver.SCHEME_ANDROID_RESOURCE)) {
+
+					mViewBackground.setImageURI(uri);
+				} else {
+					WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+					Point size = getSizeCompat(wm.getDefaultDisplay());
+					Bitmap bm = decodeUri(uri, size.x, size.y);
+					ImageView iv = (ImageView) mRootView
+							.findViewById(R.id.ivBackground);
+					iv.setImageBitmap(bm);
+				}
+			} catch (Exception e) {
+				Log.w(TAG, "Error reading background image", e);
+			}
+		}
+
+		// TODO get the setting and "react" to it accordingly with an
+		// OrientationEventListener
+		// setRequestedOrientation(intent.getIntExtra(EXTRA_ORIENTATION,
+		// ActivityInfo.SCREEN_ORIENTATION_SENSOR));
+
+		mLockViewType = intent.getIntExtra(EXTRA_VIEW_TYPE, LOCK_TYPE_DEFAULT);
+		mAllowedViewTypes = intent.getIntExtra(EXTRA_VIEW_TYPES, mLockViewType);
+		// Add default if none specified
+		// mAllowedViewTypes |= mLockViewType;
+		mPackageName = intent.getStringExtra(EXTRA_PACKAGENAME);
+		Log.d(TAG, "PackageName: " + mPackageName);
+
+		if (!getPackageName().equals(mPackageName)) {
+			Log.w(TAG, "LockViewService Binding to AppLockService");
+			Intent i = new Intent(this, AppLockService.class);
+			bindService(i, mConnection, 0);
+		}
+
+		mEnableVibration = intent.getBooleanExtra(EXTRA_VIBRATE, false);
+		mSwitchButtons = intent.getBooleanExtra(EXTRA_PASSWORD_SWITCH_BUTTONS,
+				false);
+
+		int patternColor = intent.getIntExtra(EXTRA_PATTERN_CIRCLE_COLOR,
+				PATTERN_COLOR_WHITE);
+		switch (patternColor) {
+		case PATTERN_COLOR_BLUE:
+			mPatternCircleResId = R.drawable.pattern_circle_blue;
+			break;
+		case PATTERN_COLOR_GREEN:
+			mPatternCircleResId = R.drawable.pattern_circle_green;
+			break;
+		default:
+			mPatternCircleResId = R.drawable.pattern_circle_white;
+			break;
+		}
+
+		if (intent.hasExtra(EXTRA_PASSWORD)) {
+			mPassword = intent.getStringExtra(EXTRA_PASSWORD);
+		}
+		if (intent.hasExtra(EXTRA_PATTERN)) {
+			mPattern = intent.getStringExtra(EXTRA_PATTERN);
+		}
+
+		// Stealth modes
+		mPasswordStealthMode = intent.getBooleanExtra(EXTRA_PASSWORD_STEALTH,
+				false);
+		mPatternStealthMode = intent.getBooleanExtra(EXTRA_PATTERN_STEALTH,
+				false);
+
+		if (ACTION_CREATE.equals(mAction)) {
+			mPasswordStealthMode = false;
+			mPatternStealthMode = false;
+		}
+		mViewPassword.setVisibility(mPasswordStealthMode ? View.GONE
+				: View.VISIBLE);
+		// Views
+		if (ACTION_COMPARE.equals(mAction)) {
+			mAppIcon.setVisibility(View.VISIBLE);
+			mFooterButtons.setVisibility(View.GONE);
+			ApplicationInfo ai = Util.getaApplicationInfo(mPackageName, this);
+			if (ai != null) {
+				// Load info of this application
+				String label = ai.loadLabel(getPackageManager()).toString();
+				Drawable icon = ai.loadIcon(getPackageManager());
+				Util.setBackgroundDrawable(mAppIcon, icon);
+				mViewTitle.setText(label);
+				String msg = intent.getStringExtra(EXTRA_MESSAGE);
+				if (msg != null && msg.length() != 0) {
+					mViewMessage.setVisibility(View.VISIBLE);
+					mViewMessage.setText(msg.replace("%s", label));
+				} else {
+					mViewMessage.setVisibility(View.GONE);
+				}
+			} else {
+				// App isn't installed or it's reference was not provided
+				mAppIcon.setVisibility(View.GONE);
+			}
+		} else if (ACTION_CREATE.equals(mAction)) {
+			mAppIcon.setVisibility(View.GONE);
+			mFooterButtons.setVisibility(View.VISIBLE);
+		}
+
+		switch (mLockViewType) {
+		case LOCK_TYPE_PATTERN:
+			showPatternView();
+			break;
+		case LOCK_TYPE_PASSWORD:
+			showPasswordView();
+			break;
+		}
+
+		if (ACTION_CREATE.equals(mAction)) {
+			setupFirst();
+		}
+		return true;
+	}
+
+	@SuppressWarnings("deprecation")
+	private Point getSizeCompat(Display display) {
+		Point p = new Point();
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2) {
+			p.x = display.getWidth();
+			p.y = display.getHeight();
+		} else {
+			display.getSize(p);
+		}
+		return p;
+	}
+
+	public static final Intent getDefaultIntent(final Context c) {
+		final Intent i = new Intent(c, LockViewService.class);
+		int lockType = PrefUtil.getLockTypeInt(c);
+		i.putExtra(EXTRA_VIEW_TYPE, lockType);
+		i.putExtra(EXTRA_ORIENTATION, PrefUtil.getLockOrientation(c));
+		i.putExtra(EXTRA_BACKGROUND_URI, PrefUtil.getLockerBackground(c));
+		i.putExtra(EXTRA_VIBRATE, PrefUtil.getPasswordVibrate(c));
+		i.putExtra(EXTRA_MESSAGE, PrefUtil.getMessage(c));
+		if (lockType == LOCK_TYPE_PASSWORD) {
+			i.putExtra(EXTRA_PASSWORD, PrefUtil.getPassword(c));
+			i.putExtra(EXTRA_PASSWORD_STEALTH, PrefUtil.getPasswordStealth(c));
+			i.putExtra(EXTRA_PASSWORD_SWITCH_BUTTONS,
+					PrefUtil.getPasswordSwitchButtons(c));
+		} else if (lockType == LOCK_TYPE_PATTERN) {
+			i.putExtra(EXTRA_PATTERN, PrefUtil.getPattern(c));
+			i.putExtra(EXTRA_MESSAGE, PrefUtil.getMessage(c));
+			i.putExtra(EXTRA_PATTERN_STEALTH, PrefUtil.getPatternStealth(c));
+			i.putExtra(EXTRA_PATTERN_CIRCLE_COLOR,
+					PrefUtil.getPatternCircleColor(c));
+		}
+		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		return i;
+	}
+
+	private final ServiceConnection mConnection = new ServiceConnection() {
+
+		@Override
+		public void onServiceConnected(ComponentName cn, IBinder binder) {
+			Log.d(TAG, "VIEWSERVICE BOUND onServiceConnected");
+			final AppLockService.LocalBinder b = (AppLockService.LocalBinder) binder;
+			mAppLockService = b.getInstance();
+			mBound = true;
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName cn) {
+			Log.d(TAG, "VIEWSERVICE UNBOUND Service was killed");
+			mBound = false;
+		}
+	};
+
+	private void exitCreate() {
+		// Always go back to our app
+		Intent i = AppLockService.getReloadIntent(this);
+		startService(i);
+		MainActivity.showWithoutPassword(this);
+		finish(true);
+	}
+
+	private void finish(boolean unlocked) {
+		Log.d(TAG, "finish");
+		if (mBound) {
+			unbindService(mConnection);
+			mBound = false;
+		}
+		if (!unlocked) {
+			final Intent i = new Intent(Intent.ACTION_MAIN);
+			i.addCategory(Intent.CATEGORY_HOME);
+			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(i);
+		}
+		hideAnimation();
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		finish(true);
+		Log.d(TAG, "Service destroyed");
+	}
+
+	@Override
+	public void onLowMemory() {
+		super.onLowMemory();
+
+	}
+
+	@Override
+	public boolean onKey(View v, int keyCode, KeyEvent event) {
+		Log.d(TAG, "keyevent!");
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			Log.d(TAG, "keycode back");
+			finish(false);
+			return true;
+		case KeyEvent.KEYCODE_MENU:
+			Log.d(TAG, "Keycode menu");
+		}
+		return true;
+	}
+
+}

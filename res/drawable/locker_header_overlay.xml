@@ -1,0 +1,8 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle" >
+
+    <corners android:radius="@dimen/locker_header_radius" />
+
+    <solid android:color="@color/locker_header_overlay" />
+
+</shape>

@@ -1,12 +1,21 @@
 <resources>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="element_horizontal_margin">8dp</dimen>
+    <dimen name="element_vertical_margin">8dp</dimen>
+<!--     <dimen name="patternview_max_size">400dp</dimen>
+ -->    
     <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">8dp</dimen>
+    
+    <dimen name="main_button_radius">10dp</dimen>
+    <dimen name="locker_header_radius">10dp</dimen>
+    <dimen name="passwordview_button_radius">10dp</dimen>
+    <dimen name="patternview_radius">10dp</dimen>
     
     <dimen name="locker_button_margin">5dp</dimen>
     <dimen name="locker_button_text_size">30sp</dimen>
-    <dimen name="locker_button_radius">3dp</dimen>
+    <dimen name="locker_button_radius">5dp</dimen>
     <dimen name="locker_button_small">12sp</dimen>
 
     <!-- These are for the Upper part (above the buttons) -->

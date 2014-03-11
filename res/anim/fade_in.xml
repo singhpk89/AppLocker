@@ -2,10 +2,9 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <alpha
-        android:duration="100"
+        android:duration="400"
         android:fromAlpha="0.0"
         android:interpolator="@android:anim/accelerate_interpolator"
-        android:toAlpha="1.0"
-        android:zAdjustment="top" />
+        android:toAlpha="1.0" />
 
 </set>

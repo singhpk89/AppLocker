@@ -33,24 +33,23 @@ import com.twinone.util.VersionChecker;
 
 public class AppLockService extends Service {
 
-	public static final String TAG = "Service";
-	private static final String LOCKER_CLASS = LockActivity.class.getName();
-	private static final int NOTIFICATION_ID = 1337;
+	public static final String TAG = "AppLockService";
+	public static final int NOTIFICATION_ID = 1337;
 
 	public static final String ACTION_START = "com.twinone.locker.service.action_start";
 	/**
 	 * Reloads the preferences, and stops the service if it was NOT running
 	 * before this call
 	 */
-	public static final String ACTION_RELOAD_PREFERENCES = "com.twinoen.locker.service.action.reload";
-
+	public static final String ACTION_RELOAD_PREFERENCES = "com.twinone.locker.service.action.reload";
+	public static final String ACTION_STOP = "com.twinone.locker.service.action.stop_service";
 	private ActivityManager mAM;
 	private ScheduledExecutorService mScheduledExecutor;
 	private BroadcastReceiver mScreenReceiver;
 	private HashSet<AppInfo> mTrackedApps;
 
-	private String mLastApp = "";
-	private String mLastClass = "";
+	private String mLastPackageName = "";
+	private String mLastClassName = "";
 
 	private boolean mPrefRelockAfterScreenOff;
 	private boolean mPrefDelayUnlockEnabled;
@@ -59,8 +58,6 @@ public class AppLockService extends Service {
 	private boolean mPrefShowNotification;
 	private int mPrefNotificationPriority;
 	private HashMap<String, Runnable> mUnlockMap;
-
-	private Intent mUnlockIntent;
 
 	@SuppressWarnings("unused")
 	private boolean mScreenOn = true;
@@ -133,21 +130,20 @@ public class AppLockService extends Service {
 			stopSelf();
 			return START_NOT_STICKY;
 		}
-		if (intent == null) {
-			// We got killed and restarted
-			Log.w(TAG, "------------");
-			Log.w(TAG, "------------");
-			Log.w(TAG, "SERVICE STARTED WITH INTENT = null");
-			Log.w(TAG, "mExplicitStarted: " + mExplicitStarted);
-			Log.w(TAG, "------------");
-			Log.w(TAG, "------------");
-			stopSelf();
-			// return START_NOT_STICKY;
-		}
+		// if (intent == null) {
+		// // We got killed and restarted
+		// Log.w(TAG, "------------");
+		// Log.w(TAG, "------------");
+		// Log.w(TAG, "SERVICE STARTED WITH INTENT = null");
+		// Log.w(TAG, "mExplicitStarted: " + mExplicitStarted);
+		// Log.w(TAG, "------------");
+		// Log.w(TAG, "------------");
+		// stopSelf();
+		// return START_NOT_STICKY;
+		// }
 		if (
 		// TODO Check if this is the cause of the service randomly starting
-		// intent == null ||
-		ACTION_START.equals(intent.getAction())) {
+		intent == null || ACTION_START.equals(intent.getAction())) {
 			Log.i(TAG, "Starting service");
 			if (!mExplicitStarted) {
 				mExplicitStarted = true;
@@ -166,6 +162,9 @@ public class AppLockService extends Service {
 				stopSelf();
 				return START_NOT_STICKY;
 			}
+		} else if (ACTION_STOP.equals(intent.getAction())) {
+
+			stopSelf();
 		} else {
 			Log.w(TAG, "no action specified");
 		}
@@ -252,17 +251,13 @@ public class AppLockService extends Service {
 				defaultShowNotification);
 		mPrefShowNotification = showNotification;
 
-		boolean defaultTransparentNotification = Boolean
-				.parseBoolean(getString(R.string.pref_def_transparent_notification));
-		boolean transparentNotification = sp.getBoolean(
-				getString(R.string.pref_key_transparent_notification),
-				defaultTransparentNotification);
-		mPrefNotificationPriority = transparentNotification ? Notification.PRIORITY_MIN
+		boolean defHideNotifIcon = Boolean
+				.parseBoolean(getString(R.string.pref_def_hide_notification_icon));
+		boolean hideNotifIcon = sp.getBoolean(
+				getString(R.string.pref_key_hide_notification_icon),
+				defHideNotifIcon);
+		mPrefNotificationPriority = hideNotifIcon ? Notification.PRIORITY_MIN
 				: Notification.PRIORITY_DEFAULT;
-
-		mUnlockIntent = LockActivity.getDefaultIntent(this);
-		mUnlockIntent.setAction(LockActivity.ACTION_COMPARE);
-		mUnlockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 		// Apps
 		final Set<String> apps = PrefUtil.getTrackedApps(this);
@@ -290,8 +285,8 @@ public class AppLockService extends Service {
 	 */
 	private void startScheduler() {
 		// Trigger a change on the first active package
-		mLastApp = null;
-		mLastClass = null;
+		mLastPackageName = null;
+		mLastClassName = null;
 
 		// Shutdown first if it's not running
 		if (mScheduledExecutor != null) {
@@ -343,72 +338,70 @@ public class AppLockService extends Service {
 		@Override
 		public void run() {
 			ComponentName app = mAM.getRunningTasks(1).get(0).topActivity;
-			String appName = app.getPackageName();
+			String packageName = app.getPackageName();
 			String className = app.getClassName();
 
-			boolean appChanged = !appName.equals(mLastApp);
+			boolean appChanged = !packageName.equals(mLastPackageName);
 			// boolean classChanged = !className.equals(mLastClass);
 
 			if (appChanged) {
-				// Log.d(TAG, "Close: " + mLastClass);
-				// Log.d(TAG, "Open: " + className);
-				if (!className.equals(LOCKER_CLASS)) {
-					Log.d(TAG, "Open: " + className);
-					onOpen(appName, className);
-					onClose(mLastApp, mLastClass);
-				}
+				Log.d(TAG, "Open: " + packageName + " (" + className + ")");
+				onAppOpen(packageName, className);
+				onAppClose(mLastPackageName, mLastClassName);
 			}
-			mLastApp = appName;
-			mLastClass = className;
+			mLastPackageName = packageName;
+			mLastClassName = className;
 		}
 
-		/**
-		 * Called each time the monitor has observed a package in the front. The
-		 * package can be the same as the previous.
-		 * 
-		 * @param appName
-		 * @param className
-		 */
-		private void onOpen(final String appName, final String className) {
-			// Log.v(TAG, "Package: " + appName);
-			AppInfo app = getAppInfo(appName);
-			if (app != null) {
-				if (mPrefDelayUnlockEnabled) {
-					mUnlockHandler.removeCallbacks(mUnlockMap.get(appName));
-				}
-				if (app.locked) {
-					app.className = className;
-					// Log.v(TAG,
-					// "Show locker for " + app.packageName
-					// + app.hashCode());
-					showLocker(app);
-				}
+	}
+
+	/**
+	 * Called each time the monitor has observed a package in the front. The
+	 * package can be the same as the previous.
+	 * 
+	 * @param packageName
+	 * @param className
+	 */
+	private void onAppOpen(final String packageName, final String className) {
+		AppInfo app = getLocalAppInfo(packageName);
+		if (app != null) {
+			Log.d(TAG, "test");
+			if (mPrefDelayUnlockEnabled) {
+				mUnlockHandler.removeCallbacks(mUnlockMap.get(packageName));
 			}
-			// This was here before because onClose was not implemented
-			// // lock all other apps because they're not in front anymore
-			// lockAppExcept(appName);
+			if (app.locked) {
+				Log.d(TAG, "locked");
+				app.className = className;
+				showLocker(app);
+			} else {
+				Log.d(TAG, "not locked");
+				notifyPackageChanged(this, packageName);
+			}
+		} else {
+			// this app is not locked
+			notifyPackageChanged(this, packageName);
+		}
+	}
+
+	private void onAppClose(final String packageName, final String className) {
+
+		final AppInfo ai = getLocalAppInfo(packageName);
+		if (ai != null) {
+			if (mPrefDelayUnlockEnabled) {
+				Runnable r = new Runnable() {
+					@Override
+					public void run() {
+						Log.i(TAG, "Closing after delay:" + packageName);
+						ai.locked = true;
+					}
+				};
+				mUnlockMap.put(packageName, r);
+				mUnlockHandler.postDelayed(r, mPrefDelayUnlockMillis);
+			} else {
+				ai.locked = true;
+			}
 		}
 
-		private void onClose(final String appName, final String className) {
-
-			final AppInfo ai = getAppInfo(appName);
-			if (ai != null) {
-				if (mPrefDelayUnlockEnabled) {
-					Runnable r = new Runnable() {
-						@Override
-						public void run() {
-							Log.i(TAG, "Closing after delay:" + appName);
-							ai.locked = true;
-						}
-					};
-					mUnlockMap.put(appName, r);
-					mUnlockHandler.postDelayed(r, mPrefDelayUnlockMillis);
-				} else {
-					ai.locked = true;
-				}
-			}
-
-		}
 	}
 
 	/**
@@ -459,7 +452,13 @@ public class AppLockService extends Service {
 		}
 	}
 
-	private AppInfo getAppInfo(String packageName) {
+	/**
+	 * Returns an app info from mTrackedApps if the app is locked.
+	 * 
+	 * @param packageName
+	 * @return
+	 */
+	private AppInfo getLocalAppInfo(String packageName) {
 		if (mTrackedApps == null) {
 			return null;
 		}
@@ -479,20 +478,22 @@ public class AppLockService extends Service {
 	 */
 	private void showLocker(AppInfo lockInfo) {
 
-		if (lockInfo.className.equals("com.whatsapp.Conversation")) {
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		Log.d(TAG, "Starting locker for " + lockInfo.packageName);
+		Log.d(TAG, "Starting LockView for " + lockInfo.packageName);
 
-		mUnlockIntent.putExtra(LockActivity.EXTRA_PACKAGENAME,
-				lockInfo.packageName);
-		startActivity(mUnlockIntent);
+		Intent intent = LockViewService.getDefaultIntent(this);
+		intent.setAction(LockViewService.ACTION_COMPARE);
+		intent.putExtra(LockViewService.EXTRA_PACKAGENAME, lockInfo.packageName);
+		startService(intent);
 
+	}
+
+	public static void notifyPackageChanged(Context c, String packageName) {
+		Log.d(TAG, "notifyPackageChanged");
+
+		Intent intent = new Intent(c, LockViewService.class);
+		intent.setAction(LockViewService.ACTION_NOTIFY_PACKAGE_CHANGED);
+		intent.putExtra(LockViewService.EXTRA_PACKAGENAME, packageName);
+		c.startService(intent);
 	}
 
 	/**
@@ -512,5 +513,12 @@ public class AppLockService extends Service {
 			}
 		}
 		PrefUtil.apply(editor);
+	}
+
+	public static Intent getStopIntent(Context c) {
+		Intent i = new Intent(c, AppLockService.class);
+		i.setAction(ACTION_STOP);
+		return i;
+
 	}
 }

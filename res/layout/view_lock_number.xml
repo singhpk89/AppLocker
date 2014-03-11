@@ -3,7 +3,7 @@
     xmlns:numlock="http://schemas.android.com/apk/res/com.twinone.locker"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="10dp"
+    android:padding="0dp"
     numlock:cols="3"
     numlock:horizontalSpacing="7dp"
     numlock:maxHScale="1.5"
@@ -48,6 +48,8 @@
         android:id="@+id/numlock_b4"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="0px"
         android:text="@string/num4"
         android:textSize="@dimen/locker_button_text_size"
         android:textStyle="bold" />

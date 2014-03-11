@@ -19,6 +19,12 @@
     </style>
   </head>
   <body>
+  
+$ 2.1.2
+  % Version 2.1.2
+    * Choose pattern color
+    * Custom background
+    * Updated design
 $ 2.1.0
   % Version 2.1.0
     * Pattern

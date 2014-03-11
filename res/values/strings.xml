@@ -5,6 +5,10 @@
     Added in Locker v1.0
     Author: TwinoneDevs
     -->
+
+    <string name="circle_color_white">white</string>
+    <string name="cicrle_color_green">green</string>
+    <string name="cicrle_color_blue">blue</string>
     <string name="application_name">App Locker</string>
     <string name="action_settings">Settings</string>
 
@@ -105,8 +109,6 @@
     <string name="old_pref_desc_dial_launch">When this option is enabled, you can access Locker by dialing #YOURPASSWORD\nThis means that if your password is 1111, you can dial #1111 to open Locker.</string>
     <string name="pref_tit_hide_launcher_icon">Hide icon</string>
     <string name="pref_desc_hide_launcher_icon">When this option is active, Locker will hide it\'s icon from the apps. You can remove shortcuts on your home screen manually (Requires reboot. Forces Start with call)</string>
-    <string name="pref_tit_transparent_notification">Transparent notification</string>
-    <string name="pref_desc_transparent_notification">The notification icon will be transparent</string>
     <!-- Updated text for "Notification" -->
     <string name="pref_tit_show_notification">Show notification</string>
     <!-- Changelog -->
@@ -225,5 +227,25 @@
     <string name="pref_desc_max_password_retries">The number of attempts you have to enter the correct password</string>
     <string name="pref_dlgmsg_max_password_retries">0 is unlimited</string>
     <!-- END v2.1.1 -->
+
+
+    <!-- BEGIN v2.1.2 -->
+    <string name="pref_tit_pattern_color">Pattern color</string>
+    <string name="pref_desc_pattern_color">The color of the pattern circles</string>
+    <string name="pref_list_pattern_color_white">White</string>
+    <string name="pref_list_pattern_color_blue">Blue</string>
+    <string name="pref_list_pattern_color_green">Green</string>
+    <string name="pref_tit_lockactivity_background">Background</string>
+    <string name="pref_desc_lockactivity_background">Background image to be displayed while unlocking apps</string>
+    <string name="pref_tit_hide_notification_icon">Hide notification icon</string>
+    <string name="pref_desc_hide_notification_icon">This only the notification icon in the statusbar</string>
+
+    <!-- BEGIN v2.1.2 Continuation -->
+    <string name="background_dialog_title">Change Background</string>
+    <string name="background_from_gallery">Gallery</string>
+    <string name="background_locker_1">Locker Green</string>
+    <string name="background_remove">Remove background</string>
+    <string name="background_changed">Background changed</string>
+    <string name="background_removed">Background removed</string>
 
 </resources>

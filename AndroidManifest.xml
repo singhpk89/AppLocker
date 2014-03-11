@@ -1,13 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.twinone.locker"
-    android:versionCode="2100"
-    android:versionName="2.1.0" >
+    android:versionCode="2120"
+    android:versionName="2.1.2" >
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="19" />
 
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true" />
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.usb.accessory"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.wifi"
+        android:required="false" />
 
     <!-- v1.0.0 -->
     <uses-permission android:name="android.permission.GET_TASKS" />
@@ -18,17 +45,24 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 2.1.2 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
+    <!-- Draw over other apps -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
     <!--  -->
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:theme="@style/AppTheme"
-        android:label="@string/application_name" >
+        android:label="@string/application_name"
+        android:theme="@style/AppTheme" >
         <activity
             android:name="com.twinone.locker.MainActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/application_name"
-            android:noHistory="true" >
+            android:noHistory="true"
+            android:theme="@style/ApplistTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -49,12 +83,12 @@
         <activity
             android:name="com.twinone.locker.SelectActivity"
             android:label="@string/applist_tit"
-            android:noHistory="true" >
+            android:noHistory="true"
+            android:theme="@style/ApplistTheme" >
         </activity>
         <activity
             android:name="com.twinone.locker.PrefsActivity"
-            android:label="@string/preferences_tit"
-            android:noHistory="true" >
+            android:label="@string/preferences_tit" >
         </activity>
         <!-- End derived activities -->
 
@@ -64,11 +98,14 @@
         <activity
             android:name="com.twinone.locker.lock.LockActivity"
             android:excludeFromRecents="true"
-            android:launchMode="singleInstance" >
+            android:launchMode="singleInstance"
+            android:theme="@style/LockActivityTheme" >
         </activity>
         <activity
             android:name="com.twinone.locker.StagingActivity"
             android:theme="@style/Theme_Transparent" >
+        </activity>
+        <activity android:name="com.twinone.locker.NavigationDrawerActivity" >
         </activity>
         <activity android:name="com.twinone.locker.automation.TempRuleActivity" >
         </activity>
@@ -86,16 +123,26 @@
 
         <!-- END ADS -->
         <service android:name="com.twinone.locker.lock.AppLockService" />
+        <service android:name="com.twinone.locker.lock.LockViewService" />
 
-        <receiver android:name="com.twinone.locker.EventReceiver" >
+        <receiver android:name="com.twinone.locker.receivers.OutgoingCallReceiver" >
             <intent-filter>
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
-                <action android:name="android.net.wifi.STATE_CHANGE" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+        <receiver android:name="com.twinone.locker.receivers.BootCompleteReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.twinone.locker.receivers.NetworkStateReceiver" >
+            <intent-filter>
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name="com.twinone.locker.LockTestActivity" >
+        </activity>
     </application>
 
 </manifest>

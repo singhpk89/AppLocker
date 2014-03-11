@@ -105,8 +105,8 @@
     <string name="old_pref_desc_dial_launch">Wenn diese Einstellung aktiviert ist, kannst du Locker starten indem du einen Anruf an #DEINPASSWORT startest.\nWenn dein Passwort zum Beispiel 1111 ist, kannst du Locker öffnen indem du #1111 anrufst.</string>
     <string name="pref_tit_hide_launcher_icon">Verstecke Icon</string>
     <string name="pref_desc_hide_launcher_icon">Sobald diese Option aktiviert ist, wird das Icon zum Starten von Locker aus dem Launcher versteckt. Die abgelegten Verknüpfungen am Homescreen müssen hingegen manuell entfernt werden (Benötigt evtl. einen Neustart. Aktiviert die Option "Mit Anruf starten")</string>
-    <string name="pref_tit_transparent_notification">Transparente Benachrichtigungen</string>
-    <string name="pref_desc_transparent_notification">Das Benachrichtigungsicon wird transparent sein</string>
+    <string name="old_pref_tit_hide_notification_icon">Transparente Benachrichtigungen</string>
+    <string name="old_pref_desc_hide_notification_icon">Das Benachrichtigungsicon wird transparent sein</string>
     <!-- Updated text for "Notification" -->
     <string name="pref_tit_show_notification">Zeige Benachrichtigung</string>
     <!-- Changelog -->
@@ -204,5 +204,36 @@
     <string name="pref_desc_dial_launch_number">Die Nummer, die zum Öffnen der App notwendig ist (Wir empfehlen, die Nummer mit # zu beginnen)</string>
     <string name="vc_later">Später</string>
     <!-- END v2.0.8 Strings -->
+
+
+    <!-- BEGIN v2.0.2 -->
+
+    <string name="main_no_password">Du hast noch kein Passwort gesetzt.\nMöchtest Du jetzt ein Passwort einrichten?</string>
+    <string name="main_setup">Einrichtung</string>
+    <string name="main_choose_lock_type">Wähle einen Sperr-Typ</string>
+    <string name="main_no_locked_apps">Du hast keine Apps geschützt.\nMöchtest Du jetzt paar Apps schützen?</string>
+    <!-- END v2.0.2 -->
+
+
+    <!-- BEGIN v2.1.1 -->
+    <string name="pref_tit_password_expiry">Maximale Zeit</string>
+    <string name="pref_desc_password_expiry">Die Zeitspanne, in der Du das richtige Passwort eingeben musst.</string>
+    <string name="pref_dlgmsg_password_expiry">Zeit in Sekunden, 0 bedeutet unbegrenzt</string>
+    <string name="pref_tit_max_password_retries">Maximale Versuche</string>
+    <string name="pref_desc_max_password_retries">Die Anzahl an Versuchen die Du hast, um das richtige Passwort einzugeben</string>
+    <string name="pref_dlgmsg_max_password_retries">0 bedeutet unbgegrenzt</string>
+    <!-- END v2.1.1 -->
+
+
+    <!-- BEGIN v2.1.2 -->
+    <string name="pref_tit_pattern_color">Muster-Farbe</string>
+    <string name="pref_desc_pattern_color">Die Farbe des Musters</string>
+    <string name="pref_list_pattern_color_white">Weiß</string>
+    <string name="pref_list_pattern_color_blue">Blau</string>
+    <string name="pref_list_pattern_color_green">Grün</string>
+    <string name="pref_tit_lockactivity_background">Hintergrund</string>
+    <string name="pref_desc_lockactivity_background">Hintergrundbild, was am Sperrbildschirm einer App angezeigt wird</string>
+    <string name="pref_tit_hide_notification_icon">Benachrichtigungssymbol verstecken</string>
+    <string name="pref_desc_hide_notification_icon">Die Option versteckt nur das Benachrichtigungssymbol in der Statusleiste.</string>
 
 </resources>

@@ -34,9 +34,10 @@
 
         <!-- This is the maximum size the view will take in wrap_content mode -->
         <attr name="maxSize" format="dimension"></attr>
+        <attr name="defaultCircleColor" format="reference"></attr>
 
         <!-- Number of rows and columns in the matrix -->
-        <attr name="size" format="integer"></attr>
+        <attr name="gridSize" format="integer"></attr>
     </declare-styleable>
 
 </resources>

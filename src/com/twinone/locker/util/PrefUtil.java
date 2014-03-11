@@ -12,7 +12,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.twinone.locker.R;
-import com.twinone.locker.lock.LockActivity;
+import com.twinone.locker.lock.LockViewService;
 
 /**
  * This class contains utility methods for accessing various preferences in
@@ -96,13 +96,8 @@ public abstract class PrefUtil {
 	}
 
 	public static final boolean getPasswordVibrate(Context c) {
-		return getBoolean(c, R.string.pref_key_vibrate_password,
-				R.string.pref_def_vibrate_password);
-	}
-
-	public static final boolean getPatternVibrate(Context c) {
-		return getBoolean(c, R.string.pref_key_vibrate_pattern,
-				R.string.pref_def_vibrate_pattern);
+		return getBoolean(c, R.string.pref_key_vibrate,
+				R.string.pref_def_vibrate);
 	}
 
 	public static final boolean getPasswordStealth(Context c) {
@@ -171,14 +166,49 @@ public abstract class PrefUtil {
 	public static final int getLockTypeInt(Context c) {
 		String lockType = getLockType(c);
 		if (lockType.equals(c.getString(R.string.pref_val_lock_type_password))) {
-			return LockActivity.LOCK_TYPE_PASSWORD;
+			return LockViewService.LOCK_TYPE_PASSWORD;
 		} else if (lockType.equals(c
 				.getString(R.string.pref_val_lock_type_pattern))) {
-			return LockActivity.LOCK_TYPE_PATTERN;
+			return LockViewService.LOCK_TYPE_PATTERN;
 		} else {
 			return 0;
 		}
+	}
 
+	/**
+	 * @return
+	 */
+	public static final int getPatternCircleColor(Context c) {
+		String color = getString(c, R.string.pref_key_pattern_color,
+				R.string.pref_val_pattern_color_white);
+		String blue = c.getString(R.string.pref_val_pattern_color_blue);
+		String green = c.getString(R.string.pref_val_pattern_color_green);
+		if (color.equals(green)) {
+			return LockViewService.PATTERN_COLOR_GREEN;
+		} else if (color.equals(blue)) {
+			return LockViewService.PATTERN_COLOR_BLUE;
+		} else {
+			return LockViewService.PATTERN_COLOR_WHITE;
+		}
+	}
+
+	/**
+	 * May be null
+	 * 
+	 * @param c
+	 * @return
+	 */
+	public static final String getLockerBackground(Context c) {
+		return getStringOrNull(c, R.string.pref_key_background);
+	}
+
+	public static final SharedPreferences.Editor setLockerBackground(
+			SharedPreferences.Editor editor, Context c, String value) {
+		if (value == null || value.length() == 0)
+			editor.remove(c.getString(R.string.pref_key_background));
+		else
+			editor.putString(c.getString(R.string.pref_key_background), value);
+		return editor;
 	}
 
 	public static final SharedPreferences.Editor setLockType(
@@ -190,11 +220,11 @@ public abstract class PrefUtil {
 	public static final boolean isCurrentPasswordEmpty(Context c) {
 		final int lockType = getLockTypeInt(c);
 		switch (lockType) {
-		case LockActivity.LOCK_TYPE_PASSWORD:
+		case LockViewService.LOCK_TYPE_PASSWORD:
 			Log.d("", "Currentlocktype:passwd " + lockType);
 			final String password = getPassword(c);
 			return password == null || password.length() == 0;
-		case LockActivity.LOCK_TYPE_PATTERN:
+		case LockViewService.LOCK_TYPE_PATTERN:
 			Log.d("", "Currentlocktype:2 " + lockType);
 			final String pattern = getPattern(c);
 			return pattern == null || pattern.length() == 0;
@@ -236,7 +266,7 @@ public abstract class PrefUtil {
 		final int min = 10000000;
 		final int max = 99999999;
 		final Random rand = new Random();
-		final int newRandom = rand.nextInt((max - min) + 1) + min;
+		final int newRandom = rand.nextInt(max - min + 1) + min;
 		return "#" + String.valueOf(newRandom);
 	}
 

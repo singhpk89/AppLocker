@@ -105,8 +105,8 @@
     <string name="old_pref_desc_dial_launch">Als deze optie aan is, kan je Locker starten door naar #WACHTWOORD te bellen.\nBijvoorbeeld, als je wachtwoord 1111 is, kun je #1111 bellen om Locker te starten</string>
     <string name="pref_tit_hide_launcher_icon">Icoon verbergen</string>
     <string name="pref_desc_hide_launcher_icon">Deze optie verbergt het iccon van de lijst met geïnstalleerde apps. (Opnieuw opstarten nodig. Start met oproep verplicht)</string>
-    <string name="pref_tit_transparent_notification">Doorzichtige melding</string>
-    <string name="pref_desc_transparent_notification">De melding wordt doorzichtig</string>
+    <string name="old_pref_tit_hide_notification_icon">Doorzichtige melding</string>
+    <string name="old_pref_desc_hide_notification_icon">De melding wordt doorzichtig</string>
     <!-- Updated text for "Notification" -->
     <string name="pref_tit_show_notification">Melding weergeven</string>
     <!-- Changelog -->
@@ -205,5 +205,29 @@
     <string name="pref_desc_dial_launch_number">Als je dit nummer belt wordt Locker gestart (Het is aanbevolen een # voor het nummer te zetten).</string>
     <string name="vc_later">Later</string>
     <!-- END v2.0.8 Strings -->
+    <!-- BEGIN v2.0.2 -->
+    <string name="main_no_password">Je hebt nog geen wachtwoord.\nWil je er nu een maken?</string>
+    <string name="main_setup">Setup</string>
+    <string name="main_choose_lock_type">Kies type</string>
+    <string name="main_no_locked_apps">Je hebt nog geen apps geblokkeerd.\nWil je nu apps toevoegen?</string>
+    <!-- END v2.0.2 -->
+    <!-- BEGIN v2.1.1 -->
+    <string name="pref_tit_password_expiry">Maximale tijd</string>
+    <string name="pref_desc_password_expiry">Tijd om het juiste wachtwoord in te voeren</string>
+    <string name="pref_dlgmsg_password_expiry">Tijd is in seconden. 0 is oneindig</string>
+    <string name="pref_tit_max_password_retries">Maximale pogingen</string>
+    <string name="pref_desc_max_password_retries">Aantal pogingen om het juiste wachtwoord in te voeren</string>
+    <string name="pref_dlgmsg_max_password_retries">0 is oneindig</string>
+    <!-- END v2.1.1 -->
+    <!-- BEGIN v2.1.2 -->
+    <string name="pref_tit_pattern_color">Patroon kleur</string>
+    <string name="pref_desc_pattern_color">Kleur van de cirkels op het patroon</string>
+    <string name="pref_list_pattern_color_white">Wit</string>
+    <string name="pref_list_pattern_color_blue">Blauw</string>
+    <string name="pref_list_pattern_color_green">Groen</string>
+    <string name="pref_tit_lockactivity_background">Achtergrond</string>
+    <string name="pref_desc_lockactivity_background">Achtergrondafbeelding voor wanneer je het wachtwoord in moet voeren</string>
+    <string name="pref_tit_hide_notification_icon">Verberg melding icoon</string>
+    <string name="pref_desc_hide_notification_icon">Verbergt het icoon alleen in de statusbalk.</string>
 
 </resources>

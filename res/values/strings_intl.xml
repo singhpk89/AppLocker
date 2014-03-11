@@ -9,14 +9,14 @@
     <string name="pref_key_start_boot">com.twinone.locker.pref.start_boot</string>
     <string name="pref_key_relock_after_screenoff">com.twinone.locker.pref.relock_after_screenoff</string>
     <string name="pref_key_relock_between_switch_delay">com.twinone.locker.pref.relock_delay</string>
-    <string name="pref_key_vibrate_password">com.twinone.locker.pref.vibrate_keypress</string>
+    <string name="pref_key_vibrate">com.twinone.locker.pref.vibrate_keypress</string>
     <string name="pref_key_performance">com.twinone.locker.pref.performance</string>
     <string name="pref_key_delay_status">com.twinone.locker.pref.delay_status</string>
     <string name="pref_key_delay_time">com.twinone.locker.pref.delay_time</string>
     <string name="pref_key_show_notification">com.twinone.locker.pref.show_notification</string>
     <string name="pref_key_hide_launcher_icon">com.twinone.locker.pref.hide_icon</string>
     <string name="pref_key_dial_launch">com.twinone.locker.pref.dial_launch</string>
-    <string name="pref_key_transparent_notification">com.twinone.locker.pref.transparent_notification</string>
+    <string name="pref_key_hide_notification_icon">com.twinone.locker.pref.transparent_notification</string>
     <string name="pref_key_cat_general">com.twinone.locker.pref.category_general</string>
     <string name="pref_key_cat_notification">com.twinone.locker.pref.category_notification</string>
     <string name="pref_key_cat_launcher">com.twinone.locker.pref.category_launcher</string>
@@ -28,7 +28,6 @@
     <string name="pref_key_password_expiry">com.twinone.locker.pref.password_expiry</string>
     <string name="pref_key_max_password_retries">com.twinone.locker.pref.max_password_retries</string>
     <string name="pref_key_pattern_stealth">com.twinone.locker.pref.pattern_stealth</string>
-    <string name="pref_key_vibrate_pattern">com.twinone.locker.pref.vibrate_pattern</string>
     <string name="pref_key_screen">com.twinone.locker.pref.main_preference_screen</string>
     <string name="pref_key_show_specific_settings">com.twinone.locker.pref.show_specific_settings</string>
     <string name="pref_key_switch_buttons">com.twinone.locker.pref.switch_buttons</string>
@@ -37,6 +36,9 @@
     <string name="pref_key_orientation">com.twinone.locker.pref.orientation</string>
     <string name="pref_key_security_number">com.twinone.locker.pref.security_number</string>
     <string name="pref_key_dial_launch_number">com.twinone.locker.pref.dial_launch_number</string>
+   	<string name="pref_key_pattern_color">com.twinone.locker.pref.pattern_color</string>
+    <string name="pref_key_background">com.twinone.locker.pref.lockactivity_background</string>
+    
     <!-- Temp -->
     <string name="pref_key_temp_wifi_unlock_state">temp.unlockstate</string>
     <string name="pref_key_temp_wifi_ssid">temp.ssid</string>
@@ -55,22 +57,24 @@
     <string name="pref_val_orientation_auto_rotate">autorotate</string>
     <string name="pref_val_orientation_portrait">portrait</string>
     <string name="pref_val_orientation_landscape">landscape</string>
+    <string name="pref_val_pattern_color_white">pc_white</string>
+    <string name="pref_val_pattern_color_blue">pc_blue</string>
+    <string name="pref_val_pattern_color_green">pc_green</string>
 
     <!-- Defaults -->
     <string name="pref_def_delay_status">false</string>
-    <string name="pref_def_vibrate_password">false</string>
+    <string name="pref_def_vibrate">true</string>
     <string name="pref_def_relock_after_screenoff">true</string>
     <string name="pref_def_delay_time">60</string>
     <!-- For Android 4.2 and lower, don't show a notification by default -->
-    <!-- This option is overriden in /res/values-v18 -->
+    <!-- This option is overriden in /res/values-v18/strings_intl.xml -->
     <string name="pref_def_show_notification">false</string>
     <string name="pref_def_hide_launcher_icon">false</string>
     <string name="pref_def_dial_launch">false</string>
-    <string name="pref_def_transparent_notification">false</string>
+    <string name="pref_def_hide_notification_icon">false</string>
     <string name="pref_def_hide_dots">false</string>
     <string name="pref_def_password_expiry">0</string>
     <string name="pref_def_max_password_retries">0</string>
-    <string name="pref_def_vibrate_pattern">false</string>
     <string name="pref_def_pattern_stealth">false</string>
     <string name="pref_def_switch_buttons">false</string>
     <string name="pref_def_start_boot">true</string>

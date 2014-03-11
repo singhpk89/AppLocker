@@ -9,7 +9,8 @@ public class PrefManager {
 
 	public static final Pref START_AT_BOOT = new Pref(R.string.pref_key_start_boot, R.string.pref_def_start_boot);
 	
-
+	
+	
 	public static final String PREF_FILE_DEFAULT = "com.twinone.locker.prefs.default";
 	// private static final String PREF_FILE_APPS =
 	// "com.twinone.locker.prefs.apps";

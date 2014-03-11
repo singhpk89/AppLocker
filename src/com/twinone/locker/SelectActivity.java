@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.util.LogWriter;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -64,6 +65,7 @@ public class SelectActivity extends Activity implements OnItemClickListener,
 		@Override
 		public void onServiceConnected(ComponentName cn, IBinder binder) {
 			LocalBinder b = (LocalBinder) binder;
+			Log.w("SelectActivity", "SelectActivity BINDING");
 			mService = b.getInstance();
 			mBound = true;
 		}

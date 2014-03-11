@@ -2,12 +2,14 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="@string/pref_key_screen" >
 
-    <ListPreference
-        android:defaultValue="@string/pref_val_lock_type_password"
-        android:entries="@array/lock_type_names"
-        android:entryValues="@array/lock_type_values"
+    <Preference
         android:key="@string/pref_key_lock_type"
         android:title="@string/pref_tit_lock_type" />
+
+    <Preference
+        android:key="@string/pref_key_background"
+        android:summary="@string/pref_desc_lockactivity_background"
+        android:title="@string/pref_tit_lockactivity_background" />
 
     <!-- PASSWORD -->
     <PreferenceCategory
@@ -16,8 +18,8 @@
 
         <!-- Vibration -->
         <CheckBoxPreference
-            android:defaultValue="@string/pref_def_vibrate_password"
-            android:key="@string/pref_key_vibrate_password"
+            android:defaultValue="@string/pref_def_vibrate"
+            android:key="@string/pref_key_vibrate"
             android:summary="@string/pref_desc_vibrate_password"
             android:title="@string/pref_tit_vibrate_password" />
         <!-- Hide dots -->
@@ -38,10 +40,18 @@
         android:key="@string/pref_key_cat_pattern"
         android:title="@string/pref_tit_cat_pattern" >
 
+        <!-- Pattern Color -->
+        <ListPreference
+            android:defaultValue="@string/pref_val_pattern_color_white"
+            android:entries="@array/pref_names_pattern_colors"
+            android:entryValues="@array/pref_values_pattern_colors"
+            android:key="@string/pref_key_pattern_color"
+            android:summary="@string/pref_desc_pattern_color"
+            android:title="@string/pref_tit_pattern_color" />
         <!-- Vibration -->
         <CheckBoxPreference
-            android:defaultValue="@string/pref_def_vibrate_pattern"
-            android:key="@string/pref_key_vibrate_pattern"
+            android:defaultValue="@string/pref_def_vibrate"
+            android:key="@string/pref_key_vibrate"
             android:summary="@string/pref_desc_vibrate_pattern"
             android:title="@string/pref_tit_vibrate_pattern" />
         <!-- Stealth mode -->
@@ -120,11 +130,11 @@
             android:summary="@string/pref_desc_show_notification"
             android:title="@string/pref_tit_show_notification" />
         <CheckBoxPreference
-            android:defaultValue="@string/pref_def_transparent_notification"
+            android:defaultValue="@string/pref_def_hide_notification_icon"
             android:dependency="@string/pref_key_show_notification"
-            android:key="@string/pref_key_transparent_notification"
-            android:summary="@string/pref_desc_transparent_notification"
-            android:title="@string/pref_tit_transparent_notification" />
+            android:key="@string/pref_key_hide_notification_icon"
+            android:summary="@string/pref_desc_hide_notification_icon"
+            android:title="@string/pref_tit_hide_notification_icon" />
     </PreferenceCategory>
 
     <!-- Launcher related preferences -->

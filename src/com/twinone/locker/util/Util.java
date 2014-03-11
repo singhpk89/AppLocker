@@ -1,15 +1,18 @@
 package com.twinone.locker.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 public abstract class Util {
@@ -24,8 +27,11 @@ public abstract class Util {
 	 * @param bg
 	 *            The background
 	 */
+	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	public static final void setBackgroundDrawable(View v, Drawable bg) {
+		if (v == null)
+			return;
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
 			v.setBackgroundDrawable(bg);
 		} else {
@@ -81,6 +87,13 @@ public abstract class Util {
 		} catch (NameNotFoundException e) {
 			return null;
 		}
+	}
+
+	public static float dpToPx(float dp, Context context) {
+		Resources resources = context.getResources();
+		DisplayMetrics metrics = resources.getDisplayMetrics();
+		float px = dp * (metrics.densityDpi / 160f);
+		return px;
 	}
 
 }

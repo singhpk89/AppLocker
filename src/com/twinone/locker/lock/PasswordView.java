@@ -161,9 +161,9 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 		// }
 
 		mBackButton.setText(R.string.numBack);
-		mBackButton.setTextSize(new Button(getContext()).getTextSize());
+		// mBackButton.setTextSize(new Button(getContext()).getTextSize());
 		mOkButton.setText(android.R.string.ok);
-		mOkButton.setTextSize(15.0F);
+		// mOkButton.setTextSize(15.0F);
 
 		mBackButton.setOnClickListener(this);
 		mBackButton.setOnLongClickListener(this);
@@ -189,7 +189,7 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 	}
 
 	public interface OnNumberListener {
-		public void onPasswordChange(String newNumber);
+		public void onNumberButton(String newNumber);
 
 		public void onOkButton();
 
@@ -282,7 +282,7 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 			@Override
 			public void run() {
 				if (mListener != null) {
-					mListener.onPasswordChange(newPassword);
+					mListener.onNumberButton(newPassword);
 				}
 			}
 		});
@@ -488,10 +488,9 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 		mBackButton.setVisibility(backVisibility);
 		mBackButton.setText(R.string.numBack);
 
-		mBackButton.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-				mButtons[0].getTextSize());
+		mBackButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
 		mOkButton.setText(android.R.string.ok);
-		mOkButton.setTextSize(15.0F);
+		mOkButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15F);
 
 	}
 

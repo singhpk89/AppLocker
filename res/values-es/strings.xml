@@ -105,8 +105,6 @@
     <string name="old_pref_desc_dial_launch">Cuando esta opción está encendida, puedes iniciar Locker llamando a #CONTRASEÑA.\nEs decir, si tu contraseña es 1111, puedes llamar a #1111 para inciar Locker</string>
     <string name="pref_tit_hide_launcher_icon">Ocultar icono</string>
     <string name="pref_desc_hide_launcher_icon">Con esta opción se oculta el icono de Locker de las aplicaciones instaladas (Necesita reinicio. Obliga activar Iniciar con llamada")</string>
-    <string name="pref_tit_transparent_notification">Notificación transparente</string>
-    <string name="pref_desc_transparent_notification">El icono de notificación será transparente</string>
     <!-- Updated text for "Notification" -->
     <string name="pref_tit_show_notification">Mostrar notificación</string>
     <!-- Changelog -->
@@ -204,4 +202,36 @@
     <string name="pref_desc_dial_launch_number">Cuando llamas a este número, Locker se abrirá. (Recomendamos que empieze por #)</string>
     <string name="vc_later">Más tarde</string> <!-- END v2.0.8 Strings -->
 
+
+    <!-- END v2.0.8 Strings -->
+
+
+    <!-- BEGIN v2.0.2 -->
+
+    <string name="main_no_password">Necesitas una contraseña para empezar.\n¿Quieres crear una ahora?</string>
+    <string name="main_setup">Configuración</string>
+    <string name="main_choose_lock_type">Tipo de bloqueo</string>
+    <string name="main_no_locked_apps">No tienes aplicaciones bloqueadas.\n¿Quieres añadir apps ahora?</string>
+    <!-- END v2.0.2 -->
+
+
+    <!-- BEGIN v2.1.1 -->
+    <string name="pref_tit_password_expiry">Tiempo máximo</string>
+    <string name="pref_desc_password_expiry">Tiempo máximo para poner la contraseña correcta</string>
+    <string name="pref_dlgmsg_password_expiry">Tiempo en segundos, 0 es ilimitado</string>
+    <string name="pref_tit_max_password_retries">Intentos máximos</string>
+    <string name="pref_desc_max_password_retries">Intentos máximos para desbloquear correctamente</string>
+    <string name="pref_dlgmsg_max_password_retries">0 es ilimitado</string>
+    <!-- END v2.1.1 -->
+
+
+    <!-- BEGIN v2.1.2 -->
+    <string name="pref_tit_pattern_color">Color del patrón</string>
+    <string name="pref_desc_pattern_color"></string>
+    <string name="pref_list_pattern_color_white">Blanco</string>
+    <string name="pref_list_pattern_color_blue">Azul</string>
+    <string name="pref_list_pattern_color_green">Verde</string>
+    <string name="pref_tit_hide_notification_icon">Ocultar icono notificación</string>
+    <string name="pref_desc_hide_notification_icon">Solo oculta el icono de la barra de notificaciones.</string>
+    
 </resources>

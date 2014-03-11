@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -114,7 +115,8 @@ public class PatternView extends View {
 	private Bitmap mBitmapBtnDefault;
 	private Bitmap mBitmapBtnTouched;
 	private Bitmap mBitmapCircleDefault;
-	private Bitmap mBitmapCircleGreen;
+	private int mBitmapCircleSelectedResourceId = R.drawable.pattern_btn_touched;
+	private Bitmap mBitmapCircleSelected;
 	private Bitmap mBitmapCircleRed;
 
 	private Bitmap mBitmapArrowGreenUp;
@@ -348,6 +350,19 @@ public class PatternView extends View {
 
 		setClickable(true);
 
+		TypedArray a = context.obtainStyledAttributes(attrs,
+				R.styleable.PatternView);
+		try {
+
+			mMaxSize = a.getDimensionPixelSize(R.styleable.PatternView_maxSize,
+					0);
+			mBitmapCircleSelectedResourceId = a.getResourceId(
+					R.styleable.PatternView_defaultCircleColor,
+					R.drawable.pattern_circle_white);
+		} finally {
+			a.recycle();
+		}
+
 		mPathPaint.setAntiAlias(true);
 		mPathPaint.setDither(true);
 		mPathPaint.setColor(Color.WHITE); // TODO
@@ -355,26 +370,42 @@ public class PatternView extends View {
 		mPathPaint.setStyle(Paint.Style.STROKE);
 		mPathPaint.setStrokeJoin(Paint.Join.ROUND);
 		mPathPaint.setStrokeCap(Paint.Cap.ROUND);
+		loadBitmaps();
+	}
 
-		mBitmapBtnDefault = getBitmapFor(R.drawable.btn_code_lock_default_holo);
-		mBitmapBtnTouched = getBitmapFor(R.drawable.btn_code_lock_touched_holo);
-		mBitmapCircleDefault = getBitmapFor(R.drawable.indicator_code_lock_point_area_default_holo);
+	/**
+	 * Sets the bitmap for active pattern sections (the circles)
+	 * 
+	 * @param resId
+	 */
+	public void setSelectedBitmap(int resId) {
+		mBitmapCircleSelectedResourceId = resId;
+		// Apply changes
+		loadBitmaps();
+	}
 
-		mBitmapCircleGreen = getBitmapFor(R.drawable.indicator_code_lock_point_area_green_holo);
+	private void loadBitmaps() {
+		mBitmapBtnDefault = getBitmapFor(R.drawable.pattern_btn_touched);
+		// mBitmapBtnTouched = getBitmapFor(R.drawable.pattern_btn_touched);
+		mBitmapBtnTouched = mBitmapBtnDefault;
+		mBitmapCircleDefault = getBitmapFor(R.drawable.pattern_button_untouched);
+
+		mBitmapCircleSelected = getBitmapFor(mBitmapCircleSelectedResourceId);
 		mBitmapCircleRed = getBitmapFor(R.drawable.indicator_code_lock_point_area_red_holo);
 
 		mBitmapArrowGreenUp = getBitmapFor(R.drawable.indicator_code_lock_drag_direction_green_up);
-		mBitmapArrowRedUp = getBitmapFor(R.drawable.indicator_code_lock_drag_direction_red_up);
+		mBitmapArrowRedUp = getBitmapFor(R.drawable.pattern_circle_red);
 
 		// bitmaps have the size of the largest bitmap in this group
-		final Bitmap[] bitmaps = { mBitmapBtnDefault, mBitmapBtnTouched,
-				mBitmapCircleDefault, mBitmapCircleGreen, mBitmapCircleRed };
+		final Bitmap[] bitmaps = { mBitmapBtnDefault,
+				// mBitmapBtnTouched, mBitmapCircleDefault,
+				mBitmapCircleSelected, mBitmapCircleRed };
 
 		for (Bitmap bitmap : bitmaps) {
 			mBitmapWidth = Math.max(mBitmapWidth, bitmap.getWidth());
 			mBitmapHeight = Math.max(mBitmapHeight, bitmap.getHeight());
 		}
-	}// LockPatternView()
+	}
 
 	private Bitmap getBitmapFor(int resId) {
 		return BitmapFactory.decodeResource(getContext().getResources(), resId);
@@ -1173,7 +1204,7 @@ public class PatternView extends View {
 			innerCircle = mBitmapBtnDefault;
 		} else if (mPatternInProgress) {
 			// user is in middle of drawing a pattern
-			outerCircle = mBitmapCircleGreen;
+			outerCircle = mBitmapCircleSelected;
 			innerCircle = mBitmapBtnTouched;
 		} else if (mPatternDisplayMode == DisplayMode.Wrong) {
 			// the pattern is wrong
@@ -1182,7 +1213,7 @@ public class PatternView extends View {
 		} else if (mPatternDisplayMode == DisplayMode.Correct
 				|| mPatternDisplayMode == DisplayMode.Animate) {
 			// the pattern is correct
-			outerCircle = mBitmapCircleGreen;
+			outerCircle = mBitmapCircleSelected;
 			innerCircle = mBitmapBtnDefault;
 		} else {
 			throw new IllegalStateException("unknown display mode "

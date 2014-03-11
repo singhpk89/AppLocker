@@ -1,44 +1,35 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/activity_background" >
-
-    <!--
-    <View
-        android:id="@+id/bottomSeparator"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@id/bottomBar"
-        android:background="@drawable/separator" />
-    -->
+    android:layout_height="match_parent" >
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottomBar"
+        android:layout_above="@+id/separator"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:background="@drawable/content_background"
         android:orientation="vertical" >
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:id="@+id/mainllRoot"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp" >
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/tvState"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/textview_toast"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-                android:textStyle="bold" />
+                android:background="@drawable/main_textview_state"
+                android:paddingBottom="5dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="5dp"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:textStyle="italic" />
 
             <Button
                 android:id="@+id/bToggleService"
@@ -92,6 +83,13 @@
         </LinearLayout>
     </ScrollView>
 
+    <View
+        android:id="@id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/bottomBar"
+        android:background="@drawable/separator" />
+
     <LinearLayout
         android:id="@id/bottomBar"
         android:layout_width="match_parent"
@@ -101,19 +99,14 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:background="@drawable/content_background"
-        android:orientation="horizontal"
-        android:padding="16dp" >
+        android:orientation="horizontal" >
 
         <Button
             android:id="@+id/bShare"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginRight="@dimen/element_horizontal_margin"
             android:layout_weight="1"
-            android:padding="10dp"
             android:text="@string/main_share" >
         </Button>
 
@@ -121,11 +114,8 @@
             android:id="@+id/bRate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginLeft="@dimen/element_horizontal_margin"
             android:layout_weight="1"
-            android:padding="10dp"
             android:text="@string/main_rate" >
         </Button>
     </LinearLayout>

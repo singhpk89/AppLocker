@@ -19,6 +19,11 @@
     </style>
   </head>
   <body>
+$ 2.1.2
+  % Version 2.1.2
+    * Kies patroon kleur
+    * Kies achtergrond
+    * Design update
 $ 2.1.0
   % Versie 2.1.0
     * Patroon

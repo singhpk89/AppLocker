@@ -1,16 +1,21 @@
 package com.twinone.locker;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -20,9 +25,10 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.twinone.locker.lock.AppLockService;
-import com.twinone.locker.lock.LockActivity;
+import com.twinone.locker.lock.LockViewService;
 import com.twinone.locker.util.PrefUtil;
 import com.twinone.util.ChangeLog;
 
@@ -43,12 +49,13 @@ public class PrefsActivity extends PreferenceActivity implements
 	protected CheckBoxPreference mHideIconPref;
 	protected Preference mChangeLogPref;
 	protected PreferenceScreen mPrefScreen;
-	protected ListPreference mLockTypePref;
+	protected Preference mLockTypePref;
 	protected PreferenceCategory mCatPassword;
 	protected PreferenceCategory mCatPattern;
 	protected Preference mRecoveryPref;
+	protected Preference mLockerBackgroundPref;
 
-//	private Handler mHandler = new Handler();
+	// private Handler mHandler = new Handler();
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -67,16 +74,16 @@ public class PrefsActivity extends PreferenceActivity implements
 			mDelayStatusPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_delay_status));
 			mDelayTimePref = (EditTextPreference) findPreference(getString(R.string.pref_key_delay_time));
 			mCatNotif = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_notification));
-			mTransparentPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_transparent_notification));
+			mTransparentPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_hide_notification_icon));
 			mDialStatusPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_dial_launch));
 			mHideIconPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_hide_launcher_icon));
 			mChangeLogPref = (Preference) findPreference(getString(R.string.pref_key_changelog));
-			mLockTypePref = (ListPreference) findPreference(getString(R.string.pref_key_lock_type));
+			mLockTypePref = (Preference) findPreference(getString(R.string.pref_key_lock_type));
 			mPrefScreen = (PreferenceScreen) findPreference(getString(R.string.pref_key_screen));
 			mCatPassword = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_password));
 			mCatPattern = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_pattern));
 			mRecoveryPref = (Preference) findPreference(getString(R.string.pref_key_recovery_code));
-
+			mLockerBackgroundPref = (Preference) findPreference(getString(R.string.pref_key_background));
 			initialize();
 		} else {
 			loadFragment();
@@ -109,15 +116,16 @@ public class PrefsActivity extends PreferenceActivity implements
 			parent.mDelayTimePref = (EditTextPreference) findPreference(getString(R.string.pref_key_delay_time));
 			parent.mDelayStatusPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_delay_status));
 			parent.mCatNotif = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_notification));
-			parent.mTransparentPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_transparent_notification));
+			parent.mTransparentPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_hide_notification_icon));
 			parent.mDialStatusPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_dial_launch));
 			parent.mHideIconPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_hide_launcher_icon));
 			parent.mChangeLogPref = (Preference) findPreference(getString(R.string.pref_key_changelog));
-			parent.mLockTypePref = (ListPreference) findPreference(getString(R.string.pref_key_lock_type));
+			parent.mLockTypePref = (Preference) findPreference(getString(R.string.pref_key_lock_type));
 			parent.mPrefScreen = (PreferenceScreen) findPreference(getString(R.string.pref_key_screen));
 			parent.mCatPassword = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_password));
 			parent.mCatPattern = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_pattern));
 			parent.mRecoveryPref = (Preference) findPreference(getString(R.string.pref_key_recovery_code));
+			parent.mLockerBackgroundPref = (Preference) findPreference(getString(R.string.pref_key_background));
 
 			parent.initialize();
 		}
@@ -133,9 +141,11 @@ public class PrefsActivity extends PreferenceActivity implements
 		mPrefs.registerOnSharedPreferenceChangeListener(this);
 
 		mDelayTimePref.setOnPreferenceChangeListener(this);
+		mLockTypePref.setOnPreferenceClickListener(this);
 		mHideIconPref.setOnPreferenceChangeListener(this);
 		mDialStatusPref.setOnPreferenceChangeListener(this);
 		mChangeLogPref.setOnPreferenceClickListener(this);
+		mLockerBackgroundPref.setOnPreferenceClickListener(this);
 		// Add the warning that the system may kill if not foreground
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1) {
 			mNotifOnPref.setSummary(R.string.pref_desc_show_notification_v18);
@@ -153,18 +163,17 @@ public class PrefsActivity extends PreferenceActivity implements
 		setupMessagesAndViews();
 	}
 
-	// when the user clicks something
+	// When user clicks preference and it has still to be saved
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
-		Log.d("prefs", "Preference clicked! " + preference.getKey());
-		String prefKey = preference.getKey();
+		Log.d("prefs", "Preference change! " + preference.getKey());
+		String key = preference.getKey();
 		String keyDelayTime = getString(R.string.pref_key_delay_time);
-		if (prefKey.equals(keyDelayTime)) {
+		if (key.equals(keyDelayTime)) {
 			String newTime = (String) newValue;
 			boolean isZero = (newTime.length() == 0);
 			try {
 				isZero = (Long.parseLong(newTime) == 0);
-				// TODO Remove leading zeros
 			} catch (NumberFormatException e) {
 				isZero = true;
 			}
@@ -190,47 +199,20 @@ public class PrefsActivity extends PreferenceActivity implements
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
 		String keyHideIcon = getString(R.string.pref_key_hide_launcher_icon);
-		// String keyDial = getString(R.string.pref_key_dial_launch);
-		String keyLockType = getString(R.string.pref_key_lock_type);
+
 		if (key.equals(keyHideIcon)) {
-			Log.w("Prefs", "Enabling or disabling component");
-			// boolean shouldHideDef = Boolean
-			// .parseBoolean(getString(R.string.pref_def_hide_launcher_icon));
-			// boolean shouldHide = sp.getBoolean(
-			// getString(R.string.pref_key_hide_launcher_icon),
-			// shouldHideDef);
 			boolean shouldHide = mHideIconPref.isChecked();
 			ComponentName cn = new ComponentName(this.getApplicationContext(),
 					ALIAS_CLASSNAME);
-			int newEnabledSetting = shouldHide ? PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+			int enabled = shouldHide ? PackageManager.COMPONENT_ENABLED_STATE_DISABLED
 					: PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
-			int currentEnabledSetting = getPackageManager()
-					.getComponentEnabledSetting(cn);
-			if (currentEnabledSetting != newEnabledSetting) {
-				getPackageManager().setComponentEnabledSetting(cn,
-						newEnabledSetting, PackageManager.DONT_KILL_APP);
+			int current = getPackageManager().getComponentEnabledSetting(cn);
+			if (current != enabled) {
+				getPackageManager().setComponentEnabledSetting(cn, enabled,
+						PackageManager.DONT_KILL_APP);
 			}
-		} else if (key.equals(keyLockType)) {
-			if (mLockTypePref.getValue().equals(
-					getString(R.string.pref_val_lock_type_password))) {
-				Log.d("TAG", "password");
-				Intent i = LockActivity.getDefaultIntent(this);
-				i.setAction(LockActivity.ACTION_CREATE);
-				i.putExtra(LockActivity.EXTRA_VIEW_TYPE,
-						LockActivity.LOCK_TYPE_PASSWORD);
-				startActivity(i);
-			} else {
-				Log.d("TAG", "pattern");
-				Intent i = LockActivity.getDefaultIntent(this);
-				i.setAction(LockActivity.ACTION_CREATE);
-				i.putExtra(LockActivity.EXTRA_VIEW_TYPE,
-						LockActivity.LOCK_TYPE_PATTERN);
-				startActivity(i);
-			}
-
 		}
-		// else if (key.equals(keyDial)) {
-		// }
+
 		setupMessagesAndViews();
 
 		// Reload service stuff
@@ -238,15 +220,6 @@ public class PrefsActivity extends PreferenceActivity implements
 		startService(intent);
 
 	}
-
-	//
-	// private void setupMessagesAndViews() {
-	// mHandler.post(new Runnable() {
-	//
-	// @Override
-	// public void run() {
-	// doSetupMessagesAndViews();
-	// }
 
 	private void setupMessagesAndViews() {
 		// Dial and hide icon
@@ -259,8 +232,7 @@ public class PrefsActivity extends PreferenceActivity implements
 			mHideIconPref.setEnabled(true);
 		}
 		// Password/pattern categories
-		if (mLockTypePref.getValue().equals(
-				getString(R.string.pref_val_lock_type_password))) {
+		if (PrefUtil.getLockTypeInt(this) == LockViewService.LOCK_TYPE_PASSWORD) {
 			mLockTypePref.setSummary(R.string.pref_list_lock_type_password);
 			mPrefScreen.removePreference(mCatPattern);
 			mPrefScreen.addPreference(mCatPassword);
@@ -289,10 +261,124 @@ public class PrefsActivity extends PreferenceActivity implements
 
 	@Override
 	public boolean onPreferenceClick(Preference preference) {
-		if (preference.getKey().equals(getString(R.string.pref_key_changelog))) {
+		String key = preference.getKey();
+		String lockType = getString(R.string.pref_key_lock_type);
+		String changelog = getString(R.string.pref_key_changelog);
+		String background = getString(R.string.pref_key_background);
+
+		if (key.equals(changelog)) {
 			ChangeLog cl = new ChangeLog(this);
 			cl.show(true);
+		} else if (key.equals(background)) {
+			backgroundShowDialog();
+		} else if (key.equals(lockType)) {
+			getChangePasswordDialog(this).show();
 		}
 		return false;
+	}
+
+	private void backgroundShowDialog() {
+		AlertDialog.Builder ab = new AlertDialog.Builder(this);
+		ab.setTitle(R.string.background_dialog_title);
+		ab.setItems(R.array.pref_names_background, new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Log.d("prefs", "which: " + which);
+				switch (which) {
+				case 0:
+					backgroundFromGallery();
+					break;
+				case 1:
+					backgroundSetCustom();
+					break;
+				case 2:
+					backgroundRemove();
+					break;
+				}
+			}
+		});
+		ab.show();
+	}
+
+	private void backgroundSetCustom() {
+		SharedPreferences.Editor editor = PrefUtil.prefs(this).edit();
+		PrefUtil.setLockerBackground(editor, this, "android.resource://"
+				+ getPackageName() + "/drawable/"
+				+ R.drawable.locker_default_background);
+		PrefUtil.apply(editor);
+	}
+
+	private void backgroundRemove() {
+		SharedPreferences.Editor editor = PrefUtil.prefs(this).edit();
+		PrefUtil.setLockerBackground(editor, this, null);
+		PrefUtil.apply(editor);
+		Toast.makeText(this, R.string.background_removed, Toast.LENGTH_SHORT)
+				.show();
+	}
+
+	private void backgroundFromGallery() {
+		mPermitOnPause = true;
+		Log.d("", "background");
+		Intent intent = new Intent();
+		intent.setType("image/*");
+		intent.setAction(Intent.ACTION_PICK);
+		startActivityForResult(Intent.createChooser(intent, null), IMG_REQ_CODE);
+
+	}
+
+	private static final int IMG_REQ_CODE = 0;
+
+	@Override
+	protected void onActivityResult(int req, int res, Intent data) {
+		Log.d("", "onActivityResult");
+		if (req == IMG_REQ_CODE && res == Activity.RESULT_OK) {
+			Uri image = data.getData();
+			SharedPreferences.Editor editor = PrefUtil.prefs(this).edit();
+			PrefUtil.setLockerBackground(editor, this, image.toString());
+			PrefUtil.apply(editor);
+		}
+		Toast.makeText(this, R.string.background_changed, Toast.LENGTH_SHORT)
+				.show();
+		super.onActivityResult(req, res, data);
+	}
+
+	private boolean mPermitOnPause = false;
+
+	@Override
+	protected void onResume() {
+		mPermitOnPause = false;
+		super.onResume();
+	}
+
+	@Override
+	protected void onPause() {
+		if (!mPermitOnPause) {
+			finish();
+		}
+		super.onPause();
+	}
+
+	/**
+	 * The dialog that allows the user to select between password and pattern
+	 * options
+	 * 
+	 * @param c
+	 * @return
+	 */
+	public static AlertDialog getChangePasswordDialog(final Context c) {
+		final AlertDialog.Builder choose = new AlertDialog.Builder(c);
+		choose.setTitle(R.string.main_choose_lock_type);
+		choose.setItems(R.array.lock_type_names, new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				int lockType = which == 0 ? LockViewService.LOCK_TYPE_PASSWORD
+						: LockViewService.LOCK_TYPE_PATTERN;
+				Intent i = LockViewService.getDefaultIntent(c);
+				i.setAction(LockViewService.ACTION_CREATE);
+				i.putExtra(LockViewService.EXTRA_VIEW_TYPE, lockType);
+				c.startService(i);
+			}
+		});
+		return choose.create();
 	}
 }

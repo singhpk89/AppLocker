@@ -37,5 +37,20 @@
         <item>@string/pref_val_orientation_portrait</item>
         <item>@string/pref_val_orientation_landscape</item>
     </string-array>
+    <string-array name="pref_names_pattern_colors">
+        <item>@string/pref_list_pattern_color_white</item>
+        <item>@string/pref_list_pattern_color_green</item>
+        <item>@string/pref_list_pattern_color_blue</item>
+    </string-array>
+    <string-array name="pref_values_pattern_colors">
+        <item>@string/pref_val_pattern_color_white</item>
+        <item>@string/pref_val_pattern_color_green</item>
+        <item>@string/pref_val_pattern_color_blue</item>
+    </string-array>
+    <string-array name="pref_names_background">
+        <item>@string/background_from_gallery</item>
+        <item>@string/background_locker_1</item>
+        <item>@string/background_remove</item>
+    </string-array>
 
 </resources>

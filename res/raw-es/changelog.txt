@@ -19,6 +19,11 @@
     </style>
   </head>
   <body>
+$ 2.1.2
+  % Versión 2.1.2
+    * Colores en patrón
+    * Fondo personalizado
+    * Diseño actualizado
 $ 2.1.0
   % Versión 2.1.0
     * Patrón

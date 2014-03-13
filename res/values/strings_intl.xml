@@ -53,7 +53,6 @@
     <string name="pref_val_lock_type_password">password</string>
     <string name="pref_val_lock_type_pattern">pattern</string>
     <!--  -->
-    <string name="pref_val_orientation_system">system</string>
     <string name="pref_val_orientation_auto_rotate">autorotate</string>
     <string name="pref_val_orientation_portrait">portrait</string>
     <string name="pref_val_orientation_landscape">landscape</string>

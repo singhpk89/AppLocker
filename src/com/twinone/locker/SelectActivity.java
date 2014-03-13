@@ -118,6 +118,7 @@ public class SelectActivity extends Activity implements OnItemClickListener,
 			setAllTracking(false);
 			break;
 		case R.id.bFinish:
+			Log.d("SelectActivity", "finishing...");
 			MainActivity.showWithoutPassword(this);
 			break;
 		}

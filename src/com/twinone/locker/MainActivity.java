@@ -32,7 +32,7 @@ import com.twinone.util.DialogSequencer;
 public class MainActivity extends Activity implements View.OnClickListener {
 	private static final String RUN_ONCE = "com.twinone.locker.pref.run_once";
 
-	private static final boolean TEST_BUTTON = true;
+	private static final boolean TEST_BUTTON = false;
 
 	private void onTestButton() {
 		// Intent i = new Intent(this, LockTestActivity.class);
@@ -44,9 +44,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 				0.0f, Animation.RELATIVE_TO_SELF, 2.0f);
 
 		slide.setDuration(2000);
-		 slide.setFillEnabled(true);
+		slide.setFillEnabled(true);
 
-		 bChangeMessage.startAnimation(slide);
+		bChangeMessage.startAnimation(slide);
 	}
 
 	public static String getMobFoxId() {
@@ -274,6 +274,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 	@Override
 	protected void onResume() {
+		Log.d(TAG, "OnResume");
 		super.onResume();
 		boolean unlocked = getIntent().getBooleanExtra(EXTRA_UNLOCKED, false);
 		if (PrefUtil.isCurrentPasswordEmpty(this)) {
@@ -320,6 +321,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
+		Log.d(TAG, "onNewIntent");
 		// to get unlocked state in onResume
 		setIntent(intent);
 	}

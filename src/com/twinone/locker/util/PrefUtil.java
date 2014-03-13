@@ -7,7 +7,6 @@ import java.util.Set;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.util.Log;
 
@@ -238,23 +237,9 @@ public abstract class PrefUtil {
 				R.string.pref_def_switch_buttons);
 	}
 
-	@SuppressLint("InlinedApi")
-	public static final int getLockOrientation(Context c) {
-		final String ori = getString(c, R.string.pref_key_orientation,
-				R.string.pref_val_orientation_system);
-		if (ori.equals(c.getString(R.string.pref_val_orientation_auto_rotate))) {
-			return ActivityInfo.SCREEN_ORIENTATION_SENSOR;
-		} else if (ori.equals(c
-				.getString(R.string.pref_val_orientation_landscape))) {
-			// if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD)
-			return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-			// else
-			// return ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
-		} else if (ori.equals(c
-				.getString(R.string.pref_val_orientation_portrait))) {
-			return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-		}
-		return ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+	public static final String getLockOrientation(Context c) {
+		return getString(c, R.string.pref_key_orientation,
+				R.string.pref_val_orientation_auto_rotate);
 	}
 
 	public static final String getRecoveryCode(Context c) {

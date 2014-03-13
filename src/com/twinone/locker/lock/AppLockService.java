@@ -44,7 +44,7 @@ public class AppLockService extends Service {
 	public static final String ACTION_RELOAD_PREFERENCES = "com.twinone.locker.service.action.reload";
 	public static final String ACTION_STOP = "com.twinone.locker.service.action.stop_service";
 	private ActivityManager mAM;
-	private ScheduledExecutorService mScheduledExecutor;
+	private ScheduledExecutorService mExecutor;
 	private BroadcastReceiver mScreenReceiver;
 	private HashSet<AppInfo> mTrackedApps;
 
@@ -124,7 +124,6 @@ public class AppLockService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.d(TAG, "onStartCommand");
 		if (VersionChecker.isDeprecated(this)) {
 			Log.d(TAG, "Service not started, this version is deprecated");
 			stopSelf();
@@ -154,16 +153,14 @@ public class AppLockService extends Service {
 			}
 		} else if (ACTION_RELOAD_PREFERENCES.equals(intent.getAction())) {
 			if (mExplicitStarted) {
-				Log.i(TAG, "Reloading prefs, service was running");
+				Log.d(TAG, "Reloading prefs, service was already running");
 				loadPreferences();
 				restart();
 			} else {
-				Log.i(TAG, "Stopping self, service was not running");
+				Log.v(TAG, "Gor RELOAD_PREFERENCES but service was not started");
 				stopSelf();
-				return START_NOT_STICKY;
 			}
 		} else if (ACTION_STOP.equals(intent.getAction())) {
-
 			stopSelf();
 		} else {
 			Log.w(TAG, "no action specified");
@@ -289,24 +286,24 @@ public class AppLockService extends Service {
 		mLastClassName = null;
 
 		// Shutdown first if it's not running
-		if (mScheduledExecutor != null) {
-			mScheduledExecutor.shutdownNow();
-			mScheduledExecutor = null;
+		if (mExecutor != null) {
+			mExecutor.shutdownNow();
+			mExecutor = null;
 		}
 		String defaultDelay = getString(R.string.pref_val_perf_normal);
 		SharedPreferences sp = PrefUtil.prefs(this);
 		String s = sp.getString(getString(R.string.pref_key_performance),
 				defaultDelay);
 		long delay = Long.parseLong(s);
-		mScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
-		mScheduledExecutor.scheduleWithFixedDelay(new PackageMonitor(), 0,
-				delay, TimeUnit.MILLISECONDS);
+		mExecutor = Executors.newSingleThreadScheduledExecutor();
+		mExecutor.scheduleWithFixedDelay(new PackageMonitor(), 0, delay,
+				TimeUnit.MILLISECONDS);
 	}
 
 	private void stopScheduler() {
-		if (mScheduledExecutor != null) {
-			mScheduledExecutor.shutdownNow();
-			mScheduledExecutor = null;
+		if (mExecutor != null) {
+			mExecutor.shutdownNow();
+			mExecutor = null;
 		}
 	}
 
@@ -352,7 +349,6 @@ public class AppLockService extends Service {
 			mLastPackageName = packageName;
 			mLastClassName = className;
 		}
-
 	}
 
 	/**

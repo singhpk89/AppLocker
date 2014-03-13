@@ -182,7 +182,7 @@
     <!-- TODO: Use android standards -->
     <string name="pref_list_orientation_landscape">Horizontal</string>
     <string name="pref_list_orientation_auto_rotate">Auto-rotación</string>
-    <string name="pref_list_orientation_system">Sistema</string>
+    <string name="old_deprecated_pref_list_orientation_system">Sistema</string>
 
     <!-- Beta -->
     <string name="pref_tit_temp_wifi_unlock_state">Detener con wifi</string>

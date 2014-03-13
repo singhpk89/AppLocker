@@ -184,7 +184,7 @@
     <!-- TODO: Use android standards -->
     <string name="pref_list_orientation_landscape">Landschap</string>
     <string name="pref_list_orientation_auto_rotate">Auto-rotatie</string>
-    <string name="pref_list_orientation_system">Systeem instelling</string>
+    <string name="old_deprecated_pref_list_orientation_system">Systeem instelling</string>
 
     <!-- Beta -->
     <string name="pref_tit_temp_wifi_unlock_state">Stop met wifi</string>

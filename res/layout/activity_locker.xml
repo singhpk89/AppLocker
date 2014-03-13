@@ -5,10 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <!-- CONTAINER -->
+
     <RelativeLayout
         android:id="@+id/rlContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
+
+        <!-- BACKGROUND -->
 
         <ImageView
             android:id="@+id/ivBackground"
@@ -17,6 +21,8 @@
             android:layout_centerInParent="true"
             android:scaleType="centerCrop" />
 
+        <!-- AD -->
+
         <RelativeLayout
             android:id="@+id/adContainer"
             android:layout_width="wrap_content"
@@ -24,6 +30,8 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true" >
         </RelativeLayout>
+
+        <!-- HEAD -->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -81,13 +89,14 @@
                         android:textAppearance="@android:style/TextAppearance.Small" />
                 </LinearLayout>
             </ScrollView>
+            <!-- LOCKVIEW -->
 
             <LinearLayout
                 android:id="@+id/lockView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="5"
-                android:gravity="center_horizontal"
+                android:gravity="center"
                 android:orientation="vertical" >
 
                 <!-- This view dynamically adapts to the LockType chosen by the user -->

@@ -186,7 +186,7 @@
     <!-- TODO: Use android standards -->
     <string name="pref_list_orientation_landscape">Landscape</string>
     <string name="pref_list_orientation_auto_rotate">Auto-rotate</string>
-    <string name="pref_list_orientation_system">System setting</string>
+    <string name="old_deprecated_pref_list_orientation_system">System setting</string>
 
     <!-- Beta -->
     <string name="pref_tit_temp_wifi_unlock_state">Stop with wifi</string>

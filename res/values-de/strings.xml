@@ -183,7 +183,7 @@
     <string name="pref_list_orientation_portrait">Portrait</string>
     <string name="pref_list_orientation_landscape">Querformat</string>
     <string name="pref_list_orientation_auto_rotate">Auto-Rotate</string>
-    <string name="pref_list_orientation_system">System-Einstellungen</string>
+    <string name="old_deprecated_pref_list_orientation_system">System-Einstellungen</string>
 
     <!-- Beta -->
     <string name="pref_tit_temp_wifi_unlock_state">Bei WLAN beenden</string>

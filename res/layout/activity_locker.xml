@@ -101,21 +101,6 @@
 
                 <!-- This view dynamically adapts to the LockType chosen by the user -->
 
-                <TextView
-                    android:id="@+id/tvPassword"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@android:color/transparent"
-                    android:enabled="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:gravity="center"
-                    android:inputType="textPassword"
-                    android:textColor="#ffffff"
-                    android:textSize="30sp"
-                    android:visibility="gone" >
-                </TextView>
             </LinearLayout>
 
             <LinearLayout

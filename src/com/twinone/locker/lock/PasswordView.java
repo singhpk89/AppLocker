@@ -12,7 +12,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.twinone.locker.R;
 import com.twinone.locker.util.Util;
@@ -70,7 +69,7 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 
 	private OnNumberListener mListener;
 
-	private TextView mTextView;
+	// private TextView mTextView;
 
 	public void setListener(OnNumberListener listener) {
 		this.mListener = listener;
@@ -119,8 +118,6 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 		mPaddingBottom = getPaddingBottom();
 		setPadding(0, 0, 0, 0);
 
-		// Square children
-		// Currently only supports when spacings are equal
 		if (mSquareChildren) {
 			if (mHorizontalSpacing == mVerticalSpacing) {
 				mMaxHScale = (float) mCols / mRows;
@@ -130,9 +127,6 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 						"Ignoring squareChildren because horizontal and vertical spacing are not equal");
 			}
 		}
-
-		// setBackgroundColor(Color.YELLOW);
-
 	}
 
 	@Override
@@ -305,7 +299,6 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 				mMaxVScale);
 
 		// Reset width and height because some loose pixels at the end:
-
 		int childMSW = MeasureSpec.makeMeasureSpec(mChildWidth,
 				MeasureSpec.EXACTLY);
 		int childMSH = MeasureSpec.makeMeasureSpec(mChildHeight,
@@ -318,8 +311,6 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 		}
 
 		setMeasuredDimension(mWidth, mHeight);
-		Log.w(TAG, "onMeasure resizing textview DISABLED");
-		// resizeTextView();
 	}
 
 	private void correctViewSize(int width, int height, int maxWidth,
@@ -401,7 +392,6 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 	 */
 	public void setPassword(String password) {
 		this.mPassword = (password != null) ? password : "";
-		updateTextView();
 	}
 
 	/**
@@ -409,12 +399,6 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 	 */
 	public void clearPassword() {
 		setPassword(null);
-	}
-
-	private void updateTextView() {
-		if (mTextView != null) {
-			mTextView.setText(mPassword);
-		}
 	}
 
 	/**
@@ -429,34 +413,6 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 	public int getUnpaddedWidth() {
 		return getWidth() - mPaddingLeft - mPaddingRight;
 	}
-
-	/**
-	 * @return the text view this LockView is associated with
-	 */
-	public TextView getTextView() {
-		return mTextView;
-	}
-
-	/**
-	 * @param mTextView
-	 *            the TextView to set
-	 */
-	public void setTextView(TextView tv) {
-		this.mTextView = tv;
-	}
-
-	final Runnable mResizeRunnable = new Runnable() {
-
-		@Override
-		public void run() {
-			if (mTextView == null || mTextView.getWidth() == getUnpaddedWidth())
-				return;
-
-			ViewGroup.LayoutParams lp = mTextView.getLayoutParams();
-			lp.width = getUnpaddedWidth();
-			mTextView.setLayoutParams(lp);
-		}
-	};
 
 	public void setOkButtonVisibility(int visibility) {
 		if (mOkButton != null) {
@@ -492,19 +448,6 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 		mOkButton.setText(android.R.string.ok);
 		mOkButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15F);
 
-	}
-
-	public void onShow() {
-		setPassword("");
-		if (mTextView != null) {
-			mTextView.setVisibility(View.VISIBLE);
-		}
-	}
-
-	public void onHide() {
-		if (mTextView != null) {
-			mTextView.setVisibility(View.GONE);
-		}
 	}
 
 	/**

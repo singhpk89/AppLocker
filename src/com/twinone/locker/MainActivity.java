@@ -1,5 +1,7 @@
 package com.twinone.locker;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -14,9 +16,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,6 +24,9 @@ import com.twinone.locker.automation.TempRuleActivity;
 import com.twinone.locker.lock.AppLockService;
 import com.twinone.locker.lock.LockViewService;
 import com.twinone.locker.util.PrefUtil;
+import com.twinone.locker.version.VersionInfo;
+import com.twinone.locker.version.VersionManager;
+import com.twinone.locker.version.VersionManager.VersionListener;
 import com.twinone.util.Analytics;
 import com.twinone.util.ChangeLog;
 import com.twinone.util.DialogSequencer;
@@ -32,21 +34,18 @@ import com.twinone.util.DialogSequencer;
 public class MainActivity extends Activity implements View.OnClickListener {
 	private static final String RUN_ONCE = "com.twinone.locker.pref.run_once";
 
-	private static final boolean TEST_BUTTON = false;
+	private static final boolean TEST_BUTTON = true;
 
 	private void onTestButton() {
-		// Intent i = new Intent(this, LockTestActivity.class);
-		// startActivity(i);
+		String url = "http://twinone.org/apps/locker/update.json";
+		VersionListener listener = new VersionListener() {
 
-		Animation slide = null;
-		slide = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-				Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-				0.0f, Animation.RELATIVE_TO_SELF, 2.0f);
-
-		slide.setDuration(2000);
-		slide.setFillEnabled(true);
-
-		bChangeMessage.startAnimation(slide);
+			@Override
+			public void onVersion(List<VersionInfo> infos) {
+				Log.d(TAG, "Versions received!");
+			}
+		};
+		VersionManager.getVersionInfo(this, url, listener);
 	}
 
 	public static String getMobFoxId() {

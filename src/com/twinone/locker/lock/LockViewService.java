@@ -205,7 +205,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 	// view
 	private RelativeLayout mContainer;
 	private ImageView mViewBackground;
-	private TextView mViewPassword;
+	private TextView mTextViewPassword;
 	private TextView mViewTitle;
 	private TextView mViewMessage;
 	private ImageView mAppIcon;
@@ -303,6 +303,11 @@ public class LockViewService extends Service implements View.OnClickListener,
 		mViewDisplayed = true;
 	}
 
+	/**
+	 * Should be only called from {@link #showRootView(boolean)}
+	 * 
+	 * @return
+	 */
 	private View inflateRootView() {
 		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 		LayoutInflater li = LayoutInflater.from(this);
@@ -330,7 +335,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 		mViewMessage = (TextView) root.findViewById(R.id.tvFooter);
 		mAppIcon = (ImageView) root.findViewById(R.id.ivAppIcon);
 		mLockView = (ViewGroup) root.findViewById(R.id.lockView);
-		mViewPassword = (TextView) mLockView.findViewById(R.id.tvPassword);
 
 		mFooterButtons = (LinearLayout) root.findViewById(R.id.llBottomButtons);
 		mLeftButton = (Button) root.findViewById(R.id.bFooterLeft);
@@ -397,6 +401,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 
 		@Override
 		public void onBackButtonLong() {
+			updatePassword();
 		}
 
 		@Override
@@ -405,11 +410,12 @@ public class LockViewService extends Service implements View.OnClickListener,
 		}
 
 		@Override
-		public void onNumberButton(final String newPassword) {
+		public void onNumberButton(String newPassword) {
 			if (newPassword.length() > mMaxPasswordLength) {
-				mLockPasswordView.setPassword(newPassword.substring(0,
-						mMaxPasswordLength));
+				newPassword = newPassword.substring(0, mMaxPasswordLength);
+				mLockPasswordView.setPassword(newPassword);
 			}
+			updatePasswordTextView(newPassword);
 			if (ACTION_COMPARE.equals(mAction)) {
 				doComparePassword(false);
 			}
@@ -427,6 +433,10 @@ public class LockViewService extends Service implements View.OnClickListener,
 		}
 	};
 
+	/**
+	 * Updates the password, trimming it if necessary, also updates
+	 * {@link #mTextViewPassword}
+	 */
 	private void updatePassword() {
 		String pwd = mLockPasswordView.getPassword();
 		if (mMaxPasswordLength != 0) {
@@ -435,7 +445,13 @@ public class LockViewService extends Service implements View.OnClickListener,
 						mMaxPasswordLength));
 			}
 		}
-		mViewPassword.setText(mLockPasswordView.getPassword());
+		updatePasswordTextView(mLockPasswordView.getPassword());
+	}
+
+	private void updatePasswordTextView(String newText) {
+		if (!mPasswordStealthMode) {
+			mTextViewPassword.setText(newText);
+		}
 	}
 
 	private class MyOnPatternListener implements OnPatternListener {
@@ -597,7 +613,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 			mViewMessage.setText(R.string.pattern_change_head);
 			mNewPattern = null;
 		} else {
-			mLockPasswordView.setTextView(mViewPassword);
 			mLockPasswordView.clearPassword();
 			mViewTitle.setText(R.string.password_change_tit);
 			mViewMessage.setText(R.string.password_change_head);
@@ -644,35 +659,29 @@ public class LockViewService extends Service implements View.OnClickListener,
 		mLockView.removeAllViews();
 		mLockPatternView = null;
 		LayoutInflater li = LayoutInflater.from(this);
-		li.inflate(R.layout.view_lock_number, mLockView, true);
-
-		final int childCount = mLockView.getChildCount();
-		for (int i = 0; i < childCount; i++) {
-			final View v = mLockView.getChildAt(i);
-			if (v instanceof PasswordView) {
-				mLockPasswordView = (PasswordView) v;
-				mLockPasswordView.setListener(mPasswordListener);
-				mLockPasswordView.setTextView(mViewPassword);
-				if (ACTION_CREATE.equals(mAction)) {
-					mLockPasswordView.setOkButtonVisibility(View.INVISIBLE);
-				} else {
-					mLockPasswordView.setOkButtonVisibility(View.VISIBLE);
-				}
-				break;
-			}
+		// Only add TextView if we should
+		if (!mPasswordStealthMode) {
+			mTextViewPassword = (TextView) li.inflate(
+					R.layout.view_lock_number_textview, null);
+			mTextViewPassword.setVisibility(mPasswordStealthMode ? View.GONE
+					: View.VISIBLE);
+			mLockView.addView(mTextViewPassword);
 		}
-		// }
-		// Hide patternview
-		// if (mLockPatternView != null) {
-		// mLockPatternView.onHide();
-		// mLockPatternView.setVisibility(View.GONE);
-		// }
+
+		mLockPasswordView = (PasswordView) li.inflate(
+				R.layout.view_lock_number, null);
+		mLockView.addView(mLockPasswordView);
+
+		mLockPasswordView.setListener(mPasswordListener);
+		if (ACTION_CREATE.equals(mAction)) {
+			mLockPasswordView.setOkButtonVisibility(View.INVISIBLE);
+		} else {
+			mLockPasswordView.setOkButtonVisibility(View.VISIBLE);
+		}
+
 		mLockPasswordView.setTactileFeedbackEnabled(mEnableVibration);
 		mLockPasswordView.setSwitchButtons(mSwitchButtons);
-		mLockPasswordView.onShow();
 		mLockPasswordView.setVisibility(View.VISIBLE);
-		mViewPassword.setVisibility(mPasswordStealthMode ? View.GONE
-				: View.VISIBLE);
 		mLockViewType = LOCK_TYPE_PASSWORD;
 		return true;
 	}
@@ -859,8 +868,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 	 * Called after views are inflated
 	 */
 	private void onAfterInflate() {
-		mViewPassword.setVisibility(mPasswordStealthMode ? View.GONE
-				: View.VISIBLE);
 
 		setBackground();
 
@@ -903,7 +910,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 		} else if (ACTION_CREATE.equals(mAction)) {
 			mAppIcon.setVisibility(View.GONE);
 			mFooterButtons.setVisibility(View.VISIBLE);
-			setupFirst();
+			// setupFirst();
 		}
 		Log.d(TAG, "onAfterInflate() done");
 	}

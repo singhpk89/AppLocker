@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -53,7 +54,7 @@ public class PrefsActivity extends PreferenceActivity implements
 	protected PreferenceCategory mCatPassword;
 	protected PreferenceCategory mCatPattern;
 	protected Preference mRecoveryPref;
-	protected Preference mLockerBackgroundPref;
+	protected ListPreference mLockerBackgroundPref;
 
 	// private Handler mHandler = new Handler();
 
@@ -83,7 +84,7 @@ public class PrefsActivity extends PreferenceActivity implements
 			mCatPassword = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_password));
 			mCatPattern = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_pattern));
 			mRecoveryPref = (Preference) findPreference(getString(R.string.pref_key_recovery_code));
-			mLockerBackgroundPref = (Preference) findPreference(getString(R.string.pref_key_background));
+			mLockerBackgroundPref = (ListPreference) findPreference(getString(R.string.pref_key_background));
 			initialize();
 		} else {
 			loadFragment();
@@ -125,11 +126,10 @@ public class PrefsActivity extends PreferenceActivity implements
 			parent.mCatPassword = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_password));
 			parent.mCatPattern = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_pattern));
 			parent.mRecoveryPref = (Preference) findPreference(getString(R.string.pref_key_recovery_code));
-			parent.mLockerBackgroundPref = (Preference) findPreference(getString(R.string.pref_key_background));
+			parent.mLockerBackgroundPref = (ListPreference) findPreference(getString(R.string.pref_key_background));
 
 			parent.initialize();
 		}
-
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class PrefsActivity extends PreferenceActivity implements
 		mHideIconPref.setOnPreferenceChangeListener(this);
 		mDialStatusPref.setOnPreferenceChangeListener(this);
 		mChangeLogPref.setOnPreferenceClickListener(this);
-		mLockerBackgroundPref.setOnPreferenceClickListener(this);
+		mLockerBackgroundPref.setOnPreferenceChangeListener(this);
 		// Add the warning that the system may kill if not foreground
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1) {
 			mNotifOnPref.setSummary(R.string.pref_desc_show_notification_v18);
@@ -169,6 +169,8 @@ public class PrefsActivity extends PreferenceActivity implements
 		Log.d("prefs", "Preference change! " + preference.getKey());
 		String key = preference.getKey();
 		String keyDelayTime = getString(R.string.pref_key_delay_time);
+		String background = getString(R.string.pref_key_background);
+
 		if (key.equals(keyDelayTime)) {
 			String newTime = (String) newValue;
 			boolean isZero = (newTime.length() == 0);
@@ -190,6 +192,11 @@ public class PrefsActivity extends PreferenceActivity implements
 							getString(R.string.pref_key_delay_status), res);
 					mEditor.commit();
 				}
+			}
+		} else if (key.equals(background)) {
+			Log.d("", "newValue:" + newValue);
+			if (newValue.equals(getString(R.string.pref_val_bg_gallery))) {
+				backgroundFromGallery();
 			}
 		}
 		return true;
@@ -264,56 +271,14 @@ public class PrefsActivity extends PreferenceActivity implements
 		String key = preference.getKey();
 		String lockType = getString(R.string.pref_key_lock_type);
 		String changelog = getString(R.string.pref_key_changelog);
-		String background = getString(R.string.pref_key_background);
 
 		if (key.equals(changelog)) {
 			ChangeLog cl = new ChangeLog(this);
 			cl.show(true);
-		} else if (key.equals(background)) {
-			backgroundShowDialog();
 		} else if (key.equals(lockType)) {
 			getChangePasswordDialog(this).show();
 		}
 		return false;
-	}
-
-	private void backgroundShowDialog() {
-		AlertDialog.Builder ab = new AlertDialog.Builder(this);
-		ab.setTitle(R.string.background_dialog_title);
-		ab.setItems(R.array.pref_names_background, new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				Log.d("prefs", "which: " + which);
-				switch (which) {
-				case 0:
-					backgroundFromGallery();
-					break;
-				case 1:
-					backgroundSetCustom();
-					break;
-				case 2:
-					backgroundRemove();
-					break;
-				}
-			}
-		});
-		ab.show();
-	}
-
-	private void backgroundSetCustom() {
-		SharedPreferences.Editor editor = PrefUtil.prefs(this).edit();
-		PrefUtil.setLockerBackground(editor, this, "android.resource://"
-				+ getPackageName() + "/drawable/"
-				+ R.drawable.locker_default_background);
-		PrefUtil.apply(editor);
-	}
-
-	private void backgroundRemove() {
-		SharedPreferences.Editor editor = PrefUtil.prefs(this).edit();
-		PrefUtil.setLockerBackground(editor, this, null);
-		PrefUtil.apply(editor);
-		Toast.makeText(this, R.string.background_removed, Toast.LENGTH_SHORT)
-				.show();
 	}
 
 	private void backgroundFromGallery() {

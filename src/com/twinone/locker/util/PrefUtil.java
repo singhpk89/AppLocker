@@ -8,7 +8,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.util.Log;
 
 import com.twinone.locker.R;
 import com.twinone.locker.lock.LockViewService;
@@ -220,11 +219,9 @@ public abstract class PrefUtil {
 		final int lockType = getLockTypeInt(c);
 		switch (lockType) {
 		case LockViewService.LOCK_TYPE_PASSWORD:
-			Log.d("", "Currentlocktype:passwd " + lockType);
 			final String password = getPassword(c);
 			return password == null || password.length() == 0;
 		case LockViewService.LOCK_TYPE_PATTERN:
-			Log.d("", "Currentlocktype:2 " + lockType);
 			final String pattern = getPattern(c);
 			return pattern == null || pattern.length() == 0;
 		default:

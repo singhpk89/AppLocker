@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -29,7 +30,7 @@ import com.twinone.locker.AppInfo;
 import com.twinone.locker.MainActivity;
 import com.twinone.locker.R;
 import com.twinone.locker.util.PrefUtil;
-import com.twinone.util.VersionChecker;
+import com.twinone.locker.version.VersionManager;
 
 public class AppLockService extends Service {
 
@@ -124,25 +125,24 @@ public class AppLockService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (VersionChecker.isDeprecated(this)) {
-			Log.d(TAG, "Service not started, this version is deprecated");
+		Log.d(TAG, "onStartCommand");
+		if (VersionManager.isDeprecated(this)) {
+			Intent i = new Intent(this, MainActivity.class);
+			PendingIntent.getActivity(this, 0, i, 0);
+			PendingIntent pi = PendingIntent.getActivity(this, 0, i, 0);
+			NotificationCompat.Builder nb = new NotificationCompat.Builder(this);
+			nb.setSmallIcon(R.drawable.ic_launcher);
+			nb.setContentTitle(getString(R.string.update_needed));
+			nb.setContentText(getString(R.string.update_needed_msg));
+			nb.setWhen(System.currentTimeMillis());
+			nb.setOngoing(false);
+			nb.setContentIntent(pi);
+			NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+			nm.notify(0, nb.build());
 			stopSelf();
 			return START_NOT_STICKY;
 		}
-		// if (intent == null) {
-		// // We got killed and restarted
-		// Log.w(TAG, "------------");
-		// Log.w(TAG, "------------");
-		// Log.w(TAG, "SERVICE STARTED WITH INTENT = null");
-		// Log.w(TAG, "mExplicitStarted: " + mExplicitStarted);
-		// Log.w(TAG, "------------");
-		// Log.w(TAG, "------------");
-		// stopSelf();
-		// return START_NOT_STICKY;
-		// }
-		if (
-		// TODO Check if this is the cause of the service randomly starting
-		intent == null || ACTION_START.equals(intent.getAction())) {
+		if (intent == null || ACTION_START.equals(intent.getAction())) {
 			Log.i(TAG, "Starting service");
 			if (!mExplicitStarted) {
 				mExplicitStarted = true;
@@ -157,7 +157,7 @@ public class AppLockService extends Service {
 				loadPreferences();
 				restart();
 			} else {
-				Log.v(TAG, "Gor RELOAD_PREFERENCES but service was not started");
+				Log.v(TAG, "Got RELOAD_PREFERENCES but service was not started");
 				stopSelf();
 			}
 		} else if (ACTION_STOP.equals(intent.getAction())) {
@@ -374,7 +374,8 @@ public class AppLockService extends Service {
 				notifyPackageChanged(this, packageName);
 			}
 		} else {
-			// this app is not locked
+			// this app is not locked, notify LockViewService so it can hide
+			// it's view
 			notifyPackageChanged(this, packageName);
 		}
 	}

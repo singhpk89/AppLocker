@@ -1,7 +1,5 @@
 package com.twinone.locker;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -11,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -24,9 +23,8 @@ import com.twinone.locker.automation.TempRuleActivity;
 import com.twinone.locker.lock.AppLockService;
 import com.twinone.locker.lock.LockViewService;
 import com.twinone.locker.util.PrefUtil;
-import com.twinone.locker.version.VersionInfo;
+import com.twinone.locker.version.Receiver;
 import com.twinone.locker.version.VersionManager;
-import com.twinone.locker.version.VersionManager.VersionListener;
 import com.twinone.util.Analytics;
 import com.twinone.util.ChangeLog;
 import com.twinone.util.DialogSequencer;
@@ -34,18 +32,11 @@ import com.twinone.util.DialogSequencer;
 public class MainActivity extends Activity implements View.OnClickListener {
 	private static final String RUN_ONCE = "com.twinone.locker.pref.run_once";
 
-	private static final boolean TEST_BUTTON = true;
+	private static final boolean TEST_BUTTON = false;
 
 	private void onTestButton() {
-		String url = "http://twinone.org/apps/locker/update.json";
-		VersionListener listener = new VersionListener() {
+		VersionManager.queryServer(this, null);
 
-			@Override
-			public void onVersion(List<VersionInfo> infos) {
-				Log.d(TAG, "Versions received!");
-			}
-		};
-		VersionManager.getVersionInfo(this, url, listener);
 	}
 
 	public static String getMobFoxId() {
@@ -55,10 +46,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	public static String getAdMobId() {
 		return "a152407835a94a7";
 	}
-
-	// TODO Service starts randomly (onStartCommand() return START_NOT_STICKY?)
-
-	public static final boolean SHOW_ADS = false;
 
 	private static final String TAG = "Main";
 
@@ -105,7 +92,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		if (TEST_BUTTON) {
 			ViewGroup root = (ViewGroup) findViewById(R.id.mainllRoot);
 			Button b = new Button(this);
-			b.setText("TESTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+			b.setText("Test button");
 			b.setOnClickListener(new View.OnClickListener() {
 
 				@Override
@@ -115,26 +102,74 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			});
 			root.addView(b);
 		}
+
+		initVersionManager();
+		shouldUpdate();
+	}
+
+	/**
+	 * Added in version 2204
+	 * @return true if it's deprecated and should update forcedly
+	 */
+	private boolean shouldUpdate() {
+		if (VersionManager.shouldWarn(this)) {
+			int days = VersionManager.getDaysLeft(this);
+			AlertDialog.Builder ab = new AlertDialog.Builder(this);
+			ab.setTitle(R.string.update_available);
+			ab.setMessage(getString(R.string.update_available_msg, days));
+			ab.setPositiveButton(R.string.update_button,
+					new ToPlayStoreListener());
+			ab.setNegativeButton(R.string.update_button_cancel, null);
+			ab.show();
+		} else if (VersionManager.isDeprecated(this)) {
+			AlertDialog.Builder ab = new AlertDialog.Builder(this);
+			ab.setTitle(R.string.update_needed);
+			ab.setCancelable(false);
+			ab.setMessage(R.string.update_needed_msg);
+			ab.setPositiveButton(R.string.update_button,
+					new ToPlayStoreListener());
+			ab.show();
+			return true;
+		}
+		return false;
+	}
+
+	/** When the user clicks this button he will be sent to the play store */
+	private class ToPlayStoreListener implements OnClickListener {
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			String str = "https://play.google.com/store/apps/details?id="
+					+ getPackageName();
+			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(str));
+			startActivity(intent);
+		}
 	}
 
 	private void runOnceCheck() {
 		SharedPreferences prefs = PrefUtil.prefs(this);
 		boolean runonce = prefs.getBoolean(RUN_ONCE, false);
 		if (!runonce) {
-			runOnce();
+			runOnceImpl();
 			SharedPreferences.Editor editor = prefs.edit().putBoolean(RUN_ONCE,
 					true);
 			PrefUtil.apply(editor);
 		}
 	}
 
-	private void runOnce() {
+	private void runOnceImpl() {
 		// Set default background
 		SharedPreferences.Editor editor = PrefUtil.prefs(this).edit();
-		PrefUtil.setLockerBackground(editor, this, "android.resource://"
-				+ getPackageName() + "/drawable/"
-				+ R.drawable.locker_default_background);
+		PrefUtil.setLockerBackground(editor, this,
+				getString(R.string.pref_val_bg_blue));
 		PrefUtil.apply(editor);
+	}
+
+	private void initVersionManager() {
+		String url = "http://twinone.org/apps/locker/update.php";
+		VersionManager.setUrlOnce(this, url);
+		if (VersionManager.isJustUpgraded(this)) {
+			Receiver.scheduleAlarm(this);
+		}
 	}
 
 	/**
@@ -256,7 +291,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			showShareDialog();
 			break;
 		case R.id.bRate:
-
 			// startActivity(new Intent(this, NavigationDrawerActivity.class));
 			mAnalytics.increment(LockerAnalytics.RATE);
 			Intent i = new Intent(MainActivity.this, StagingActivity.class);
@@ -364,11 +398,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 	private void doStartService() {
 		Log.d(TAG, "doStartService");
-		if (showDialogs()) {
+		if (showDialogs() && !shouldUpdate()) {
 			mAnalytics.increment(LockerAnalytics.MAIN_START);
 			Intent i = AppLockService.getStartIntent(this);
 			startService(i);
-			updateLayout(true);
+			updateLayout(isServiceRunning());
 		}
 	}
 

@@ -36,9 +36,9 @@
     <string name="pref_key_orientation">com.twinone.locker.pref.orientation</string>
     <string name="pref_key_security_number">com.twinone.locker.pref.security_number</string>
     <string name="pref_key_dial_launch_number">com.twinone.locker.pref.dial_launch_number</string>
-   	<string name="pref_key_pattern_color">com.twinone.locker.pref.pattern_color</string>
+    <string name="pref_key_pattern_color">com.twinone.locker.pref.pattern_color</string>
     <string name="pref_key_background">com.twinone.locker.pref.lockactivity_background</string>
-    
+
     <!-- Temp -->
     <string name="pref_key_temp_wifi_unlock_state">temp.unlockstate</string>
     <string name="pref_key_temp_wifi_ssid">temp.ssid</string>
@@ -54,12 +54,23 @@
     <string name="pref_val_lock_type_pattern">pattern</string>
     <!--  -->
     <string name="pref_val_orientation_auto_rotate">autorotate</string>
+    <string name="pref_val_orientation_system">system</string>
     <string name="pref_val_orientation_portrait">portrait</string>
     <string name="pref_val_orientation_landscape">landscape</string>
     <string name="pref_val_pattern_color_white">pc_white</string>
     <string name="pref_val_pattern_color_blue">pc_blue</string>
     <string name="pref_val_pattern_color_green">pc_green</string>
-
+    <!--  -->
+    <string name="pref_val_bg_none">bg_none</string>
+    <string name="pref_val_bg_gallery">bg_gallery</string>
+    <string name="pref_val_bg_green">bg_green</string>
+    <string name="pref_val_bg_red">bg_red</string>
+    <string name="pref_val_bg_blue">bg_blue</string>
+    <string name="pref_val_bg_dark_blue">bg_dark_blue</string>
+    <string name="pref_val_bg_turquoise">bg_turquoise</string>
+    <string name="pref_val_bg_purple">bg_purple</string>
+    <string name="pref_val_bg_orange">bg_orange</string>
+    
     <!-- Defaults -->
     <string name="pref_def_delay_status">false</string>
     <string name="pref_def_vibrate">true</string>

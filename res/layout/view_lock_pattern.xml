@@ -2,6 +2,7 @@
 <com.twinone.locker.lock.PatternView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:twinone_patternview="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
+    android:id="@+id/patternView"
     android:layout_height="wrap_content" >
 
     <!-- twinone_patternview:maxSize="@dimen/patternview_max_size" -->

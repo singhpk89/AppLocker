@@ -3,6 +3,6 @@
 
     <corners android:radius="@dimen/locker_header_radius" />
 
-    <solid android:color="@color/locker_header_overlay" />
+    <solid android:color="@color/locker_overlay" />
 
 </shape>

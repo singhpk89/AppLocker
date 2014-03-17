@@ -6,7 +6,6 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -49,15 +48,6 @@ import com.twinone.locker.lock.PatternView.OnPatternListener;
 import com.twinone.locker.util.PrefUtil;
 import com.twinone.locker.util.Util;
 
-/*
- * TODO
- * Add show / hide animation
- * Orientation settings
- * When package changed we should hide rootView
- * 
- */
-
-@SuppressLint("NewApi")
 public class LockViewService extends Service implements View.OnClickListener,
 		View.OnKeyListener {
 
@@ -173,7 +163,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 	private static final long PATTERN_DELAY = 600;
 
 	// options
-	// private boolean mExplicitStarted;
 	private String mPackageName;
 	private String mAction;
 
@@ -196,13 +185,12 @@ public class LockViewService extends Service implements View.OnClickListener,
 	private int mMaxPasswordLength = 8;
 	private boolean mSwitchButtons;
 
-	// TODO
 	private String mOrientationSetting;
 
 	private long mShowAnimationDuration = 250;
 	private long mHideAnimationDuration = 500;
 
-	// view
+	// views
 	private RelativeLayout mContainer;
 	private ImageView mViewBackground;
 	private TextView mTextViewPassword;
@@ -245,10 +233,8 @@ public class LockViewService extends Service implements View.OnClickListener,
 			return START_NOT_STICKY;
 		}
 		if (ACTION_NOTIFY_PACKAGE_CHANGED.equals(intent.getAction())) {
-			Log.d(TAG,
-					"notify package changed: "
-							+ intent.getStringExtra(EXTRA_PACKAGENAME));
 			String newPackageName = intent.getStringExtra(EXTRA_PACKAGENAME);
+			Log.d(TAG, "Notify package changed " + newPackageName);
 			if (newPackageName == null) {
 				finish(true);
 				return START_NOT_STICKY;
@@ -279,17 +265,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 	private View mRootView;
 	private WindowManager.LayoutParams mLayoutParams;
 	private boolean mViewDisplayed;
-
-	// private void showRootView() {
-	// if (!mViewDisplayed) {
-	// if (mRootView == null) {
-	// mRootView = inflateRootView();
-	// }
-	// mWindowManager.addView(mRootView, mLayoutParams);
-	// showAnimation();
-	// mViewDisplayed = true;
-	// }
-	// }
 
 	private void showRootView(boolean animate) {
 		if (mViewDisplayed) {
@@ -393,8 +368,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 			}
 		});
 		mContainer.startAnimation(anim);
-
-		Log.d(TAG, "Animate end");
 	}
 
 	private class MyOnNumberListener implements OnNumberListener {
@@ -494,7 +467,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 	 *            for a password check (this should never happen)
 	 */
 	private void doComparePassword(boolean explicit) {
-		Log.d(TAG, "Comparig password");
 		final String currentPassword = mLockPasswordView.getPassword();
 		if (currentPassword.equals(mPassword)) {
 			exitSuccessCompare();
@@ -524,7 +496,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 	 * Exit when an app has been unlocked successfully
 	 */
 	private void exitSuccessCompare() {
-		Log.d(TAG, "exitSuccessCompare");
 		if (mPackageName == null || mPackageName.equals(getPackageName())) {
 			finish(true);
 			return;
@@ -546,7 +517,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 				if (mLeftButtonAction == LeftButtonAction.BACK) {
 					setupFirst();
 				} else {
-					Log.d(TAG, "Cancelled by user");
 					exitCreate();
 				}
 			}
@@ -639,7 +609,8 @@ public class LockViewService extends Service implements View.OnClickListener,
 						Toast.LENGTH_SHORT).show();
 				return;
 			}
-			mLockPasswordView.clearPassword();
+			mLockPasswordView.setPassword("");
+			updatePassword();
 			mViewMessage.setText(R.string.password_change_confirm);
 		}
 		mLeftButton.setText(R.string.button_back);
@@ -654,11 +625,10 @@ public class LockViewService extends Service implements View.OnClickListener,
 			Log.w(TAG, "Called showNumberView but not allowed");
 			return false;
 		}
-		// Lazy inflation:
-		// if (mLockPasswordView == null) {
 		mLockView.removeAllViews();
 		mLockPatternView = null;
 		LayoutInflater li = LayoutInflater.from(this);
+
 		// Only add TextView if we should
 		if (!mPasswordStealthMode) {
 			mTextViewPassword = (TextView) li.inflate(
@@ -692,26 +662,20 @@ public class LockViewService extends Service implements View.OnClickListener,
 			Log.w(TAG, "Called showPatternView but not allowed");
 			return false;
 		}
-		// Lazy inflation:
-		// if (mLockPatternView == null) {
+
 		mLockView.removeAllViews();
 		mLockPasswordView = null;
 		LayoutInflater li = LayoutInflater.from(this);
 		li.inflate(R.layout.view_lock_pattern, mLockView, true);
-		final int childCount = mLockView.getChildCount();
-		for (int i = 0; i < childCount; i++) {
-			final View v = mLockView.getChildAt(i);
-			if (v instanceof PatternView) {
-				mLockPatternView = (PatternView) v;
-				mLockPatternView.setOnPatternListener(mPatternListener);
-				int id = getPatternCircleResId(mPatternColorSetting);
-				mLockPatternView.setSelectedBitmap(id);
-				Drawable gd = getResources().getDrawable(
-						R.drawable.passwordview_button_background);
-				Util.setBackgroundDrawable(mLockPatternView, gd);
-				break;
-			}
-		}
+
+		mLockPatternView = (PatternView) mLockView
+				.findViewById(R.id.patternView);
+		mLockPatternView.setOnPatternListener(mPatternListener);
+		int id = getPatternCircleResId(mPatternColorSetting);
+		mLockPatternView.setSelectedBitmap(id);
+		Drawable gd = getResources().getDrawable(
+				R.drawable.passwordview_button_background);
+		Util.setBackgroundDrawable(mLockPatternView, gd);
 		// }
 		// hide passwordview
 		// if (mLockPasswordView != null) {
@@ -730,18 +694,17 @@ public class LockViewService extends Service implements View.OnClickListener,
 	 * Before inflating views
 	 */
 	private boolean onBeforeInflate() {
-		Log.d(TAG, "onBeforeInflate()");
 		if (mIntent == null) {
 			return false;
 		}
 		mAction = mIntent.getAction();
 
 		if (mAction == null) {
-			Log.d(TAG, "Finishing: No action specified");
+			Log.w(TAG, "Finishing: No action specified");
 			return false;
 		}
 		mPackageName = mIntent.getStringExtra(EXTRA_PACKAGENAME);
-		Log.d(TAG, "PackageName: " + mPackageName);
+		Log.v(TAG, "PackageName: " + mPackageName);
 		mPassword = mIntent.getStringExtra(EXTRA_PASSWORD);
 		mPattern = mIntent.getStringExtra(EXTRA_PATTERN);
 
@@ -794,31 +757,72 @@ public class LockViewService extends Service implements View.OnClickListener,
 	}
 
 	private void setBackground() {
-		if (mBackgroundUriString == null) {
+		String none = getString(R.string.pref_val_bg_none);
+		if (mBackgroundUriString == null || mBackgroundUriString.equals(none)) {
 			mViewBackground.setImageBitmap(null);
 			mViewBackground.setBackgroundColor(Color.BLACK);
 			return;
 		}
+		String blue = getString(R.string.pref_val_bg_blue);
+		String dark_blue = getString(R.string.pref_val_bg_dark_blue);
+		String green = getString(R.string.pref_val_bg_green);
+		String purple = getString(R.string.pref_val_bg_purple);
+		String red = getString(R.string.pref_val_bg_red);
+		String orange = getString(R.string.pref_val_bg_orange);
+		String turquoise = getString(R.string.pref_val_bg_turquoise);
+		if (blue.equals(mBackgroundUriString)) {
+			mViewBackground.setBackgroundColor(getResources().getColor(
+					R.color.flat_blue));
+		} else if (dark_blue.equals(mBackgroundUriString)) {
+			mViewBackground.setBackgroundColor(getResources().getColor(
+					R.color.flat_dark_blue));
+		} else if (green.equals(mBackgroundUriString)) {
+			mViewBackground.setBackgroundColor(getResources().getColor(
+					R.color.flat_green));
+		} else if (purple.equals(mBackgroundUriString)) {
+			mViewBackground.setBackgroundColor(getResources().getColor(
+					R.color.flat_purple));
+			Log.d(TAG, "purple");
+		} else if (red.equals(mBackgroundUriString)) {
+			mViewBackground.setBackgroundColor(getResources().getColor(
+					R.color.flat_red));
+		} else if (turquoise.equals(mBackgroundUriString)) {
+			mViewBackground.setBackgroundColor(getResources().getColor(
+					R.color.flat_turquoise));
+		} else if (orange.equals(mBackgroundUriString)) {
+			mViewBackground.setBackgroundColor(getResources().getColor(
+					R.color.flat_orange));
+		} else {
+			if (!setBackgroundFromUri()) {
+				mViewBackground.setImageBitmap(null);
+				mViewBackground.setBackgroundColor(Color.BLACK);
+			}
+		}
+	}
+
+	private boolean setBackgroundFromUri() {
+		if (mBackgroundUriString == null)
+			return false;
 		Uri uri = Uri.parse(mBackgroundUriString);
-		if (uri == null) {
-			return;
-		}
-		String uriScheme = uri.getScheme();
-		if (ContentResolver.SCHEME_ANDROID_RESOURCE.equals(uriScheme)) {
-			mViewBackground.setImageURI(uri);
-			return;
-		}
+		if (uri == null)
+			return false;
+
 		Point size = getSizeCompat(mWindowManager.getDefaultDisplay());
 		try {
 			final Bitmap b = decodeSampledBitmapFromUri(uri, size.x, size.y);
+			if (b == null) {
+				return false;
+			}
 			mViewBackground.setImageBitmap(b);
 		} catch (FileNotFoundException e) {
-			Log.d(TAG, "Error setting background");
+			Log.w(TAG, "Error setting background");
+			return false;
 		}
-
+		return true;
 	}
 
 	@SuppressWarnings("deprecation")
+	@SuppressLint("NewApi")
 	private Point getSizeCompat(Display display) {
 		Point p = new Point();
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2) {
@@ -840,7 +844,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 
 		options.inSampleSize = calculateInSampleSize(options, reqWidth,
 				reqHeight);
-		Log.d(TAG, "Scaled to " + options.inSampleSize);
 
 		options.inJustDecodeBounds = false;
 		Bitmap bm = BitmapFactory.decodeStream(getContentResolver()
@@ -873,7 +876,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 
 		// bind to AppLockService
 		if (!getPackageName().equals(mPackageName)) {
-			Log.w(TAG, "LockViewService Binding to AppLockService");
 			Intent i = new Intent(this, AppLockService.class);
 			bindService(i, mConnection, 0);
 		}
@@ -910,9 +912,8 @@ public class LockViewService extends Service implements View.OnClickListener,
 		} else if (ACTION_CREATE.equals(mAction)) {
 			mAppIcon.setVisibility(View.GONE);
 			mFooterButtons.setVisibility(View.VISIBLE);
-			// setupFirst();
+			setupFirst();
 		}
-		Log.d(TAG, "onAfterInflate() done");
 	}
 
 	public static final Intent getDefaultIntent(final Context c) {
@@ -943,7 +944,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 
 		@Override
 		public void onServiceConnected(ComponentName cn, IBinder binder) {
-			Log.d(TAG, "VIEWSERVICE BOUND onServiceConnected");
+			Log.v(TAG, "LockViewService is now bound");
 			final AppLockService.LocalBinder b = (AppLockService.LocalBinder) binder;
 			mAppLockService = b.getInstance();
 			mBound = true;
@@ -951,7 +952,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 
 		@Override
 		public void onServiceDisconnected(ComponentName cn) {
-			Log.d(TAG, "VIEWSERVICE UNBOUND Service was killed");
+			Log.v(TAG, "LockViewService is now unbound");
 			mBound = false;
 		}
 	};
@@ -965,7 +966,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 	}
 
 	private void finish(boolean unlocked) {
-		Log.d(TAG, "finish");
+		Log.v(TAG, "finishing");
 		if (mBound) {
 			unbindService(mConnection);
 			mBound = false;
@@ -983,21 +984,19 @@ public class LockViewService extends Service implements View.OnClickListener,
 	public void onDestroy() {
 		super.onDestroy();
 		finish(true);
-		Log.d(TAG, "Service destroyed");
+		Log.w(TAG, "destroyed");
 	}
 
 	@Override
 	public void onLowMemory() {
 		super.onLowMemory();
-
+		Log.d(TAG, "onLowMemory()");
 	}
 
 	@Override
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
-		Log.d(TAG, "keyevent!");
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
-			Log.d(TAG, "keycode back");
 			finish(false);
 			return true;
 		}
@@ -1005,27 +1004,34 @@ public class LockViewService extends Service implements View.OnClickListener,
 	}
 
 	private void setOrientation() {
-		Log.d(TAG, "setting orientation");
 		String port = getString(R.string.pref_val_orientation_portrait);
+		String auto = getString(R.string.pref_val_orientation_auto_rotate);
 		String land = getString(R.string.pref_val_orientation_landscape);
 		if (port.equals(mOrientationSetting)) {
 			mLayoutParams.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 		} else if (land.equals(mOrientationSetting)) {
 			// workaround for older versions
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
-				mLayoutParams.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-			} else {
-				mLayoutParams.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
-			}
-		} else {
+			mLayoutParams.screenOrientation = getLandscapeCompat();
+		} else if (auto.equals(mOrientationSetting)) {
 			mLayoutParams.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+		} else {
+			// default to system setting
+			mLayoutParams.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+		}
+	}
+
+	@SuppressLint("InlinedApi")
+	private static int getLandscapeCompat() {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
+			return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+		} else {
+			return ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
 		}
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		Log.d(TAG, "onConfigChange");
 		if (mViewDisplayed) {
 			showRootView(false);
 			onAfterInflate();

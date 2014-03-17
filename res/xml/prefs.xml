@@ -5,7 +5,10 @@
     <Preference
         android:key="@string/pref_key_lock_type"
         android:title="@string/pref_tit_lock_type" />
-    <Preference
+
+    <ListPreference
+        android:entries="@array/pref_names_background"
+        android:entryValues="@array/pref_values_background"
         android:key="@string/pref_key_background"
         android:summary="@string/pref_desc_lockactivity_background"
         android:title="@string/pref_tit_lockactivity_background" />
@@ -96,7 +99,7 @@
             android:title="@string/pref_tit_performance" />
         <!-- Orientation -->
         <ListPreference
-            android:defaultValue="@string/pref_val_orientation_auto_rotate"
+            android:defaultValue="@string/pref_val_orientation_system"
             android:entries="@array/orientation_names"
             android:entryValues="@array/orientation_values"
             android:key="@string/pref_key_orientation"

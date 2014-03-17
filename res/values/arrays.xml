@@ -26,11 +26,13 @@
     </string-array>
     <!--  -->
     <string-array name="orientation_names">
+        <item>@string/pref_list_orientation_system</item>
         <item>@string/pref_list_orientation_auto_rotate</item>
         <item>@string/pref_list_orientation_portrait</item>
         <item>@string/pref_list_orientation_landscape</item>
     </string-array>
     <string-array name="orientation_values">
+        <item>@string/pref_val_orientation_system</item>
         <item>@string/pref_val_orientation_auto_rotate</item>
         <item>@string/pref_val_orientation_portrait</item>
         <item>@string/pref_val_orientation_landscape</item>
@@ -46,9 +48,26 @@
         <item>@string/pref_val_pattern_color_blue</item>
     </string-array>
     <string-array name="pref_names_background">
-        <item>@string/background_from_gallery</item>
-        <item>@string/background_locker_1</item>
         <item>@string/background_remove</item>
+        <item>@string/background_from_gallery</item>
+        <item>@string/background_locker_blue</item>
+        <item>@string/background_locker_dark_blue</item>
+        <item>@string/background_locker_green</item>
+        <item>@string/background_locker_purple</item>
+        <item>@string/background_locker_red</item>
+        <item>@string/background_locker_turquoise</item>
+        <item>@string/background_locker_orange</item>
+    </string-array>
+    <string-array name="pref_values_background">
+        <item>@string/pref_val_bg_none</item>
+        <item>@string/pref_val_bg_gallery</item>
+        <item>@string/pref_val_bg_blue</item>
+        <item>@string/pref_val_bg_dark_blue</item>
+        <item>@string/pref_val_bg_green</item>
+        <item>@string/pref_val_bg_purple</item>
+        <item>@string/pref_val_bg_red</item>
+        <item>@string/pref_val_bg_turquoise</item>
+        <item>@string/pref_val_bg_orange</item>
     </string-array>
 
 </resources>

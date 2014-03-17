@@ -1,61 +1,48 @@
 package com.twinone.locker.version;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import com.google.gson.annotations.Expose;
 
 public class VersionInfo implements Serializable {
 
-	/***/
-	public transient static final long serialVersionUID = -2984202672417839008L;
-	/** Matches if device version is equal to specified version */
-	public static final String CRITERIA_EQ = "eq";
-	/** Matches if device version is different to specified version */
-	public static final String CRITERIA_NE = "ne";
-	/** Matches if device version is less than specified version */
-	public static final String CRITERIA_LT = "lt";
-	/** Matches if device version is greater than specified version */
-	public static final String CRITERIA_GT = "gt";
-	/** Matches if device version is less than or equal to specified version */
-	public static final String CRITERIA_LE = "le";
-	/** Matches if device version is greater than or equal to specified version */
-	public static final String CRITERIA_GE = "ge";
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6317794712430020731L;
 
+	@Expose
 	/**
-	 * Versions this {@link VersionInfo} applies to
+	 * True if this version is not longer supported after deprecation_time
 	 */
-	@Expose
-	public int version;
-	/**
-	 * Will be used like this:<br>
-	 * installedVersion criteria targetVersion
-	 */
-	@Expose
-	public String criteria;
-	@Expose
-	public boolean deprecated;
-	@Expose
-	public String message;
+	public Boolean deprecated;
 
+	@Expose
+	/** The time at which the version will not longer be usable */
+	public Long deprecation_time;
+
+	@Expose
+	/** The current server-time to ensure clock is right, never null */
+	public Long server_time;
+	@Expose
 	/**
-	 * @return true if this VersionInfo is applicable to manifestVersion
+	 * The time at which we should start warning the user he has to update
 	 */
-	public boolean isApplicable(int manifestVersion) {
-		if (criteria == null)
-			return false;
-		if (CRITERIA_EQ.equals(criteria)) {
-			return manifestVersion == version;
-		} else if (CRITERIA_NE.equals(criteria)) {
-			return manifestVersion != version;
-		} else if (CRITERIA_LT.equals(criteria)) {
-			return manifestVersion < version;
-		} else if (CRITERIA_GT.equals(criteria)) {
-			return manifestVersion > version;
-		} else if (CRITERIA_LE.equals(criteria)) {
-			return manifestVersion <= version;
-		} else if (CRITERIA_GE.equals(criteria)) {
-			return manifestVersion >= version;
-		}
-		return false;
-	}
+	public Long warn_time;
+	/**
+	 * Used for server migrations <br>
+	 * If this is not null, the app will no longer check the original url, but
+	 * instead it will check this one. <br>
+	 * Use with great care. If you put in the wrong url, the only way to update
+	 * it is to upload a new app version
+	 */
+	public String new_url;
+	/**
+	 * Custom values that are passed to the user, may be null if the server
+	 * didn't have values
+	 */
+	@Expose
+	public Map<String, String> values;
+
 }

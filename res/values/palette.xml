@@ -8,12 +8,21 @@
 
     <!-- LOCKER ACTIVITY -->
     <color name="locker_head_text_color">#ffffff</color>
-    <color name="locker_header_overlay">#48333333</color>
+    <color name="locker_overlay">#48333333</color>
     <color name="patternview_background">#48333333</color>
     <color name="passwordview_button_background">#48333333</color>
 
     <!-- Holo dark background -->
     <color name="ics_background_start">#ff020202</color>
     <color name="ics_background_end">#ff272D33</color>
+
+    <!-- flatuicolors.com -->
+    <color name="flat_green">#1F8B4D</color>
+    <color name="flat_blue">#2980b9</color>
+    <color name="flat_dark_blue">#336699</color>
+    <color name="flat_purple">#9b59b6</color>
+    <color name="flat_red">#c0392b</color>
+    <color name="flat_turquoise">#16a085</color>
+    <color name="flat_orange">#e67e22</color>
 
 </resources>

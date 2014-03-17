@@ -182,7 +182,7 @@
     <!-- TODO: Use android standards -->
     <string name="pref_list_orientation_landscape">Horizontal</string>
     <string name="pref_list_orientation_auto_rotate">Auto-rotación</string>
-    <string name="old_deprecated_pref_list_orientation_system">Sistema</string>
+    <string name="pref_list_orientation_system">Sistema</string>
 
     <!-- Beta -->
     <string name="pref_tit_temp_wifi_unlock_state">Detener con wifi</string>
@@ -233,5 +233,29 @@
     <string name="pref_list_pattern_color_green">Verde</string>
     <string name="pref_tit_hide_notification_icon">Ocultar icono notificación</string>
     <string name="pref_desc_hide_notification_icon">Solo oculta el icono de la barra de notificaciones.</string>
-    
+    <!-- BEGIN 2203 -->
+    <string name="update_available">Actualización disponible</string>
+    <string name="update_needed">Actualización necesaria</string>
+    <string name="update_available_msg">Hay una nueva actualización. La versión actual dejará de funcionar en %d días.</string>
+    <string name="update_needed_msg">Esta versión ya no está soportada. Por favor, actualiza a la última versión.</string>
+    <string name="update_button">Actualizar</string>
+    <string name="update_button_cancel">Ahora no</string>
+
+    <!-- BEGIN v2.1.2 Continuation -->
+    <string name="background_dialog_title">Cambiar fondo</string>
+    <string name="background_from_gallery">Galería</string>
+    <string name="background_locker_green">Verde</string>
+    <string name="background_remove">Quitar fondo</string>
+    <string name="background_changed">Fondo cambiado</string>
+    <string name="background_removed">Fondo quitado</string>
+    <!-- Start missing -->
+    <string name="pref_tit_lockactivity_background">Fondo</string>
+    <string name="pref_desc_lockactivity_background"></string>
+    <string name="background_locker_blue">Azul</string>
+    <string name="background_locker_dark_blue">Azul oscuro</string>
+    <string name="background_locker_red">Rojo</string>
+    <string name="background_locker_purple">Lila</string>
+    <string name="background_locker_turquoise">Turquesa</string>
+    <string name="background_locker_orange">Naranja</string>
+
 </resources>

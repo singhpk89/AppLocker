@@ -6,9 +6,6 @@
     Author: TwinoneDevs
     -->
 
-    <string name="circle_color_white">white</string>
-    <string name="cicrle_color_green">green</string>
-    <string name="cicrle_color_blue">blue</string>
     <string name="application_name">App Locker</string>
     <string name="action_settings">Settings</string>
 
@@ -186,7 +183,7 @@
     <!-- TODO: Use android standards -->
     <string name="pref_list_orientation_landscape">Landscape</string>
     <string name="pref_list_orientation_auto_rotate">Auto-rotate</string>
-    <string name="old_deprecated_pref_list_orientation_system">System setting</string>
+    <string name="pref_list_orientation_system">System setting</string>
 
     <!-- Beta -->
     <string name="pref_tit_temp_wifi_unlock_state">Stop with wifi</string>
@@ -240,10 +237,27 @@
     <string name="pref_tit_hide_notification_icon">Hide notification icon</string>
     <string name="pref_desc_hide_notification_icon">This only the notification icon in the statusbar</string>
 
+    <!-- BEGIN 2203 -->
+    <string name="update_available">Update available</string>
+    <string name="update_needed">Update needed</string>
+    <string name="update_available_msg">There is a new update of this app available. The current version will stop working in %d days.</string>
+    <string name="update_needed_msg">This version is no longer supported. Please update to the newest version.</string>
+    <string name="update_button">Update</string>
+    <string name="update_button_cancel">Not now</string>
+
+    <!--  -->
+    <!-- See background_locker_green -->
+    <string name="background_locker_blue">Blue</string>
+    <string name="background_locker_dark_blue">Dark Blue</string>
+    <string name="background_locker_red">Red</string>
+    <string name="background_locker_purple">Purple</string>
+    <string name="background_locker_turquoise">Turquoise</string>
+    <string name="background_locker_orange">Orange</string>
+
     <!-- BEGIN v2.1.2 Continuation -->
     <string name="background_dialog_title">Change Background</string>
     <string name="background_from_gallery">Gallery</string>
-    <string name="background_locker_1">Locker Green</string>
+    <string name="background_locker_green">Green</string>
     <string name="background_remove">Remove background</string>
     <string name="background_changed">Background changed</string>
     <string name="background_removed">Background removed</string>

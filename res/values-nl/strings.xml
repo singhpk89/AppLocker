@@ -169,9 +169,9 @@
 
     <!-- Password specific settings -->
     <string name="pref_tit_vibrate_password">Vibratie</string>
-    <string name="pref_desc_vibrate_password">Vibrate when you press keys</string>
-    <string name="pref_tit_hide_dots">Hide dots</string>
-    <string name="pref_desc_hide_dots">When you type your password, the dots will not show on screen</string>
+    <string name="pref_desc_vibrate_password">Tril als je op toetsen drukt</string>
+    <string name="pref_tit_hide_dots">Verberg puntjes</string>
+    <string name="pref_desc_hide_dots">Als je je wachtwoord typt, worden de puntjes verborgen</string>
 
     <!-- Pattern specific settings -->
     <string name="pref_tit_vibrate_pattern">Vibration</string>
@@ -184,7 +184,7 @@
     <!-- TODO: Use android standards -->
     <string name="pref_list_orientation_landscape">Landschap</string>
     <string name="pref_list_orientation_auto_rotate">Auto-rotatie</string>
-    <string name="old_deprecated_pref_list_orientation_system">Systeem instelling</string>
+    <string name="pref_list_orientation_system">Systeem instelling</string>
 
     <!-- Beta -->
     <string name="pref_tit_temp_wifi_unlock_state">Stop met wifi</string>
@@ -229,5 +229,29 @@
     <string name="pref_desc_lockactivity_background">Achtergrondafbeelding voor wanneer je het wachtwoord in moet voeren</string>
     <string name="pref_tit_hide_notification_icon">Verberg melding icoon</string>
     <string name="pref_desc_hide_notification_icon">Verbergt het icoon alleen in de statusbalk.</string>
+    <!-- BEGIN 2203 -->
+    <string name="update_available">Update beschikbaar</string>
+    <string name="update_needed">Update nodig</string>
+    <string name="update_available_msg">Er is een nieuwe update beschikbaar. De huidige versie zal stoppen met werken in %d dagen.</string>
+    <string name="update_needed_msg">Deze versie wordt niet langer ondersteund. Update naar de nieuwste versie.</string>
+    <string name="update_button">Update</string>
+    <string name="update_button_cancel">Niet nu</string>
+
+    <!--  -->
+    <!-- See background_locker_green -->
+    <string name="background_locker_blue">Blauw</string>
+    <string name="background_locker_dark_blue">Donkerblauw</string>
+    <string name="background_locker_red">Rood</string>
+    <string name="background_locker_purple">Paars</string>
+    <string name="background_locker_turquoise">Turkoois</string>
+    <string name="background_locker_orange">Oranje</string>
+
+    <!-- BEGIN v2.1.2 Continuation -->
+    <string name="background_dialog_title">Kies achtergrond</string>
+    <string name="background_from_gallery">Galerij</string>
+    <string name="background_locker_green">Groen</string>
+    <string name="background_remove">Verwijderen</string>
+    <string name="background_changed">Achtergrond veranderd</string>
+    <string name="background_removed">Achtergrond verwijderd</string>
 
 </resources>

@@ -183,7 +183,7 @@
     <string name="pref_list_orientation_portrait">Portrait</string>
     <string name="pref_list_orientation_landscape">Querformat</string>
     <string name="pref_list_orientation_auto_rotate">Auto-Rotate</string>
-    <string name="old_deprecated_pref_list_orientation_system">System-Einstellungen</string>
+    <string name="pref_list_orientation_system">System-Einstellungen</string>
 
     <!-- Beta -->
     <string name="pref_tit_temp_wifi_unlock_state">Bei WLAN beenden</string>
@@ -235,5 +235,29 @@
     <string name="pref_desc_lockactivity_background">Hintergrundbild, was am Sperrbildschirm einer App angezeigt wird</string>
     <string name="pref_tit_hide_notification_icon">Benachrichtigungssymbol verstecken</string>
     <string name="pref_desc_hide_notification_icon">Die Option versteckt nur das Benachrichtigungssymbol in der Statusleiste.</string>
+
+    <!-- BEGIN 2203 -->
+
+    <string name="update_available">Aktualisierung verfügbar</string>
+    <string name="update_needed">Aktualisierung benötigt</string>
+    <string name="update_available_msg">Es ist eine neue Aktualisierung für diese App verfügbar. Diese Version wird in %d Tagen nicht mehr unterstützt.</string>
+    <string name="update_needed_msg">Diese Version wird nicht länger unterstützt. Bitte aktualisiere zur aktuellsten Version.</string>
+    <string name="update_button">Aktualisieren</string>
+    <string name="update_button_cancel">Jetzt nicht</string>
+    <!-- BEGIN v2.1.2 Continuation -->
+    <string name="background_dialog_title">Hintergrund ändern</string>
+    <string name="background_from_gallery">Galerie</string>
+    <string name="background_locker_green">Grün</string>
+    <string name="background_remove">Hintergrund löschen</string>
+    <string name="background_changed">Hintergrund geändert</string>
+    <string name="background_removed">Hintergrund gelöscht</string>
+
+    <!-- See background_locker_green -->
+    <string name="background_locker_blue">Blau</string>
+    <string name="background_locker_dark_blue">Dunkelblau</string>
+    <string name="background_locker_red">Rot</string>
+    <string name="background_locker_purple">Lila</string>
+    <string name="background_locker_turquoise">Türkis</string>
+    <string name="background_locker_orange">Orange</string>
 
 </resources>

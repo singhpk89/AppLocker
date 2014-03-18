@@ -32,7 +32,7 @@ import com.twinone.util.DialogSequencer;
 public class MainActivity extends Activity implements View.OnClickListener {
 	private static final String RUN_ONCE = "com.twinone.locker.pref.run_once";
 
-	private static final boolean TEST_BUTTON = false;
+	private static final boolean TEST_BUTTON = true;
 
 	private void onTestButton() {
 		VersionManager.queryServer(this, null);
@@ -109,6 +109,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 	/**
 	 * Added in version 2204
+	 * 
 	 * @return true if it's deprecated and should update forcedly
 	 */
 	private boolean shouldUpdate() {
@@ -165,7 +166,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	}
 
 	private void initVersionManager() {
-		String url = "http://twinone.org/apps/locker/update.php";
+		String url = "https://twinone.org/apps/locker/update.php";
 		VersionManager.setUrlOnce(this, url);
 		if (VersionManager.isJustUpgraded(this)) {
 			Receiver.scheduleAlarm(this);
@@ -178,10 +179,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	 */
 	private boolean showDialogs() {
 		boolean res = true;
-		final ChangeLog cl = new ChangeLog(this);
-		if (cl.shouldShow()) {
-			mSequencer.addDialog(cl.getDialog(true));
-		}
+		// ChangeLog cl = new ChangeLog(this);
+		// if (cl.shouldShow()) {
+		// mSequencer.addDialog(cl.getDialog(true));
+		// }
 
 		// Recovery code
 		String code = PrefUtil.getRecoveryCode(this);

@@ -18,7 +18,6 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
-// TODO Start alarm manager at boot
 /**
  * Manages versions of your application.<br>
  * It uses versionCode in AndroidManifest.xml
@@ -26,7 +25,6 @@ import com.google.gson.Gson;
  * <br>
  * Requires permissions:<br>
  * INTERNET<br>
- * WAKE_LOCK<br>
  * 
  * @author twinone
  * 
@@ -84,7 +82,6 @@ public class VersionManager {
 			Log.w(TAG, "You should provide a URL with setUrlOnce()");
 			return;
 		}
-		Log.d(TAG, "Querying " + url);
 		new LoadVersionsTask(context, listener).execute(url);
 	}
 
@@ -205,8 +202,6 @@ public class VersionManager {
 						Context.MODE_PRIVATE);
 				long warnTime = sp.getLong(PREFS_WARN_TIME, 0);
 				long serverTime = sp.getLong(PREFS_SERVER_TIME, 0);
-				Log.d(TAG, "warnTime: " + warnTime);
-				Log.d(TAG, "servTime: " + serverTime);
 				if (warnTime != 0 && serverTime != 0 && serverTime >= warnTime) {
 					return true;
 				}
@@ -339,10 +334,11 @@ public class VersionManager {
 			}
 			urlConnection.disconnect();
 			Gson gson = new Gson();
-			return gson.fromJson(data.toString(), VersionInfo.class);
+			VersionInfo vi = gson.fromJson(data.toString(), VersionInfo.class);
+			Log.d(TAG, "Succesful query to server");
+			return vi;
 		} catch (Exception e) {
-			Log.w(TAG,
-					"Error loading version info from server" + e.getMessage());
+			Log.w(TAG, "Query to server failed" + e.getMessage());
 			return null;
 		}
 	}

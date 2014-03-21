@@ -257,5 +257,9 @@
     <string name="background_locker_purple">Lila</string>
     <string name="background_locker_turquoise">Turquesa</string>
     <string name="background_locker_orange">Naranja</string>
+    <!-- BEGIN v2205 -->
+    <string name="pref_tit_ads">Publicidad</string>
+    <string name="pref_desc_ads">Si te gusta Locker, ayúdanos a mejorar activando los anuncios<stirng></stirng></string>
+    <string name="pref_desc_ads_forced">En este momento no puedes desactivar la publicidad</string>
 
 </resources>

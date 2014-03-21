@@ -256,7 +256,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 			mIntent = intent;
 			mAnalytics = new Analytics(this);
 			onBeforeInflate();
-			showRootView(true);
+			showRootView(true, false);
 			onAfterInflate();
 		}
 		return super.onStartCommand(intent, flags, startId);
@@ -270,14 +270,15 @@ public class LockViewService extends Service implements View.OnClickListener,
 	private WindowManager.LayoutParams mLayoutParams;
 	private boolean mViewDisplayed;
 
-	private void showRootView(boolean animate) {
+	private void showRootView(boolean animate, boolean forceReload) {
 		if (mViewDisplayed) {
 			mWindowManager.removeView(mRootView);
 		}
 		System.gc();
 		// Cache view for better performance
 		// FIXME possible bug
-		if (mRootView == null)
+
+		if (mRootView == null || forceReload)
 			mRootView = inflateRootView();
 		mWindowManager.addView(mRootView, mLayoutParams);
 		if (animate)
@@ -300,19 +301,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 		root.setOnKeyListener(this);
 		root.setFocusable(true);
 		root.setFocusableInTouchMode(true);
-
-
-		mLayoutParams = new WindowManager.LayoutParams(
-				WindowManager.LayoutParams.MATCH_PARENT,
-				WindowManager.LayoutParams.MATCH_PARENT,
-				WindowManager.LayoutParams.TYPE_PHONE,
-				// Whatsapp bug fixed!
-				WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM
-						| WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-						| WindowManager.LayoutParams.FLAG_FULLSCREEN
-						| WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-				PixelFormat.TRANSLUCENT);
-		setOrientation();
 
 		mViewTitle = (TextView) root.findViewById(R.id.tvHeader);
 		mViewMessage = (TextView) root.findViewById(R.id.tvFooter);
@@ -720,6 +708,18 @@ public class LockViewService extends Service implements View.OnClickListener,
 			mPatternStealthMode = false;
 		}
 
+		mLayoutParams = new WindowManager.LayoutParams(
+				WindowManager.LayoutParams.MATCH_PARENT,
+				WindowManager.LayoutParams.MATCH_PARENT,
+				WindowManager.LayoutParams.TYPE_PHONE,
+				// Whatsapp bug fixed!
+				WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM
+						| WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+						| WindowManager.LayoutParams.FLAG_FULLSCREEN
+						| WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+				PixelFormat.TRANSLUCENT);
+		mLayoutParams.screenOrientation = getScreenOrientation();
+
 		return true;
 	}
 
@@ -851,12 +851,13 @@ public class LockViewService extends Service implements View.OnClickListener,
 	private AdViewManager mAdViewManager;
 
 	private void onAfterInflate() {
-		if (mAdViewManager == null) {
-			mAdViewManager = new AdViewManager(this, mRootView);
-			mAdViewManager.showAds();
-		}
-
 		setupBackground();
+		
+		if (mAdViewManager == null) {
+			mAdViewManager = new AdViewManager(this);
+		}
+		mAdViewManager.showAds(mRootView);
+
 		// bind to AppLockService
 		if (!getPackageName().equals(mPackageName)) {
 			Intent i = new Intent(this, AppLockService.class);
@@ -1014,20 +1015,20 @@ public class LockViewService extends Service implements View.OnClickListener,
 		return true;
 	}
 
-	private void setOrientation() {
+	private int getScreenOrientation() {
 		String port = getString(R.string.pref_val_orientation_portrait);
 		String auto = getString(R.string.pref_val_orientation_auto_rotate);
 		String land = getString(R.string.pref_val_orientation_landscape);
 		if (port.equals(mOrientationSetting)) {
-			mLayoutParams.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+			return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 		} else if (land.equals(mOrientationSetting)) {
 			// workaround for older versions
-			mLayoutParams.screenOrientation = getLandscapeCompat();
+			return getLandscapeCompat();
 		} else if (auto.equals(mOrientationSetting)) {
-			mLayoutParams.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+			return ActivityInfo.SCREEN_ORIENTATION_SENSOR;
 		} else {
 			// default to system setting
-			mLayoutParams.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+			return ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 		}
 	}
 
@@ -1042,9 +1043,10 @@ public class LockViewService extends Service implements View.OnClickListener,
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
+		Log.d(TAG, "onConfigChange");
 		super.onConfigurationChanged(newConfig);
 		if (mViewDisplayed) {
-			showRootView(false);
+			showRootView(false, true);
 			onAfterInflate();
 		}
 	}

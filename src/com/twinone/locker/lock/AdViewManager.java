@@ -3,6 +3,7 @@ package com.twinone.locker.lock;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.adsdk.sdk.Ad;
@@ -12,6 +13,7 @@ import com.adsdk.sdk.banner.AdView;
 import com.twinone.locker.LockerAnalytics;
 import com.twinone.locker.MainActivity;
 import com.twinone.locker.R;
+import com.twinone.locker.VersionKeys;
 import com.twinone.locker.util.PrefUtil;
 import com.twinone.locker.version.VersionManager;
 import com.twinone.util.Analytics;
@@ -19,9 +21,7 @@ import com.twinone.util.Analytics;
 public class AdViewManager implements AdListener {
 
 	private static final String TAG = "AdShowManager";
-	// TODO from prefs
 	private boolean mShowAds = true;
-	private View mRootView;
 	private Context mContext;
 	private RelativeLayout mAdContainer;
 	private com.adsdk.sdk.banner.AdView mMobFoxAdView;
@@ -30,39 +30,42 @@ public class AdViewManager implements AdListener {
 
 	private AdManager mMobFoxManager;
 
-	public AdViewManager(Context c, View rootView) {
+	public AdViewManager(Context c) {
 		mContext = c;
-		mRootView = rootView;
 		mAnalytics = new Analytics(c);
 
 		mShowAds = PrefUtil.getAds(c)
-				|| Boolean.parseBoolean(VersionManager.getValue(c, "show_ads",
-						"false"));
+				|| Boolean.parseBoolean(VersionManager.getValue(c,
+						VersionKeys.ENABLE_ADS, "false"));
+
+		mMobFoxManager = new AdManager(mContext,
+				"http://my.mobfox.com/vrequest.php",
+				MainActivity.getMobFoxId(), true);
+		mMobFoxManager.setListener(this);
 
 	}
 
 	/** Show ads if the preference says so, or if the server forces it */
 	private boolean mShown = false;
 
-	public void showAds() {
-		if (mShowAds) {
-			if (mShown != true) {
-				mAdContainer = (RelativeLayout) mRootView
-						.findViewById(R.id.adContainer);
-				mMobFoxManager = new AdManager(mContext,
-						"http://my.mobfox.com/vrequest.php",
-						MainActivity.getMobFoxId(), true);
-				mMobFoxManager.setListener(this);
-				// show banner
-				mMobFoxAdView = new AdView(mContext,
-						"http://my.mobfox.com/request.php",
-						MainActivity.getMobFoxId(), true, true);
-				mMobFoxAdView.setAdListener(this);
-			}
-			mAdContainer.removeAllViews();
-			mAdContainer.addView(mMobFoxAdView);
-			mShown = true;
+	public void showAds(View rootView) {
+		if (!mShowAds)
+			return;
+
+		if (mShown != true) {
+			mMobFoxAdView = new AdView(mContext,
+					"http://my.mobfox.com/request.php",
+					MainActivity.getMobFoxId(), true, true);
+			mMobFoxAdView.setAdListener(this);
 		}
+		ViewGroup parent = ((ViewGroup) mMobFoxAdView.getParent());
+		if (parent != null) {
+			parent.removeView(mMobFoxAdView);
+		}
+		// old parent can be useless, so get the new one
+		mAdContainer = (RelativeLayout) rootView.findViewById(R.id.adContainer);
+		mAdContainer.addView(mMobFoxAdView);
+		mShown = true;
 	}
 
 	@Override

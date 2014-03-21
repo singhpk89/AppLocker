@@ -261,7 +261,9 @@
     <string name="background_remove">Remove background</string>
     <string name="background_changed">Background changed</string>
     <string name="background_removed">Background removed</string>
+    
+    <!-- BEGIN v2205 -->
     <string name="pref_tit_ads">Ads</string>
     <string name="pref_desc_ads">If you like Locker, please support me by enabling ads<stirng></stirng></string>
-
+	<string name="pref_desc_ads_forced">You can currently not disable ads</string>
 </resources>

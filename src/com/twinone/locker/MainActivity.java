@@ -27,13 +27,11 @@ import com.twinone.locker.version.Receiver;
 import com.twinone.locker.version.VersionManager;
 import com.twinone.util.Analytics;
 import com.twinone.util.DialogSequencer;
-// TODO
-// Use alarm manager to restart service every 15 seconds
 
 public class MainActivity extends Activity implements View.OnClickListener {
 	private static final String RUN_ONCE = "com.twinone.locker.pref.run_once";
 
-	private static final boolean TEST_BUTTON = true;
+	private static final boolean TEST_BUTTON = false;
 
 	private void onTestButton() {
 		VersionManager.queryServer(this, null);

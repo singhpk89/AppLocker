@@ -253,5 +253,9 @@
     <string name="background_remove">Verwijderen</string>
     <string name="background_changed">Achtergrond veranderd</string>
     <string name="background_removed">Achtergrond verwijderd</string>
-
+    <!-- BEGIN v2205 -->
+    <string name="pref_tit_ads">Advertenties</string>
+    <string name="pref_desc_ads">Als je Locker leuk vindt, help ons dan door advertenties in te schakelen<stirng></stirng></string>
+	<string name="pref_desc_ads_forced">Je kunt op dit moment reclame niet uitschakelen</string>
+    
 </resources>

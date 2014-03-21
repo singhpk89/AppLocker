@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.twinone.locker.lock.AppLockService;
 import com.twinone.locker.lock.LockViewService;
 import com.twinone.locker.util.PrefUtil;
+import com.twinone.locker.version.VersionManager;
 import com.twinone.util.ChangeLog;
 
 public class PrefsActivity extends PreferenceActivity implements
@@ -55,6 +56,7 @@ public class PrefsActivity extends PreferenceActivity implements
 	protected PreferenceCategory mCatPattern;
 	protected Preference mRecoveryPref;
 	protected ListPreference mLockerBackgroundPref;
+	protected CheckBoxPreference mAdsPref;
 
 	// private Handler mHandler = new Handler();
 
@@ -85,6 +87,8 @@ public class PrefsActivity extends PreferenceActivity implements
 			mCatPattern = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_pattern));
 			mRecoveryPref = (Preference) findPreference(getString(R.string.pref_key_recovery_code));
 			mLockerBackgroundPref = (ListPreference) findPreference(getString(R.string.pref_key_background));
+			mAdsPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_ads));
+
 			initialize();
 		} else {
 			loadFragment();
@@ -127,6 +131,7 @@ public class PrefsActivity extends PreferenceActivity implements
 			parent.mCatPattern = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_pattern));
 			parent.mRecoveryPref = (Preference) findPreference(getString(R.string.pref_key_recovery_code));
 			parent.mLockerBackgroundPref = (ListPreference) findPreference(getString(R.string.pref_key_background));
+			parent.mAdsPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_ads));
 
 			parent.initialize();
 		}
@@ -139,13 +144,13 @@ public class PrefsActivity extends PreferenceActivity implements
 	protected void initialize() {
 
 		mPrefs.registerOnSharedPreferenceChangeListener(this);
-
 		mDelayTimePref.setOnPreferenceChangeListener(this);
-		mLockTypePref.setOnPreferenceClickListener(this);
 		mHideIconPref.setOnPreferenceChangeListener(this);
 		mDialStatusPref.setOnPreferenceChangeListener(this);
-		mChangeLogPref.setOnPreferenceClickListener(this);
 		mLockerBackgroundPref.setOnPreferenceChangeListener(this);
+
+		mLockTypePref.setOnPreferenceClickListener(this);
+		mChangeLogPref.setOnPreferenceClickListener(this);
 		// Add the warning that the system may kill if not foreground
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1) {
 			mNotifOnPref.setSummary(R.string.pref_desc_show_notification_v18);
@@ -156,7 +161,14 @@ public class PrefsActivity extends PreferenceActivity implements
 			mCatNotif.removePreference(mTransparentPref);
 		}
 
-		final String code = PrefUtil.getRecoveryCode(this);
+		Boolean ads = Boolean.parseBoolean(VersionManager.getValue(this,
+				VersionKeys.ENABLE_ADS, "false"));
+		if (ads) {
+			mAdsPref.setChecked(true);
+			mAdsPref.setEnabled(false);
+			mAdsPref.setSummary(R.string.pref_desc_ads_forced);
+		}
+		String code = PrefUtil.getRecoveryCode(this);
 		if (code != null)
 			mRecoveryPref.setSummary(String.format(
 					getString(R.string.pref_desc_recovery_code), code));

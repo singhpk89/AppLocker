@@ -473,11 +473,10 @@ public class LockViewService extends Service implements View.OnClickListener,
 		}
 		if (mBound) {
 			mAppLockService.unlockApp(mPackageName);
-			finish(true);
 		} else {
 			Log.w(TAG, "Not bound to lockservice");
-			mViewTitle.setText("Not bound :(");
 		}
+		finish(true);
 	}
 
 	@Override
@@ -852,7 +851,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 
 	private void onAfterInflate() {
 		setupBackground();
-		
+
 		if (mAdViewManager == null) {
 			mAdViewManager = new AdViewManager(this);
 		}

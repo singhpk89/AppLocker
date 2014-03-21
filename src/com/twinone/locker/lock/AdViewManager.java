@@ -34,23 +34,32 @@ public class AdViewManager implements AdListener {
 		mContext = c;
 		mAnalytics = new Analytics(c);
 
-		mShowAds = PrefUtil.getAds(c)
-				|| Boolean.parseBoolean(VersionManager.getValue(c,
-						VersionKeys.ENABLE_ADS, "false"));
-
 		mMobFoxManager = new AdManager(mContext,
 				"http://my.mobfox.com/vrequest.php",
 				MainActivity.getMobFoxId(), true);
 		mMobFoxManager.setListener(this);
+		mShowAds = shouldShowAds();
+	}
 
+	/**
+	 * Reload {@link #mShowAds}
+	 */
+	private boolean shouldShowAds() {
+		return PrefUtil.getAds(mContext)
+				|| Boolean.parseBoolean(VersionManager.getValue(mContext,
+						VersionKeys.ENABLE_ADS, "false"));
 	}
 
 	/** Show ads if the preference says so, or if the server forces it */
 	private boolean mShown = false;
 
 	public void showAds(View rootView) {
-		if (!mShowAds)
+		mShowAds = shouldShowAds();
+
+		if (!mShowAds) {
+			removeAdFromParent();
 			return;
+		}
 
 		if (mShown != true) {
 			mMobFoxAdView = new AdView(mContext,
@@ -58,14 +67,21 @@ public class AdViewManager implements AdListener {
 					MainActivity.getMobFoxId(), true, true);
 			mMobFoxAdView.setAdListener(this);
 		}
-		ViewGroup parent = ((ViewGroup) mMobFoxAdView.getParent());
-		if (parent != null) {
-			parent.removeView(mMobFoxAdView);
-		}
+		removeAdFromParent();
 		// old parent can be useless, so get the new one
 		mAdContainer = (RelativeLayout) rootView.findViewById(R.id.adContainer);
 		mAdContainer.addView(mMobFoxAdView);
 		mShown = true;
+	}
+
+	private void removeAdFromParent() {
+		if (mMobFoxAdView == null)
+			return;
+		ViewGroup parent = ((ViewGroup) mMobFoxAdView.getParent());
+		if (parent != null) {
+			parent.removeView(mMobFoxAdView);
+		}
+
 	}
 
 	@Override

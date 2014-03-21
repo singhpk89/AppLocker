@@ -260,4 +260,9 @@
     <string name="background_locker_turquoise">Türkis</string>
     <string name="background_locker_orange">Orange</string>
 
+    <!-- BEGIN v2205 -->
+    <string name="pref_tit_ads">Werbung</string>
+    <string name="pref_desc_ads">Wenn Du Locker magst, unterstütze mich bitte, indem Du die Werbung aktivierst</string>
+    <string name="pref_desc_ads_forced">Du kannst derzeit die Werbung nicht deaktivieren</string>
+
 </resources>

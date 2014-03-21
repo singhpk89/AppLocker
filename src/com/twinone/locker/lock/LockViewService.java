@@ -39,6 +39,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.twinone.locker.LockerAnalytics;
 import com.twinone.locker.MainActivity;
 import com.twinone.locker.R;
 import com.twinone.locker.lock.PasswordView.OnNumberListener;
@@ -47,6 +48,7 @@ import com.twinone.locker.lock.PatternView.DisplayMode;
 import com.twinone.locker.lock.PatternView.OnPatternListener;
 import com.twinone.locker.util.PrefUtil;
 import com.twinone.locker.util.Util;
+import com.twinone.util.Analytics;
 
 public class LockViewService extends Service implements View.OnClickListener,
 		View.OnKeyListener {
@@ -213,6 +215,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 	private boolean mBound;
 
 	private Intent mIntent;
+	private Analytics mAnalytics;
 
 	private enum RightButtonAction {
 		CONTINUE, CONFIRM
@@ -251,6 +254,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 			}
 		} else {
 			mIntent = intent;
+			mAnalytics = new Analytics(this);
 			onBeforeInflate();
 			showRootView(true);
 			onAfterInflate();
@@ -271,7 +275,10 @@ public class LockViewService extends Service implements View.OnClickListener,
 			mWindowManager.removeView(mRootView);
 		}
 		System.gc();
-		mRootView = inflateRootView();
+		// Cache view for better performance
+		// FIXME possible bug
+		if (mRootView == null)
+			mRootView = inflateRootView();
 		mWindowManager.addView(mRootView, mLayoutParams);
 		if (animate)
 			showAnimation();
@@ -293,6 +300,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 		root.setOnKeyListener(this);
 		root.setFocusable(true);
 		root.setFocusableInTouchMode(true);
+
 
 		mLayoutParams = new WindowManager.LayoutParams(
 				WindowManager.LayoutParams.MATCH_PARENT,
@@ -324,7 +332,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 	}
 
 	private void hideView() {
-		Log.d(TAG, "hideView");
 		if (mViewDisplayed) {
 			mWindowManager.removeView(mRootView);
 			mViewDisplayed = false;
@@ -341,33 +348,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 		mContainer.startAnimation(anim);
 
 		Log.d(TAG, "Show Animate end");
-	}
-
-	private void hideAnimation() {
-		if (!mViewDisplayed) {
-			return;
-		}
-		Log.d(TAG, "Hide Animating");
-		Animation anim = AnimationUtils.loadAnimation(this, R.anim.fade_out);
-		anim.setDuration(mHideAnimationDuration);
-		anim.setFillEnabled(true);
-		anim.setDetachWallpaper(false);
-		anim.setAnimationListener(new AnimationListener() {
-
-			@Override
-			public void onAnimationStart(Animation animation) {
-			}
-
-			@Override
-			public void onAnimationRepeat(Animation animation) {
-			}
-
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				hideView();
-			}
-		});
-		mContainer.startAnimation(anim);
 	}
 
 	private class MyOnNumberListener implements OnNumberListener {
@@ -470,11 +450,12 @@ public class LockViewService extends Service implements View.OnClickListener,
 		final String currentPassword = mLockPasswordView.getPassword();
 		if (currentPassword.equals(mPassword)) {
 			exitSuccessCompare();
+			mAnalytics.increment(LockerAnalytics.PASSWORD_SUCCESS);
 		} else if (explicit) {
+			mAnalytics.increment(LockerAnalytics.PASSWORD_FAILED);
 			mLockPasswordView.clearPassword();
 			Toast.makeText(this, R.string.locker_invalid_password,
 					Toast.LENGTH_SHORT).show();
-
 		}
 	}
 
@@ -486,7 +467,9 @@ public class LockViewService extends Service implements View.OnClickListener,
 		final String currentPattern = mLockPatternView.getPatternString();
 		if (currentPattern.equals(mPattern)) {
 			exitSuccessCompare();
+			mAnalytics.increment(LockerAnalytics.PATTERN_SUCCESS);
 		} else {
+			mAnalytics.increment(LockerAnalytics.PATTERN_FAILED);
 			mLockPatternView.setDisplayMode(DisplayMode.Wrong);
 			mLockPatternView.clearPattern(PATTERN_DELAY);
 		}
@@ -676,12 +659,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 		Drawable gd = getResources().getDrawable(
 				R.drawable.passwordview_button_background);
 		Util.setBackgroundDrawable(mLockPatternView, gd);
-		// }
-		// hide passwordview
-		// if (mLockPasswordView != null) {
-		// mLockPasswordView.onHide();
-		// mLockPasswordView.setVisibility(View.GONE);
-		// }
+
 		mLockPatternView.setTactileFeedbackEnabled(mEnableVibration);
 		mLockPatternView.setInStealthMode(mPatternStealthMode);
 		mLockPatternView.onShow();
@@ -756,7 +734,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 		}
 	}
 
-	private void setBackground() {
+	private void setupBackground() {
 		String none = getString(R.string.pref_val_bg_none);
 		if (mBackgroundUriString == null || mBackgroundUriString.equals(none)) {
 			mViewBackground.setImageBitmap(null);
@@ -870,10 +848,15 @@ public class LockViewService extends Service implements View.OnClickListener,
 	/**
 	 * Called after views are inflated
 	 */
+	private AdViewManager mAdViewManager;
+
 	private void onAfterInflate() {
+		if (mAdViewManager == null) {
+			mAdViewManager = new AdViewManager(this, mRootView);
+			mAdViewManager.showAds();
+		}
 
-		setBackground();
-
+		setupBackground();
 		// bind to AppLockService
 		if (!getPackageName().equals(mPackageName)) {
 			Intent i = new Intent(this, AppLockService.class);
@@ -971,7 +954,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 			unbindService(mConnection);
 			mBound = false;
 		}
-		if (!unlocked) {
+		if (!unlocked && ACTION_COMPARE.equals(mAction)) {
 			final Intent i = new Intent(Intent.ACTION_MAIN);
 			i.addCategory(Intent.CATEGORY_HOME);
 			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -980,11 +963,39 @@ public class LockViewService extends Service implements View.OnClickListener,
 		hideAnimation();
 	}
 
+	private void hideAnimation() {
+		if (!mViewDisplayed) {
+			return;
+		}
+		Log.d(TAG, "Hide Animating");
+		Animation anim = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+		anim.setDuration(mHideAnimationDuration);
+		anim.setFillEnabled(true);
+		anim.setDetachWallpaper(false);
+		anim.setAnimationListener(new AnimationListener() {
+
+			@Override
+			public void onAnimationStart(Animation animation) {
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+			}
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				hideView();
+			}
+		});
+		mContainer.startAnimation(anim);
+	}
+
 	@Override
 	public void onDestroy() {
-		super.onDestroy();
-		finish(true);
 		Log.w(TAG, "destroyed");
+		super.onDestroy();
+		mAdViewManager.onDestroy();
+		// finish(true);
 	}
 
 	@Override

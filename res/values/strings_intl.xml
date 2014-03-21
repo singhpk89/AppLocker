@@ -38,7 +38,8 @@
     <string name="pref_key_dial_launch_number">com.twinone.locker.pref.dial_launch_number</string>
     <string name="pref_key_pattern_color">com.twinone.locker.pref.pattern_color</string>
     <string name="pref_key_background">com.twinone.locker.pref.lockactivity_background</string>
-
+    <string name="pref_key_ads">com.twinone.locker.pref.show_ads</string>
+    
     <!-- Temp -->
     <string name="pref_key_temp_wifi_unlock_state">temp.unlockstate</string>
     <string name="pref_key_temp_wifi_ssid">temp.ssid</string>
@@ -89,7 +90,8 @@
     <string name="pref_def_switch_buttons">false</string>
     <string name="pref_def_start_boot">true</string>
     <string name="pref_def_dial_launch_number">#12345</string>
-
+    <string name="pref_def_ads">false</string>
+    
     <!--
     Next are numbers on buttons, only translate if your language 
     doesn't have decimal numbers (also please contact me in that case)

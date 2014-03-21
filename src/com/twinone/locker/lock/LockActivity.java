@@ -267,14 +267,7 @@
 //		mRightButton.setOnClickListener(this);
 //		mLeftButton.setOnClickListener(this);
 //
-//		if (MainActivity.SHOW_ADS) {
-//			mAdContainer = (RelativeLayout) findViewById(R.id.adContainer);
-//			mMobFoxManager = new AdManager(this,
-//					"http://my.mobfox.com/vrequest.php",
-//					MainActivity.getMobFoxId(), true);
-//			mMobFoxManager.setListener(this);
-//			showBanner();
-//		}
+//		
 //
 //		loadIntentData();
 //	}
@@ -884,77 +877,5 @@
 //	 * 
 //	 */
 //
-//	@Override
-//	public void adClicked() {
-//		mAnalytics.increment(LockerAnalytics.AD_CLICKED);
-//		Log.i(TAG, "adClicked");
-//	}
 //
-//	@Override
-//	public void adClosed(Ad arg0, boolean arg1) {
-//		Log.i(TAG, "adClosed");
-//	}
-//
-//	@Override
-//	public void adLoadSucceeded(Ad arg0) {
-//		mAnalytics.increment(LockerAnalytics.AD_LOAD_SUCCEEDED);
-//		Log.i(TAG, "adLoadSucceeded");
-//		if (mMobFoxManager != null && mMobFoxManager.isAdLoaded())
-//			mMobFoxManager.showAd();
-//	}
-//
-//	@Override
-//	public void adShown(Ad arg0, boolean arg1) {
-//		Log.i(TAG, "adShown");
-//	}
-//
-//	@Override
-//	public void noAdFound() {
-//		showFallbackAd();
-//	}
-//
-//	private void showFallbackAd() {
-//		removeBanners();
-//		Log.w(TAG, "no ad found in mobfox, falling back to admob");
-//		mAdMobAdView = new com.google.ads.AdView(this, AdSize.BANNER,
-//				MainActivity.getAdMobId());
-//		mAdContainer.addView(mAdMobAdView);
-//		mAdMobAdView.loadAd(new AdRequest());
-//	}
-//
-//	@Override
-//	protected void onDestroy() {
-//		super.onDestroy();
-//		if (MainActivity.SHOW_ADS) {
-//			if (mMobFoxManager != null)
-//				mMobFoxManager.release();
-//			if (mMobFoxAdView != null)
-//				mMobFoxAdView.release();
-//			if (mAdMobAdView != null) {
-//				mAdMobAdView.destroy();
-//			}
-//		}
-//	}
-//
-//	private void showBanner() {
-//		Log.i(TAG, "showBanner");
-//		removeBanners();
-//		mMobFoxAdView = new AdView(this, "http://my.mobfox.com/request.php",
-//				MainActivity.getMobFoxId(), true, true);
-//		mMobFoxAdView.setAdListener(this);
-//		mAdContainer.addView(mMobFoxAdView);
-//
-//	}
-//
-//	private void removeBanners() {
-//		Log.i(TAG, "removeBanner");
-//		mAdContainer.removeAllViews();
-//		if (mMobFoxAdView != null) {
-//			mMobFoxAdView = null;
-//		}
-//		if (mAdMobAdView != null) {
-//			mAdMobAdView.destroy();
-//			mAdMobAdView = null;
-//		}
-//	}
 //}

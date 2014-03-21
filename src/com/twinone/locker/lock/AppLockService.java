@@ -31,6 +31,7 @@ import com.twinone.locker.MainActivity;
 import com.twinone.locker.R;
 import com.twinone.locker.util.PrefUtil;
 import com.twinone.locker.version.VersionManager;
+import com.twinone.util.Analytics;
 
 public class AppLockService extends Service {
 
@@ -63,6 +64,7 @@ public class AppLockService extends Service {
 	@SuppressWarnings("unused")
 	private boolean mScreenOn = true;
 	private boolean mExplicitStarted;
+	
 
 	@Override
 	public IBinder onBind(Intent i) {
@@ -165,7 +167,7 @@ public class AppLockService extends Service {
 		} else {
 			Log.w(TAG, "no action specified");
 		}
-
+		super.onStartCommand(intent, flags, startId);
 		return START_STICKY;
 	}
 

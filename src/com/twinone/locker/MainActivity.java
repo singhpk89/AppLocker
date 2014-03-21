@@ -26,8 +26,9 @@ import com.twinone.locker.util.PrefUtil;
 import com.twinone.locker.version.Receiver;
 import com.twinone.locker.version.VersionManager;
 import com.twinone.util.Analytics;
-import com.twinone.util.ChangeLog;
 import com.twinone.util.DialogSequencer;
+// TODO
+// Use alarm manager to restart service every 15 seconds
 
 public class MainActivity extends Activity implements View.OnClickListener {
 	private static final String RUN_ONCE = "com.twinone.locker.pref.run_once";
@@ -68,7 +69,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		super.onCreate(savedInstanceState);
 
 		mAnalytics = new Analytics(this);
-		mAnalytics.increment(LockerAnalytics.MAIN_OPENED);
 		runOnceCheck();
 
 		setContentView(R.layout.activity_main);
@@ -166,7 +166,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	}
 
 	private void initVersionManager() {
-		String url = "https://twinone.org/apps/locker/update.php";
+		String url = "https://twinone.org/apps/locker/update_test.php";
 		VersionManager.setUrlOnce(this, url);
 		if (VersionManager.isJustUpgraded(this)) {
 			Receiver.scheduleAlarm(this);
@@ -284,11 +284,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			startSelectActivity();
 			break;
 		case R.id.bPrefs:
-			mAnalytics.increment(LockerAnalytics.MAIN_LAUNCH_PREFS);
 			Intent prefsIntent = new Intent(this, PrefsActivity.class);
 			startActivity(prefsIntent);
 			break;
 		case R.id.bShare:
+			mAnalytics.increment(LockerAnalytics.SHARE);
 			showShareDialog();
 			break;
 		case R.id.bRate:
@@ -299,7 +299,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			startActivity(i);
 			break;
 		case R.id.bBeta:
-			mAnalytics.increment(LockerAnalytics.MAIN_BETA);
 			Intent i2 = new Intent(MainActivity.this, TempRuleActivity.class);
 			startActivity(i2);
 			break;
@@ -400,7 +399,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	private void doStartService() {
 		Log.d(TAG, "doStartService");
 		if (showDialogs() && !shouldUpdate()) {
-			mAnalytics.increment(LockerAnalytics.MAIN_START);
 			Intent i = AppLockService.getStartIntent(this);
 			startService(i);
 			updateLayout(isServiceRunning());
@@ -417,7 +415,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	}
 
 	private final void startSelectActivity() {
-		mAnalytics.increment(LockerAnalytics.MAIN_SELECT_APPS);
 		Intent i = new Intent(this, SelectActivity.class);
 		startActivity(i);
 	}

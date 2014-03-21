@@ -97,6 +97,11 @@ public abstract class PrefUtil {
 		return getBoolean(c, R.string.pref_key_vibrate,
 				R.string.pref_def_vibrate);
 	}
+	
+	public static final boolean getAds(Context c) {
+		return getBoolean(c, R.string.pref_key_ads,
+				R.string.pref_def_ads);
+	}
 
 	public static final boolean getPasswordStealth(Context c) {
 		return getBoolean(c, R.string.pref_key_hide_dots,

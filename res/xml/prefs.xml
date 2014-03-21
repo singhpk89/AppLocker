@@ -178,5 +178,11 @@
             android:title="@string/pref_tit_recovery_code" >
         </Preference>
     </PreferenceCategory>
+    <!-- ADS -->
+    <CheckBoxPreference
+        android:defaultValue="@string/pref_def_ads"
+        android:key="@string/pref_key_ads"
+        android:summary="@string/pref_desc_ads"
+        android:title="@string/pref_tit_ads" />
 
 </PreferenceScreen>

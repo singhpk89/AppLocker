@@ -12,6 +12,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
@@ -114,12 +115,19 @@ public class VersionManager {
 	 * This will also append the ?v=versionCode to the URL
 	 */
 	private static String getUrl(Context c) {
-		String url = c.getSharedPreferences(PREFS_FILENAME,
-				Context.MODE_PRIVATE).getString(PREFS_URL, null);
-		if (url != null) {
-			url += "?v=" + getManifestVersion(c);
+		try {
+			String url = c.getSharedPreferences(PREFS_FILENAME,
+					Context.MODE_PRIVATE).getString(PREFS_URL, null);
+			Uri.Builder ub = Uri.parse(url).buildUpon();
+			int manifestVersion = getManifestVersion(c);
+			String mVersion = String.valueOf(manifestVersion);
+			ub.appendQueryParameter("v", mVersion);
+			
+			return ub.build().toString();
+		} catch (Exception e) {
+			Log.w(TAG, "Error parsing url");
+			return null;
 		}
-		return url;
 	}
 
 	private static int getPrefsVersion(Context c) {

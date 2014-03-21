@@ -851,7 +851,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 
 	private void onAfterInflate() {
 		setupBackground();
-
 		if (mAdViewManager == null) {
 			mAdViewManager = new AdViewManager(this);
 		}
@@ -967,7 +966,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 		if (!mViewDisplayed) {
 			return;
 		}
-		Log.d(TAG, "Hide Animating");
 		Animation anim = AnimationUtils.loadAnimation(this, R.anim.fade_out);
 		anim.setDuration(mHideAnimationDuration);
 		anim.setFillEnabled(true);
@@ -976,6 +974,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 
 			@Override
 			public void onAnimationStart(Animation animation) {
+				Log.d(TAG, "onAnimationStart");
 			}
 
 			@Override
@@ -984,9 +983,9 @@ public class LockViewService extends Service implements View.OnClickListener,
 
 			@Override
 			public void onAnimationEnd(Animation animation) {
-				hideView();
 			}
 		});
+		hideView();
 		mContainer.startAnimation(anim);
 	}
 

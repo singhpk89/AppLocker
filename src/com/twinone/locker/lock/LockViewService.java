@@ -297,6 +297,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 		setTheme(R.style.LockActivityTheme);
 		View root = (View) li.inflate(R.layout.layout_alias_locker, null);
 		mContainer = (RelativeLayout) root.findViewById(R.id.rlContainer);
+		Log.d(TAG, "inflated Container:" + mContainer.hashCode());
 		mViewBackground = (ImageView) root.findViewById(R.id.ivBackground);
 		root.setOnKeyListener(this);
 		root.setFocusable(true);
@@ -966,6 +967,8 @@ public class LockViewService extends Service implements View.OnClickListener,
 		if (!mViewDisplayed) {
 			return;
 		}
+		Log.d(TAG, "hide" + mContainer.hashCode());
+
 		Animation anim = AnimationUtils.loadAnimation(this, R.anim.fade_out);
 		anim.setDuration(mHideAnimationDuration);
 		anim.setFillEnabled(true);
@@ -983,9 +986,9 @@ public class LockViewService extends Service implements View.OnClickListener,
 
 			@Override
 			public void onAnimationEnd(Animation animation) {
+				hideView();
 			}
 		});
-		hideView();
 		mContainer.startAnimation(anim);
 	}
 

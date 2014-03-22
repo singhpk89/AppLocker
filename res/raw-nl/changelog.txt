@@ -19,6 +19,9 @@
     </style>
   </head>
   <body>
+$ 2.3
+  % Version 2.3
+    * Aanpasbare animaties!
 $ 2.1.2
   % Version 2.1.2
     * Kies patroon kleur

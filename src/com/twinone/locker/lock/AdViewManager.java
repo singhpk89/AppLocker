@@ -1,6 +1,7 @@
 package com.twinone.locker.lock;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,9 +46,9 @@ public class AdViewManager implements AdListener {
 	 * Reload {@link #mShowAds}
 	 */
 	private boolean shouldShowAds() {
-		return PrefUtil.getAds(mContext)
-				|| Boolean.parseBoolean(VersionManager.getValue(mContext,
-						VersionKeys.ENABLE_ADS, "false"));
+		return (PrefUtil.getAds(mContext) || Boolean
+				.parseBoolean(VersionManager.getValue(mContext,
+						VersionKeys.ENABLE_ADS, "false")));
 	}
 
 	/** Show ads if the preference says so, or if the server forces it */
@@ -120,6 +121,12 @@ public class AdViewManager implements AdListener {
 			if (mMobFoxAdView != null)
 				mMobFoxAdView.release();
 		}
+	}
+
+	public static boolean isOnEmulator() {
+		return ("google_sdk".equals(Build.PRODUCT) || "sdk"
+				.equals(Build.PRODUCT))
+				&& Build.FINGERPRINT.contains("generic");
 	}
 
 }

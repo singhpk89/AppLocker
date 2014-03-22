@@ -261,5 +261,17 @@
     <string name="pref_tit_ads">Publicidad</string>
     <string name="pref_desc_ads">Si te gusta Locker, ayúdanos a mejorar activando los anuncios<stirng></stirng></string>
     <string name="pref_desc_ads_forced">En este momento no puedes desactivar la publicidad</string>
-
+    <!-- BEGIN v2300 -->
+    <!-- animations for the lock screen -->
+    <string name="pref_tit_cat_anim_show">Animación entrada</string>
+    <string name="pref_tit_cat_anim_hide">Animación salida</string>
+    <string name="pref_tit_anim_millis">Duración</string>
+    <string name="pref_desc_anim_millis">Tiempo en milisegundos para la animación</string>
+    <string name="pref_tit_anim_type">Tipo</string>
+    <string name="pref_desc_anim_type">%s</string>
+    <string name="pref_list_anim_fade">Desvanecer</string>
+    <string name="pref_list_anim_slide_right">Deslizar derecha</string>
+    <string name="pref_list_anim_slide_left">Deslizar izquierda</string>
+    <string name="pref_list_anim_none">Apagado</string>
+    
 </resources>

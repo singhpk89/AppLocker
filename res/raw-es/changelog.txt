@@ -19,6 +19,9 @@
     </style>
   </head>
   <body>
+$ 2.3
+  % Version 2.3
+    * Animaciones personalizadas!  
 $ 2.1.2
   % Versión 2.1.2
     * Colores en patrón

@@ -27,7 +27,8 @@ public class Analytics {
 			mEditor = null;
 		}
 	}
-// #57288504
+
+	// #57288504
 	/**
 	 * Utility method for when the user decides to allow or decline analytics.
 	 * You should respect the preference of the user.
@@ -43,22 +44,26 @@ public class Analytics {
 		save(editor);
 	}
 
-	public void increment(String key) {
+	public long increment(String key) {
 		if (mEnableAnalytics) {
 			long value = mPrefs.getLong(key, 0);
 			value++;
 			mEditor.putLong(key, value);
 			autoSave();
+			return value;
 		}
+		return -1;
 	}
 
-	public void decrement(String key) {
+	public long decrement(String key) {
 		if (mEnableAnalytics) {
 			long value = mPrefs.getLong(key, 0);
 			value--;
 			mEditor.putLong(key, value);
 			autoSave();
+			return value;
 		}
+		return -1;
 	}
 
 	public void setEnabled(String key, boolean enabled) {

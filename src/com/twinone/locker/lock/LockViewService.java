@@ -4,7 +4,9 @@ import java.io.FileNotFoundException;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Service;
+import android.app.AlertDialog.Builder;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -50,6 +52,7 @@ import com.twinone.locker.util.PrefUtil;
 import com.twinone.locker.util.Util;
 import com.twinone.util.Analytics;
 
+// TODO have all views re attach automatically
 public class LockViewService extends Service implements View.OnClickListener,
 		View.OnKeyListener {
 
@@ -480,13 +483,35 @@ public class LockViewService extends Service implements View.OnClickListener,
 		final String currentPassword = mLockPasswordView.getPassword();
 		if (currentPassword.equals(mPassword)) {
 			exitSuccessCompare();
-			mAnalytics.increment(LockerAnalytics.PASSWORD_SUCCESS);
+			long newV = mAnalytics.increment(LockerAnalytics.PASSWORD_SUCCESS);
+//			showAchievementDialog(newV);
 		} else if (explicit) {
 			mAnalytics.increment(LockerAnalytics.PASSWORD_FAILED);
 			mLockPasswordView.clearPassword();
 			Toast.makeText(this, R.string.locker_invalid_password,
 					Toast.LENGTH_SHORT).show();
 		}
+	}
+
+	private void showAchievementDialog(long count) {
+		// check if it's multiple of 500, 1000, 5000
+		boolean show = false;
+		long tmp = 500;
+		while (true) {
+			if (tmp > count)
+				break;
+			if (count % tmp == 0)
+				show = true;
+			tmp *= 2;
+			if (tmp > count)
+				break;
+			if (count % tmp == 0)
+				show = true;
+			tmp *= 5;
+		}
+		if (!show)
+			return;
+
 	}
 
 	/**
@@ -497,7 +522,8 @@ public class LockViewService extends Service implements View.OnClickListener,
 		final String currentPattern = mLockPatternView.getPatternString();
 		if (currentPattern.equals(mPattern)) {
 			exitSuccessCompare();
-			mAnalytics.increment(LockerAnalytics.PATTERN_SUCCESS);
+			long newV = mAnalytics.increment(LockerAnalytics.PATTERN_SUCCESS);
+//			showAchievementDialog(newV);
 		} else {
 			mAnalytics.increment(LockerAnalytics.PATTERN_FAILED);
 			mLockPatternView.setDisplayMode(DisplayMode.Wrong);
@@ -911,11 +937,12 @@ public class LockViewService extends Service implements View.OnClickListener,
 
 	private void onAfterInflate() {
 		setBackground();
-		if (mAdViewManager == null) {
-			mAdViewManager = new AdViewManager(this);
+		if (!AdViewManager.isOnEmulator()) {
+			if (mAdViewManager == null) {
+				mAdViewManager = new AdViewManager(this);
+			}
+			mAdViewManager.showAds(mRootView);
 		}
-		mAdViewManager.showAds(mRootView);
-
 		// bind to AppLockService
 		if (!getPackageName().equals(mPackageName)) {
 			Intent i = new Intent(this, AppLockService.class);

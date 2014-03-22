@@ -266,7 +266,7 @@
     <string name="pref_tit_ads">Ads</string>
     <string name="pref_desc_ads">If you like Locker, please support me by enabling ads<stirng></stirng></string>
     <string name="pref_desc_ads_forced">You can currently not disable ads</string>
-    <!-- BEGIN v2209 -->
+    <!-- BEGIN v2300 -->
     <!-- animations for the lock screen -->
     <string name="pref_tit_cat_anim_show">Enter animation</string>
     <string name="pref_tit_cat_anim_hide">Exit animation</string>
@@ -278,7 +278,5 @@
     <string name="pref_list_anim_slide_right">Slide Right</string>
     <string name="pref_list_anim_slide_left">Slide left</string>
     <string name="pref_list_anim_none">Disabled</string>
-    <string name="promo_rate">You have unlocked %d apps!</string>
-    <string name="promo_rate_tit"></string>
 
 </resources>

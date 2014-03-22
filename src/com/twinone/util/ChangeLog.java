@@ -20,7 +20,7 @@ import com.twinone.locker.R;
 public class ChangeLog {
 
 	private static final String TAG = "ChangeLog";
-	private static final String PREF_FILE_EXTENSION = ".changelog";
+	private static final String PREF_FILE = "com.twinone.changelog";
 	private static final String VERSION_EMPTY = "";
 	private static final String VERSION_KEY = "com.twinone.changelog.key";
 
@@ -30,26 +30,9 @@ public class ChangeLog {
 	private final SharedPreferences mPreferences;
 	private OnChangeLogViewedListener mListener = null;
 
-	/**
-	 * Use of this constructor is discouraged<br>
-	 * Use {@link #ChangeLog(Context, String)} for more control
-	 * 
-	 * @param c
-	 */
 	public ChangeLog(Context c) {
-		this(c, c.getSharedPreferences(
-				c.getPackageName() + PREF_FILE_EXTENSION, Context.MODE_PRIVATE));
+		this(c, c.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE));
 	}
-
-	// /**
-	// * Use this constructor to use different SharedPreference file name
-	// *
-	// * @param c
-	// * @param prefFile
-	// */
-	// public ChangeLog(Context c, String prefFile) {
-	// this(c, c.getSharedPreferences(prefFile, Context.MODE_PRIVATE));
-	// }
 
 	private ChangeLog(Context c, SharedPreferences sp) {
 		mContext = c;

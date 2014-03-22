@@ -26,6 +26,7 @@ import com.twinone.locker.util.PrefUtil;
 import com.twinone.locker.version.Receiver;
 import com.twinone.locker.version.VersionManager;
 import com.twinone.util.Analytics;
+import com.twinone.util.ChangeLog;
 import com.twinone.util.DialogSequencer;
 
 public class MainActivity extends Activity implements View.OnClickListener {
@@ -157,9 +158,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 	private void runOnceImpl() {
 		// Set default background
+		Log.d(TAG, "runOnce");
 		SharedPreferences.Editor editor = PrefUtil.prefs(this).edit();
 		PrefUtil.setLockerBackground(editor, this,
-				getString(R.string.pref_val_bg_blue));
+				getString(R.string.pref_val_bg_green));
 		PrefUtil.apply(editor);
 	}
 
@@ -177,10 +179,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	 */
 	private boolean showDialogs() {
 		boolean res = true;
-		// ChangeLog cl = new ChangeLog(this);
-		// if (cl.shouldShow()) {
-		// mSequencer.addDialog(cl.getDialog(true));
-		// }
+		ChangeLog cl = new ChangeLog(this);
+		if (cl.shouldShow()) {
+			mSequencer.addDialog(cl.getDialog(true));
+		}
 
 		// Recovery code
 		String code = PrefUtil.getRecoveryCode(this);

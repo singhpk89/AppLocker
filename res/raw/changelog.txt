@@ -20,6 +20,9 @@
   </head>
   <body>
   
+$ 2.3
+  % Version 2.3
+    * Custom animations!
 $ 2.1.2
   % Version 2.1.2
     * Choose pattern color

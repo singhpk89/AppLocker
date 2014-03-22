@@ -264,5 +264,17 @@
     <string name="pref_tit_ads">Werbung</string>
     <string name="pref_desc_ads">Wenn Du Locker magst, unterstütze mich bitte, indem Du die Werbung aktivierst</string>
     <string name="pref_desc_ads_forced">Du kannst derzeit die Werbung nicht deaktivieren</string>
+    <!-- BEGIN v2300 -->
+    <!-- animations for the lock screen -->
+    <string name="pref_tit_cat_anim_show">Animation betreten</string>
+    <string name="pref_tit_cat_anim_hide">Animation verlassen</string>
+    <string name="pref_tit_anim_millis">Dauer</string>
+    <string name="pref_desc_anim_millis">Zeit in Millisekunden für die Animation</string>
+    <string name="pref_tit_anim_type">Typ</string>
+    <string name="pref_desc_anim_type">%s</string>
+    <string name="pref_list_anim_fade">Verblassen</string>
+    <string name="pref_list_anim_slide_right">Nach rechts ausblenden</string>
+    <string name="pref_list_anim_slide_left">Nach links ausblenden</string>
+    <string name="pref_list_anim_none">Deaktiviert</string>
 
 </resources>

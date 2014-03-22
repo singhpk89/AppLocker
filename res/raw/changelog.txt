@@ -23,23 +23,6 @@
 $ 2.3
   % Version 2.3
     * Custom animations!
-$ 2.1.2
-  % Version 2.1.2
-    * Choose pattern color
-    * Custom background
-    * Updated design
-$ 2.1.0
-  % Version 2.1.0
-    * Pattern
-$ 2.0.6
-  % Version 2.0.6
-    * Show/Hide notification
-    * Better support for small screens
-    * Hide icon from launcher
-    * Start Locker calling #YOURPASSWORD
-$ 2.0.5
-  % Version 2.0.5
-    * Better performance
 $ END_OF_CHANGE_LOG
   </body>
 </html>

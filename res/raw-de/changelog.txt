@@ -20,24 +20,9 @@
   </head>
   <body>
   
- $ 2.1.2
-  % Version 2.1.2
-    * Wähle die Farbe des Musters
-    * Benutzerdefinierter Hintergrund
-    * Neues Design
-$ 2.1.0
-  % Version 2.1.0
-    * Muster
-    
-$ 2.0.6
-  % Version 2.0.6
-    * Zeige oder verstecke die Benachrichtigungen
-    * Bessere Unterstützung für kleinere Bildschirme
-    * Verstecke das Icon vom Launcher
-    * Starte Locker mit einem Anruf an #DEINPASSWORT
-$ 2.0.5
-  % Version 2.0.5
-    * Bessere Leistung
+ $ 2.3
+  % Version 2.3
+    * Benutzerdefinierte Animationen!
 $ END_OF_CHANGE_LOG
   </body>
 </html>

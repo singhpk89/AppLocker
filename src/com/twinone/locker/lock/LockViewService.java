@@ -189,8 +189,8 @@ public class LockViewService extends Service implements View.OnClickListener,
 
 	private String mOrientationSetting;
 
-	private long mShowAnimationDuration = 250;
-	private long mHideAnimationDuration = 500;
+	private long mShowAnimationDuration = 600;
+	private long mHideAnimationDuration = 600;
 
 	// views
 	private RelativeLayout mContainer;
@@ -271,16 +271,20 @@ public class LockViewService extends Service implements View.OnClickListener,
 	private boolean mViewDisplayed;
 
 	private void showRootView(boolean animate, boolean forceReload) {
-		if (mViewDisplayed) {
-			mWindowManager.removeView(mRootView);
-		}
-		System.gc();
-		// Cache view for better performance
-		// FIXME possible bug
-
-		if (mRootView == null || forceReload)
+		if (mRootView == null || forceReload) {
+			if (mViewDisplayed) {
+				mWindowManager.removeView(mRootView);
+			}
 			mRootView = inflateRootView();
-		mWindowManager.addView(mRootView, mLayoutParams);
+			mWindowManager.addView(mRootView, mLayoutParams);
+		} else {
+			// just make sure the WindowManager reloads the view
+			if (mViewDisplayed) {
+				mWindowManager.updateViewLayout(mRootView, mLayoutParams);
+			} else {
+				mWindowManager.addView(mRootView, mLayoutParams);
+			}
+		}
 		if (animate)
 			showAnimation();
 		mViewDisplayed = true;
@@ -297,7 +301,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 		setTheme(R.style.LockActivityTheme);
 		View root = (View) li.inflate(R.layout.layout_alias_locker, null);
 		mContainer = (RelativeLayout) root.findViewById(R.id.rlContainer);
-		Log.d(TAG, "inflated Container:" + mContainer.hashCode());
+		Log.d(TAG, "idss inflated: " + mContainer.hashCode());
 		mViewBackground = (ImageView) root.findViewById(R.id.ivBackground);
 		root.setOnKeyListener(this);
 		root.setFocusable(true);
@@ -328,15 +332,10 @@ public class LockViewService extends Service implements View.OnClickListener,
 	}
 
 	private void showAnimation() {
-		Log.d(TAG, "Show Animating");
-
 		Animation anim = AnimationUtils.loadAnimation(this, R.anim.fade_in);
 		anim.setDuration(mShowAnimationDuration);
 		anim.setFillEnabled(true);
-
 		mContainer.startAnimation(anim);
-
-		Log.d(TAG, "Show Animate end");
 	}
 
 	private class MyOnNumberListener implements OnNumberListener {
@@ -967,8 +966,8 @@ public class LockViewService extends Service implements View.OnClickListener,
 		if (!mViewDisplayed) {
 			return;
 		}
-		Log.d(TAG, "hide" + mContainer.hashCode());
-
+		Log.d(TAG, "idss hide: " + mContainer.hashCode());
+		Log.d(TAG, "idss focused: " + mContainer.isFocused());
 		Animation anim = AnimationUtils.loadAnimation(this, R.anim.fade_out);
 		anim.setDuration(mHideAnimationDuration);
 		anim.setFillEnabled(true);
@@ -977,7 +976,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 
 			@Override
 			public void onAnimationStart(Animation animation) {
-				Log.d(TAG, "onAnimationStart");
 			}
 
 			@Override

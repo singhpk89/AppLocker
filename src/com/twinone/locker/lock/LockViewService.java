@@ -278,7 +278,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 			mIntent = intent;
 			mAnalytics = new Analytics(this);
 			onBeforeInflate();
-			showRootView(true, false);
+			showRootView(true);
 			onAfterInflate();
 		}
 		return super.onStartCommand(intent, flags, startId);
@@ -292,19 +292,20 @@ public class LockViewService extends Service implements View.OnClickListener,
 	private WindowManager.LayoutParams mLayoutParams;
 	private boolean mViewDisplayed;
 
-	private void showRootView(boolean animate, boolean forceReload) {
-		if (mRootView == null || forceReload) {
-			hideView();
-			mRootView = inflateRootView();
-			mWindowManager.addView(mRootView, mLayoutParams);
-		} else {
-			// just make sure the WindowManager reloads the view
-			if (mViewDisplayed) {
-				mWindowManager.updateViewLayout(mRootView, mLayoutParams);
-			} else {
-				mWindowManager.addView(mRootView, mLayoutParams);
-			}
-		}
+	private void showRootView(boolean animate) {
+		// if (mRootView == null || forceReload) {
+		// if next line removed, screen off bug appears!
+		hideView();
+		mRootView = inflateRootView();
+		mWindowManager.addView(mRootView, mLayoutParams);
+		// } else {
+		// // just make sure the WindowManager reloads the view
+		// if (mViewDisplayed) {
+		// mWindowManager.updateViewLayout(mRootView, mLayoutParams);
+		// } else {
+		// mWindowManager.addView(mRootView, mLayoutParams);
+		// }
+		// }
 		if (animate)
 			showAnimation();
 		mViewDisplayed = true;
@@ -344,7 +345,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 	}
 
 	private void hideView() {
-		if (mViewDisplayed) {
+		if (mViewDisplayed && mRootView != null) {
 			mWindowManager.removeView(mRootView);
 			mViewDisplayed = false;
 		}
@@ -1125,7 +1126,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 		Log.d(TAG, "onConfigChange");
 		super.onConfigurationChanged(newConfig);
 		if (mViewDisplayed) {
-			showRootView(false, true);
+			showRootView(false);
 			onAfterInflate();
 		}
 	}

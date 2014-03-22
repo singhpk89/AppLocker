@@ -261,9 +261,24 @@
     <string name="background_remove">Remove background</string>
     <string name="background_changed">Background changed</string>
     <string name="background_removed">Background removed</string>
-    
+
     <!-- BEGIN v2205 -->
     <string name="pref_tit_ads">Ads</string>
     <string name="pref_desc_ads">If you like Locker, please support me by enabling ads<stirng></stirng></string>
-	<string name="pref_desc_ads_forced">You can currently not disable ads</string>
+    <string name="pref_desc_ads_forced">You can currently not disable ads</string>
+    <!-- BEGIN v2209 -->
+    <!-- animations for the lock screen -->
+    <string name="pref_tit_cat_anim_show">Enter animation</string>
+    <string name="pref_tit_cat_anim_hide">Exit animation</string>
+    <string name="pref_tit_anim_millis">Duration</string>
+    <string name="pref_desc_anim_millis">Time in milliseconds for the animation</string>
+    <string name="pref_tit_anim_type">Type</string>
+    <string name="pref_desc_anim_type">%s</string>
+    <string name="pref_list_anim_fade">Fade</string>
+    <string name="pref_list_anim_slide_right">Slide Right</string>
+    <string name="pref_list_anim_slide_left">Slide left</string>
+    <string name="pref_list_anim_none">Disabled</string>
+    <string name="promo_rate">You have unlocked %d apps!</string>
+    <string name="promo_rate_tit"></string>
+
 </resources>

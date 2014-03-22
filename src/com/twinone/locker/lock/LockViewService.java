@@ -147,6 +147,26 @@ public class LockViewService extends Service implements View.OnClickListener,
 	public static final String EXTRA_BACKGROUND_URI = CLASSNAME
 			+ ".extra.background_uri";
 
+	/** Milliseconds that the show animation will take */
+	public static final String EXTRA_ANIM_SHOW_MILLIS = CLASSNAME
+			+ ".extra.anim_show_millis";
+
+	/** Milliseconds that the hide animation will take */
+	public static final String EXTRA_ANIM_HIDE_MILLIS = CLASSNAME
+			+ ".extra.anim_hide_millis";
+
+	/** Animation type for show */
+	public static final String EXTRA_ANIM_SHOW_TYPE = CLASSNAME
+			+ ".extra.anim_show_type";
+
+	/** Animation type for hide */
+	public static final String EXTRA_ANIM_HIDE_TYPE = CLASSNAME
+			+ ".extra.anim_hide_type";
+
+	public static final int ANIM_TYPE_NONE = 1 << 0;
+	public static final int ANIM_TYPE_FADE = 1 << 1;
+	public static final int ANIM_TYPE_SLIDE_LEFT = 1 << 2;
+	public static final int ANIM_TYPE_SLIDE_RIGHT = 1 << 3;
 	/**
 	 * Integer value, one of {@link ActivityInfo#SCREEN_ORIENTATION_SENSOR} or
 	 * {@link ActivityInfo#SCREEN_ORIENTATION_PORTRAIT}
@@ -189,8 +209,11 @@ public class LockViewService extends Service implements View.OnClickListener,
 
 	private String mOrientationSetting;
 
-	private long mShowAnimationDuration = 600;
-	private long mHideAnimationDuration = 600;
+	private long mAnimShowTime;
+	private long mAnimHideTime;
+
+	private int mAnimShowResId;
+	private int mAnimHideResId;
 
 	// views
 	private RelativeLayout mContainer;
@@ -237,7 +260,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 		}
 		if (ACTION_NOTIFY_PACKAGE_CHANGED.equals(intent.getAction())) {
 			String newPackageName = intent.getStringExtra(EXTRA_PACKAGENAME);
-			Log.d(TAG, "Notify package changed " + newPackageName);
 			if (newPackageName == null) {
 				finish(true);
 				return START_NOT_STICKY;
@@ -272,9 +294,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 
 	private void showRootView(boolean animate, boolean forceReload) {
 		if (mRootView == null || forceReload) {
-			if (mViewDisplayed) {
-				mWindowManager.removeView(mRootView);
-			}
+			hideView();
 			mRootView = inflateRootView();
 			mWindowManager.addView(mRootView, mLayoutParams);
 		} else {
@@ -301,7 +321,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 		setTheme(R.style.LockActivityTheme);
 		View root = (View) li.inflate(R.layout.layout_alias_locker, null);
 		mContainer = (RelativeLayout) root.findViewById(R.id.rlContainer);
-		Log.d(TAG, "idss inflated: " + mContainer.hashCode());
 		mViewBackground = (ImageView) root.findViewById(R.id.ivBackground);
 		root.setOnKeyListener(this);
 		root.setFocusable(true);
@@ -332,10 +351,32 @@ public class LockViewService extends Service implements View.OnClickListener,
 	}
 
 	private void showAnimation() {
-		Animation anim = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-		anim.setDuration(mShowAnimationDuration);
+		if (mAnimShowResId == 0 || mAnimShowTime == 0)
+			return;
+		Animation anim = AnimationUtils.loadAnimation(this, mAnimShowResId);
+		anim.setDuration(mAnimShowTime);
 		anim.setFillEnabled(true);
 		mContainer.startAnimation(anim);
+	}
+
+	/**
+	 * @param animType
+	 *            the input animtype
+	 * @param show
+	 *            true if show animation, false if hide animation
+	 * @return the resid to be applied
+	 */
+	private int getAnimResId(int animType, boolean show) {
+		switch (animType) {
+		case ANIM_TYPE_NONE:
+			return 0;
+		case ANIM_TYPE_SLIDE_LEFT:
+			return show ? R.anim.slide_in_left : R.anim.slide_out_left;
+		case ANIM_TYPE_SLIDE_RIGHT:
+			return show ? R.anim.slide_in_right : R.anim.slide_out_right;
+		default:
+			return show ? R.anim.fade_in : R.anim.fade_out;
+		}
 	}
 
 	private class MyOnNumberListener implements OnNumberListener {
@@ -590,7 +631,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 	}
 
 	private final boolean showPasswordView() {
-		Log.w(TAG, "showPasswordView");
 		if ((mAllowedViewTypes & LOCK_TYPE_PASSWORD) == 0) {
 			Log.w(TAG, "Called showNumberView but not allowed");
 			return false;
@@ -627,7 +667,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 	}
 
 	private final boolean showPatternView() {
-		Log.w(TAG, "showPatternView");
 		if ((mAllowedViewTypes & LOCK_TYPE_PATTERN) == 0) {
 			Log.w(TAG, "Called showPatternView but not allowed");
 			return false;
@@ -669,7 +708,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 			return false;
 		}
 		mPackageName = mIntent.getStringExtra(EXTRA_PACKAGENAME);
-		Log.v(TAG, "PackageName: " + mPackageName);
 		mPassword = mIntent.getStringExtra(EXTRA_PASSWORD);
 		mPattern = mIntent.getStringExtra(EXTRA_PATTERN);
 
@@ -707,6 +745,20 @@ public class LockViewService extends Service implements View.OnClickListener,
 			mPatternStealthMode = false;
 		}
 
+		// animations
+
+		mAnimShowTime = mIntent.getIntExtra(EXTRA_ANIM_SHOW_MILLIS, 0);
+		mAnimHideTime = mIntent.getIntExtra(EXTRA_ANIM_HIDE_MILLIS, 0);
+		int showType = mIntent
+				.getIntExtra(EXTRA_ANIM_SHOW_TYPE, ANIM_TYPE_NONE);
+		int hideType = mIntent
+				.getIntExtra(EXTRA_ANIM_HIDE_TYPE, ANIM_TYPE_NONE);
+		mAnimShowResId = getAnimResId(showType, true);
+		mAnimHideResId = getAnimResId(hideType, false);
+		Log.d(TAG, "showTime, hideTime, showType, hideType: " + mAnimShowTime
+				+ " " + mAnimHideTime + " " + mAnimShowResId + " "
+				+ mAnimHideResId);
+
 		mLayoutParams = new WindowManager.LayoutParams(
 				WindowManager.LayoutParams.MATCH_PARENT,
 				WindowManager.LayoutParams.MATCH_PARENT,
@@ -733,7 +785,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 		}
 	}
 
-	private void setupBackground() {
+	private void setBackground() {
 		String none = getString(R.string.pref_val_bg_none);
 		if (mBackgroundUriString == null || mBackgroundUriString.equals(none)) {
 			mViewBackground.setImageBitmap(null);
@@ -748,25 +800,32 @@ public class LockViewService extends Service implements View.OnClickListener,
 		String orange = getString(R.string.pref_val_bg_orange);
 		String turquoise = getString(R.string.pref_val_bg_turquoise);
 		if (blue.equals(mBackgroundUriString)) {
+			mViewBackground.setImageBitmap(null);
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_blue));
 		} else if (dark_blue.equals(mBackgroundUriString)) {
+			mViewBackground.setImageBitmap(null);
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_dark_blue));
 		} else if (green.equals(mBackgroundUriString)) {
+			mViewBackground.setImageBitmap(null);
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_green));
 		} else if (purple.equals(mBackgroundUriString)) {
+			mViewBackground.setImageBitmap(null);
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_purple));
-			Log.d(TAG, "purple");
 		} else if (red.equals(mBackgroundUriString)) {
+			mViewBackground.setImageBitmap(null);
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_red));
 		} else if (turquoise.equals(mBackgroundUriString)) {
+			mViewBackground.setImageBitmap(null);
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_turquoise));
 		} else if (orange.equals(mBackgroundUriString)) {
+			mViewBackground.setImageBitmap(null);
+
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_orange));
 		} else {
@@ -850,7 +909,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 	private AdViewManager mAdViewManager;
 
 	private void onAfterInflate() {
-		setupBackground();
+		setBackground();
 		if (mAdViewManager == null) {
 			mAdViewManager = new AdViewManager(this);
 		}
@@ -906,6 +965,12 @@ public class LockViewService extends Service implements View.OnClickListener,
 		i.putExtra(EXTRA_BACKGROUND_URI, PrefUtil.getLockerBackground(c));
 		i.putExtra(EXTRA_VIBRATE, PrefUtil.getPasswordVibrate(c));
 		i.putExtra(EXTRA_MESSAGE, PrefUtil.getMessage(c));
+		i.putExtra(EXTRA_ANIM_SHOW_TYPE,
+				getAnimType(c, PrefUtil.getAnimShowType(c)));
+		i.putExtra(EXTRA_ANIM_HIDE_TYPE,
+				getAnimType(c, PrefUtil.getAnimHideType(c)));
+		i.putExtra(EXTRA_ANIM_SHOW_MILLIS, PrefUtil.getAnimShowMillis(c));
+		i.putExtra(EXTRA_ANIM_HIDE_MILLIS, PrefUtil.getAnimHideMillis(c));
 		if (lockType == LOCK_TYPE_PASSWORD) {
 			i.putExtra(EXTRA_PASSWORD, PrefUtil.getPassword(c));
 			i.putExtra(EXTRA_PASSWORD_STEALTH, PrefUtil.getPasswordStealth(c));
@@ -920,6 +985,20 @@ public class LockViewService extends Service implements View.OnClickListener,
 		}
 		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		return i;
+	}
+
+	private static int getAnimType(Context c, String animType) {
+		if (animType.equals(c.getString(R.string.pref_val_anim_slide_left))) {
+			return ANIM_TYPE_SLIDE_LEFT;
+		} else if (animType.equals(c
+				.getString(R.string.pref_val_anim_slide_right))) {
+			return ANIM_TYPE_SLIDE_RIGHT;
+		} else if (animType.equals(c.getString(R.string.pref_val_anim_none))) {
+			return ANIM_TYPE_NONE;
+		} else {
+			// default
+			return ANIM_TYPE_FADE;
+		}
 	}
 
 	private final ServiceConnection mConnection = new ServiceConnection() {
@@ -963,13 +1042,14 @@ public class LockViewService extends Service implements View.OnClickListener,
 	}
 
 	private void hideAnimation() {
-		if (!mViewDisplayed) {
+		if (!mViewDisplayed)
+			return;
+		if (mAnimHideResId == 0 || mAnimHideTime == 0) {
+			hideView();
 			return;
 		}
-		Log.d(TAG, "idss hide: " + mContainer.hashCode());
-		Log.d(TAG, "idss focused: " + mContainer.isFocused());
-		Animation anim = AnimationUtils.loadAnimation(this, R.anim.fade_out);
-		anim.setDuration(mHideAnimationDuration);
+		Animation anim = AnimationUtils.loadAnimation(this, mAnimHideResId);
+		anim.setDuration(mAnimHideTime);
 		anim.setFillEnabled(true);
 		anim.setDetachWallpaper(false);
 		anim.setAnimationListener(new AnimationListener() {

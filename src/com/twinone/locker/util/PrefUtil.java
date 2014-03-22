@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.util.Log;
 
 import com.twinone.locker.R;
 import com.twinone.locker.lock.LockViewService;
@@ -46,10 +47,36 @@ public abstract class PrefUtil {
 		return c.getSharedPreferences(PREF_FILE_APPS, Context.MODE_PRIVATE);
 	}
 
-	private static final int getInt(Context c, int prefKeyResId,
+	private static final int parseInt(Context c, int prefKeyResId,
 			int prefDefResId) {
-		return prefs(c).getInt(c.getString(prefKeyResId),
-				Integer.parseInt(c.getString(prefDefResId)));
+		try {
+			int ret = Integer.parseInt(prefs(c).getString(
+					c.getString(prefKeyResId), c.getString(prefDefResId)));
+			return ret;
+		} catch (Exception e) {
+			Log.w("PrefUtil", "Error formatting int");
+			return 0;
+		}
+	}
+
+	public static final int getAnimShowMillis(Context c) {
+		return parseInt(c, R.string.pref_key_anim_show_millis,
+				R.string.pref_def_anim_millis);
+	}
+
+	public static final int getAnimHideMillis(Context c) {
+		return parseInt(c, R.string.pref_key_anim_hide_millis,
+				R.string.pref_def_anim_millis);
+	}
+
+	public static final String getAnimShowType(Context c) {
+		return getString(c, R.string.pref_key_anim_show_type,
+				R.string.pref_val_anim_fade);
+	}
+
+	public static final String getAnimHideType(Context c) {
+		return getString(c, R.string.pref_key_anim_hide_type,
+				R.string.pref_val_anim_fade);
 	}
 
 	private static final boolean getBoolean(Context c, int prefKeyResId,
@@ -74,10 +101,10 @@ public abstract class PrefUtil {
 				Float.parseFloat(c.getString(prefDefResId)));
 	}
 
-	private static final long getLong(Context c, int prefKeyResId,
+	private static final long parseLong(Context c, int prefKeyResId,
 			int prefDefResId) {
-		return prefs(c).getLong(c.getString(prefKeyResId),
-				Long.parseLong(c.getString(prefDefResId)));
+		return Long.parseLong(prefs(c).getString(c.getString(prefKeyResId),
+				c.getString(prefDefResId)));
 	}
 
 	public static final boolean getStartAtBoot(Context c) {
@@ -97,10 +124,9 @@ public abstract class PrefUtil {
 		return getBoolean(c, R.string.pref_key_vibrate,
 				R.string.pref_def_vibrate);
 	}
-	
+
 	public static final boolean getAds(Context c) {
-		return getBoolean(c, R.string.pref_key_ads,
-				R.string.pref_def_ads);
+		return getBoolean(c, R.string.pref_key_ads, R.string.pref_def_ads);
 	}
 
 	public static final boolean getPasswordStealth(Context c) {
@@ -246,7 +272,6 @@ public abstract class PrefUtil {
 
 	public static final String getRecoveryCode(Context c) {
 		return getStringOrNull(c, R.string.pref_key_recovery_code);
-
 	}
 
 	public static final String generateRecoveryCode() {

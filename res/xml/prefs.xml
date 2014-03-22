@@ -178,11 +178,52 @@
             android:title="@string/pref_tit_recovery_code" >
         </Preference>
     </PreferenceCategory>
+
+    <!-- ANIMATIONS -->
+    <PreferenceCategory android:title="@string/pref_tit_cat_anim_show" >
+        <ListPreference
+            android:defaultValue="@string/pref_val_anim_fade"
+            android:entries="@array/pref_names_anim"
+            android:entryValues="@array/pref_values_anim"
+            android:key="@string/pref_key_anim_show_type"
+            android:summary="@string/pref_desc_anim_type"
+            android:title="@string/pref_tit_anim_type" />
+
+        <EditTextPreference
+            android:defaultValue="@string/pref_def_anim_millis"
+            android:dialogTitle="@string/pref_tit_anim_millis"
+            android:key="@string/pref_key_anim_show_millis"
+            android:numeric="decimal"
+            android:selectAllOnFocus="true"
+            android:summary="@string/pref_desc_anim_millis"
+            android:title="@string/pref_tit_anim_millis" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_tit_cat_anim_hide" >
+        <ListPreference
+            android:defaultValue="@string/pref_val_anim_fade"
+            android:entries="@array/pref_names_anim"
+            android:entryValues="@array/pref_values_anim"
+            android:key="@string/pref_key_anim_hide_type"
+            android:summary="@string/pref_desc_anim_type"
+            android:title="@string/pref_tit_anim_type" />
+
+        <EditTextPreference
+            android:defaultValue="@string/pref_def_anim_millis"
+            android:dialogTitle="@string/pref_tit_anim_millis"
+            android:key="@string/pref_key_anim_hide_millis"
+            android:numeric="decimal"
+            android:selectAllOnFocus="true"
+            android:summary="@string/pref_desc_anim_millis"
+            android:title="@string/pref_tit_anim_millis" />
+    </PreferenceCategory>
+
     <!-- ADS -->
-    <CheckBoxPreference
-        android:defaultValue="@string/pref_def_ads"
-        android:key="@string/pref_key_ads"
-        android:summary="@string/pref_desc_ads"
-        android:title="@string/pref_tit_ads" />
+    <PreferenceCategory android:title="@string/pref_tit_ads" >
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_def_ads"
+            android:key="@string/pref_key_ads"
+            android:summary="@string/pref_desc_ads"
+            android:title="@string/pref_tit_ads" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

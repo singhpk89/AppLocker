@@ -69,5 +69,17 @@
         <item>@string/pref_val_bg_turquoise</item>
         <item>@string/pref_val_bg_orange</item>
     </string-array>
+    <string-array name="pref_names_anim">
+        <item>@string/pref_list_anim_fade</item>
+        <item>@string/pref_list_anim_slide_left</item>
+        <item>@string/pref_list_anim_slide_right</item>
+        <item>@string/pref_list_anim_none</item>
+    </string-array>
+    <string-array name="pref_values_anim">
+        <item>@string/pref_val_anim_fade</item>
+        <item>@string/pref_val_anim_slide_left</item>
+        <item>@string/pref_val_anim_slide_right</item>
+        <item>@string/pref_val_anim_none</item>
+    </string-array>
 
 </resources>

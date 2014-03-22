@@ -39,7 +39,11 @@
     <string name="pref_key_pattern_color">com.twinone.locker.pref.pattern_color</string>
     <string name="pref_key_background">com.twinone.locker.pref.lockactivity_background</string>
     <string name="pref_key_ads">com.twinone.locker.pref.show_ads</string>
-    
+    <string name="pref_key_anim_show_type">com.twinone.locker.pref.anim_show_type</string>
+    <string name="pref_key_anim_hide_type">com.twinone.locker.pref.anim_hide_type</string>
+    <string name="pref_key_anim_show_millis">com.twinone.locker.pref.anim_show_millis</string>
+    <string name="pref_key_anim_hide_millis">com.twinone.locker.pref.anim_hide_millis</string>
+
     <!-- Temp -->
     <string name="pref_key_temp_wifi_unlock_state">temp.unlockstate</string>
     <string name="pref_key_temp_wifi_ssid">temp.ssid</string>
@@ -61,6 +65,11 @@
     <string name="pref_val_pattern_color_white">pc_white</string>
     <string name="pref_val_pattern_color_blue">pc_blue</string>
     <string name="pref_val_pattern_color_green">pc_green</string>
+    <string name="pref_val_anim_fade">anim_fade</string>
+    <string name="pref_val_anim_slide_left">anim_slide_left</string>
+    <string name="pref_val_anim_slide_right">anim_slide_right</string>
+    <string name="pref_val_anim_none">anim_none</string>
+
     <!--  -->
     <string name="pref_val_bg_none">bg_none</string>
     <string name="pref_val_bg_gallery">bg_gallery</string>
@@ -71,7 +80,7 @@
     <string name="pref_val_bg_turquoise">bg_turquoise</string>
     <string name="pref_val_bg_purple">bg_purple</string>
     <string name="pref_val_bg_orange">bg_orange</string>
-    
+
     <!-- Defaults -->
     <string name="pref_def_delay_status">false</string>
     <string name="pref_def_vibrate">true</string>
@@ -91,7 +100,8 @@
     <string name="pref_def_start_boot">true</string>
     <string name="pref_def_dial_launch_number">#12345</string>
     <string name="pref_def_ads">false</string>
-    
+    <string name="pref_def_anim_millis">300</string>
+
     <!--
     Next are numbers on buttons, only translate if your language 
     doesn't have decimal numbers (also please contact me in that case)

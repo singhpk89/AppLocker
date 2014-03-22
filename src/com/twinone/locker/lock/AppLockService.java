@@ -31,7 +31,6 @@ import com.twinone.locker.MainActivity;
 import com.twinone.locker.R;
 import com.twinone.locker.util.PrefUtil;
 import com.twinone.locker.version.VersionManager;
-import com.twinone.util.Analytics;
 
 public class AppLockService extends Service {
 

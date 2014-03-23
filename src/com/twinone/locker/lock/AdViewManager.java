@@ -22,7 +22,7 @@ import com.twinone.util.Analytics;
 public class AdViewManager implements AdListener {
 
 	private static final String TAG = "AdShowManager";
-	private boolean mShowAds = true;
+	private boolean mShowAds;
 	private Context mContext;
 	private RelativeLayout mAdContainer;
 	private com.adsdk.sdk.banner.AdView mMobFoxAdView;
@@ -46,9 +46,15 @@ public class AdViewManager implements AdListener {
 	 * Reload {@link #mShowAds}
 	 */
 	private boolean shouldShowAds() {
-		return (PrefUtil.getAds(mContext) || Boolean
-				.parseBoolean(VersionManager.getValue(mContext,
-						VersionKeys.ENABLE_ADS, "false")));
+		boolean pref = PrefUtil.getAds(mContext);
+		boolean server = Boolean.parseBoolean(VersionManager.getValue(mContext,
+				VersionKeys.ENABLE_ADS, "false"));
+		if (MainActivity.DEBUG) {
+			Log.w(TAG, "not showing ads in debug mode");
+			return false;
+		}
+		// if server says ads have to be shown, we have to show them :D
+		return pref || server;
 	}
 
 	/** Show ads if the preference says so, or if the server forces it */

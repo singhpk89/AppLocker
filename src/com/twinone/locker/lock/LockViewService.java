@@ -299,6 +299,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 		// if (mRootView == null || forceReload) {
 		// if next line removed, screen off bug appears!
 		hideView();
+		System.gc();
 		mRootView = inflateRootView();
 		mWindowManager.addView(mRootView, mLayoutParams);
 		// } else {
@@ -1093,6 +1094,8 @@ public class LockViewService extends Service implements View.OnClickListener,
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				hideView();
+				stopSelf();
+				System.gc();
 			}
 		});
 		mContainer.startAnimation(anim);

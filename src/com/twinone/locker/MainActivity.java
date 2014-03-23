@@ -32,7 +32,7 @@ import com.twinone.util.DialogSequencer;
 public class MainActivity extends Activity implements View.OnClickListener {
 	private static final String RUN_ONCE = "com.twinone.locker.pref.run_once";
 
-	private static final boolean TEST_BUTTON = false;
+	public static final boolean DEBUG = true;
 
 	private void onTestButton() {
 		VersionManager.queryServer(this, null);
@@ -88,7 +88,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		bBeta.setOnClickListener(this);
 		mSequencer = new DialogSequencer();
 		bBeta.setVisibility(View.GONE);
-		if (TEST_BUTTON) {
+		if (DEBUG) {
 			ViewGroup root = (ViewGroup) findViewById(R.id.mainllRoot);
 			Button b = new Button(this);
 			b.setText("Test button");
@@ -166,7 +166,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	}
 
 	private void initVersionManager() {
-		String url = "https://twinone.org/apps/locker/update_test.php";
+		
+		String url = "https://twinone.org/apps/locker/update.php";
 		VersionManager.setUrlOnce(this, url);
 		if (VersionManager.isJustUpgraded(this)) {
 			Receiver.scheduleAlarm(this);

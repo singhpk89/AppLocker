@@ -28,7 +28,7 @@ import android.preference.PreferenceScreen;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.twinone.locker.lock.AppLockService;
+import com.twinone.locker.lock.AlarmService;
 import com.twinone.locker.lock.LockViewService;
 import com.twinone.locker.util.PrefUtil;
 import com.twinone.locker.version.VersionManager;
@@ -235,9 +235,9 @@ public class PrefsActivity extends PreferenceActivity implements
 		setupMessagesAndViews();
 
 		// Reload service stuff
-		Intent intent = AppLockService.getReloadIntent(this);
-		startService(intent);
-
+		// Intent intent = AppLockService.getReloadIntent(this);
+		// startService(intent);
+		AlarmService.restart(this);
 	}
 
 	private void setupMessagesAndViews() {

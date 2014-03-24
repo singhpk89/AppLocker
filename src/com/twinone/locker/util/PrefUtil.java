@@ -71,7 +71,7 @@ public abstract class PrefUtil {
 
 	public static final String getAnimShowType(Context c) {
 		return getString(c, R.string.pref_key_anim_show_type,
-				R.string.pref_val_anim_fade);
+				R.string.pref_val_anim_none);
 	}
 
 	public static final String getAnimHideType(Context c) {

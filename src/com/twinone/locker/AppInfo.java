@@ -55,7 +55,7 @@ public class AppInfo implements Serializable {
 		if (object instanceof AppInfo) {
 			return this.packageName.equals(((AppInfo) object).packageName);
 		}
-
+		
 		return false;
 	}
 

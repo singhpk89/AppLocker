@@ -20,7 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.twinone.locker.automation.TempRuleActivity;
-import com.twinone.locker.lock.AppLockService;
+import com.twinone.locker.lock.AlarmService;
 import com.twinone.locker.lock.LockViewService;
 import com.twinone.locker.util.PrefUtil;
 import com.twinone.locker.version.Receiver;
@@ -33,10 +33,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	private static final String RUN_ONCE = "com.twinone.locker.pref.run_once";
 
 	public static final boolean DEBUG = true;
+	private static final String PROD_URL = "https://twinone.org/apps/locker/update.php";
+	private static final String DEBUG_URL = "https://twinone.org/apps/locker/debug.php";
+
+	private static final String VERSION_URL = DEBUG ? DEBUG_URL : PROD_URL;
 
 	private void onTestButton() {
-		VersionManager.queryServer(this, null);
-
+		// VersionManager.queryServer(this, null);
+		AlarmService.start(this);
 	}
 
 	public static String getMobFoxId() {
@@ -166,9 +170,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	}
 
 	private void initVersionManager() {
-		
-		String url = "https://twinone.org/apps/locker/update.php";
-		VersionManager.setUrlOnce(this, url);
+
+		VersionManager.setUrlOnce(this, VERSION_URL);
 		if (VersionManager.isJustUpgraded(this)) {
 			Receiver.scheduleAlarm(this);
 		}
@@ -275,11 +278,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 			break;
 		case R.id.bToggleService:
-			if (isServiceRunning()) {
-				doStopService();
-			} else {
-				doStartService();
-			}
+			doToggleService();
 			break;
 		case R.id.bSelect:
 			startSelectActivity();
@@ -329,7 +328,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	protected void onPause() {
 		super.onPause();
 		mSequencer.stop();
-		AppLockService.notifyPackageChanged(this, null);
+		// TODO
+		// Log.e(TAG, "Should notify lockViewService");
+		LockViewService.hide(this);
+		// AppLockService.notifyPackageChanged(this, null);
 	}
 
 	private void updateLayout(boolean running) {
@@ -389,7 +391,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
 		for (RunningServiceInfo service : manager
 				.getRunningServices(Integer.MAX_VALUE)) {
-			if (AppLockService.class.getName().equals(
+			if (AlarmService.class.getName().equals(
 					service.service.getClassName())) {
 				return true;
 			}
@@ -397,11 +399,21 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		return false;
 	}
 
+	private void doToggleService() {
+		if (isServiceRunning()) {
+			doStopService();
+		} else {
+			doStartService();
+		}
+	}
+
 	private void doStartService() {
 		Log.d(TAG, "doStartService");
 		if (showDialogs() && !shouldUpdate()) {
-			Intent i = AppLockService.getStartIntent(this);
-			startService(i);
+
+			// Intent i = AppLockService.getStartIntent(this);
+			// startService(i);
+			AlarmService.start(this);
 			updateLayout(isServiceRunning());
 		}
 	}
@@ -410,9 +422,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		Log.d(TAG, "doStopService");
 		// Intent i = AppLockService.getStopIntent(this);
 		// startService(i);
-		Intent i = new Intent(this, AppLockService.class);
 		updateLayout(false);
-		stopService(i);
+		// Intent i = new Intent(this, AppLockService.class);
+		// stopService(i);
+		AlarmService.stop(this);
 	}
 
 	private final void startSelectActivity() {

@@ -3,13 +3,8 @@ package com.twinone.locker;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.support.v4.util.LogWriter;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,20 +14,18 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.twinone.locker.AppAdapter.AppHolder;
-import com.twinone.locker.lock.AppLockService;
-import com.twinone.locker.lock.AppLockService.LocalBinder;
+import com.twinone.locker.lock.AlarmService;
+import com.twinone.locker.util.PrefUtil;
 
 public class SelectActivity extends Activity implements OnItemClickListener,
 		OnClickListener {
 
-	ListView mListView;
-	AppAdapter mAppAdapter;
-	Button bAll;
-	Button bNone;
-	Button bFinish;
-
-	private AppLockService mService;
-	boolean mBound = false;
+	private ListView mListView;
+	private AppAdapter mAppAdapter;
+	private Button bAll;
+	private Button bNone;
+	private Button bFinish;
+	private SharedPreferences.Editor mEditor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,52 +44,15 @@ public class SelectActivity extends Activity implements OnItemClickListener,
 		bNone.setOnClickListener(this);
 		bFinish = (Button) findViewById(R.id.bFinish);
 		bFinish.setOnClickListener(this);
-	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		Intent i = new Intent(this, AppLockService.class);
-		bindService(i, mConnection, Context.BIND_AUTO_CREATE);
-	}
-
-	private ServiceConnection mConnection = new ServiceConnection() {
-
-		@Override
-		public void onServiceConnected(ComponentName cn, IBinder binder) {
-			LocalBinder b = (LocalBinder) binder;
-			Log.w("SelectActivity", "SelectActivity BINDING");
-			mService = b.getInstance();
-			mBound = true;
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName cn) {
-			mBound = false;
-		}
-	};
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		if (mBound) {
-			// We don't need mService.restart()
-			// because this only changes apps
-			mService.loadPreferences();
-			unbindService(mConnection);
-			mBound = false;
-		}
+		mEditor = PrefUtil.appsPrefs(this).edit();
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		AppHolder ah = (AppHolder) mAppAdapter.getItem(position);
-		if (mBound) {
-			mService.setTracking(!ah.tracked, ah.ri.activityInfo.packageName);
-		} else {
-			Log.w("SelectActivity", "not bound");
-		}
+		setTracking(!ah.tracked, ah.ri.activityInfo.packageName);
 
 		// Move to top when re-enter
 		mAppAdapter.updateLockSwitches(this);
@@ -119,25 +75,34 @@ public class SelectActivity extends Activity implements OnItemClickListener,
 			break;
 		case R.id.bFinish:
 			Log.d("SelectActivity", "finishing...");
+			AlarmService.restart(this);
+			PrefUtil.apply(mEditor);
 			MainActivity.showWithoutPassword(this);
 			break;
 		}
 	}
 
 	private void setAllTracking(boolean track) {
-		if (mBound) {
-			ArrayList<String> apps = new ArrayList<String>();
-			for (AppHolder ah : mAppAdapter.getAllItems()) {
-				apps.add(ah.ri.activityInfo.packageName);
-			}
-			mService.setTracking(track, apps.toArray(new String[apps.size()]));
-
-			mAppAdapter.loadAppsIntoList(this);
-			mAppAdapter.sort();
-			mAppAdapter.notifyDataSetChanged();
-		} else {
-			Log.w("SelectActivity", "not bound");
+		ArrayList<String> apps = new ArrayList<String>();
+		for (AppHolder ah : mAppAdapter.getAllItems()) {
+			apps.add(ah.ri.activityInfo.packageName);
 		}
+		setTracking(track, apps.toArray(new String[apps.size()]));
+
+		mAppAdapter.loadAppsIntoList(this);
+		mAppAdapter.sort();
+		mAppAdapter.notifyDataSetChanged();
+	}
+
+	public final void setTracking(boolean shouldTrack, String... packageNames) {
+		for (String packageName : packageNames) {
+			if (shouldTrack) {
+				mEditor.putBoolean(packageName, true);
+			} else {
+				mEditor.remove(packageName);
+			}
+		}
+		PrefUtil.apply(mEditor);
 	}
 
 	@Override

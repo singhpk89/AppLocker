@@ -63,7 +63,6 @@ public class AppLockService extends Service {
 	@SuppressWarnings("unused")
 	private boolean mScreenOn = true;
 	private boolean mExplicitStarted;
-	
 
 	@Override
 	public IBinder onBind(Intent i) {
@@ -494,24 +493,7 @@ public class AppLockService extends Service {
 		c.startService(intent);
 	}
 
-	/**
-	 * Tracks or untracks an app
-	 * 
-	 * @param packageNames
-	 * @param shouldTrack
-	 *            True if the new state will be tracking, false if not
-	 */
-	public final void setTracking(boolean shouldTrack, String... packageNames) {
-		SharedPreferences.Editor editor = PrefUtil.appsPrefs(this).edit();
-		for (String packageName : packageNames) {
-			if (shouldTrack) {
-				editor.putBoolean(packageName, true);
-			} else {
-				editor.remove(packageName);
-			}
-		}
-		PrefUtil.apply(editor);
-	}
+
 
 	public static Intent getStopIntent(Context c) {
 		Intent i = new Intent(c, AppLockService.class);

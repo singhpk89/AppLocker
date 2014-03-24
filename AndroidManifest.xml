@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.twinone.locker"
-    android:versionCode="2301"
+    android:versionCode="2204"
     android:versionName="2.3" >
 
     <uses-sdk
@@ -123,6 +123,7 @@
 
         <!-- END ADS -->
         <service android:name="com.twinone.locker.lock.AppLockService" />
+        <service android:name="com.twinone.locker.lock.AlarmService" />
         <service android:name="com.twinone.locker.lock.LockViewService" />
 
         <receiver android:name="com.twinone.locker.receivers.OutgoingCallReceiver" >

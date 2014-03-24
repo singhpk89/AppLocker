@@ -4,9 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.List;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Service;
-import android.app.AlertDialog.Builder;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -64,6 +62,8 @@ public class LockViewService extends Service implements View.OnClickListener,
 	 * Check a currently set password, (either number or pattern)
 	 */
 	public static final String ACTION_COMPARE = CLASSNAME + ".action.compare";
+
+	private static final String ACTION_HIDE = CLASSNAME + ".action.hide";
 
 	/**
 	 * Create a new password by asking the user to enter it twice (either number
@@ -237,7 +237,8 @@ public class LockViewService extends Service implements View.OnClickListener,
 	private OnPatternListener mPatternListener;
 	private OnNumberListener mPasswordListener;
 
-	private AppLockService mAppLockService;
+	// private AppLockService mAppLockService;
+	private AlarmService mAlarmService;
 	private boolean mBound;
 
 	private Intent mIntent;
@@ -259,6 +260,10 @@ public class LockViewService extends Service implements View.OnClickListener,
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (intent == null) {
+			return START_NOT_STICKY;
+		}
+		if (ACTION_HIDE.equals(intent.getAction())) {
+			finish(true);
 			return START_NOT_STICKY;
 		}
 		if (ACTION_NOTIFY_PACKAGE_CHANGED.equals(intent.getAction())) {
@@ -353,6 +358,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 			mWindowManager.removeView(mRootView);
 			mViewDisplayed = false;
 		}
+		isFinishing = false;
 	}
 
 	private void showAnimation() {
@@ -485,7 +491,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 		if (currentPassword.equals(mPassword)) {
 			exitSuccessCompare();
 			long newV = mAnalytics.increment(LockerAnalytics.PASSWORD_SUCCESS);
-//			showAchievementDialog(newV);
+			// showAchievementDialog(newV);
 		} else if (explicit) {
 			mAnalytics.increment(LockerAnalytics.PASSWORD_FAILED);
 			mLockPasswordView.clearPassword();
@@ -494,26 +500,26 @@ public class LockViewService extends Service implements View.OnClickListener,
 		}
 	}
 
-	private void showAchievementDialog(long count) {
-		// check if it's multiple of 500, 1000, 5000
-		boolean show = false;
-		long tmp = 500;
-		while (true) {
-			if (tmp > count)
-				break;
-			if (count % tmp == 0)
-				show = true;
-			tmp *= 2;
-			if (tmp > count)
-				break;
-			if (count % tmp == 0)
-				show = true;
-			tmp *= 5;
-		}
-		if (!show)
-			return;
-
-	}
+	// private void showAchievementDialog(long count) {
+	// // check if it's multiple of 500, 1000, 5000
+	// boolean show = false;
+	// long tmp = 500;
+	// while (true) {
+	// if (tmp > count)
+	// break;
+	// if (count % tmp == 0)
+	// show = true;
+	// tmp *= 2;
+	// if (tmp > count)
+	// break;
+	// if (count % tmp == 0)
+	// show = true;
+	// tmp *= 5;
+	// }
+	// if (!show)
+	// return;
+	//
+	// }
 
 	/**
 	 * Called every time a pattern has been detected by the user and the action
@@ -524,7 +530,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 		if (currentPattern.equals(mPattern)) {
 			exitSuccessCompare();
 			long newV = mAnalytics.increment(LockerAnalytics.PATTERN_SUCCESS);
-//			showAchievementDialog(newV);
+			// showAchievementDialog(newV);
 		} else {
 			mAnalytics.increment(LockerAnalytics.PATTERN_FAILED);
 			mLockPatternView.setDisplayMode(DisplayMode.Wrong);
@@ -541,7 +547,8 @@ public class LockViewService extends Service implements View.OnClickListener,
 			return;
 		}
 		if (mBound) {
-			mAppLockService.unlockApp(mPackageName);
+			// mAppLockService.unlockApp(mPackageName);
+			mAlarmService.unlockApp(mPackageName);
 		} else {
 			Log.w(TAG, "Not bound to lockservice");
 		}
@@ -946,7 +953,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 		}
 		// bind to AppLockService
 		if (!getPackageName().equals(mPackageName)) {
-			Intent i = new Intent(this, AppLockService.class);
+			Intent i = new Intent(this, AlarmService.class);
 			bindService(i, mConnection, 0);
 		}
 
@@ -984,6 +991,12 @@ public class LockViewService extends Service implements View.OnClickListener,
 			mFooterButtons.setVisibility(View.VISIBLE);
 			setupFirst();
 		}
+	}
+
+	public static final void hide(Context c) {
+		Intent i = new Intent(c, LockViewService.class);
+		i.setAction(ACTION_HIDE);
+		c.startService(i);
 	}
 
 	public static final Intent getDefaultIntent(final Context c) {
@@ -1035,8 +1048,8 @@ public class LockViewService extends Service implements View.OnClickListener,
 		@Override
 		public void onServiceConnected(ComponentName cn, IBinder binder) {
 			Log.v(TAG, "LockViewService is now bound");
-			final AppLockService.LocalBinder b = (AppLockService.LocalBinder) binder;
-			mAppLockService = b.getInstance();
+			final AlarmService.LocalBinder b = (AlarmService.LocalBinder) binder;
+			mAlarmService = b.getInstance();
 			mBound = true;
 		}
 
@@ -1048,15 +1061,18 @@ public class LockViewService extends Service implements View.OnClickListener,
 	};
 
 	private void exitCreate() {
-		// Always go back to our app
-		Intent i = AppLockService.getReloadIntent(this);
-		startService(i);
+		AlarmService.restart(this);
 		MainActivity.showWithoutPassword(this);
 		finish(true);
 	}
 
+	private boolean isFinishing;
 	private void finish(boolean unlocked) {
 		Log.v(TAG, "finishing");
+		if (isFinishing) {
+			Log.d(TAG, "already was finishing!!");
+		}
+		isFinishing = true;
 		if (mBound) {
 			unbindService(mConnection);
 			mBound = false;
@@ -1160,5 +1176,4 @@ public class LockViewService extends Service implements View.OnClickListener,
 			onAfterInflate();
 		}
 	}
-
 }

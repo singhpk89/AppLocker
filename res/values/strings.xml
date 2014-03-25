@@ -278,5 +278,15 @@
     <string name="pref_list_anim_slide_right">Slide Right</string>
     <string name="pref_list_anim_slide_left">Slide left</string>
     <string name="pref_list_anim_none">Disabled</string>
+    <!-- BEGIN v2310 -->
+    <string name="pro_b_main">Pro</string>
+    <string name="pro_features">Pro features:</string>
+    <string name="pro_ft_bg">Custom Background image</string>
+    <string name="pro_ft_hide">Hide Locker</string>
+    <string name="pro_ft_pcolor">Change pattern color</string>
+    <string name="pro_ft_short_exit">Short exit</string>
+    <string name="pro_ft_more">More coming soon;</string>
+    <string name="pro_msg_ads">Using pro will enable ads</string>
+    <string name="pro_required">This is a pro feature. Do you want to enable Locker pro (free)?</string>
 
 </resources>

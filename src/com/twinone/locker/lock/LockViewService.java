@@ -1067,10 +1067,10 @@ public class LockViewService extends Service implements View.OnClickListener,
 	}
 
 	private boolean isFinishing;
+
 	private void finish(boolean unlocked) {
-		Log.v(TAG, "finishing");
 		if (isFinishing) {
-			Log.d(TAG, "already was finishing!!");
+			return;
 		}
 		isFinishing = true;
 		if (mBound) {
@@ -1110,8 +1110,8 @@ public class LockViewService extends Service implements View.OnClickListener,
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				hideView();
-				stopSelf();
 				System.gc();
+				stopSelf();
 			}
 		});
 		mContainer.startAnimation(anim);
@@ -1119,10 +1119,9 @@ public class LockViewService extends Service implements View.OnClickListener,
 
 	@Override
 	public void onDestroy() {
-		Log.w(TAG, "destroyed");
 		super.onDestroy();
-		mAdViewManager.onDestroy();
-		// finish(true);
+		if (mAdViewManager != null)
+			mAdViewManager.onDestroy();
 	}
 
 	@Override

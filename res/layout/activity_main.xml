@@ -13,8 +13,8 @@
         android:orientation="vertical" >
 
         <LinearLayout
-            android:layout_width="match_parent"
             android:id="@+id/mainllRoot"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical" >
@@ -72,13 +72,13 @@
             </Button>
 
             <Button
-                android:id="@+id/bBeta"
+                android:id="@+id/bPro"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
                 android:padding="10dp"
-                android:text="@string/beta_tit" >
+                android:text="@string/pro_b_main" >
             </Button>
         </LinearLayout>
     </ScrollView>

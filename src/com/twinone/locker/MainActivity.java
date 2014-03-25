@@ -9,17 +9,14 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.twinone.locker.automation.TempRuleActivity;
 import com.twinone.locker.lock.AlarmService;
 import com.twinone.locker.lock.LockViewService;
 import com.twinone.locker.util.PrefUtil;
@@ -39,8 +36,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	private static final String VERSION_URL = DEBUG ? DEBUG_URL : PROD_URL;
 
 	private void onTestButton() {
-		// VersionManager.queryServer(this, null);
-		AlarmService.start(this);
+		 VersionManager.queryServer(this, null);
 	}
 
 	public static String getMobFoxId() {
@@ -60,7 +56,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	private Button bChangeMessage;
 	private Button bShare;
 	private Button bRate;
-	private Button bBeta;
 
 	private DialogSequencer mSequencer;
 	private Analytics mAnalytics;
@@ -81,7 +76,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		bChangeMessage = (Button) findViewById(R.id.bPrefs);
 		bShare = (Button) findViewById(R.id.bShare);
 		bRate = (Button) findViewById(R.id.bRate);
-		bBeta = (Button) findViewById(R.id.bBeta);
 		tvState = (TextView) findViewById(R.id.tvState);
 		bStart.setOnClickListener(this);
 		bChangePass.setOnClickListener(this);
@@ -89,9 +83,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		bChangeMessage.setOnClickListener(this);
 		bShare.setOnClickListener(this);
 		bRate.setOnClickListener(this);
-		bBeta.setOnClickListener(this);
 		mSequencer = new DialogSequencer();
-		bBeta.setVisibility(View.GONE);
 		if (DEBUG) {
 			ViewGroup root = (ViewGroup) findViewById(R.id.mainllRoot);
 			Button b = new Button(this);
@@ -107,7 +99,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		}
 
 		initVersionManager();
-		shouldUpdate();
+		showVersionDialogs();
 	}
 
 	/**
@@ -115,37 +107,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	 * 
 	 * @return true if it's deprecated and should update forcedly
 	 */
-	private boolean shouldUpdate() {
+	private void showVersionDialogs() {
 		if (VersionManager.shouldWarn(this)) {
-			int days = VersionManager.getDaysLeft(this);
-			AlertDialog.Builder ab = new AlertDialog.Builder(this);
-			ab.setTitle(R.string.update_available);
-			ab.setMessage(getString(R.string.update_available_msg, days));
-			ab.setPositiveButton(R.string.update_button,
-					new ToPlayStoreListener());
-			ab.setNegativeButton(R.string.update_button_cancel, null);
-			ab.show();
+			new MessageProvider(this).getUpdateAvailableDialog().show();
 		} else if (VersionManager.isDeprecated(this)) {
-			AlertDialog.Builder ab = new AlertDialog.Builder(this);
-			ab.setTitle(R.string.update_needed);
-			ab.setCancelable(false);
-			ab.setMessage(R.string.update_needed_msg);
-			ab.setPositiveButton(R.string.update_button,
-					new ToPlayStoreListener());
-			ab.show();
-			return true;
-		}
-		return false;
-	}
-
-	/** When the user clicks this button he will be sent to the play store */
-	private class ToPlayStoreListener implements OnClickListener {
-		@Override
-		public void onClick(DialogInterface dialog, int which) {
-			String str = "https://play.google.com/store/apps/details?id="
-					+ getPackageName();
-			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(str));
-			startActivity(intent);
+			new MessageProvider(this).getDeprecatedDialog().show();
 		}
 	}
 
@@ -298,10 +264,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			i.setAction(StagingActivity.ACTION_RATE);
 			startActivity(i);
 			break;
-		case R.id.bBeta:
-			Intent i2 = new Intent(MainActivity.this, TempRuleActivity.class);
-			startActivity(i2);
-			break;
 		}
 	}
 
@@ -409,10 +371,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 	private void doStartService() {
 		Log.d(TAG, "doStartService");
-		if (showDialogs() && !shouldUpdate()) {
-
-			// Intent i = AppLockService.getStartIntent(this);
-			// startService(i);
+		if (showDialogs()) {
 			AlarmService.start(this);
 			updateLayout(isServiceRunning());
 		}
@@ -420,23 +379,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 	private void doStopService() {
 		Log.d(TAG, "doStopService");
-		// Intent i = AppLockService.getStopIntent(this);
-		// startService(i);
 		updateLayout(false);
-		// Intent i = new Intent(this, AppLockService.class);
-		// stopService(i);
 		AlarmService.stop(this);
 	}
 
 	private final void startSelectActivity() {
 		Intent i = new Intent(this, SelectActivity.class);
 		startActivity(i);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// getMenuInflater().inflate(R.menu.main, menu);
-		return true;
 	}
 
 	/**
@@ -448,7 +397,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	public static final void showWithoutPassword(Context context) {
 		Intent i = new Intent(context, MainActivity.class);
 		i.putExtra(EXTRA_UNLOCKED, true);
-		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		if (!(context instanceof Activity)) {
+			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		}
 		context.startActivity(i);
 	}
 

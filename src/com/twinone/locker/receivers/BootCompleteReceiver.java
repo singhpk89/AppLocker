@@ -1,17 +1,18 @@
 package com.twinone.locker.receivers;
 
-import com.twinone.locker.lock.AppLockService;
-import com.twinone.locker.util.PrefUtil;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.twinone.locker.lock.AlarmService;
+import com.twinone.locker.util.PrefUtil;
+
 /**
  * Starts the Service at boot if it's specified in the preferences.
+ * 
  * @author twinone
- *
+ * 
  */
 public class BootCompleteReceiver extends BroadcastReceiver {
 
@@ -22,8 +23,7 @@ public class BootCompleteReceiver extends BroadcastReceiver {
 		boolean startAtBoot = PrefUtil.getStartAtBoot(c);
 		if (startAtBoot) {
 			Log.d("BootCompleteReceiver", "Starting service");
-			Intent startIntent = AppLockService.getStartIntent(c);
-			c.startService(startIntent);
+			AlarmService.start(c);
 		}
 	}
 

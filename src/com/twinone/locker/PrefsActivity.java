@@ -237,6 +237,7 @@ public class PrefsActivity extends PreferenceActivity implements
 		// Reload service stuff
 		// Intent intent = AppLockService.getReloadIntent(this);
 		// startService(intent);
+		Log.d("", "restating service");
 		AlarmService.restart(this);
 	}
 

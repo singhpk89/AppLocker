@@ -1,4 +1,4 @@
-package com.twinone.locker;
+package com.twinone.locker.version;
 
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -11,12 +11,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
-import com.twinone.locker.version.VersionManager;
+import com.twinone.locker.MainActivity;
+import com.twinone.locker.R;
 
-public class MessageProvider {
+public class VersionUtils {
 	private final Context mContext;
 
-	public MessageProvider(Context c) {
+	public VersionUtils(Context c) {
 		mContext = c;
 	}
 

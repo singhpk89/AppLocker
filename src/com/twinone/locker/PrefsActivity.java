@@ -151,10 +151,6 @@ public class PrefsActivity extends PreferenceActivity implements
 
 		mLockTypePref.setOnPreferenceClickListener(this);
 		mChangeLogPref.setOnPreferenceClickListener(this);
-		// Add the warning that the system may kill if not foreground
-		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1) {
-			mNotifOnPref.setSummary(R.string.pref_desc_show_notification_v18);
-		}
 
 		// transparent notification is only available on api level 16+
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
@@ -333,6 +329,7 @@ public class PrefsActivity extends PreferenceActivity implements
 		if (!mPermitOnPause) {
 			finish();
 		}
+		LockViewService.hide(this);
 		super.onPause();
 	}
 

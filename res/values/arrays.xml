@@ -48,7 +48,7 @@
         <item>@string/pref_val_pattern_color_blue</item>
     </string-array>
     <string-array name="pref_names_background">
-        <item>@string/background_remove</item>
+        <item>@string/background_default</item>
         <item>@string/background_from_gallery</item>
         <item>@string/background_locker_blue</item>
         <item>@string/background_locker_dark_blue</item>
@@ -59,7 +59,7 @@
         <item>@string/background_locker_orange</item>
     </string-array>
     <string-array name="pref_values_background">
-        <item>@string/pref_val_bg_none</item>
+        <item>@string/pref_val_bg_default</item>
         <item>@string/pref_val_bg_gallery</item>
         <item>@string/pref_val_bg_blue</item>
         <item>@string/pref_val_bg_dark_blue</item>

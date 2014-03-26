@@ -15,7 +15,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -40,7 +39,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.twinone.locker.LockerAnalytics;
-import com.twinone.locker.MainActivity;
 import com.twinone.locker.R;
 import com.twinone.locker.lock.PasswordView.OnNumberListener;
 import com.twinone.locker.lock.PatternView.Cell;
@@ -821,12 +819,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 	}
 
 	private void setBackground() {
-		String none = getString(R.string.pref_val_bg_none);
-		if (mBackgroundUriString == null || mBackgroundUriString.equals(none)) {
-			mViewBackground.setImageBitmap(null);
-			mViewBackground.setBackgroundColor(Color.BLACK);
-			return;
-		}
+		String def = getString(R.string.pref_val_bg_default);
 		String blue = getString(R.string.pref_val_bg_blue);
 		String dark_blue = getString(R.string.pref_val_bg_dark_blue);
 		String green = getString(R.string.pref_val_bg_green);
@@ -834,40 +827,31 @@ public class LockViewService extends Service implements View.OnClickListener,
 		String red = getString(R.string.pref_val_bg_red);
 		String orange = getString(R.string.pref_val_bg_orange);
 		String turquoise = getString(R.string.pref_val_bg_turquoise);
+		mViewBackground.setImageBitmap(null);
 		if (blue.equals(mBackgroundUriString)) {
-			mViewBackground.setImageBitmap(null);
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_blue));
 		} else if (dark_blue.equals(mBackgroundUriString)) {
-			mViewBackground.setImageBitmap(null);
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_dark_blue));
 		} else if (green.equals(mBackgroundUriString)) {
-			mViewBackground.setImageBitmap(null);
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_green));
 		} else if (purple.equals(mBackgroundUriString)) {
-			mViewBackground.setImageBitmap(null);
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_purple));
 		} else if (red.equals(mBackgroundUriString)) {
-			mViewBackground.setImageBitmap(null);
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_red));
 		} else if (turquoise.equals(mBackgroundUriString)) {
-			mViewBackground.setImageBitmap(null);
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_turquoise));
 		} else if (orange.equals(mBackgroundUriString)) {
-			mViewBackground.setImageBitmap(null);
-
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_orange));
-		} else {
-			if (!setBackgroundFromUri()) {
-				mViewBackground.setImageBitmap(null);
-				mViewBackground.setBackgroundColor(Color.BLACK);
-			}
+		} else if (def.equals(mBackgroundUriString) || !setBackgroundFromUri()) {
+			mViewBackground
+					.setImageResource(R.drawable.locker_default_background);
 		}
 	}
 
@@ -1062,7 +1046,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 
 	private void exitCreate() {
 		AlarmService.restart(this);
-		MainActivity.showWithoutPassword(this);
 		finish(true);
 	}
 

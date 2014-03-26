@@ -88,7 +88,7 @@
     <!-- For android 4.2 and below, the system will not kill Locker -->
     <string name="pref_desc_show_notification">Show a notification while apps are locked</string>
     <!-- Since Android 4.3, system kills app if it doesn't show a notification, we should warnt he users about this -->
-    <string name="pref_desc_show_notification_v18">Show a notification while apps are locked. Keep this enabled for correct functioning of Locker. If you disable this option, Android may kill Locker</string>
+    <string name="_old_pref_desc_show_notification_v18">Show a notification while apps are locked. Keep this enabled for correct functioning of Locker. If you disable this option, Android may kill Locker</string>
     <string name="notification_title">Locker is active</string>
     <string name="notification_state_locked">Click here to disable the lock</string>
     <!-- END v2.0 Strings -->
@@ -258,9 +258,8 @@
     <string name="background_dialog_title">Change Background</string>
     <string name="background_from_gallery">Gallery</string>
     <string name="background_locker_green">Green</string>
-    <string name="background_remove">Remove background</string>
+    <string name="old__background_default">Remove background</string>
     <string name="background_changed">Background changed</string>
-    <string name="background_removed">Background removed</string>
 
     <!-- BEGIN v2205 -->
     <string name="pref_tit_ads">Ads</string>
@@ -279,6 +278,8 @@
     <string name="pref_list_anim_slide_left">Slide left</string>
     <string name="pref_list_anim_none">Disabled</string>
     <!-- BEGIN v2310 -->
+    <string name="background_default">Default</string>
+    <!-- Pro stuff -->
     <string name="pro_b_main">Pro</string>
     <string name="pro_features">Pro features:</string>
     <string name="pro_ft_bg">Custom Background image</string>
@@ -287,6 +288,15 @@
     <string name="pro_ft_short_exit">Short exit</string>
     <string name="pro_ft_more">More coming soon;</string>
     <string name="pro_msg_ads">Using pro will enable ads</string>
-    <string name="pro_required">This is a pro feature. Do you want to enable Locker pro (free)?</string>
+    <string name="pro_required">This is a pro feature. Do you want to enable Pro features for free?</string>
+    <!--  -->
+    <string name="pro_window_title">Choose your plan</string>
+    <string name="pro_tit_paid">Locker Pro</string>
+    <string name="pro_desc_paid">You will have all pro features, and will see no ads</string>
+    <string name="pro_desc_paid_na">Currently not available</string>
+    <string name="pro_tit_ads">Locker Ads</string>
+    <string name="pro_desc_ads">You will have all pro features, and see ads to support us</string>
+    <string name="pro_tit_free">Locker Free</string>
+    <string name="pro_desc_free">Pro features will not be available in free mode</string>
 
 </resources>

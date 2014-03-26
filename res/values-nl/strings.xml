@@ -87,7 +87,7 @@
     <!-- For android 4.2 and below, the system will not kill Locker -->
     <string name="pref_desc_show_notification">Laat een melding zien wanneer apps geblokkeerd zijn</string>
     <!-- Since Android 4.3, system kills app if it doesn't show a notification, we should warnt he users about this -->
-    <string name="pref_desc_show_notification_v18">Laat een melding zien wanneer apps geblokkeerd zijn. Als je deze optie uitschakelt, kan Android Locker beëindigen</string>
+    <string name="old_pref_desc_show_notification_v18">Laat een melding zien wanneer apps geblokkeerd zijn. Als je deze optie uitschakelt, kan Android Locker beëindigen</string>
     <string name="notification_title">Locker is actief</string>
     <string name="notification_state_locked">Klik hier om de vergrendeling uit te schakelen</string>
     <!-- END v2.0 Strings -->
@@ -250,7 +250,7 @@
     <string name="background_dialog_title">Kies achtergrond</string>
     <string name="background_from_gallery">Galerij</string>
     <string name="background_locker_green">Groen</string>
-    <string name="background_remove">Verwijderen</string>
+    <string name="old_background_default">Verwijderen</string>
     <string name="background_changed">Achtergrond veranderd</string>
     <string name="background_removed">Achtergrond verwijderd</string>
     <!-- BEGIN v2205 -->

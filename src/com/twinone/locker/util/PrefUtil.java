@@ -61,12 +61,12 @@ public abstract class PrefUtil {
 
 	public static final int getAnimShowMillis(Context c) {
 		return parseInt(c, R.string.pref_key_anim_show_millis,
-				R.string.pref_def_anim_millis);
+				R.string.pref_def_anim_show_millis);
 	}
 
 	public static final int getAnimHideMillis(Context c) {
 		return parseInt(c, R.string.pref_key_anim_hide_millis,
-				R.string.pref_def_anim_millis);
+				R.string.pref_def_anim_hide_millis);
 	}
 
 	public static final String getAnimShowType(Context c) {
@@ -228,7 +228,8 @@ public abstract class PrefUtil {
 	 * @return
 	 */
 	public static final String getLockerBackground(Context c) {
-		return getStringOrNull(c, R.string.pref_key_background);
+		return getString(c, R.string.pref_key_background,
+				R.string.pref_val_bg_default);
 	}
 
 	public static final SharedPreferences.Editor setLockerBackground(
@@ -267,7 +268,7 @@ public abstract class PrefUtil {
 
 	public static final String getLockOrientation(Context c) {
 		return getString(c, R.string.pref_key_orientation,
-				R.string.pref_val_orientation_auto_rotate);
+				R.string.pref_val_orientation_system);
 	}
 
 	public static final String getRecoveryCode(Context c) {

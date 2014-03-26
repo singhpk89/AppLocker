@@ -182,7 +182,7 @@
     <!-- ANIMATIONS -->
     <PreferenceCategory android:title="@string/pref_tit_cat_anim_show" >
         <ListPreference
-            android:defaultValue="@string/pref_val_anim_fade"
+            android:defaultValue="@string/pref_val_anim_none"
             android:entries="@array/pref_names_anim"
             android:entryValues="@array/pref_values_anim"
             android:key="@string/pref_key_anim_show_type"
@@ -190,7 +190,7 @@
             android:title="@string/pref_tit_anim_type" />
 
         <EditTextPreference
-            android:defaultValue="@string/pref_def_anim_millis"
+            android:defaultValue="@string/pref_def_anim_show_millis"
             android:dialogTitle="@string/pref_tit_anim_millis"
             android:key="@string/pref_key_anim_show_millis"
             android:numeric="decimal"
@@ -208,7 +208,7 @@
             android:title="@string/pref_tit_anim_type" />
 
         <EditTextPreference
-            android:defaultValue="@string/pref_def_anim_millis"
+            android:defaultValue="@string/pref_def_anim_hide_millis"
             android:dialogTitle="@string/pref_tit_anim_millis"
             android:key="@string/pref_key_anim_hide_millis"
             android:numeric="decimal"

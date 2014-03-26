@@ -24,9 +24,9 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.twinone.locker.MainActivity;
-import com.twinone.locker.MessageProvider;
 import com.twinone.locker.R;
 import com.twinone.locker.util.PrefUtil;
+import com.twinone.locker.version.VersionUtils;
 import com.twinone.locker.version.VersionManager;
 
 public class AlarmService extends Service {
@@ -37,8 +37,6 @@ public class AlarmService extends Service {
 
 	/** Use this action to stop the intent */
 	private static final String ACTION_STOP = "com.twinone.locker.intent.action.stop_lock_service";
-	/** Use this action to indicate the service should run */
-	private static final String ACTION_RUN = "com.twinone.locker.intent.action.run";
 	/** Starts the alarm */
 	private static final String ACTION_START = "com.twinone.locker.intent.action.start_lock_service";
 	/**
@@ -105,6 +103,20 @@ public class AlarmService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		Log.d(TAG, "onCreate");
+	}
+
+	/** Starts everything, including notification and repeating alarm */
+	private void init() {
+		Log.d(TAG, "init");
+		if (VersionManager.isDeprecated(this)) {
+			Log.i(TAG, "Not starting AlarmService for deprecated version");
+			new VersionUtils(this).showDeprecatedNotification();
+			stop(this);
+			return;
+		}
+
+		mExplicitStarted = true;
+
 		mHandler = new Handler();
 		mActivityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 		mUnlockMap = new HashMap<String, Runnable>();
@@ -114,11 +126,6 @@ public class AlarmService extends Service {
 		filter.addAction(Intent.ACTION_SCREEN_ON);
 		filter.addAction(Intent.ACTION_SCREEN_OFF);
 		registerReceiver(mScreenReceiver, filter);
-	}
-
-	/** Starts everything, including notification and repeating alarm */
-	private void init() {
-		Log.d(TAG, "init");
 
 		final Set<String> apps = PrefUtil.getTrackedApps(this);
 		for (String s : apps) {
@@ -153,18 +160,10 @@ public class AlarmService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		super.onStartCommand(intent, flags, startId);
 		if (ACTION_START.equals(intent.getAction())) {
-			if (VersionManager.isDeprecated(this)) {
-				Log.i(TAG, "Not starting AlarmService for deprecated version");
-				new MessageProvider(this).showDeprecatedNotification();
-				doStopSelf();
-				return START_NOT_STICKY;
+			if (!mExplicitStarted) {
+				init();
 			}
-			Log.d(TAG, "ACTION_START");
-			mExplicitStarted = true;
-			init();
-		} else if (ACTION_RUN.equals(intent.getAction())) {
 			checkPackageChanged();
 		} else if (ACTION_RESTART.equals(intent.getAction())) {
 			if (mExplicitStarted) {
@@ -183,6 +182,7 @@ public class AlarmService extends Service {
 		if (!packageName.equals(mLastPackageName)) {
 			onAppClose(mLastPackageName);
 			onAppOpen(packageName);
+			Log.d(TAG, packageName);
 		}
 
 		// prepare for next call
@@ -340,14 +340,11 @@ public class AlarmService extends Service {
 	}
 
 	public static final void start(Context c) {
-		Intent i = new Intent(c, AlarmService.class);
-		i.setAction(ACTION_START);
-		c.startService(i);
+		startAlarm(c);
 	}
 
 	/** Starts the service */
 	private static final void startAlarm(Context c) {
-		Log.v(TAG, "starting alarm");
 		AlarmManager am = (AlarmManager) c.getSystemService(ALARM_SERVICE);
 		PendingIntent pi = getRunIntent(c);
 		SharedPreferences sp = PrefUtil.prefs(c);
@@ -363,7 +360,7 @@ public class AlarmService extends Service {
 
 	private static final PendingIntent getRunIntent(Context c) {
 		Intent i = new Intent(c, AlarmService.class);
-		i.setAction(ACTION_RUN);
+		i.setAction(ACTION_START);
 		PendingIntent pi = PendingIntent.getService(c, REQUEST_CODE, i, 0);
 		return pi;
 	}
@@ -375,6 +372,7 @@ public class AlarmService extends Service {
 
 	/** Stop this service, also stopping the alarm */
 	public static final void stop(Context c) {
+		stopAlarm(c);
 		Intent i = new Intent(c, AlarmService.class);
 		i.setAction(ACTION_STOP);
 		c.startService(i);
@@ -400,13 +398,13 @@ public class AlarmService extends Service {
 			Log.d(TAG, "Destroy not allowed, restarting service");
 			start(this);
 		}
-		unregisterReceiver(mScreenReceiver);
+		if (mScreenReceiver != null)
+			unregisterReceiver(mScreenReceiver);
 		if (mShowNotification)
 			hideNotification();
 	}
 
 	private void doStopSelf() {
-		stopAlarm(this);
 		mAllowDestroy = true;
 		stopSelf();
 	}

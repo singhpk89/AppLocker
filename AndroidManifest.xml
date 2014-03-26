@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.twinone.locker"
-    android:versionCode="2204"
+    android:versionCode="2205"
     android:versionName="2.3" >
 
     <uses-sdk
@@ -61,7 +61,6 @@
             android:name="com.twinone.locker.MainActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/application_name"
-            android:noHistory="true"
             android:theme="@style/ApplistTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -83,7 +82,6 @@
         <activity
             android:name="com.twinone.locker.SelectActivity"
             android:label="@string/applist_tit"
-            android:noHistory="true"
             android:theme="@style/ApplistTheme" >
         </activity>
         <activity
@@ -105,10 +103,7 @@
             android:name="com.twinone.locker.StagingActivity"
             android:theme="@style/Theme_Transparent" >
         </activity>
-        <activity android:name="com.twinone.locker.NavigationDrawerActivity" >
-        </activity>
-        <activity android:name="com.twinone.locker.automation.TempRuleActivity" >
-        </activity>
+        <activity android:name="com.twinone.locker.pro.ProActivity" />
         <!-- ADS -->
         <activity
             android:name="com.adsdk.sdk.banner.InAppWebView"
@@ -121,8 +116,6 @@
             android:name="com.google.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
 
-        <!-- END ADS -->
-        <service android:name="com.twinone.locker.lock.AppLockService" />
         <service android:name="com.twinone.locker.lock.AlarmService" />
         <service android:name="com.twinone.locker.lock.LockViewService" />
 

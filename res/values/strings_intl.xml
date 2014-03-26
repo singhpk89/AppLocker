@@ -71,7 +71,7 @@
     <string name="pref_val_anim_none">anim_none</string>
 
     <!--  -->
-    <string name="pref_val_bg_none">bg_none</string>
+    <string name="pref_val_bg_default">bg_none</string>
     <string name="pref_val_bg_gallery">bg_gallery</string>
     <string name="pref_val_bg_green">bg_green</string>
     <string name="pref_val_bg_red">bg_red</string>
@@ -100,8 +100,9 @@
     <string name="pref_def_start_boot">true</string>
     <string name="pref_def_dial_launch_number">#12345</string>
     <string name="pref_def_ads">false</string>
-    <string name="pref_def_anim_millis">300</string>
-
+    <string name="pref_def_anim_show_millis">0</string>
+    <string name="pref_def_anim_hide_millis">300</string>
+    
     <!--
     Next are numbers on buttons, only translate if your language 
     doesn't have decimal numbers (also please contact me in that case)

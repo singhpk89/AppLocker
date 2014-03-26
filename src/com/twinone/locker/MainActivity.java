@@ -19,7 +19,9 @@ import android.widget.TextView;
 
 import com.twinone.locker.lock.AlarmService;
 import com.twinone.locker.lock.LockViewService;
+import com.twinone.locker.pro.ProActivity;
 import com.twinone.locker.util.PrefUtil;
+import com.twinone.locker.version.VersionUtils;
 import com.twinone.locker.version.Receiver;
 import com.twinone.locker.version.VersionManager;
 import com.twinone.util.Analytics;
@@ -36,7 +38,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	private static final String VERSION_URL = DEBUG ? DEBUG_URL : PROD_URL;
 
 	private void onTestButton() {
-		 VersionManager.queryServer(this, null);
+		VersionManager.queryServer(this, null);
 	}
 
 	public static String getMobFoxId() {
@@ -56,6 +58,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	private Button bChangeMessage;
 	private Button bShare;
 	private Button bRate;
+	private Button bPro;
 
 	private DialogSequencer mSequencer;
 	private Analytics mAnalytics;
@@ -76,6 +79,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		bChangeMessage = (Button) findViewById(R.id.bPrefs);
 		bShare = (Button) findViewById(R.id.bShare);
 		bRate = (Button) findViewById(R.id.bRate);
+		bPro = (Button) findViewById(R.id.bPro);
 		tvState = (TextView) findViewById(R.id.tvState);
 		bStart.setOnClickListener(this);
 		bChangePass.setOnClickListener(this);
@@ -83,6 +87,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		bChangeMessage.setOnClickListener(this);
 		bShare.setOnClickListener(this);
 		bRate.setOnClickListener(this);
+		bPro.setOnClickListener(this);
 		mSequencer = new DialogSequencer();
 		if (DEBUG) {
 			ViewGroup root = (ViewGroup) findViewById(R.id.mainllRoot);
@@ -109,9 +114,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	 */
 	private void showVersionDialogs() {
 		if (VersionManager.shouldWarn(this)) {
-			new MessageProvider(this).getUpdateAvailableDialog().show();
+			new VersionUtils(this).getUpdateAvailableDialog().show();
 		} else if (VersionManager.isDeprecated(this)) {
-			new MessageProvider(this).getDeprecatedDialog().show();
+			new VersionUtils(this).getDeprecatedDialog().show();
 		}
 	}
 
@@ -263,6 +268,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			Intent i = new Intent(MainActivity.this, StagingActivity.class);
 			i.setAction(StagingActivity.ACTION_RATE);
 			startActivity(i);
+			break;
+		case R.id.bPro:
+			Intent pro = new Intent(MainActivity.this, ProActivity.class);
+			startActivity(pro);
 			break;
 		}
 	}

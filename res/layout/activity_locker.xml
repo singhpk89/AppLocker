@@ -52,7 +52,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:background="@drawable/locker_overlay"
+                    android:background="@drawable/overlay"
                     android:orientation="vertical"
                     android:paddingBottom="@dimen/main_vertical_padding"
                     android:paddingLeft="@dimen/main_horizontal_padding"

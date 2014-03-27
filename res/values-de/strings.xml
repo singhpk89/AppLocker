@@ -234,7 +234,7 @@
     <string name="pref_tit_lockactivity_background">Hintergrund</string>
     <string name="pref_desc_lockactivity_background">Hintergrundbild, was am Sperrbildschirm einer App angezeigt wird</string>
     <string name="pref_tit_hide_notification_icon">Benachrichtigungssymbol verstecken</string>
-    <string name="pref_desc_hide_notification_icon">Die Option versteckt nur das Benachrichtigungssymbol in der Statusleiste.</string>
+    <string name="pref_desc_hide_notification_icon">Die Option versteckt nur das Benachrichtigungssymbol in der Statusleiste</string>
 
     <!-- BEGIN 2203 -->
 

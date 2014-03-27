@@ -4,6 +4,7 @@
     android:orientation="vertical" >
 
     <LinearLayout
+        android:id="@+id/prollRoot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -11,6 +12,14 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="@string/pro_header"
+            android:textAppearance="@android:style/TextAppearance.Large" />
 
         <LinearLayout
             android:id="@+id/proItemFree"
@@ -82,6 +91,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/pro_desc_paid" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/prollFeatures"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="@string/pro_features_tit"
+                android:textAppearance="@android:style/TextAppearance.Large" />
         </LinearLayout>
     </LinearLayout>
 

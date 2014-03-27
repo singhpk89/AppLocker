@@ -81,5 +81,14 @@
         <item>@string/pref_val_anim_slide_right</item>
         <item>@string/pref_val_anim_none</item>
     </string-array>
+    <!--  -->
+    <string-array name="pro_features_array">
+        <item>@string/pro_ft_bg</item>
+        <item>@string/pro_ft_hide</item>
+        <item>@string/pro_ft_hide_notif</item>
+        <item>@string/pro_ft_pcolor</item>
+        <item>@string/pro_ft_short_exit</item>
+        <item>@string/pro_ft_more</item>
+    </string-array>
 
 </resources>

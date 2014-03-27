@@ -44,6 +44,7 @@ import com.twinone.locker.lock.PasswordView.OnNumberListener;
 import com.twinone.locker.lock.PatternView.Cell;
 import com.twinone.locker.lock.PatternView.DisplayMode;
 import com.twinone.locker.lock.PatternView.OnPatternListener;
+import com.twinone.locker.pro.ProUtils;
 import com.twinone.locker.util.PrefUtil;
 import com.twinone.locker.util.Util;
 import com.twinone.util.Analytics;
@@ -788,10 +789,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 				.getIntExtra(EXTRA_ANIM_HIDE_TYPE, ANIM_TYPE_NONE);
 		mAnimShowResId = getAnimResId(showType, true);
 		mAnimHideResId = getAnimResId(hideType, false);
-		Log.d(TAG, "showTime, hideTime, showType, hideType: " + mAnimShowTime
-				+ " " + mAnimHideTime + " " + mAnimShowResId + " "
-				+ mAnimHideResId);
-
 		mLayoutParams = new WindowManager.LayoutParams(
 				WindowManager.LayoutParams.MATCH_PARENT,
 				WindowManager.LayoutParams.MATCH_PARENT,
@@ -986,17 +983,20 @@ public class LockViewService extends Service implements View.OnClickListener,
 	public static final Intent getDefaultIntent(final Context c) {
 		final Intent i = new Intent(c, LockViewService.class);
 		int lockType = PrefUtil.getLockTypeInt(c);
+		boolean pro = new ProUtils(c).proFeaturesEnabled();
 		i.putExtra(EXTRA_VIEW_TYPE, lockType);
 		i.putExtra(EXTRA_ORIENTATION, PrefUtil.getLockOrientation(c));
-		i.putExtra(EXTRA_BACKGROUND_URI, PrefUtil.getLockerBackground(c));
 		i.putExtra(EXTRA_VIBRATE, PrefUtil.getPasswordVibrate(c));
 		i.putExtra(EXTRA_MESSAGE, PrefUtil.getMessage(c));
-		i.putExtra(EXTRA_ANIM_SHOW_TYPE,
-				getAnimType(c, PrefUtil.getAnimShowType(c)));
-		i.putExtra(EXTRA_ANIM_HIDE_TYPE,
-				getAnimType(c, PrefUtil.getAnimHideType(c)));
-		i.putExtra(EXTRA_ANIM_SHOW_MILLIS, PrefUtil.getAnimShowMillis(c));
-		i.putExtra(EXTRA_ANIM_HIDE_MILLIS, PrefUtil.getAnimHideMillis(c));
+		if (pro) {
+			i.putExtra(EXTRA_BACKGROUND_URI, PrefUtil.getLockerBackground(c));
+			i.putExtra(EXTRA_ANIM_SHOW_TYPE,
+					getAnimType(c, PrefUtil.getAnimShowType(c)));
+			i.putExtra(EXTRA_ANIM_HIDE_TYPE,
+					getAnimType(c, PrefUtil.getAnimHideType(c)));
+			i.putExtra(EXTRA_ANIM_SHOW_MILLIS, PrefUtil.getAnimShowMillis(c));
+			i.putExtra(EXTRA_ANIM_HIDE_MILLIS, PrefUtil.getAnimHideMillis(c));
+		}
 		if (lockType == LOCK_TYPE_PASSWORD) {
 			i.putExtra(EXTRA_PASSWORD, PrefUtil.getPassword(c));
 			i.putExtra(EXTRA_PASSWORD_STEALTH, PrefUtil.getPasswordStealth(c));
@@ -1004,12 +1004,13 @@ public class LockViewService extends Service implements View.OnClickListener,
 					PrefUtil.getPasswordSwitchButtons(c));
 		} else if (lockType == LOCK_TYPE_PATTERN) {
 			i.putExtra(EXTRA_PATTERN, PrefUtil.getPattern(c));
-			i.putExtra(EXTRA_MESSAGE, PrefUtil.getMessage(c));
 			i.putExtra(EXTRA_PATTERN_STEALTH, PrefUtil.getPatternStealth(c));
-			i.putExtra(EXTRA_PATTERN_CIRCLE_COLOR,
-					PrefUtil.getPatternCircleColor(c));
+			if (pro) {
+				i.putExtra(EXTRA_PATTERN_CIRCLE_COLOR,
+						PrefUtil.getPatternCircleColor(c));
+			}
 		}
-		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		// i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		return i;
 	}
 

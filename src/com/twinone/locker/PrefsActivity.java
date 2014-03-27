@@ -37,7 +37,6 @@ import com.twinone.util.ChangeLog;
 public class PrefsActivity extends PreferenceActivity implements
 		OnPreferenceChangeListener, OnSharedPreferenceChangeListener,
 		OnPreferenceClickListener {
-	private static final String ALIAS_CLASSNAME = "com.twinone.locker.MainActivityAlias";
 
 	SharedPreferences mPrefs;
 	SharedPreferences.Editor mEditor;
@@ -217,15 +216,7 @@ public class PrefsActivity extends PreferenceActivity implements
 
 		if (key.equals(keyHideIcon)) {
 			boolean shouldHide = mHideIconPref.isChecked();
-			ComponentName cn = new ComponentName(this.getApplicationContext(),
-					ALIAS_CLASSNAME);
-			int enabled = shouldHide ? PackageManager.COMPONENT_ENABLED_STATE_DISABLED
-					: PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
-			int current = getPackageManager().getComponentEnabledSetting(cn);
-			if (current != enabled) {
-				getPackageManager().setComponentEnabledSetting(cn, enabled,
-						PackageManager.DONT_KILL_APP);
-			}
+			PrefUtil.setHideApplication(this, shouldHide);
 		}
 
 		setupMessagesAndViews();

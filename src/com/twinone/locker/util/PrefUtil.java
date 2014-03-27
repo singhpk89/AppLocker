@@ -5,8 +5,10 @@ import java.util.Random;
 import java.util.Set;
 
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 
@@ -24,6 +26,8 @@ public abstract class PrefUtil {
 
 	public static final String PREF_FILE_DEFAULT = "com.twinone.locker.prefs.default";
 	private static final String PREF_FILE_APPS = "com.twinone.locker.prefs.apps";
+
+	private static final String ALIAS_CLASSNAME = "com.twinone.locker.MainActivityAlias";
 
 	// private SharedPreferences mSP;
 	// private SharedPreferences.Editor mEditor;
@@ -234,10 +238,7 @@ public abstract class PrefUtil {
 
 	public static final SharedPreferences.Editor setLockerBackground(
 			SharedPreferences.Editor editor, Context c, String value) {
-		if (value == null || value.length() == 0)
-			editor.remove(c.getString(R.string.pref_key_background));
-		else
-			editor.putString(c.getString(R.string.pref_key_background), value);
+		editor.putString(c.getString(R.string.pref_key_background), value);
 		return editor;
 	}
 
@@ -289,6 +290,18 @@ public abstract class PrefUtil {
 			editor.commit();
 		} else {
 			editor.apply();
+		}
+	}
+
+	public static void setHideApplication(Context c, boolean hide) {
+		ComponentName cn = new ComponentName(c.getApplicationContext(),
+				ALIAS_CLASSNAME);
+		int setting = hide ? PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+				: PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
+		int current = c.getPackageManager().getComponentEnabledSetting(cn);
+		if (current != setting) {
+			c.getPackageManager().setComponentEnabledSetting(cn, setting,
+					PackageManager.DONT_KILL_APP);
 		}
 	}
 

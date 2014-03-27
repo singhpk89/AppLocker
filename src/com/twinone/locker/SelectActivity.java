@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -74,7 +73,6 @@ public class SelectActivity extends Activity implements OnItemClickListener,
 			setAllTracking(false);
 			break;
 		case R.id.bFinish:
-			Log.d("SelectActivity", "finishing...");
 			AlarmService.restart(this);
 			PrefUtil.apply(mEditor);
 			MainActivity.showWithoutPassword(this);

@@ -12,6 +12,9 @@
     <color name="patternview_background">#48333333</color>
     <color name="passwordview_button_background">#48333333</color>
 
+    <!-- PRO -->
+    <color name="pro_overlay">#72333333</color>
+
     <!-- Holo dark background -->
     <color name="ics_background_start">#ff020202</color>
     <color name="ics_background_end">#ff272D33</color>

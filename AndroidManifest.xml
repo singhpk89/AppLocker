@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.twinone.locker"
-    android:versionCode="2205"
+    android:versionCode="2206"
     android:versionName="2.3" >
 
     <uses-sdk
@@ -81,30 +81,26 @@
 
         <activity
             android:name="com.twinone.locker.SelectActivity"
+            android:configChanges="orientation"
             android:label="@string/applist_tit"
             android:theme="@style/ApplistTheme" >
         </activity>
         <activity
             android:name="com.twinone.locker.PrefsActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
             android:label="@string/preferences_tit" >
         </activity>
         <!-- End derived activities -->
 
-
-        <!-- ExcludeFromRecents will hide it in task switcher -->
-        <!-- NoHistory will finish in onPause -->
-        <activity
-            android:name="com.twinone.locker.lock.LockActivity"
-            android:excludeFromRecents="true"
-            android:launchMode="singleInstance"
-            android:theme="@style/LockActivityTheme" >
-        </activity>
         <activity
             android:name="com.twinone.locker.StagingActivity"
             android:theme="@style/Theme_Transparent" >
         </activity>
-        <activity android:name="com.twinone.locker.pro.ProActivity" />
+        <activity
+            android:name="com.twinone.locker.pro.ProActivity"
+            android:configChanges="orientation|screenLayout|screenSize" />
         <!-- ADS -->
+        <!-- Mobfox -->
         <activity
             android:name="com.adsdk.sdk.banner.InAppWebView"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />

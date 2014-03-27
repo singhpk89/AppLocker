@@ -235,7 +235,7 @@
     <string name="pref_tit_lockactivity_background">Background</string>
     <string name="pref_desc_lockactivity_background">Background image to be displayed while unlocking apps</string>
     <string name="pref_tit_hide_notification_icon">Hide notification icon</string>
-    <string name="pref_desc_hide_notification_icon">This only the notification icon in the statusbar</string>
+    <string name="pref_desc_hide_notification_icon">This only hides the notification icon in the statusbar</string>
 
     <!-- BEGIN 2203 -->
     <string name="update_available">Update available</string>
@@ -281,22 +281,26 @@
     <string name="background_default">Default</string>
     <!-- Pro stuff -->
     <string name="pro_b_main">Pro</string>
-    <string name="pro_features">Pro features:</string>
+    <string name="pro_window_title">Pro features</string>
+    <!--  -->
+    <string name="pro_features_tit">Pro features:</string>
     <string name="pro_ft_bg">Custom Background image</string>
-    <string name="pro_ft_hide">Hide Locker</string>
+    <string name="pro_ft_hide">Hide Locker application</string>
+    <string name="pro_ft_hide_notif">Hide notification</string>
     <string name="pro_ft_pcolor">Change pattern color</string>
     <string name="pro_ft_short_exit">Short exit</string>
-    <string name="pro_ft_more">More coming soon;</string>
+    <string name="pro_ft_more">More coming soon</string>
+    <string name="pro_header">Choose your plan:</string>
+    <!--  -->
+    <string name="pro_tit_paid">Locker Pro</string>
+    <string name="pro_desc_paid">All pro features enabled\nNo ads</string>
+    <string name="pro_desc_paid_na">Currently not available</string>
+    <string name="pro_tit_ads">Locker Pro (Ads)</string>
+    <string name="pro_desc_ads">All pro features available for free\nAds</string>
+    <string name="pro_tit_free">Locker Free</string>
+    <string name="pro_desc_free">No pro features available\nNo ads</string>
+    <!--  -->
     <string name="pro_msg_ads">Using pro will enable ads</string>
     <string name="pro_required">This is a pro feature. Do you want to enable Pro features for free?</string>
-    <!--  -->
-    <string name="pro_window_title">Choose your plan</string>
-    <string name="pro_tit_paid">Locker Pro</string>
-    <string name="pro_desc_paid">You will have all pro features, and will see no ads</string>
-    <string name="pro_desc_paid_na">Currently not available</string>
-    <string name="pro_tit_ads">Locker Ads</string>
-    <string name="pro_desc_ads">You will have all pro features, and see ads to support us</string>
-    <string name="pro_tit_free">Locker Free</string>
-    <string name="pro_desc_free">Pro features will not be available in free mode</string>
 
 </resources>

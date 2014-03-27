@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.twinone.locker.lock.AlarmService;
 import com.twinone.locker.lock.LockViewService;
 import com.twinone.locker.pro.ProActivity;
+import com.twinone.locker.pro.ProUtils;
 import com.twinone.locker.util.PrefUtil;
 import com.twinone.locker.version.VersionUtils;
 import com.twinone.locker.version.Receiver;
@@ -31,7 +32,7 @@ import com.twinone.util.DialogSequencer;
 public class MainActivity extends Activity implements View.OnClickListener {
 	private static final String RUN_ONCE = "com.twinone.locker.pref.run_once";
 
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 	private static final String PROD_URL = "https://twinone.org/apps/locker/update.php";
 	private static final String DEBUG_URL = "https://twinone.org/apps/locker/debug.php";
 
@@ -103,8 +104,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			root.addView(b);
 		}
 
-		initVersionManager();
 		showVersionDialogs();
+
+		VersionManager.setUrlOnce(this, VERSION_URL);
+		if (VersionManager.isJustUpgraded(this)) {
+			onUpgrade();
+		}
+
 	}
 
 	/**
@@ -140,12 +146,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		PrefUtil.apply(editor);
 	}
 
-	private void initVersionManager() {
-
-		VersionManager.setUrlOnce(this, VERSION_URL);
-		if (VersionManager.isJustUpgraded(this)) {
-			Receiver.scheduleAlarm(this);
-		}
+	/** Called when a version upgrade performed (or on fresh install) */
+	private void onUpgrade() {
+		Receiver.scheduleAlarm(this);
+		new ProUtils(this).updateProSettings();
 	}
 
 	/**
@@ -314,7 +318,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		} else {
 			tvState.setText(R.string.main_state_not_running);
 			// tvState.setTextColor(Color.RED);
-			tvState.setVisibility(View.GONE);
+			tvState.setVisibility(View.INVISIBLE);
 			bStart.setText(R.string.main_start_service);
 		}
 		if (PrefUtil.getLockTypeInt(this) == LockViewService.LOCK_TYPE_PASSWORD) {

@@ -44,10 +44,14 @@ public class VersionManager {
 	private static final String PREFS_WARN_TIME = "com.twinone.update.warn_before_time";
 	/** Current server time */
 	private static final String PREFS_SERVER_TIME = "com.twinone.update.server_time";
-	/** The url to query for version info */
-	private static final String PREFS_URL = "com.twinone.update.url";
 	/** Custom prefix to be added to user-defined objects */
 	private static final String PREFS_VALUES_PREFIX = "com.twinone.update.values.custom.";
+
+	// Prefs in persistent file will not be wiped when a new version is applied
+	// from server
+	private static final String PERSISTENT_FILENAME = "com.twinone.update.pers";
+	/** The url to query for version info */
+	private static final String PREFS_URL = "com.twinone.update.url";
 
 	/** This indicates the old version for #isJustUpdated() */
 	private static final String PREFS_OLD_VERSION = "com.twinone.update.values.old_version";
@@ -103,10 +107,7 @@ public class VersionManager {
 		// update when different manifest versions or when there is no url set
 		// yet
 		if (getPrefsVersion(c) != getManifestVersion(c) || getUrl(c) == null) {
-			SharedPreferences.Editor editor = c.getSharedPreferences(
-					PREFS_FILENAME, Context.MODE_PRIVATE).edit();
-			editor.putString(PREFS_URL, url);
-			applyCompat(editor);
+			setUrl(c, url);
 		}
 	}
 
@@ -116,18 +117,26 @@ public class VersionManager {
 	 */
 	private static String getUrl(Context c) {
 		try {
-			String url = c.getSharedPreferences(PREFS_FILENAME,
+			String url = c.getSharedPreferences(PERSISTENT_FILENAME,
 					Context.MODE_PRIVATE).getString(PREFS_URL, null);
 			Uri.Builder ub = Uri.parse(url).buildUpon();
 			int manifestVersion = getManifestVersion(c);
 			String mVersion = String.valueOf(manifestVersion);
 			ub.appendQueryParameter("v", mVersion);
-			
+
 			return ub.build().toString();
 		} catch (Exception e) {
 			Log.w(TAG, "Error parsing url");
 			return null;
 		}
+	}
+
+	@SuppressLint("CommitPrefEdits")
+	private static void setUrl(Context c, String newUrl) {
+		SharedPreferences.Editor editor = c.getSharedPreferences(
+				PERSISTENT_FILENAME, Context.MODE_PRIVATE).edit();
+		editor.putString(PREFS_URL, newUrl);
+		applyCompat(editor);
 	}
 
 	private static int getPrefsVersion(Context c) {
@@ -172,8 +181,6 @@ public class VersionManager {
 		SharedPreferences.Editor editor = sp.edit();
 
 		// save the url!
-		String url = sp.getString(PREFS_URL, null);
-		editor.putString(PREFS_URL, url);
 		editor.clear();
 
 		editor.putInt(PREFS_VERSION_MATCHED, getManifestVersion(c));
@@ -183,8 +190,6 @@ public class VersionManager {
 			editor.putLong(PREFS_DEPRECATION_TIME, vi.deprecation_time);
 		if (vi.warn_time != null)
 			editor.putLong(PREFS_WARN_TIME, vi.warn_time);
-		if (vi.new_url != null)
-			editor.putString(PREFS_URL, vi.new_url);
 		if (vi.server_time != null)
 			editor.putLong(PREFS_SERVER_TIME, vi.server_time);
 		if (vi.values != null) {
@@ -195,6 +200,9 @@ public class VersionManager {
 					editor.putString(key, value);
 			}
 		}
+
+		if (vi.new_url != null)
+			setUrl(c, vi.new_url);
 
 		applyCompat(editor);
 	}
@@ -357,13 +365,15 @@ public class VersionManager {
 	 */
 	@SuppressLint("CommitPrefEdits")
 	public static boolean isJustUpgraded(Context context) {
-		SharedPreferences sp = context.getSharedPreferences(PREFS_FILENAME,
-				Context.MODE_PRIVATE);
+		SharedPreferences sp = context.getSharedPreferences(
+				PERSISTENT_FILENAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = sp.edit();
 		int manifestVersion = getManifestVersion(context);
 		int storedVersion = sp.getInt(PREFS_OLD_VERSION, 0);
+		Log.d(TAG, "Comparing versions: stored: " + storedVersion
+				+ " manifest: " + manifestVersion);
 		editor.putInt(PREFS_OLD_VERSION, manifestVersion);
 		applyCompat(editor);
-		return storedVersion == manifestVersion;
+		return storedVersion != manifestVersion;
 	}
 }

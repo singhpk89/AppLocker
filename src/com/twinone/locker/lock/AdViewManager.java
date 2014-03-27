@@ -14,9 +14,7 @@ import com.adsdk.sdk.banner.AdView;
 import com.twinone.locker.LockerAnalytics;
 import com.twinone.locker.MainActivity;
 import com.twinone.locker.R;
-import com.twinone.locker.VersionKeys;
-import com.twinone.locker.util.PrefUtil;
-import com.twinone.locker.version.VersionManager;
+import com.twinone.locker.pro.ProUtils;
 import com.twinone.util.Analytics;
 
 public class AdViewManager implements AdListener {
@@ -46,21 +44,23 @@ public class AdViewManager implements AdListener {
 	 * Reload {@link #mShowAds}
 	 */
 	private boolean shouldShowAds() {
-		boolean pref = PrefUtil.getAds(mContext);
-		boolean server = Boolean.parseBoolean(VersionManager.getValue(mContext,
-				VersionKeys.ENABLE_ADS, "false"));
 		if (MainActivity.DEBUG) {
 			Log.w(TAG, "not showing ads in debug mode");
 			return false;
 		}
-		// if server says ads have to be shown, we have to show them :D
-		return pref || server;
+		return new ProUtils(mContext).showAds();
 	}
 
-	/** Show ads if the preference says so, or if the server forces it */
+	/** Keeps track whether ads were already shown */
 	private boolean mShown = false;
 
+	public void reloadAds(ViewGroup rootView) {
+		mShown = false;
+		showAds(rootView);
+	}
+
 	public void showAds(View rootView) {
+		Log.d(TAG, "Requesting Ad");
 		mShowAds = shouldShowAds();
 
 		if (!mShowAds) {
@@ -117,6 +117,7 @@ public class AdViewManager implements AdListener {
 	@Override
 	public void noAdFound() {
 		// showFallbackAd();
+		Log.d(TAG, "noAdFound");
 	}
 
 	/** Call from service */

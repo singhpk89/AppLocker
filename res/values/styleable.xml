@@ -39,5 +39,8 @@
         <!-- Number of rows and columns in the matrix -->
         <attr name="gridSize" format="integer"></attr>
     </declare-styleable>
+    <declare-styleable name="ProPreference">
+        <attr name="isPro" format="boolean"></attr>
+    </declare-styleable>
 
 </resources>

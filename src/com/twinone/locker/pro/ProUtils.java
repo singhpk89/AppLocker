@@ -11,6 +11,8 @@ import android.content.SharedPreferences;
 import android.os.Build;
 
 import com.twinone.locker.R;
+import com.twinone.locker.lock.AlarmService;
+import com.twinone.locker.util.PrefUtil;
 
 public class ProUtils {
 	private static final String PREFS_FILENAME = "com.twinone.locker.pro";
@@ -28,8 +30,8 @@ public class ProUtils {
 	}
 
 	/**
-	 * @return true if the current pro setting is one of {@link #TYPE_ADS}
-	 *         or {@link #TYPE_PAID}
+	 * @return true if the current pro setting is one of {@link #TYPE_ADS} or
+	 *         {@link #TYPE_PAID}
 	 */
 	public boolean proFeaturesEnabled() {
 		final int type = getProType();
@@ -55,8 +57,7 @@ public class ProUtils {
 
 	/**
 	 * 
-	 * @return one of {@link #TYPE_ADS} {@link #TYPE_FREE} or
-	 *         {@link #TYPE_PAID}
+	 * @return one of {@link #TYPE_ADS} {@link #TYPE_FREE} or {@link #TYPE_PAID}
 	 */
 	public int getProType() {
 		return prefs().getInt(KEY_PRO_ENABLED, TYPE_FREE);
@@ -72,6 +73,7 @@ public class ProUtils {
 		SharedPreferences.Editor edit = prefs().edit().putInt(KEY_PRO_ENABLED,
 				value);
 		applyCompat(edit);
+		updateProSettings();
 	}
 
 	private SharedPreferences prefs() {
@@ -96,7 +98,7 @@ public class ProUtils {
 	}
 
 	/** Show the dialog for Pro options if pro features are not enabled */
-	public void showProDialogIfNotEnabled() {
+	public void showDialogIfProNotEnabled() {
 		if (!proFeaturesEnabled()) {
 			getProRequiredDialog().show();
 		}
@@ -119,4 +121,27 @@ public class ProUtils {
 			editor.apply();
 		}
 	}
+
+	public void updateProSettings() {
+		/** If pro features are enabled, we don't need to lock them */
+		if (proFeaturesEnabled())
+			return;
+		SharedPreferences.Editor editor = PrefUtil.prefs(mContext).edit();
+		editor.remove(mContext.getString(R.string.pref_key_background));
+		editor.remove(mContext.getString(R.string.pref_key_pattern_color));
+		editor.remove(mContext.getString(R.string.pref_key_delay_status));
+		editor.remove(mContext.getString(R.string.pref_key_dial_launch));
+		editor.remove(mContext.getString(R.string.pref_key_hide_launcher_icon));
+		editor.remove(mContext.getString(R.string.pref_key_show_notification));
+		editor.remove(mContext.getString(R.string.pref_key_anim_hide_type));
+		editor.remove(mContext.getString(R.string.pref_key_anim_hide_millis));
+		editor.remove(mContext.getString(R.string.pref_key_anim_show_type));
+		editor.remove(mContext.getString(R.string.pref_key_anim_show_millis));
+		editor.remove(mContext
+				.getString(R.string.pref_key_hide_notification_icon));
+		PrefUtil.apply(editor);
+		AlarmService.restart(mContext);
+		PrefUtil.setHideApplication(mContext, false);
+	}
+
 }

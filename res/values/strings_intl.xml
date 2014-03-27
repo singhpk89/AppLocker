@@ -86,9 +86,7 @@
     <string name="pref_def_vibrate">true</string>
     <string name="pref_def_relock_after_screenoff">true</string>
     <string name="pref_def_delay_time">60</string>
-    <!-- For Android 4.2 and lower, don't show a notification by default -->
-    <!-- This option is overriden in /res/values-v18/strings_intl.xml -->
-    <string name="pref_def_show_notification">false</string>
+    <string name="pref_def_show_notification">true</string>
     <string name="pref_def_hide_launcher_icon">false</string>
     <string name="pref_def_dial_launch">false</string>
     <string name="pref_def_hide_notification_icon">false</string>
@@ -100,7 +98,7 @@
     <string name="pref_def_start_boot">true</string>
     <string name="pref_def_dial_launch_number">#12345</string>
     <string name="pref_def_ads">false</string>
-    <string name="pref_def_anim_show_millis">0</string>
+    <string name="pref_def_anim_show_millis">200</string>
     <string name="pref_def_anim_hide_millis">300</string>
     
     <!--

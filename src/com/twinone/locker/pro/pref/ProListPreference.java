@@ -6,8 +6,12 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ProListPreference extends ListPreference {
+public class ProListPreference extends ListPreference implements IProPreference {
 	private Helper mHelper;
+
+	public Helper getHelper() {
+		return mHelper;
+	}
 
 	public ProListPreference(Context context) {
 		super(context);

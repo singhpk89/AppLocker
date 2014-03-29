@@ -100,7 +100,7 @@
     <string name="pref_def_ads">false</string>
     <string name="pref_def_anim_show_millis">200</string>
     <string name="pref_def_anim_hide_millis">300</string>
-    
+
     <!--
     Next are numbers on buttons, only translate if your language 
     doesn't have decimal numbers (also please contact me in that case)
@@ -116,5 +116,7 @@
     <string name="num8">8</string>
     <string name="num9">9</string>
     <string name="numBack">&lt;</string>
+    <!-- Works for 4.4 -->
+    <string name="packagename_dialer">com.android.dialer</string>
 
 </resources>

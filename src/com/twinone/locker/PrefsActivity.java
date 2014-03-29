@@ -3,20 +3,17 @@ package com.twinone.locker;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -28,10 +25,13 @@ import android.preference.PreferenceScreen;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.twinone.locker.lock.AlarmService;
-import com.twinone.locker.lock.LockViewService;
+import com.twinone.locker.lock.AppLockService;
+import com.twinone.locker.lock.LockService;
+import com.twinone.locker.pro.ProUtils;
+import com.twinone.locker.pro.pref.IProPreference;
+import com.twinone.locker.pro.pref.ProCheckBoxPreference;
+import com.twinone.locker.pro.pref.ProListPreference;
 import com.twinone.locker.util.PrefUtil;
-import com.twinone.locker.version.VersionManager;
 import com.twinone.util.ChangeLog;
 
 public class PrefsActivity extends PreferenceActivity implements
@@ -41,21 +41,22 @@ public class PrefsActivity extends PreferenceActivity implements
 	SharedPreferences mPrefs;
 	SharedPreferences.Editor mEditor;
 	// private static final String TAG = "PrefsActivity";
-	protected CheckBoxPreference mNotifOnPref;
-	protected CheckBoxPreference mDelayStatusPref;
-	protected EditTextPreference mDelayTimePref;
+	protected ProCheckBoxPreference mShowNotification;
+	protected ProCheckBoxPreference mShortExit;
+	protected EditTextPreference mShortExitTime;
 	protected CheckBoxPreference mTransparentPref;
 	protected PreferenceCategory mCatNotif;
-	protected CheckBoxPreference mDialStatusPref;
-	protected CheckBoxPreference mHideIconPref;
+	protected ProCheckBoxPreference mStartWithCall;
+	protected ProCheckBoxPreference mHideIcon;
 	protected Preference mChangeLogPref;
 	protected PreferenceScreen mPrefScreen;
 	protected Preference mLockTypePref;
 	protected PreferenceCategory mCatPassword;
 	protected PreferenceCategory mCatPattern;
 	protected Preference mRecoveryPref;
-	protected ListPreference mLockerBackgroundPref;
-	protected CheckBoxPreference mAdsPref;
+	protected ProListPreference mBackground;
+
+	private ProUtils mProUtils;
 
 	// private Handler mHandler = new Handler();
 
@@ -64,6 +65,8 @@ public class PrefsActivity extends PreferenceActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// Workaround for older versions
+		mProUtils = new ProUtils(this);
+
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			PreferenceManager pm = getPreferenceManager();
 			pm.setSharedPreferencesName(PrefUtil.PREF_FILE_DEFAULT);
@@ -72,21 +75,20 @@ public class PrefsActivity extends PreferenceActivity implements
 
 			mPrefs = pm.getSharedPreferences();
 			mEditor = pm.getSharedPreferences().edit();
-			mNotifOnPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_show_notification));
-			mDelayStatusPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_delay_status));
-			mDelayTimePref = (EditTextPreference) findPreference(getString(R.string.pref_key_delay_time));
+			mShowNotification = (ProCheckBoxPreference) findPreference(getString(R.string.pref_key_show_notification));
+			mShortExit = (ProCheckBoxPreference) findPreference(getString(R.string.pref_key_delay_status));
+			mShortExitTime = (EditTextPreference) findPreference(getString(R.string.pref_key_delay_time));
 			mCatNotif = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_notification));
 			mTransparentPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_hide_notification_icon));
-			mDialStatusPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_dial_launch));
-			mHideIconPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_hide_launcher_icon));
+			mStartWithCall = (ProCheckBoxPreference) findPreference(getString(R.string.pref_key_dial_launch));
+			mHideIcon = (ProCheckBoxPreference) findPreference(getString(R.string.pref_key_hide_launcher_icon));
 			mChangeLogPref = (Preference) findPreference(getString(R.string.pref_key_changelog));
 			mLockTypePref = (Preference) findPreference(getString(R.string.pref_key_lock_type));
 			mPrefScreen = (PreferenceScreen) findPreference(getString(R.string.pref_key_screen));
 			mCatPassword = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_password));
 			mCatPattern = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_pattern));
 			mRecoveryPref = (Preference) findPreference(getString(R.string.pref_key_recovery_code));
-			mLockerBackgroundPref = (ListPreference) findPreference(getString(R.string.pref_key_background));
-			mAdsPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_ads));
+			mBackground = (ProListPreference) findPreference(getString(R.string.pref_key_background));
 
 			initialize();
 		} else {
@@ -116,21 +118,20 @@ public class PrefsActivity extends PreferenceActivity implements
 
 			parent.mPrefs = pm.getSharedPreferences();
 			parent.mEditor = pm.getSharedPreferences().edit();
-			parent.mNotifOnPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_show_notification));
-			parent.mDelayTimePref = (EditTextPreference) findPreference(getString(R.string.pref_key_delay_time));
-			parent.mDelayStatusPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_delay_status));
+			parent.mShowNotification = (ProCheckBoxPreference) findPreference(getString(R.string.pref_key_show_notification));
+			parent.mShortExitTime = (EditTextPreference) findPreference(getString(R.string.pref_key_delay_time));
+			parent.mShortExit = (ProCheckBoxPreference) findPreference(getString(R.string.pref_key_delay_status));
 			parent.mCatNotif = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_notification));
 			parent.mTransparentPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_hide_notification_icon));
-			parent.mDialStatusPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_dial_launch));
-			parent.mHideIconPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_hide_launcher_icon));
+			parent.mStartWithCall = (ProCheckBoxPreference) findPreference(getString(R.string.pref_key_dial_launch));
+			parent.mHideIcon = (ProCheckBoxPreference) findPreference(getString(R.string.pref_key_hide_launcher_icon));
 			parent.mChangeLogPref = (Preference) findPreference(getString(R.string.pref_key_changelog));
 			parent.mLockTypePref = (Preference) findPreference(getString(R.string.pref_key_lock_type));
 			parent.mPrefScreen = (PreferenceScreen) findPreference(getString(R.string.pref_key_screen));
 			parent.mCatPassword = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_password));
 			parent.mCatPattern = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_pattern));
 			parent.mRecoveryPref = (Preference) findPreference(getString(R.string.pref_key_recovery_code));
-			parent.mLockerBackgroundPref = (ListPreference) findPreference(getString(R.string.pref_key_background));
-			parent.mAdsPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_ads));
+			parent.mBackground = (ProListPreference) findPreference(getString(R.string.pref_key_background));
 
 			parent.initialize();
 		}
@@ -143,10 +144,10 @@ public class PrefsActivity extends PreferenceActivity implements
 	protected void initialize() {
 
 		mPrefs.registerOnSharedPreferenceChangeListener(this);
-		mDelayTimePref.setOnPreferenceChangeListener(this);
-		mHideIconPref.setOnPreferenceChangeListener(this);
-		mDialStatusPref.setOnPreferenceChangeListener(this);
-		mLockerBackgroundPref.setOnPreferenceChangeListener(this);
+		mShortExitTime.setOnPreferenceChangeListener(this);
+		mHideIcon.setOnPreferenceChangeListener(this);
+		mStartWithCall.setOnPreferenceChangeListener(this);
+		mBackground.setOnPreferenceChangeListener(this);
 
 		mLockTypePref.setOnPreferenceClickListener(this);
 		mChangeLogPref.setOnPreferenceClickListener(this);
@@ -156,13 +157,6 @@ public class PrefsActivity extends PreferenceActivity implements
 			mCatNotif.removePreference(mTransparentPref);
 		}
 
-		Boolean ads = Boolean.parseBoolean(VersionManager.getValue(this,
-				VersionKeys.ENABLE_ADS, "false"));
-		if (ads) {
-			mAdsPref.setChecked(true);
-			mAdsPref.setEnabled(false);
-			mAdsPref.setSummary(R.string.pref_desc_ads_forced);
-		}
 		String code = PrefUtil.getRecoveryCode(this);
 		if (code != null)
 			mRecoveryPref.setSummary(String.format(
@@ -187,7 +181,7 @@ public class PrefsActivity extends PreferenceActivity implements
 				isZero = true;
 			}
 			if (isZero) {
-				mDelayStatusPref.setChecked(false);
+				mShortExit.setChecked(false);
 				mEditor.putBoolean(getString(R.string.pref_key_delay_status),
 						false);
 				mEditor.commit();
@@ -215,7 +209,7 @@ public class PrefsActivity extends PreferenceActivity implements
 		String keyHideIcon = getString(R.string.pref_key_hide_launcher_icon);
 
 		if (key.equals(keyHideIcon)) {
-			boolean shouldHide = mHideIconPref.isChecked();
+			boolean shouldHide = mHideIcon.isChecked();
 			PrefUtil.setHideApplication(this, shouldHide);
 		}
 
@@ -225,21 +219,21 @@ public class PrefsActivity extends PreferenceActivity implements
 		// Intent intent = AppLockService.getReloadIntent(this);
 		// startService(intent);
 		Log.d("", "restating service");
-		AlarmService.restart(this);
+		AppLockService.restart(this);
 	}
 
 	private void setupMessagesAndViews() {
 		// Dial and hide icon
-		final boolean dialCheck = mDialStatusPref.isChecked();
-		final boolean hideCheck = mHideIconPref.isChecked();
+		final boolean dialCheck = mStartWithCall.isChecked();
+		final boolean hideCheck = mHideIcon.isChecked();
 
-		mHideIconPref.setEnabled(dialCheck);
-		mDialStatusPref.setEnabled(!hideCheck);
+		mHideIcon.setEnabled(dialCheck);
+		mStartWithCall.setEnabled(!hideCheck);
 		if (hideCheck) {
-			mHideIconPref.setEnabled(true);
+			mHideIcon.setEnabled(true);
 		}
 		// Password/pattern categories
-		if (PrefUtil.getLockTypeInt(this) == LockViewService.LOCK_TYPE_PASSWORD) {
+		if (PrefUtil.getLockTypeInt(this) == LockService.LOCK_TYPE_PASSWORD) {
 			mLockTypePref.setSummary(R.string.pref_list_lock_type_password);
 			mPrefScreen.removePreference(mCatPattern);
 			mPrefScreen.addPreference(mCatPassword);
@@ -247,6 +241,14 @@ public class PrefsActivity extends PreferenceActivity implements
 			mLockTypePref.setSummary(R.string.pref_list_lock_type_pattern);
 			mPrefScreen.removePreference(mCatPassword);
 			mPrefScreen.addPreference(mCatPattern);
+		}
+		for (int i = 0; i < getListView().getCount(); i++) {
+			Preference p = (Preference) getListView().getItemAtPosition(i);
+			if (p instanceof IProPreference) {
+
+				((IProPreference) p).getHelper().setProUtils(mProUtils);
+				// ((IProPreference) p).getHelper().updateProFlag();
+			}
 		}
 
 	}
@@ -320,7 +322,7 @@ public class PrefsActivity extends PreferenceActivity implements
 		if (!mPermitOnPause) {
 			finish();
 		}
-		LockViewService.hide(this);
+		LockService.hide(this);
 		super.onPause();
 	}
 
@@ -337,11 +339,11 @@ public class PrefsActivity extends PreferenceActivity implements
 		choose.setItems(R.array.lock_type_names, new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				int lockType = which == 0 ? LockViewService.LOCK_TYPE_PASSWORD
-						: LockViewService.LOCK_TYPE_PATTERN;
-				Intent i = LockViewService.getDefaultIntent(c);
-				i.setAction(LockViewService.ACTION_CREATE);
-				i.putExtra(LockViewService.EXTRA_VIEW_TYPE, lockType);
+				int lockType = which == 0 ? LockService.LOCK_TYPE_PASSWORD
+						: LockService.LOCK_TYPE_PATTERN;
+				Intent i = LockService.getDefaultIntent(c);
+				i.setAction(LockService.ACTION_CREATE);
+				i.putExtra(LockService.EXTRA_VIEW_TYPE, lockType);
 				c.startService(i);
 			}
 		});

@@ -88,6 +88,7 @@
         <item>@string/pro_ft_hide_notif</item>
         <item>@string/pro_ft_pcolor</item>
         <item>@string/pro_ft_short_exit</item>
+        <item>@string/pro_ft_anim</item>
         <item>@string/pro_ft_more</item>
     </string-array>
 

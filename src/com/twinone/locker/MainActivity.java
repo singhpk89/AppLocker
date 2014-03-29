@@ -17,14 +17,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.twinone.locker.lock.AlarmService;
-import com.twinone.locker.lock.LockViewService;
+import com.twinone.locker.appselect.SelectActivity;
+import com.twinone.locker.lock.AppLockService;
+import com.twinone.locker.lock.LockService;
 import com.twinone.locker.pro.ProActivity;
 import com.twinone.locker.pro.ProUtils;
 import com.twinone.locker.util.PrefUtil;
-import com.twinone.locker.version.VersionUtils;
 import com.twinone.locker.version.Receiver;
 import com.twinone.locker.version.VersionManager;
+import com.twinone.locker.version.VersionUtils;
 import com.twinone.util.Analytics;
 import com.twinone.util.ChangeLog;
 import com.twinone.util.DialogSequencer;
@@ -32,14 +33,21 @@ import com.twinone.util.DialogSequencer;
 public class MainActivity extends Activity implements View.OnClickListener {
 	private static final String RUN_ONCE = "com.twinone.locker.pref.run_once";
 
-	public static final boolean DEBUG = false;
-	private static final String PROD_URL = "https://twinone.org/apps/locker/update.php";
-	private static final String DEBUG_URL = "https://twinone.org/apps/locker/debug.php";
+	public static final boolean DEBUG = BuildConfig.DEBUG;
+	private static final String VERSION_URL_PRD = "https://twinone.org/apps/locker/update.php";
+	private static final String VERSION_URL_DBG = "https://twinone.org/apps/locker/dbg-update.php";
 
-	private static final String VERSION_URL = DEBUG ? DEBUG_URL : PROD_URL;
+	private static final String ANALYTICS_PRD = "https://twinone.org/apps/locker/dbg-analytics.php";
+	private static final String ANALYTICS_DBG = "https://twinone.org/apps/locker/analytics.php";
+	private static final String VERSION_URL = DEBUG ? VERSION_URL_DBG
+			: VERSION_URL_PRD;
+	private static final String ANALYTICS_URL = DEBUG ? ANALYTICS_DBG
+			: ANALYTICS_PRD;
+	private VersionManager mVersionManager;
 
 	private void onTestButton() {
-		VersionManager.queryServer(this, null);
+		// mVersionManager.queryServer();
+		Receiver.scheduleAlarm(this);
 	}
 
 	public static String getMobFoxId() {
@@ -69,8 +77,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d(TAG, "onCreate");
 
 		mAnalytics = new Analytics(this);
+		mVersionManager = new VersionManager(this);
 		runOnceCheck();
 
 		setContentView(R.layout.activity_main);
@@ -106,8 +116,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 		showVersionDialogs();
 
-		VersionManager.setUrlOnce(this, VERSION_URL);
-		if (VersionManager.isJustUpgraded(this)) {
+		mVersionManager.setUrlOnce(VERSION_URL);
+		mAnalytics.setUrlOnce(ANALYTICS_URL);
+
+		if (mVersionManager.isJustUpgraded()) {
 			onUpgrade();
 		}
 
@@ -119,9 +131,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	 * @return true if it's deprecated and should update forcedly
 	 */
 	private void showVersionDialogs() {
-		if (VersionManager.shouldWarn(this)) {
+		if (mVersionManager.shouldWarn()) {
 			new VersionUtils(this).getUpdateAvailableDialog().show();
-		} else if (VersionManager.isDeprecated(this)) {
+		} else if (mVersionManager.isDeprecated()) {
 			new VersionUtils(this).getDeprecatedDialog().show();
 		}
 	}
@@ -202,7 +214,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			res = false;
 		}
 		// No apps
-		if (PrefUtil.getTrackedApps(this).isEmpty()) {
+		if (PrefUtil.getLockedApps(this).isEmpty()) {
 			final AlertDialog.Builder ab = new AlertDialog.Builder(this);
 			ab.setTitle(R.string.main_setup);
 			ab.setMessage(R.string.main_no_locked_apps);
@@ -246,8 +258,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			if (PrefUtil.isCurrentPasswordEmpty(this)) {
 				PrefsActivity.getChangePasswordDialog(this).show();
 			} else {
-				Intent i = LockViewService.getDefaultIntent(this);
-				i.setAction(LockViewService.ACTION_CREATE);
+				Intent i = LockService.getDefaultIntent(this);
+				i.setAction(LockService.ACTION_CREATE);
 				startService(i);
 			}
 
@@ -256,9 +268,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			doToggleService();
 			break;
 		case R.id.bSelect:
+			mAnalytics.increment(LockerAnalytics.OPEN_SELECT);
 			startSelectActivity();
 			break;
 		case R.id.bPrefs:
+			mAnalytics.increment(LockerAnalytics.OPEN_PREFS);
 			Intent prefsIntent = new Intent(this, PrefsActivity.class);
 			startActivity(prefsIntent);
 			break;
@@ -289,9 +303,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			unlocked = true;
 		}
 		if (!unlocked) {
-			Intent i = LockViewService.getDefaultIntent(this);
-			i.setAction(LockViewService.ACTION_COMPARE);
-			i.putExtra(LockViewService.EXTRA_PACKAGENAME, getPackageName());
+			Intent i = LockService.getDefaultIntent(this);
+			i.setAction(LockService.ACTION_COMPARE);
+			i.putExtra(LockService.EXTRA_PACKAGENAME, getPackageName());
 			startService(i);
 		}
 		getIntent().putExtra(EXTRA_UNLOCKED, false);
@@ -305,7 +319,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		mSequencer.stop();
 		// TODO
 		// Log.e(TAG, "Should notify lockViewService");
-		LockViewService.hide(this);
+		LockService.hide(this);
 		// AppLockService.notifyPackageChanged(this, null);
 	}
 
@@ -321,7 +335,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			tvState.setVisibility(View.INVISIBLE);
 			bStart.setText(R.string.main_start_service);
 		}
-		if (PrefUtil.getLockTypeInt(this) == LockViewService.LOCK_TYPE_PASSWORD) {
+		if (PrefUtil.getLockTypeInt(this) == LockService.LOCK_TYPE_PASSWORD) {
 			bChangePass.setText(R.string.main_button_set_password);
 		} else {
 			bChangePass.setText(R.string.main_button_set_pattern);
@@ -366,7 +380,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
 		for (RunningServiceInfo service : manager
 				.getRunningServices(Integer.MAX_VALUE)) {
-			if (AlarmService.class.getName().equals(
+			if (AppLockService.class.getName().equals(
 					service.service.getClassName())) {
 				return true;
 			}
@@ -385,7 +399,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	private void doStartService() {
 		Log.d(TAG, "doStartService");
 		if (showDialogs()) {
-			AlarmService.start(this);
+			AppLockService.start(this);
 			updateLayout(isServiceRunning());
 		}
 	}
@@ -393,7 +407,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	private void doStopService() {
 		Log.d(TAG, "doStopService");
 		updateLayout(false);
-		AlarmService.stop(this);
+		AppLockService.stop(this);
 	}
 
 	private final void startSelectActivity() {

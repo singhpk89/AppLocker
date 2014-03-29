@@ -50,10 +50,10 @@ import com.twinone.locker.util.Util;
 import com.twinone.util.Analytics;
 
 // TODO have all views re attach automatically
-public class LockViewService extends Service implements View.OnClickListener,
+public class LockService extends Service implements View.OnClickListener,
 		View.OnKeyListener {
 
-	public static final String CLASSNAME = LockViewService.class.getName();
+	public static final String CLASSNAME = LockService.class.getName();
 
 	private static final String TAG = CLASSNAME;
 
@@ -237,7 +237,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 	private OnNumberListener mPasswordListener;
 
 	// private AppLockService mAppLockService;
-	private AlarmService mAlarmService;
+	private AppLockService mAlarmService;
 	private boolean mBound;
 
 	private Intent mIntent;
@@ -316,6 +316,9 @@ public class LockViewService extends Service implements View.OnClickListener,
 		// }
 		if (animate)
 			showAnimation();
+		else {
+
+		}
 		mViewDisplayed = true;
 	}
 
@@ -489,8 +492,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 		final String currentPassword = mLockPasswordView.getPassword();
 		if (currentPassword.equals(mPassword)) {
 			exitSuccessCompare();
-			long newV = mAnalytics.increment(LockerAnalytics.PASSWORD_SUCCESS);
-			// showAchievementDialog(newV);
+			mAnalytics.increment(LockerAnalytics.PASSWORD_SUCCESS);
 		} else if (explicit) {
 			mAnalytics.increment(LockerAnalytics.PASSWORD_FAILED);
 			mLockPasswordView.clearPassword();
@@ -528,8 +530,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 		final String currentPattern = mLockPatternView.getPatternString();
 		if (currentPattern.equals(mPattern)) {
 			exitSuccessCompare();
-			long newV = mAnalytics.increment(LockerAnalytics.PATTERN_SUCCESS);
-			// showAchievementDialog(newV);
+			mAnalytics.increment(LockerAnalytics.PATTERN_SUCCESS);
 		} else {
 			mAnalytics.increment(LockerAnalytics.PATTERN_FAILED);
 			mLockPatternView.setDisplayMode(DisplayMode.Wrong);
@@ -546,7 +547,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 			return;
 		}
 		if (mBound) {
-			// mAppLockService.unlockApp(mPackageName);
 			mAlarmService.unlockApp(mPackageName);
 		} else {
 			Log.w(TAG, "Not bound to lockservice");
@@ -934,7 +934,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 		}
 		// bind to AppLockService
 		if (!getPackageName().equals(mPackageName)) {
-			Intent i = new Intent(this, AlarmService.class);
+			Intent i = new Intent(this, AppLockService.class);
 			bindService(i, mConnection, 0);
 		}
 
@@ -975,13 +975,13 @@ public class LockViewService extends Service implements View.OnClickListener,
 	}
 
 	public static final void hide(Context c) {
-		Intent i = new Intent(c, LockViewService.class);
+		Intent i = new Intent(c, LockService.class);
 		i.setAction(ACTION_HIDE);
 		c.startService(i);
 	}
 
 	public static final Intent getDefaultIntent(final Context c) {
-		final Intent i = new Intent(c, LockViewService.class);
+		final Intent i = new Intent(c, LockService.class);
 		int lockType = PrefUtil.getLockTypeInt(c);
 		boolean pro = new ProUtils(c).proFeaturesEnabled();
 		i.putExtra(EXTRA_VIEW_TYPE, lockType);
@@ -1033,7 +1033,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 		@Override
 		public void onServiceConnected(ComponentName cn, IBinder binder) {
 			Log.v(TAG, "LockViewService is now bound");
-			final AlarmService.LocalBinder b = (AlarmService.LocalBinder) binder;
+			final AppLockService.LocalBinder b = (AppLockService.LocalBinder) binder;
 			mAlarmService = b.getInstance();
 			mBound = true;
 		}
@@ -1046,7 +1046,7 @@ public class LockViewService extends Service implements View.OnClickListener,
 	};
 
 	private void exitCreate() {
-		AlarmService.restart(this);
+		AppLockService.restart(this);
 		finish(true);
 	}
 
@@ -1094,8 +1094,6 @@ public class LockViewService extends Service implements View.OnClickListener,
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				hideView();
-				System.gc();
-				stopSelf();
 			}
 		});
 		mContainer.startAnimation(anim);

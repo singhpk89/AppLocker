@@ -13,7 +13,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.twinone.locker.R;
-import com.twinone.locker.lock.LockViewService;
+import com.twinone.locker.lock.LockService;
 
 /**
  * This class contains utility methods for accessing various preferences in
@@ -179,7 +179,7 @@ public abstract class PrefUtil {
 
 	}
 
-	public static final Set<String> getTrackedApps(Context c) {
+	public static final Set<String> getLockedApps(Context c) {
 		SharedPreferences sp = appsPrefs(c);
 		Set<String> apps = new HashSet<String>(sp.getAll().keySet());
 		return apps;
@@ -199,10 +199,10 @@ public abstract class PrefUtil {
 	public static final int getLockTypeInt(Context c) {
 		String lockType = getLockType(c);
 		if (lockType.equals(c.getString(R.string.pref_val_lock_type_password))) {
-			return LockViewService.LOCK_TYPE_PASSWORD;
+			return LockService.LOCK_TYPE_PASSWORD;
 		} else if (lockType.equals(c
 				.getString(R.string.pref_val_lock_type_pattern))) {
-			return LockViewService.LOCK_TYPE_PATTERN;
+			return LockService.LOCK_TYPE_PATTERN;
 		} else {
 			return 0;
 		}
@@ -217,11 +217,11 @@ public abstract class PrefUtil {
 		String blue = c.getString(R.string.pref_val_pattern_color_blue);
 		String green = c.getString(R.string.pref_val_pattern_color_green);
 		if (color.equals(green)) {
-			return LockViewService.PATTERN_COLOR_GREEN;
+			return LockService.PATTERN_COLOR_GREEN;
 		} else if (color.equals(blue)) {
-			return LockViewService.PATTERN_COLOR_BLUE;
+			return LockService.PATTERN_COLOR_BLUE;
 		} else {
-			return LockViewService.PATTERN_COLOR_WHITE;
+			return LockService.PATTERN_COLOR_WHITE;
 		}
 	}
 
@@ -251,10 +251,10 @@ public abstract class PrefUtil {
 	public static final boolean isCurrentPasswordEmpty(Context c) {
 		final int lockType = getLockTypeInt(c);
 		switch (lockType) {
-		case LockViewService.LOCK_TYPE_PASSWORD:
+		case LockService.LOCK_TYPE_PASSWORD:
 			final String password = getPassword(c);
 			return password == null || password.length() == 0;
-		case LockViewService.LOCK_TYPE_PATTERN:
+		case LockService.LOCK_TYPE_PATTERN:
 			final String pattern = getPattern(c);
 			return pattern == null || pattern.length() == 0;
 		default:

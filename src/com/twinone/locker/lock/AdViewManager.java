@@ -19,7 +19,7 @@ import com.twinone.util.Analytics;
 
 public class AdViewManager implements AdListener {
 
-	private static final String TAG = "AdShowManager";
+	private static final String TAG = "AdViewManager";
 	private boolean mShowAds;
 	private Context mContext;
 	private RelativeLayout mAdContainer;
@@ -60,7 +60,6 @@ public class AdViewManager implements AdListener {
 	}
 
 	public void showAds(View rootView) {
-		Log.d(TAG, "Requesting Ad");
 		mShowAds = shouldShowAds();
 
 		if (!mShowAds) {
@@ -69,6 +68,7 @@ public class AdViewManager implements AdListener {
 		}
 
 		if (mShown != true) {
+			Log.d(TAG, "Requesting Ad");
 			mMobFoxAdView = new AdView(mContext,
 					"http://my.mobfox.com/request.php",
 					MainActivity.getMobFoxId(), true, true);

@@ -1,4 +1,4 @@
-package com.twinone.locker;
+package com.twinone.locker.appselect;
 
 import java.util.ArrayList;
 
@@ -12,8 +12,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.twinone.locker.AppAdapter.AppHolder;
-import com.twinone.locker.lock.AlarmService;
+import com.twinone.locker.MainActivity;
+import com.twinone.locker.R;
+import com.twinone.locker.lock.AppLockService;
 import com.twinone.locker.util.PrefUtil;
 
 public class SelectActivity extends Activity implements OnItemClickListener,
@@ -21,8 +22,8 @@ public class SelectActivity extends Activity implements OnItemClickListener,
 
 	private ListView mListView;
 	private AppAdapter mAppAdapter;
-	private Button bAll;
-	private Button bNone;
+	private boolean mAllLocked;
+	private Button bToggleAll;
 	private Button bFinish;
 	private SharedPreferences.Editor mEditor;
 
@@ -37,10 +38,8 @@ public class SelectActivity extends Activity implements OnItemClickListener,
 		mListView.setAdapter(mAppAdapter);
 		mListView.setOnItemClickListener(this);
 
-		bAll = (Button) findViewById(R.id.bLockAll);
-		bAll.setOnClickListener(this);
-		bNone = (Button) findViewById(R.id.bUnlockAll);
-		bNone.setOnClickListener(this);
+		bToggleAll = (Button) findViewById(R.id.bToggleAll);
+		bToggleAll.setOnClickListener(this);
 		bFinish = (Button) findViewById(R.id.bFinish);
 		bFinish.setOnClickListener(this);
 
@@ -48,33 +47,51 @@ public class SelectActivity extends Activity implements OnItemClickListener,
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		updateLayout();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		AppLockService.restart(this);
+		finish();
+		MainActivity.showWithoutPassword(this);
+	}
+
+	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		AppHolder ah = (AppHolder) mAppAdapter.getItem(position);
-		setTracking(!ah.tracked, ah.ri.activityInfo.packageName);
-
+		AppInfo sih = (AppInfo) mAppAdapter.getItem(position);
+		if (sih.isApp()) {
+			setLocked(!sih.locked, sih.packageName);
+		}
 		// Move to top when re-enter
-		mAppAdapter.updateLockSwitches(this);
+		mAppAdapter.updateLockSwitches();
 
 		// Dynamic move to top
 		// mAppAdapter.loadAppsIntoList(this);
 		// mAppAdapter.sort();
 
 		mAppAdapter.notifyDataSetChanged();
+		updateLayout();
+	}
+
+	private void updateLayout() {
+		mAllLocked = mAppAdapter.areAllAppsLocked();
+		bToggleAll.setText(mAllLocked ? R.string.applist_unlock_all
+				: R.string.applist_lock_all);
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.bLockAll:
-			setAllTracking(true);
-			break;
-		case R.id.bUnlockAll:
-			setAllTracking(false);
+		case R.id.bToggleAll:
+			setAllTracking(!mAllLocked);
+			updateLayout();
 			break;
 		case R.id.bFinish:
-			AlarmService.restart(this);
-			PrefUtil.apply(mEditor);
 			MainActivity.showWithoutPassword(this);
 			break;
 		}
@@ -82,17 +99,17 @@ public class SelectActivity extends Activity implements OnItemClickListener,
 
 	private void setAllTracking(boolean track) {
 		ArrayList<String> apps = new ArrayList<String>();
-		for (AppHolder ah : mAppAdapter.getAllItems()) {
-			apps.add(ah.ri.activityInfo.packageName);
+		for (AppInfo ah : mAppAdapter.getAllItems()) {
+			apps.add(ah.packageName);
 		}
-		setTracking(track, apps.toArray(new String[apps.size()]));
+		setLocked(track, apps.toArray(new String[apps.size()]));
 
-		mAppAdapter.loadAppsIntoList(this);
+		mAppAdapter.loadAppsIntoList();
 		mAppAdapter.sort();
 		mAppAdapter.notifyDataSetChanged();
 	}
 
-	public final void setTracking(boolean shouldTrack, String... packageNames) {
+	public final void setLocked(boolean shouldTrack, String... packageNames) {
 		for (String packageName : packageNames) {
 			if (shouldTrack) {
 				mEditor.putBoolean(packageName, true);
@@ -101,12 +118,6 @@ public class SelectActivity extends Activity implements OnItemClickListener,
 			}
 		}
 		PrefUtil.apply(mEditor);
-	}
-
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-		MainActivity.showWithoutPassword(this);
 	}
 
 }

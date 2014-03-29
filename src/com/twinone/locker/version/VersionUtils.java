@@ -22,7 +22,7 @@ public class VersionUtils {
 	}
 
 	public AlertDialog getUpdateAvailableDialog() {
-		int days = VersionManager.getDaysLeft(mContext);
+		int days = new VersionManager(mContext).getDaysLeft();
 		AlertDialog.Builder ab = new AlertDialog.Builder(mContext);
 		ab.setTitle(R.string.update_available);
 		ab.setMessage(mContext.getString(R.string.update_available_msg, days));

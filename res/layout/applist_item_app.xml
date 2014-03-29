@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/llThumbnail"
+    android:id="@+id/applist_item_app"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
-    android:paddingBottom="10dp"
-    android:paddingTop="10dp" >
+    android:paddingBottom="@dimen/element_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/element_vertical_margin" >
 
     <!-- android:background="@drawable/image_bg" -->
 
     <ImageView
         android:id="@+id/listIcon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentLeft="true"
         android:layout_marginRight="@dimen/image_right_margin"
         android:contentDescription="@string/icon_desc" />
@@ -26,15 +26,15 @@
         android:layout_toRightOf="@id/listIcon"
         android:textIsSelectable="false" />
 
-    <Button
+    <ImageView
         android:id="@+id/listLocked"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_width="20dp"
+        android:scaleType="centerInside"
+        android:layout_height="20dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:clickable="false"
         android:focusable="false"
-        android:text="@string/applist_on"
-        android:textSize="12sp" />
+        android:src="@drawable/lock_icon" />
 
 </RelativeLayout>

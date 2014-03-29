@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.twinone.locker.lock.AlarmService;
+import com.twinone.locker.lock.AppLockService;
 import com.twinone.locker.util.PrefUtil;
 
 /**
@@ -23,7 +23,7 @@ public class BootCompleteReceiver extends BroadcastReceiver {
 		boolean startAtBoot = PrefUtil.getStartAtBoot(c);
 		if (startAtBoot) {
 			Log.d("BootCompleteReceiver", "Starting service");
-			AlarmService.start(c);
+			AppLockService.start(c);
 		}
 	}
 

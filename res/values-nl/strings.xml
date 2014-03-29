@@ -22,7 +22,7 @@
 
     <!-- All Strings for applist -->
     <string name="applist_on">AAN</string>
-    <string name="applist_tit">Geblokkeerde apps</string>
+    <string name="applist_window_title">Geblokkeerde apps</string>
     <string name="icon_desc">icon</string>
 
     <!-- Change password activity -->
@@ -269,5 +269,37 @@
     <string name="pref_list_anim_slide_right">Schuif lechts</string>
     <string name="pref_list_anim_slide_left">Schuif links</string>
     <string name="pref_list_anim_none">Uitgeschakeld</string>
-	
+	 <!-- BEGIN v2302 -->
+    <string name="background_default">Standaard</string>
+    <!-- Pro stuff -->
+    <string name="pro_b_main">Pro</string>
+    <string name="pro_window_title">Pro functies</string>
+    <!--  -->
+    <string name="pro_ft_tit">Pro functies:</string>
+    <string name="pro_ft_bg">Aanpasbare achtergrond afbeelding</string>
+    <string name="pro_ft_hide">Verberg Locker applicatie</string>
+    <string name="pro_ft_hide_notif">Verberg melding</string>
+    <string name="pro_ft_pcolor">Verander patroon kleur</string>
+    <string name="pro_ft_short_exit">Korte uitgang</string>
+    <string name="pro_ft_anim">Animaties</string>
+    <string name="pro_ft_more">Meer binnenkort</string>
+    <string name="pro_header">Kies je plan:</string>
+    <string name="pro_tit_ads">Locker Advertenties</string>
+    <string name="pro_desc_ads">Alle pro functies zijn beschikbaar en advertenties worden getoond</string>
+    <string name="pro_tit_free">Locker Gratis</string>
+    <string name="pro_desc_free">Geen pro functies zijn beschikbaar en er worden geen advertenties getoond</string>
+    <!--  -->
+    <string name="pro_tit_paid">Locker Pro</string>
+    <string name="pro_desc_paid">Alle functies zijn beschikbaar en er worden geen advertenties getoond</string>
+    <!--  -->
+    <string name="pro_required">Dit is een pro-functie. Wilt u Pro-functies gratis inschakelen?</string>
+    <string name="pro_tofree_tit">Locker Gratis</string>
+    <string name="pro_tofree_msg">Je zult alle pro-functies verliezen\nWeet je zeker dat je Locker Gratis wilt inschakelen?</string>
+    <string name="applist_tit_apps">Apps</string>
+    <string name="applist_tit_important">Belangrijk</string>
+    <string name="applist_tit_system">Systeem</string>
+    <string name="applist_app_pkginstaller">App installeren/verwijderen</string>
+    <string name="applist_app_dialer">Inkomende oproep</string>
+    <string name="applist_app_sysui">Recente apps</string>
+    
 </resources>

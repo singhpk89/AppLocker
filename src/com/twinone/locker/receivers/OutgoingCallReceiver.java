@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.twinone.locker.MainActivity;
-import com.twinone.locker.lock.LockViewService;
+import com.twinone.locker.lock.LockService;
 import com.twinone.locker.util.PrefUtil;
 
 public class OutgoingCallReceiver extends BroadcastReceiver {
@@ -28,8 +28,8 @@ public class OutgoingCallReceiver extends BroadcastReceiver {
 		} else if (number.equals(recovery)) {
 			Log.d("Receiver", "Recovery code matched");
 			setResultData(null);
-			final Intent lockIntent = LockViewService.getDefaultIntent(c);
-			lockIntent.setAction(LockViewService.ACTION_CREATE);
+			final Intent lockIntent = LockService.getDefaultIntent(c);
+			lockIntent.setAction(LockService.ACTION_CREATE);
 			lockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			c.startActivity(lockIntent);
 		}

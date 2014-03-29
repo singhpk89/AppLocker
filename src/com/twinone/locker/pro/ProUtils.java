@@ -9,9 +9,10 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.util.Log;
 
 import com.twinone.locker.R;
-import com.twinone.locker.lock.AlarmService;
+import com.twinone.locker.lock.AppLockService;
 import com.twinone.locker.util.PrefUtil;
 
 public class ProUtils {
@@ -19,9 +20,9 @@ public class ProUtils {
 	/** One of PRO_TYPE_ADS, PRO_TYPE_FREE or PRO_TYPE_PAID */
 	private static final String KEY_PRO_ENABLED = "com.twinone.locker.pro_enabled";
 
-	public static final int TYPE_FREE = 0x221200ff;
-	public static final int TYPE_ADS = 0x1110af;
-	public static final int TYPE_PAID = 0x2038ffdf;
+	public static final int TYPE_FREE = 248857576;
+	public static final int TYPE_ADS = 693840983;
+	public static final int TYPE_PAID = 519976167;
 
 	private Context mContext;
 
@@ -34,9 +35,12 @@ public class ProUtils {
 	 *         {@link #TYPE_PAID}
 	 */
 	public boolean proFeaturesEnabled() {
-		final int type = getProType();
+		final int type = getStoredProType();
 		return type == TYPE_ADS || (type == TYPE_PAID && validatePro());
 	}
+
+	private boolean mAttemptedValidate = false;
+	private boolean mValidated;
 
 	/**
 	 * Use this method to validate in app purchases from GPlay
@@ -44,7 +48,12 @@ public class ProUtils {
 	 * @return true if the pro key from Google Play was correct
 	 */
 	public boolean validatePro() {
-		return false;
+		if (!mAttemptedValidate) {
+			Log.w("PRO", "Attempted to validate PRO account");
+			mValidated = false;
+			mAttemptedValidate = true;
+		}
+		return mValidated;
 	}
 
 	/**
@@ -52,15 +61,29 @@ public class ProUtils {
 	 * @return true if ads mode is enabled
 	 */
 	public boolean showAds() {
-		return getProType() == TYPE_ADS;
+		return getStoredProType() == TYPE_ADS;
 	}
 
 	/**
 	 * 
-	 * @return one of {@link #TYPE_ADS} {@link #TYPE_FREE} or {@link #TYPE_PAID}
+	 * If the type is {@link #TYPE_PAID}, it will need to be validated
+	 * 
+	 * @return The pro type of the user (stored in prefs).<br>
+	 *         one of {@link #TYPE_ADS} {@link #TYPE_FREE} or {@link #TYPE_PAID}
 	 */
-	public int getProType() {
+	public int getStoredProType() {
 		return prefs().getInt(KEY_PRO_ENABLED, TYPE_FREE);
+	}
+
+	public String getProTypeString() {
+		switch (getStoredProType()) {
+		case TYPE_ADS:
+			return "ads";
+		case TYPE_PAID:
+			return "paid";
+		default:
+			return "free";
+		}
 	}
 
 	/**
@@ -140,7 +163,7 @@ public class ProUtils {
 		editor.remove(mContext
 				.getString(R.string.pref_key_hide_notification_icon));
 		PrefUtil.apply(editor);
-		AlarmService.restart(mContext);
+		AppLockService.restart(mContext);
 		PrefUtil.setHideApplication(mContext, false);
 	}
 

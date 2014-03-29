@@ -15,6 +15,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -56,18 +57,24 @@ public class VersionManager {
 	/** This indicates the old version for #isJustUpdated() */
 	private static final String PREFS_OLD_VERSION = "com.twinone.update.values.old_version";
 
+	private final Context mContext;
+
+	public VersionManager(Context c) {
+		mContext = c;
+	}
+
 	/**
 	 * Gets the versionCode from AndroidManifest.xml<br>
 	 * This is the current version installed on the device.
 	 * 
-	 * @param context
+	 * @param mContext
 	 * @return
 	 */
-	public static final int getManifestVersion(Context context) {
+	public final int getManifestVersion() {
 		int ver = 0;
 		try {
-			ver = context.getPackageManager().getPackageInfo(
-					context.getPackageName(), 0).versionCode;
+			ver = mContext.getPackageManager().getPackageInfo(
+					mContext.getPackageName(), 0).versionCode;
 		} catch (NameNotFoundException e) {
 		}
 		return ver;
@@ -77,17 +84,21 @@ public class VersionManager {
 		public void onServerResponse();
 	}
 
+	public void queryServer() {
+		queryServer(null);
+	}
+
 	/**
 	 * Primary method that should be called when you want to know something
 	 * about the device's version (async, so a listener is needed)
 	 */
-	public static void queryServer(Context context, VersionListener listener) {
-		String url = getUrl(context);
+	public void queryServer(VersionListener listener) {
+		Uri url = getUrl();
 		if (url == null) {
 			Log.w(TAG, "You should provide a URL with setUrlOnce()");
 			return;
 		}
-		new LoadVersionsTask(context, listener).execute(url);
+		new LoadVersionsTask(listener).execute(url);
 	}
 
 	/**
@@ -103,11 +114,11 @@ public class VersionManager {
 	 * 
 	 */
 	@SuppressLint("CommitPrefEdits")
-	public static void setUrlOnce(Context c, String url) {
+	public void setUrlOnce(String url) {
 		// update when different manifest versions or when there is no url set
 		// yet
-		if (getPrefsVersion(c) != getManifestVersion(c) || getUrl(c) == null) {
-			setUrl(c, url);
+		if (getPrefsVersion() != getManifestVersion() || getUrl() == null) {
+			setUrl(url);
 		}
 	}
 
@@ -115,16 +126,16 @@ public class VersionManager {
 	 * Return the current URL, or null if it was not yet set.<br>
 	 * This will also append the ?v=versionCode to the URL
 	 */
-	private static String getUrl(Context c) {
+	private Uri getUrl() {
 		try {
-			String url = c.getSharedPreferences(PERSISTENT_FILENAME,
+			String url = mContext.getSharedPreferences(PERSISTENT_FILENAME,
 					Context.MODE_PRIVATE).getString(PREFS_URL, null);
 			Uri.Builder ub = Uri.parse(url).buildUpon();
-			int manifestVersion = getManifestVersion(c);
+			int manifestVersion = getManifestVersion();
 			String mVersion = String.valueOf(manifestVersion);
 			ub.appendQueryParameter("v", mVersion);
 
-			return ub.build().toString();
+			return ub.build();
 		} catch (Exception e) {
 			Log.w(TAG, "Error parsing url");
 			return null;
@@ -132,39 +143,36 @@ public class VersionManager {
 	}
 
 	@SuppressLint("CommitPrefEdits")
-	private static void setUrl(Context c, String newUrl) {
-		SharedPreferences.Editor editor = c.getSharedPreferences(
+	private void setUrl(String newUrl) {
+		SharedPreferences.Editor editor = mContext.getSharedPreferences(
 				PERSISTENT_FILENAME, Context.MODE_PRIVATE).edit();
 		editor.putString(PREFS_URL, newUrl);
 		applyCompat(editor);
 	}
 
-	private static int getPrefsVersion(Context c) {
-		return c.getSharedPreferences(PREFS_FILENAME, Context.MODE_PRIVATE)
-				.getInt(PREFS_VERSION_MATCHED, 0);
+	private int getPrefsVersion() {
+		return mContext.getSharedPreferences(PREFS_FILENAME,
+				Context.MODE_PRIVATE).getInt(PREFS_VERSION_MATCHED, 0);
 	}
 
-	private static class LoadVersionsTask extends
-			AsyncTask<String, Void, VersionInfo> {
+	private class LoadVersionsTask extends AsyncTask<Uri, Void, VersionInfo> {
 
 		private final VersionListener mListener;
-		private final Context mContext;
 
-		public LoadVersionsTask(Context context, VersionListener listener) {
+		public LoadVersionsTask(VersionListener listener) {
 			mListener = listener;
-			mContext = context;
 		}
 
 		@Override
-		protected VersionInfo doInBackground(String... params) {
-			final String url = params[0];
+		protected VersionInfo doInBackground(Uri... params) {
+			final Uri url = params[0];
 			return queryServerImpl(url);
 		}
 
 		@Override
 		protected void onPostExecute(VersionInfo result) {
 			if (result != null) {
-				saveToStorage(mContext, result);
+				saveToStorage(result);
 				if (mListener != null) {
 					mListener.onServerResponse();
 				}
@@ -173,17 +181,17 @@ public class VersionManager {
 	}
 
 	@SuppressLint("CommitPrefEdits")
-	private static void saveToStorage(Context c, VersionInfo vi) {
+	private void saveToStorage(VersionInfo vi) {
 		// Get if this version is deprecated, and if it is, the most restrictive
 		// deprecation time
-		SharedPreferences sp = c.getSharedPreferences(PREFS_FILENAME,
+		SharedPreferences sp = mContext.getSharedPreferences(PREFS_FILENAME,
 				Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = sp.edit();
 
 		// save the url!
 		editor.clear();
 
-		editor.putInt(PREFS_VERSION_MATCHED, getManifestVersion(c));
+		editor.putInt(PREFS_VERSION_MATCHED, getManifestVersion());
 		if (vi.deprecated != null)
 			editor.putBoolean(PREFS_DEPRECATED, vi.deprecated);
 		if (vi.deprecation_time != null)
@@ -202,7 +210,7 @@ public class VersionManager {
 		}
 
 		if (vi.new_url != null)
-			setUrl(c, vi.new_url);
+			setUrl(vi.new_url);
 
 		applyCompat(editor);
 	}
@@ -211,11 +219,11 @@ public class VersionManager {
 	 * If this is true, you should show a dialog warning the user that he has
 	 * only some days left to update
 	 */
-	public static boolean shouldWarn(Context c) {
-		if (getPrefsVersion(c) == getManifestVersion(c)) {
-			if (isMarkedForDeprecation(c) && !isDeprecated(c)) {
-				SharedPreferences sp = c.getSharedPreferences(PREFS_FILENAME,
-						Context.MODE_PRIVATE);
+	public boolean shouldWarn() {
+		if (getPrefsVersion() == getManifestVersion()) {
+			if (isMarkedForDeprecation() && !isDeprecated()) {
+				SharedPreferences sp = mContext.getSharedPreferences(
+						PREFS_FILENAME, Context.MODE_PRIVATE);
 				long warnTime = sp.getLong(PREFS_WARN_TIME, 0);
 				long serverTime = sp.getLong(PREFS_SERVER_TIME, 0);
 				if (warnTime != 0 && serverTime != 0 && serverTime >= warnTime) {
@@ -231,17 +239,18 @@ public class VersionManager {
 	 * {@link VersionInfo#values} or defValue if the value was not received
 	 * 
 	 */
-	public static final String getValue(Context c, String key, String defValue) {
+	public final String getValue(String key, String defValue) {
 		// don't interfeare with older versions
-		if (getPrefsVersion(c) != getManifestVersion(c)) {
+		if (getPrefsVersion() != getManifestVersion()) {
 			return defValue;
 		}
-		return c.getSharedPreferences(PREFS_FILENAME, Context.MODE_PRIVATE)
-				.getString(PREFS_VALUES_PREFIX + key, defValue);
+		return mContext.getSharedPreferences(PREFS_FILENAME,
+				Context.MODE_PRIVATE).getString(PREFS_VALUES_PREFIX + key,
+				defValue);
 	}
 
 	@SuppressLint("NewApi")
-	private static void applyCompat(SharedPreferences.Editor editor) {
+	private void applyCompat(SharedPreferences.Editor editor) {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
 			editor.commit();
 		} else {
@@ -253,11 +262,11 @@ public class VersionManager {
 	 * Returns true if this version is deprecated, independently of whether the
 	 * deprecation time is before or after current server time
 	 */
-	public static boolean isMarkedForDeprecation(Context c) {
-		if (getPrefsVersion(c) != getManifestVersion(c)) {
+	public boolean isMarkedForDeprecation() {
+		if (getPrefsVersion() != getManifestVersion()) {
 			return false;
 		}
-		SharedPreferences sp = c.getSharedPreferences(PREFS_FILENAME,
+		SharedPreferences sp = mContext.getSharedPreferences(PREFS_FILENAME,
 				Context.MODE_PRIVATE);
 		boolean deprecated = sp.getBoolean(PREFS_DEPRECATED, false);
 		return deprecated;
@@ -271,11 +280,11 @@ public class VersionManager {
 	 * returns -1 if not applicable
 	 * 
 	 */
-	public static int getDaysLeft(Context c) {
-		if (getPrefsVersion(c) != getManifestVersion(c)) {
+	public int getDaysLeft() {
+		if (getPrefsVersion() != getManifestVersion()) {
 			return -1;
 		}
-		SharedPreferences sp = c.getSharedPreferences(PREFS_FILENAME,
+		SharedPreferences sp = mContext.getSharedPreferences(PREFS_FILENAME,
 				Context.MODE_PRIVATE);
 		long server_time = sp.getLong(PREFS_SERVER_TIME, 0);
 		long deprecation_time = sp.getLong(PREFS_DEPRECATION_TIME, 0);
@@ -301,11 +310,11 @@ public class VersionManager {
 	 * Returns one of {@link #STATUS_DEPRECATED},
 	 * {@link #STATUS_MARKED_FOR_DEPRECATION} or {@link #STATUS_NOT_DEPRECATED}
 	 */
-	public static int getDeprecationStatus(Context c) {
-		SharedPreferences sp = c.getSharedPreferences(PREFS_FILENAME,
+	public int getDeprecationStatus() {
+		SharedPreferences sp = mContext.getSharedPreferences(PREFS_FILENAME,
 				Context.MODE_PRIVATE);
 		int matchedVersion = sp.getInt(PREFS_VERSION_MATCHED, 0);
-		int manifestVersion = getManifestVersion(c);
+		int manifestVersion = getManifestVersion();
 
 		// avoid false positives after updating the app
 		if (matchedVersion == manifestVersion) {
@@ -324,19 +333,20 @@ public class VersionManager {
 	 * @return true if {@link #getDeprecationStatus(Context)} =
 	 *         {@link #STATUS_DEPRECATED}
 	 */
-	public static boolean isDeprecated(Context c) {
-		return getDeprecationStatus(c) == STATUS_DEPRECATED;
+	public boolean isDeprecated() {
+		return getDeprecationStatus() == STATUS_DEPRECATED;
 	}
 
 	/**
 	 * Does the loading (blocks until done)
 	 * 
-	 * @param link
+	 * @param uri
 	 * @return
 	 */
-	private static VersionInfo queryServerImpl(String link) {
+	private VersionInfo queryServerImpl(Uri uri) {
 		try {
-			URL url = new URL(link);
+			Log.d(TAG, "Querying " + uri.toString());
+			URL url = new URL(uri.toString());
 			HttpURLConnection urlConnection = (HttpURLConnection) url
 					.openConnection();
 
@@ -364,16 +374,20 @@ public class VersionManager {
 	 * other time
 	 */
 	@SuppressLint("CommitPrefEdits")
-	public static boolean isJustUpgraded(Context context) {
-		SharedPreferences sp = context.getSharedPreferences(
+	public boolean isJustUpgraded() {
+		SharedPreferences sp = mContext.getSharedPreferences(
 				PERSISTENT_FILENAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = sp.edit();
-		int manifestVersion = getManifestVersion(context);
+		int manifestVersion = getManifestVersion();
 		int storedVersion = sp.getInt(PREFS_OLD_VERSION, 0);
 		Log.d(TAG, "Comparing versions: stored: " + storedVersion
 				+ " manifest: " + manifestVersion);
 		editor.putInt(PREFS_OLD_VERSION, manifestVersion);
 		applyCompat(editor);
 		return storedVersion != manifestVersion;
+	}
+
+	public static final String getUniqueDeviceId() {
+		return Settings.Secure.ANDROID_ID;
 	}
 }

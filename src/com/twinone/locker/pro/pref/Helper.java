@@ -13,6 +13,10 @@ public class Helper {
 	private Context mContext;
 	private ProUtils mProUtils;
 
+	public void setProUtils(ProUtils proUtils) {
+		this.mProUtils = proUtils;
+	}
+
 	public Helper(Context context) {
 		mContext = context;
 		mProUtils = new ProUtils(context);
@@ -31,16 +35,31 @@ public class Helper {
 		}
 	}
 
+	private ViewGroup mRootView;
+	private TextView mTvPro;
+
+	public void updateProFlag() {
+		boolean show = false;
+		if (mProUtils != null) {
+			show = !mProUtils.proFeaturesEnabled();
+		}
+		if (mTvPro != null) {
+			mTvPro.setVisibility(show ? View.VISIBLE : View.GONE);
+		}
+	}
+
 	public View getView(View v) {
-		TextView tv = new TextView(mContext);
-		tv.setText("PRO");
-		tv.setBackgroundColor(Color.parseColor("#e74c3c"));
-		tv.setTextColor(Color.WHITE);
-		tv.setTextSize(10);
+		mRootView = (ViewGroup) v;
+		mTvPro = new TextView(mContext);
+		mTvPro.setText("PRO");
+		mTvPro.setBackgroundColor(Color.parseColor("#e74c3c"));
+		mTvPro.setTextColor(Color.WHITE);
+		mTvPro.setTextSize(10);
 		int paddingV = 2 * (int) mContext.getResources().getDisplayMetrics().density;
 		int paddingH = 3 * (int) mContext.getResources().getDisplayMetrics().density;
-		tv.setPadding(paddingH, paddingV, paddingH, paddingV);
-		((ViewGroup) v).addView(tv);
+		mTvPro.setPadding(paddingH, paddingV, paddingH, paddingV);
+		updateProFlag();
+		mRootView.addView(mTvPro);
 		return v;
 	}
 }

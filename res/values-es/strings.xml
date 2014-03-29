@@ -22,7 +22,7 @@
 
     <!-- All Strings for applist -->
     <string name="applist_on">SI</string>
-    <string name="applist_tit">Aplicationes bloqueadas</string>
+    <string name="applist_window_title">Aplicationes bloqueadas</string>
     <string name="icon_desc">icon</string>
 
     <!-- Change password activity -->
@@ -273,5 +273,37 @@
     <string name="pref_list_anim_slide_right">Deslizar derecha</string>
     <string name="pref_list_anim_slide_left">Deslizar izquierda</string>
     <string name="pref_list_anim_none">Apagado</string>
+    <!-- BEGIN v2302 -->
+    <string name="background_default">Predeterminado</string>
+    <!-- Pro stuff -->
+    <string name="pro_b_main">Pro</string>
+    <string name="pro_window_title">Funciones Pro</string>
+    <!--  -->
+    <string name="pro_ft_tit">Funciones Pro:</string>
+    <string name="pro_ft_bg">Fondo personalizado</string>
+    <string name="pro_ft_hide">Ocultar Locker</string>
+    <string name="pro_ft_hide_notif">Ocultar notificación</string>
+    <string name="pro_ft_pcolor">Cambiar color del patrón</string>
+    <string name="pro_ft_short_exit">Salida breve</string>
+    <string name="pro_ft_anim">Animaciones</string>
+    <string name="pro_ft_more">Más próximamnete</string>
+    <string name="pro_header">Elige tu plan:</string>
+    <string name="pro_tit_ads">Locker Anuncios</string>
+    <string name="pro_desc_ads">Todas las funciones pro están disponibles y se muestran anuncios</string>
+    <string name="pro_tit_free">Locker Gratis</string>
+    <string name="pro_desc_free">No hay funciones pro disponibles y no se muestran anuncios</string>
+    <!--  -->
+    <string name="pro_tit_paid">Locker Pro</string>
+    <string name="pro_desc_paid">Todas las funciones pro están disponibles y sin anuncios</string>
+    <!--  -->
+    <string name="pro_required">Esto es una función pro. ¿Quieres activar Locker Pro ahora gratis?</string>
+    <string name="pro_tofree_tit">Modo gratis</string>
+    <string name="pro_tofree_msg">Perderás todas las funciones pro\n¿Seguro que quieres activar Locker gratis?</string>
+    <string name="applist_tit_apps">Aplicaciones</string>
+    <string name="applist_tit_important">Importantes</string>
+    <string name="applist_tit_system">Sistema</string>
+    <string name="applist_app_pkginstaller">Instalar/Desinstalar apps</string>
+    <string name="applist_app_dialer">Llamada entrante</string>
+    <string name="applist_app_sysui">Apps recientes</string>
     
 </resources>

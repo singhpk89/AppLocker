@@ -23,7 +23,7 @@
 
     <!-- All Strings for applist -->
     <string name="applist_on">ON</string>
-    <string name="applist_tit">Locked apps</string>
+    <string name="applist_window_title">Locked apps</string>
     <string name="icon_desc">icon</string>
 
     <!-- Change password activity -->
@@ -272,35 +272,42 @@
     <string name="pref_tit_anim_millis">Duration</string>
     <string name="pref_desc_anim_millis">Time in milliseconds for the animation</string>
     <string name="pref_tit_anim_type">Type</string>
-    <string name="pref_desc_anim_type">%s</string>
+    <string name="pref_desc_anim_type"></string>
     <string name="pref_list_anim_fade">Fade</string>
     <string name="pref_list_anim_slide_right">Slide Right</string>
     <string name="pref_list_anim_slide_left">Slide left</string>
     <string name="pref_list_anim_none">Disabled</string>
-    <!-- BEGIN v2310 -->
+    <!-- BEGIN v2302 -->
     <string name="background_default">Default</string>
     <!-- Pro stuff -->
     <string name="pro_b_main">Pro</string>
     <string name="pro_window_title">Pro features</string>
     <!--  -->
-    <string name="pro_features_tit">Pro features:</string>
+    <string name="pro_ft_tit">Pro features:</string>
     <string name="pro_ft_bg">Custom Background image</string>
     <string name="pro_ft_hide">Hide Locker application</string>
     <string name="pro_ft_hide_notif">Hide notification</string>
     <string name="pro_ft_pcolor">Change pattern color</string>
     <string name="pro_ft_short_exit">Short exit</string>
+    <string name="pro_ft_anim">Animations</string>
     <string name="pro_ft_more">More coming soon</string>
     <string name="pro_header">Choose your plan:</string>
+    <string name="pro_tit_ads">Locker Ads</string>
+    <string name="pro_desc_ads">All pro features are available and ads are shown</string>
+    <string name="pro_tit_free">Locker Free</string>
+    <string name="pro_desc_free">No pro features are available and no ads are shown</string>
     <!--  -->
     <string name="pro_tit_paid">Locker Pro</string>
-    <string name="pro_desc_paid">All pro features enabled\nNo ads</string>
-    <string name="pro_desc_paid_na">Currently not available</string>
-    <string name="pro_tit_ads">Locker Pro (Ads)</string>
-    <string name="pro_desc_ads">All pro features available for free\nAds</string>
-    <string name="pro_tit_free">Locker Free</string>
-    <string name="pro_desc_free">No pro features available\nNo ads</string>
+    <string name="pro_desc_paid">All features are available and you will see no ads</string>
     <!--  -->
-    <string name="pro_msg_ads">Using pro will enable ads</string>
     <string name="pro_required">This is a pro feature. Do you want to enable Pro features for free?</string>
-
+    <string name="pro_tofree_tit">Free mode</string>
+    <string name="pro_tofree_msg">You will lose all pro features\nAre you sure you want to change to free mode?</string>
+    <string name="applist_tit_apps">Apps</string>
+    <string name="applist_tit_important">Important</string>
+    <string name="applist_tit_system">System</string>
+    <string name="applist_app_pkginstaller">App install/uninstall</string>
+    <string name="applist_app_dialer">Incoming call</string>
+    <string name="applist_app_sysui">Recent tasks</string>
+    
 </resources>

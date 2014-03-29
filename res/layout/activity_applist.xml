@@ -9,32 +9,25 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/bLockAll"
-            android:layout_width="match_parent"
+            android:id="@+id/bToggleAll"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:text="@string/applist_lock_all" >
-        </Button>
-
-        <Button
-            android:id="@+id/bUnlockAll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:text="@string/applist_unlock_all" >
+            android:layout_marginRight="@dimen/element_horizontal_margin"
+            android:layout_weight="1" >
         </Button>
 
         <Button
             android:id="@+id/bFinish"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginLeft="@dimen/element_horizontal_margin"
+            android:layout_weight="1"
             android:text="@android:string/ok" >
         </Button>
     </LinearLayout>
@@ -51,11 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/separator"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:scrollbarStyle="outsideInset" >
+        android:scrollbarStyle="insideOverlay" >
     </ListView>
 
 </RelativeLayout>

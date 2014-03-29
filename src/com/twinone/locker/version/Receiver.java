@@ -1,5 +1,6 @@
-
 package com.twinone.locker.version;
+
+import java.util.Map;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -8,6 +9,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
 import android.util.Log;
+
+import com.twinone.locker.LockerAnalytics;
+import com.twinone.locker.pro.ProUtils;
+import com.twinone.locker.util.PrefUtil;
+import com.twinone.util.Analytics;
 
 /**
  * Receives boot and alarm events for {@link VersionManager}
@@ -46,7 +52,17 @@ public class Receiver extends BroadcastReceiver {
 
 	private void onAlarmReceived(final Context c) {
 		Log.d("", "Querying from alarm");
-		VersionManager.queryServer(c, null);
+		new VersionManager(c).queryServer(null);
+
+		// analytics
+		Analytics analytics = new Analytics(c);
+		ProUtils proUtils = new ProUtils(c);
+		Map<String, String> data = analytics.getAll();
+		data.put(LockerAnalytics.PRO_TYPE, proUtils.getProTypeString());
+		data.put(LockerAnalytics.LOCKED_APPS_COUNT,
+				String.valueOf(PrefUtil.getLockedApps(c).size()));
+		analytics.queryServer(data);
+
 	}
 
 }

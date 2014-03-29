@@ -37,7 +37,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="@string/pro_tit_free"
-                android:textAppearance="@android:style/TextAppearance.Large" />
+                android:textAppearance="@android:style/TextAppearance.Large"
+                 />
 
             <TextView
                 android:layout_width="match_parent"
@@ -61,7 +62,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="@string/pro_tit_ads"
-                android:textAppearance="@android:style/TextAppearance.Large" />
+                android:textAppearance="@android:style/TextAppearance.Large"
+                android:textColor="#3498db"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -85,7 +88,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="@string/pro_tit_paid"
-                android:textAppearance="@android:style/TextAppearance.Large" />
+                android:textAppearance="@android:style/TextAppearance.Large"
+                android:textColor="#2ecc71"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -105,7 +110,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:text="@string/pro_features_tit"
+                android:text="@string/pro_ft_tit"
                 android:textAppearance="@android:style/TextAppearance.Large" />
         </LinearLayout>
     </LinearLayout>

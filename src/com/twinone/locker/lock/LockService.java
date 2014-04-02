@@ -261,12 +261,8 @@ public class LockService extends Service implements View.OnClickListener,
 		}
 		if (ACTION_NOTIFY_PACKAGE_CHANGED.equals(intent.getAction())) {
 			String newPackageName = intent.getStringExtra(EXTRA_PACKAGENAME);
-			if (newPackageName == null) {
-				finish(true);
-				return START_NOT_STICKY;
-			} else if (!getPackageName().equals(newPackageName)) {
-				// actual package != new package
-				// not Locker
+			if (newPackageName == null
+					|| !getPackageName().equals(newPackageName)) {
 				finish(true);
 				return START_NOT_STICKY;
 			}
@@ -280,9 +276,6 @@ public class LockService extends Service implements View.OnClickListener,
 		return super.onStartCommand(intent, flags, startId);
 	}
 
-	/**
-	 * WindowManager stuff here
-	 */
 	private WindowManager mWindowManager;
 	private View mRootView;
 	private WindowManager.LayoutParams mLayoutParams;
@@ -293,7 +286,6 @@ public class LockService extends Service implements View.OnClickListener,
 	private Animation mAnimHide;
 
 	private void showView(boolean animate) {
-		Log.d(TAG, "showView");
 		if (mViewShowing) {
 			Log.i(TAG, "not showing, already showing");
 			return;
@@ -344,10 +336,10 @@ public class LockService extends Service implements View.OnClickListener,
 		Log.d(TAG, "showViewEnd");
 		mViewDisplayed = true;
 		mViewShowing = false;
+		mAnimShow = null;
 	}
 
 	private void hideView(boolean animate) {
-		Log.d(TAG, "hideView");
 		if (mViewHiding) {
 			Log.w(TAG, "Already hiding!");
 			return;
@@ -399,10 +391,10 @@ public class LockService extends Service implements View.OnClickListener,
 	}
 
 	private void hideViewEnd() {
-		Log.d(TAG, "hideViewEnd");
 		mWindowManager.removeView(mRootView);
 		mViewDisplayed = false;
 		mViewHiding = false;
+		mAnimHide = null;
 	}
 
 	// avoid hiding the view when the trigger is done

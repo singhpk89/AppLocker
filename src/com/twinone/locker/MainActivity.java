@@ -30,7 +30,6 @@ import com.twinone.locker.version.Receiver;
 import com.twinone.locker.version.VersionManager;
 import com.twinone.locker.version.VersionUtils;
 import com.twinone.util.Analytics;
-import com.twinone.util.ChangeLog;
 import com.twinone.util.DialogSequencer;
 
 public class MainActivity extends Activity implements View.OnClickListener {
@@ -147,10 +146,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	 */
 	private boolean showDialogs() {
 		boolean res = true;
-		ChangeLog cl = new ChangeLog(this);
-		if (cl.shouldShow()) {
-			mSequencer.addDialog(cl.getDialog(true));
-		}
+		// ChangeLog cl = new ChangeLog(this);
+		// if (cl.shouldShow()) {
+		// mSequencer.addDialog(cl.getDialog(true));
+		// }
 
 		// Recovery code
 		String code = PrefUtil.getRecoveryCode(this);

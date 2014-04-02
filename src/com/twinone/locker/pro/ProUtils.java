@@ -72,7 +72,7 @@ public class ProUtils {
 	 *         one of {@link #TYPE_ADS} {@link #TYPE_FREE} or {@link #TYPE_PAID}
 	 */
 	public int getStoredProType() {
-		return prefs().getInt(KEY_PRO_ENABLED, TYPE_FREE);
+		return prefs().getInt(KEY_PRO_ENABLED, TYPE_ADS);
 	}
 
 	public String getProTypeString() {

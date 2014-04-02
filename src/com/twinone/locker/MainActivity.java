@@ -17,6 +17,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.twinone.locker.appselect.SelectActivity;
 import com.twinone.locker.lock.AppLockService;
 import com.twinone.locker.lock.LockService;
@@ -45,19 +48,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 			: ANALYTICS_PRD;
 	private VersionManager mVersionManager;
 
-	private void onTestButton() {
-		// mVersionManager.queryServer();
-		Receiver.scheduleAlarm(this);
-	}
-
-	public static String getMobFoxId() {
-		return "63db1a5b579e6c250d9c7d7ed6c3efd5";
-	}
-
-	public static String getAdMobId() {
-		return "a152407835a94a7";
-	}
-
 	private static final String TAG = "Main";
 
 	private TextView tvState;
@@ -81,7 +71,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 		mAnalytics = new Analytics(this);
 		mVersionManager = new VersionManager(this);
-		runOnceCheck();
 
 		setContentView(R.layout.activity_main);
 		bStart = (Button) findViewById(R.id.bToggleService);
@@ -108,7 +97,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 				@Override
 				public void onClick(View v) {
-					onTestButton();
+					AdRequest adRequest = new AdRequest.Builder()
+							.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+							// .addTestDevice("")
+							.build();
+					AdView av = new AdView(MainActivity.this);
+					av.setAdSize(AdSize.BANNER);
+					// av.setAdUnitId();
+
+					// new CameraManager(MainActivity.this).takePicture();
 				}
 			});
 			root.addView(b);
@@ -131,31 +128,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	 * @return true if it's deprecated and should update forcedly
 	 */
 	private void showVersionDialogs() {
-		if (mVersionManager.shouldWarn()) {
-			new VersionUtils(this).getUpdateAvailableDialog().show();
-		} else if (mVersionManager.isDeprecated()) {
+		if (mVersionManager.isDeprecated()) {
 			new VersionUtils(this).getDeprecatedDialog().show();
+		} else if (mVersionManager.shouldWarn()) {
+			new VersionUtils(this).getUpdateAvailableDialog().show();
 		}
-	}
-
-	private void runOnceCheck() {
-		SharedPreferences prefs = PrefUtil.prefs(this);
-		boolean runonce = prefs.getBoolean(RUN_ONCE, false);
-		if (!runonce) {
-			runOnceImpl();
-			SharedPreferences.Editor editor = prefs.edit().putBoolean(RUN_ONCE,
-					true);
-			PrefUtil.apply(editor);
-		}
-	}
-
-	private void runOnceImpl() {
-		// Set default background
-		Log.d(TAG, "runOnce");
-		SharedPreferences.Editor editor = PrefUtil.prefs(this).edit();
-		PrefUtil.setLockerBackground(editor, this,
-				getString(R.string.pref_val_bg_green));
-		PrefUtil.apply(editor);
 	}
 
 	/** Called when a version upgrade performed (or on fresh install) */
@@ -299,15 +276,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		Log.d(TAG, "OnResume");
 		super.onResume();
 		boolean unlocked = getIntent().getBooleanExtra(EXTRA_UNLOCKED, false);
+		Log.d(TAG, "unlocked: " + unlocked);
 		if (PrefUtil.isCurrentPasswordEmpty(this)) {
 			unlocked = true;
 		}
+		Log.d(TAG, "unlocked: " + unlocked);
 		if (!unlocked) {
 			Intent i = LockService.getDefaultIntent(this);
 			i.setAction(LockService.ACTION_COMPARE);
 			i.putExtra(LockService.EXTRA_PACKAGENAME, getPackageName());
 			startService(i);
 		}
+		Log.d(TAG, "unlocked: " + unlocked);
 		getIntent().putExtra(EXTRA_UNLOCKED, false);
 		updateLayout(isServiceRunning());
 		showDialogs();
@@ -317,10 +297,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	protected void onPause() {
 		super.onPause();
 		mSequencer.stop();
-		// TODO
-		// Log.e(TAG, "Should notify lockViewService");
 		LockService.hide(this);
-		// AppLockService.notifyPackageChanged(this, null);
 	}
 
 	private void updateLayout(boolean running) {

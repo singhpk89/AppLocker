@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--
-    Added in Locker v1.0
-    Author: TwinoneDevs
-    -->
-
     <string name="application_name">App Locker</string>
     <string name="action_settings">Settings</string>
 
@@ -169,8 +164,8 @@
     <!-- Password specific settings -->
     <string name="pref_tit_vibrate_password">Vibration</string>
     <string name="pref_desc_vibrate_password">Vibrate when you press keys</string>
-    <string name="pref_tit_hide_dots">Hide dots</string>
-    <string name="pref_desc_hide_dots">When you type your password, the dots will not show on screen</string>
+    <string name="pref_ti_hide_dots">Hide dots</string>
+    <string name="pref_dsc_hide_dots">When you type your password, the dots will not show on screen</string>
 
     <!-- Pattern specific settings -->
     <string name="pref_tit_vibrate_pattern">Vibration</string>
@@ -309,5 +304,5 @@
     <string name="applist_app_pkginstaller">App install/uninstall</string>
     <string name="applist_app_dialer">Incoming call</string>
     <string name="applist_app_sysui">Recent tasks</string>
-    
+
 </resources>

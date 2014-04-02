@@ -121,12 +121,6 @@ public class LockService extends Service implements View.OnClickListener,
 			+ ".extra.pattern_stealth_mode";
 
 	/**
-	 * Boolean, true when password is in stealth mode
-	 */
-	public static final String EXTRA_PASSWORD_STEALTH = CLASSNAME
-			+ ".extra.password_stealth_mode";
-
-	/**
 	 * Boolean, Swap the action buttons in password
 	 */
 	public static final String EXTRA_PASSWORD_SWITCH_BUTTONS = CLASSNAME
@@ -193,7 +187,6 @@ public class LockService extends Service implements View.OnClickListener,
 	private String mBackgroundUriString;
 	private String mNewPassword;
 	private String mNewPattern;
-	private boolean mPasswordStealthMode;
 	private boolean mPatternStealthMode;
 	private int mPatternColorSetting;
 	private String mPassword;
@@ -261,6 +254,7 @@ public class LockService extends Service implements View.OnClickListener,
 		if (intent == null) {
 			return START_NOT_STICKY;
 		}
+		Log.d(TAG, "action: " + intent.getAction());
 		if (ACTION_HIDE.equals(intent.getAction())) {
 			finish(true);
 			return START_NOT_STICKY;
@@ -270,22 +264,17 @@ public class LockService extends Service implements View.OnClickListener,
 			if (newPackageName == null) {
 				finish(true);
 				return START_NOT_STICKY;
-			} else if (!newPackageName.equals(mPackageName)
-					&& (!getPackageName().equals(newPackageName))) {
+			} else if (!getPackageName().equals(newPackageName)) {
+				// actual package != new package
+				// not Locker
 				finish(true);
-				return START_NOT_STICKY;
-			}
-			if (newPackageName.equals(mPackageName)) {
-				if (!getPackageName().equals(newPackageName)) {
-					finish(true);
-				}
 				return START_NOT_STICKY;
 			}
 		} else {
 			mIntent = intent;
 			mAnalytics = new Analytics(this);
 			onBeforeInflate();
-			showRootView(true);
+			showView(true);
 			onAfterInflate();
 		}
 		return super.onStartCommand(intent, flags, startId);
@@ -298,28 +287,139 @@ public class LockService extends Service implements View.OnClickListener,
 	private View mRootView;
 	private WindowManager.LayoutParams mLayoutParams;
 	private boolean mViewDisplayed;
+	private boolean mViewShowing;
+	private boolean mViewHiding;
+	private Animation mAnimShow;
+	private Animation mAnimHide;
 
-	private void showRootView(boolean animate) {
-		// if (mRootView == null || forceReload) {
-		// if next line removed, screen off bug appears!
-		hideView();
-		System.gc();
+	private void showView(boolean animate) {
+		Log.d(TAG, "showView");
+		if (mViewShowing) {
+			Log.i(TAG, "not showing, already showing");
+			return;
+		}
+
+		// if (mViewShowing || mViewDisplayed)
+		// return;
+		hideViewCancel();
+		hideView(false);
+		mViewShowing = true;
+
 		mRootView = inflateRootView();
 		mWindowManager.addView(mRootView, mLayoutParams);
-		// } else {
-		// // just make sure the WindowManager reloads the view
-		// if (mViewDisplayed) {
-		// mWindowManager.updateViewLayout(mRootView, mLayoutParams);
-		// } else {
-		// mWindowManager.addView(mRootView, mLayoutParams);
-		// }
-		// }
-		if (animate)
-			showAnimation();
-		else {
 
+		if (animate)
+			showViewAnimate();
+		else
+			showViewEnd();
+	}
+
+	private void showViewAnimate() {
+		if (mAnimShowResId == 0 || mAnimShowTime == 0) {
+			showViewEnd();
+			return;
 		}
+		mAnimShow = AnimationUtils.loadAnimation(this, mAnimShowResId);
+		mAnimShow.setAnimationListener(new AnimationListener() {
+
+			@Override
+			public void onAnimationStart(Animation animation) {
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+			}
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				showViewEnd();
+			}
+		});
+		mAnimShow.setDuration(mAnimShowTime);
+		mAnimShow.setFillEnabled(true);
+		mContainer.startAnimation(mAnimShow);
+	}
+
+	private void showViewEnd() {
+		Log.d(TAG, "showViewEnd");
 		mViewDisplayed = true;
+		mViewShowing = false;
+	}
+
+	private void hideView(boolean animate) {
+		Log.d(TAG, "hideView");
+		if (mViewHiding) {
+			Log.w(TAG, "Already hiding!");
+			return;
+		}
+		if (!mViewDisplayed) {
+			Log.w(TAG, "Not displayed!");
+			return;
+		}
+		if (mRootView == null) {
+			Log.w(TAG, "rootView = null");
+			return;
+		}
+
+		// if (mViewHiding || !mViewDisplayed || mRootView == null)
+		// return;
+		mViewHiding = true;
+		if (animate)
+			hideViewAnimate();
+		else
+			hideViewEnd();
+	}
+
+	private void hideViewAnimate() {
+		if (mAnimHideResId == 0 || mAnimHideTime == 0) {
+			hideViewEnd();
+			return;
+		}
+
+		mAnimHide = AnimationUtils.loadAnimation(this, mAnimHideResId);
+		mAnimHide.setDuration(mAnimHideTime);
+		mAnimHide.setFillEnabled(true);
+		mAnimHide.setDetachWallpaper(false);
+		mAnimHide.setAnimationListener(new AnimationListener() {
+
+			@Override
+			public void onAnimationStart(Animation animation) {
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+			}
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				hideViewEnd();
+			}
+		});
+		mContainer.startAnimation(mAnimHide);
+	}
+
+	private void hideViewEnd() {
+		Log.d(TAG, "hideViewEnd");
+		mWindowManager.removeView(mRootView);
+		mViewDisplayed = false;
+		mViewHiding = false;
+	}
+
+	// avoid hiding the view when the trigger is done
+	private void hideViewCancel() {
+		Log.d(TAG, "hideViewCancel");
+		if (!mViewHiding) {
+			Log.w(TAG, "not cancelling,  was not hiding");
+			return;
+		}
+		if (mAnimHide == null) {
+			Log.d(TAG, "anim already null");
+			return;
+		}
+		mAnimHide.setAnimationListener(null);
+		mAnimHide.cancel();
+		mAnimHide = null;
+		mViewHiding = false;
 	}
 
 	/**
@@ -353,23 +453,6 @@ public class LockService extends Service implements View.OnClickListener,
 		mPasswordListener = new MyOnNumberListener();
 		mPatternListener = new MyOnPatternListener();
 		return root;
-	}
-
-	private void hideView() {
-		if (mViewDisplayed && mRootView != null) {
-			mWindowManager.removeView(mRootView);
-			mViewDisplayed = false;
-		}
-		isFinishing = false;
-	}
-
-	private void showAnimation() {
-		if (mAnimShowResId == 0 || mAnimShowTime == 0)
-			return;
-		Animation anim = AnimationUtils.loadAnimation(this, mAnimShowResId);
-		anim.setDuration(mAnimShowTime);
-		anim.setFillEnabled(true);
-		mContainer.startAnimation(anim);
 	}
 
 	/**
@@ -444,9 +527,7 @@ public class LockService extends Service implements View.OnClickListener,
 	}
 
 	private void updatePasswordTextView(String newText) {
-		if (!mPasswordStealthMode) {
-			mTextViewPassword.setText(newText);
-		}
+		mTextViewPassword.setText(newText);
 	}
 
 	private class MyOnPatternListener implements OnPatternListener {
@@ -673,14 +754,9 @@ public class LockService extends Service implements View.OnClickListener,
 		mLockPatternView = null;
 		LayoutInflater li = LayoutInflater.from(this);
 
-		// Only add TextView if we should
-		if (!mPasswordStealthMode) {
-			mTextViewPassword = (TextView) li.inflate(
-					R.layout.view_lock_number_textview, null);
-			mTextViewPassword.setVisibility(mPasswordStealthMode ? View.GONE
-					: View.VISIBLE);
-			mLockView.addView(mTextViewPassword);
-		}
+		mTextViewPassword = (TextView) li.inflate(
+				R.layout.view_lock_number_textview, null);
+		mLockView.addView(mTextViewPassword);
 
 		mLockPasswordView = (PasswordView) li.inflate(
 				R.layout.view_lock_number, null);
@@ -765,8 +841,6 @@ public class LockService extends Service implements View.OnClickListener,
 		getPatternCircleResId(mPatternColorSetting);
 
 		// Stealth modes
-		mPasswordStealthMode = mIntent.getBooleanExtra(EXTRA_PASSWORD_STEALTH,
-				false);
 		mPatternStealthMode = mIntent.getBooleanExtra(EXTRA_PATTERN_STEALTH,
 				false);
 
@@ -775,7 +849,6 @@ public class LockService extends Service implements View.OnClickListener,
 		mOrientationSetting = mIntent.getStringExtra(EXTRA_ORIENTATION);
 
 		if (ACTION_CREATE.equals(mAction)) {
-			mPasswordStealthMode = false;
 			mPatternStealthMode = false;
 		}
 
@@ -999,7 +1072,6 @@ public class LockService extends Service implements View.OnClickListener,
 		}
 		if (lockType == LOCK_TYPE_PASSWORD) {
 			i.putExtra(EXTRA_PASSWORD, PrefUtil.getPassword(c));
-			i.putExtra(EXTRA_PASSWORD_STEALTH, PrefUtil.getPasswordStealth(c));
 			i.putExtra(EXTRA_PASSWORD_SWITCH_BUTTONS,
 					PrefUtil.getPasswordSwitchButtons(c));
 		} else if (lockType == LOCK_TYPE_PATTERN) {
@@ -1050,13 +1122,7 @@ public class LockService extends Service implements View.OnClickListener,
 		finish(true);
 	}
 
-	private boolean isFinishing;
-
 	private void finish(boolean unlocked) {
-		if (isFinishing) {
-			return;
-		}
-		isFinishing = true;
 		if (mBound) {
 			unbindService(mConnection);
 			mBound = false;
@@ -1067,36 +1133,7 @@ public class LockService extends Service implements View.OnClickListener,
 			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(i);
 		}
-		hideAnimation();
-	}
-
-	private void hideAnimation() {
-		if (!mViewDisplayed)
-			return;
-		if (mAnimHideResId == 0 || mAnimHideTime == 0) {
-			hideView();
-			return;
-		}
-		Animation anim = AnimationUtils.loadAnimation(this, mAnimHideResId);
-		anim.setDuration(mAnimHideTime);
-		anim.setFillEnabled(true);
-		anim.setDetachWallpaper(false);
-		anim.setAnimationListener(new AnimationListener() {
-
-			@Override
-			public void onAnimationStart(Animation animation) {
-			}
-
-			@Override
-			public void onAnimationRepeat(Animation animation) {
-			}
-
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				hideView();
-			}
-		});
-		mContainer.startAnimation(anim);
+		hideView(true);
 	}
 
 	@Override
@@ -1153,7 +1190,7 @@ public class LockService extends Service implements View.OnClickListener,
 		Log.d(TAG, "onConfigChange");
 		super.onConfigurationChanged(newConfig);
 		if (mViewDisplayed) {
-			showRootView(false);
+			showView(false);
 			onAfterInflate();
 		}
 	}

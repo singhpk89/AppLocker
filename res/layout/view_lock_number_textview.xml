@@ -10,7 +10,6 @@
     android:gravity="center"
     android:inputType="textPassword"
     android:textColor="#ffffff"
-    android:textSize="30sp"
-    android:visibility="gone" >
+    android:textSize="30sp" >
 
 </TextView>

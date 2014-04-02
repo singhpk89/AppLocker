@@ -320,9 +320,10 @@ public class PrefsActivity extends PreferenceActivity implements
 	@Override
 	protected void onPause() {
 		if (!mPermitOnPause) {
+			// MainActivity.showWithoutPassword(this);
 			finish();
 		}
-		LockService.hide(this);
+//		LockService.hide(this);
 		super.onPause();
 	}
 

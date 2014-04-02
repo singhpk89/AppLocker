@@ -166,10 +166,8 @@
     <string name="pref_tit_orientation">Orientación</string>
 
     <!-- Password specific settings -->
-    <string name="pref_tit_vibrate_password">Vibration</string>
-    <string name="pref_desc_vibrate_password">Vibrate when you press keys</string>
-    <string name="pref_tit_hide_dots">Hide dots</string>
-    <string name="pref_desc_hide_dots">When you type your password, the dots will not show on screen</string>
+    <string name="pref_tit_vibrate_password">Vibración</string>
+    <string name="pref_desc_vibrate_password">Vibra cuando pulsas los números</string>
 
     <!-- Pattern specific settings -->
     <string name="pref_tit_vibrate_pattern">Vibración</string>
@@ -286,7 +284,7 @@
     <string name="pro_ft_pcolor">Cambiar color del patrón</string>
     <string name="pro_ft_short_exit">Salida breve</string>
     <string name="pro_ft_anim">Animaciones</string>
-    <string name="pro_ft_more">Más próximamnete</string>
+    <string name="pro_ft_more">Más próximamente</string>
     <string name="pro_header">Elige tu plan:</string>
     <string name="pro_tit_ads">Locker Anuncios</string>
     <string name="pro_desc_ads">Todas las funciones pro están disponibles y se muestran anuncios</string>
@@ -305,5 +303,5 @@
     <string name="applist_app_pkginstaller">Instalar/Desinstalar apps</string>
     <string name="applist_app_dialer">Llamada entrante</string>
     <string name="applist_app_sysui">Apps recientes</string>
-    
+
 </resources>

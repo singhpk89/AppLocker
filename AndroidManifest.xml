@@ -5,7 +5,7 @@
     android:versionName="2.3" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="9"
         android:targetSdkVersion="19" />
 
     <supports-screens
@@ -24,13 +24,7 @@
         android:name="android.hardware.usb.host"
         android:required="false" />
     <uses-feature
-        android:name="android.hardware.bluetooth"
-        android:required="false" />
-    <uses-feature
         android:name="android.hardware.location"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.location.gps"
         android:required="false" />
     <uses-feature
         android:name="android.hardware.wifi"
@@ -51,16 +45,26 @@
     <!-- Draw over other apps -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
+    <!-- 2303 -->
+    <!-- Take pictures of intruder -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <!--  -->
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/application_name"
         android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <!-- singleTask solved bug with notification click -->
         <activity
             android:name="com.twinone.locker.MainActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/application_name"
+            android:launchMode="singleTask"
             android:theme="@style/ApplistTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -109,7 +113,7 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
         <!-- Admob -->
         <activity
-            android:name="com.google.ads.AdActivity"
+            android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
 
         <service android:name="com.twinone.locker.lock.AppLockService" />

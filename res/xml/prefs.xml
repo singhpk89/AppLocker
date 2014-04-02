@@ -25,12 +25,6 @@
             android:key="@string/pref_key_vibrate"
             android:summary="@string/pref_desc_vibrate_password"
             android:title="@string/pref_tit_vibrate_password" />
-        <!-- Hide dots -->
-        <CheckBoxPreference
-            android:defaultValue="@string/pref_def_hide_dots"
-            android:key="@string/pref_key_hide_dots"
-            android:summary="@string/pref_desc_hide_dots"
-            android:title="@string/pref_tit_hide_dots" />
         <!-- Switch buttons -->
         <CheckBoxPreference
             android:defaultValue="@string/pref_def_switch_buttons"

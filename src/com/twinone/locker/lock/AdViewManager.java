@@ -34,8 +34,7 @@ public class AdViewManager implements AdListener {
 		mAnalytics = new Analytics(c);
 
 		mMobFoxManager = new AdManager(mContext,
-				"http://my.mobfox.com/vrequest.php",
-				MainActivity.getMobFoxId(), true);
+				"http://my.mobfox.com/vrequest.php", getMobFoxId(), true);
 		mMobFoxManager.setListener(this);
 		mShowAds = shouldShowAds();
 	}
@@ -70,8 +69,8 @@ public class AdViewManager implements AdListener {
 		if (mShown != true) {
 			Log.d(TAG, "Requesting Ad");
 			mMobFoxAdView = new AdView(mContext,
-					"http://my.mobfox.com/request.php",
-					MainActivity.getMobFoxId(), true, true);
+					"http://my.mobfox.com/request.php", getMobFoxId(), true,
+					true);
 			mMobFoxAdView.setAdListener(this);
 		}
 		removeAdFromParent();
@@ -134,6 +133,14 @@ public class AdViewManager implements AdListener {
 		return ("google_sdk".equals(Build.PRODUCT) || "sdk"
 				.equals(Build.PRODUCT))
 				&& Build.FINGERPRINT.contains("generic");
+	}
+
+	private String getMobFoxId() {
+		return "63db1a5b579e6c250d9c7d7ed6c3efd5";
+	}
+
+	private String getAdMobId() {
+		return "a152407835a94a7";
 	}
 
 }

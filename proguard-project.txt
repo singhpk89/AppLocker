@@ -28,3 +28,5 @@
 
 -keep class com.twinone.locker.pro.pref.** { *; }
 
+-dontwarn com.google.ads.**
+

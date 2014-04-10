@@ -17,9 +17,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
 import com.twinone.locker.appselect.SelectActivity;
 import com.twinone.locker.lock.AppLockService;
 import com.twinone.locker.lock.LockService;
@@ -35,7 +32,7 @@ import com.twinone.util.DialogSequencer;
 public class MainActivity extends Activity implements View.OnClickListener {
 	private static final String RUN_ONCE = "com.twinone.locker.pref.run_once";
 
-	public static final boolean DEBUG = BuildConfig.DEBUG;
+	public static final boolean DEBUG = false;
 	private static final String VERSION_URL_PRD = "https://twinone.org/apps/locker/update.php";
 	private static final String VERSION_URL_DBG = "https://twinone.org/apps/locker/dbg-update.php";
 
@@ -96,15 +93,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 				@Override
 				public void onClick(View v) {
-					AdRequest adRequest = new AdRequest.Builder()
-							.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-							// .addTestDevice("")
-							.build();
-					AdView av = new AdView(MainActivity.this);
-					av.setAdSize(AdSize.BANNER);
-					// av.setAdUnitId();
-
-					// new CameraManager(MainActivity.this).takePicture();
 				}
 			});
 			root.addView(b);

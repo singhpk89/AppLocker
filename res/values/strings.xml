@@ -304,5 +304,6 @@
     <string name="applist_app_pkginstaller">App install/uninstall</string>
     <string name="applist_app_dialer">Incoming call</string>
     <string name="applist_app_sysui">Recent tasks</string>
+    <string name="teststring">Test</string>
 
 </resources>

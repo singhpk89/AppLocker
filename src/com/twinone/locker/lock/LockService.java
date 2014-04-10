@@ -569,6 +569,7 @@ public class LockService extends Service implements View.OnClickListener,
 		} else if (explicit) {
 			mAnalytics.increment(LockerAnalytics.PASSWORD_FAILED);
 			mLockPasswordView.clearPassword();
+			updatePassword();
 			Toast.makeText(this, R.string.locker_invalid_password,
 					Toast.LENGTH_SHORT).show();
 		}
@@ -991,7 +992,7 @@ public class LockService extends Service implements View.OnClickListener,
 
 	private void onAfterInflate() {
 		setBackground();
-		if (!AdViewManager.isOnEmulator()) {
+		if (!AdViewManager.isOnEmulator() && !ACTION_CREATE.equals(mAction)) {
 			if (mAdViewManager == null) {
 				mAdViewManager = new AdViewManager(this);
 			}

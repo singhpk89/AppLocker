@@ -108,13 +108,13 @@ public class AppLockService extends Service {
 	}
 
 	/** Starts everything, including notification and repeating alarm */
-	private void init() {
+	private boolean init() {
 		Log.d(TAG, "init");
 		if (new VersionManager(this).isDeprecated()) {
 			Log.i(TAG, "Not starting AlarmService for deprecated version");
 			new VersionUtils(this).showDeprecatedNotification();
 			stop(this);
-			return;
+			return false;
 		}
 
 		mHandler = new Handler();
@@ -158,13 +158,16 @@ public class AppLockService extends Service {
 		startAlarm(this);
 
 		mExplicitStarted = true;
+		return true;
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (ACTION_START.equals(intent.getAction())) {
 			if (!mExplicitStarted) {
-				init();
+				
+				if (init() == false);
+//					return START_NOT_STICKY;
 			}
 			checkPackageChanged();
 		} else if (ACTION_RESTART.equals(intent.getAction())) {

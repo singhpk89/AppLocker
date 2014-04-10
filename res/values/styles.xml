@@ -1,0 +1,62 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <item name="android:buttonStyle">@style/Theme_Button</item>
+    </style>
+
+    <style name="LockActivityTheme" parent="AppBaseTheme">
+        <item name="android:buttonStyle">@style/Theme_Lock_Button</item>
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
+        <!-- Don't set background here because it will load 2 times -->
+        <!-- <item name="android:windowBackground">@drawable/locker_default_background</item> -->
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="ApplistTheme" parent="AppBaseTheme">
+        <item name="android:buttonStyle">@style/Theme_Applist_Button</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Black">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <style name="Theme_Button" parent="@android:style/Widget.Button">
+        <item name="android:background">@drawable/main_button_background</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="Theme_Lock_Button" parent="@android:style/Widget.Button">
+        <item name="android:background">@drawable/passwordview_button_background</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Theme_Applist_Button" parent="@android:style/Widget.Button">
+        <item name="android:background">@drawable/applist_button_background</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+    <!-- For StagingActivity -->
+    <style name="Theme_Transparent" parent="android:Theme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+</resources>

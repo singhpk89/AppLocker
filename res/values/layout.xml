@@ -1,0 +1,6 @@
+<resources>
+
+    <item name="layout_alias_locker" type="layout">@layout/activity_locker</item>
+    <item name="isTablet" type="bool">false</item>
+
+</resources>

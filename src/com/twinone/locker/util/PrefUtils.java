@@ -1,15 +1,16 @@
 package com.twinone.locker.util;
 
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.provider.Settings.Secure;
 import android.util.Log;
 
 import com.twinone.locker.R;
@@ -22,13 +23,143 @@ import com.twinone.locker.lock.LockService;
  * @author twinone
  * 
  */
-public abstract class PrefUtil {
+public class PrefUtils {
 
 	public static final String PREF_FILE_DEFAULT = "com.twinone.locker.prefs.default";
 	private static final String PREF_FILE_APPS = "com.twinone.locker.prefs.apps";
 
 	private static final String ALIAS_CLASSNAME = "com.twinone.locker.MainActivityAlias";
 
+	private Context mContext;
+
+	private SharedPreferences mPrefs;
+	private SharedPreferences mApps;
+	private Editor mEditor;
+
+	public Editor editor() {
+		if (mEditor != null) {
+			mEditor = mPrefs.edit();
+		}
+		return mEditor;
+	}
+
+	public SharedPreferences apps() {
+		if (mApps != null) {
+			mApps = mContext.getSharedPreferences(PREF_FILE_APPS,
+					Context.MODE_PRIVATE);
+		}
+		return mApps;
+	}
+
+	public void put(int keyResId, Object value) {
+		final String key = mContext.getString(keyResId);
+		if (key == null) {
+
+		}
+		if (value instanceof String)
+			editor().putString(key, (String) value);
+		else if (value instanceof Integer)
+			editor().putInt(key, (Integer) value);
+		else if (value instanceof Boolean)
+			editor().putBoolean(key, (Boolean) value);
+		else if (value instanceof Float)
+			editor().putFloat(key, (Float) value);
+		else if (value instanceof Long)
+			editor().putLong(key, (Long) value);
+		else
+			throw new IllegalArgumentException("Unknown data type");
+	}
+
+	public String getString(int keyResId) {
+		try {
+			return mPrefs.getString(mContext.getString(keyResId), null);
+		} catch (NullPointerException e) {
+			return null;
+		}
+	}
+
+	public Integer getInt(int keyResId) {
+		try {
+			return mPrefs.getInt(mContext.getString(keyResId), (Integer) null);
+		} catch (NullPointerException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * Parse an Integer that is stored as a String or get the default value
+	 * which is also stored as a String
+	 * 
+	 * @param keyResId
+	 *            The resId of the stored String
+	 * @param defResId
+	 *            The resId of the default String
+	 * @return
+	 */
+	public Integer parseInt(int keyResId, int defResId) {
+		final Integer result = parseInt(keyResId);
+		return (result != null) ? result : Integer.parseInt(mContext
+				.getString(defResId));
+	}
+
+	/**
+	 * Parse an Integer that is stored as a string
+	 * 
+	 * @return The Integer or null if there was an error
+	 */
+	public Integer parseInt(int keyResId) {
+		try {
+			return Integer.parseInt(getString(keyResId));
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public Boolean getBoolean(int keyResId) {
+		try {
+			return mPrefs.getBoolean(mContext.getString(keyResId),
+					(Boolean) null);
+		} catch (NullPointerException e) {
+			return null;
+		}
+	}
+
+	public Float getFloatOrNull(int keyResId) {
+		try {
+			return mPrefs.getFloat(mContext.getString(keyResId), (Float) null);
+		} catch (NullPointerException e) {
+			return null;
+		}
+	}
+
+	public Long getLongOrNull(int keyResId) {
+		try {
+			return mPrefs.getLong(mContext.getString(keyResId), (Long) null);
+		} catch (NullPointerException e) {
+			return null;
+		}
+	}
+
+	public String getString(int keyResId, int defResId) {
+		final String value = getString(keyResId);
+		return (value != null) ? value : mContext.getString(defResId);
+	}
+
+	/**
+	 * Manages everything relative to preferences
+	 * 
+	 * @param c
+	 */
+	public PrefUtils(Context c) {
+		mContext = c;
+		mPrefs = mContext.getSharedPreferences(PREF_FILE_DEFAULT,
+				Context.MODE_PRIVATE);
+	}
+
+	/***************************************************************************
+	 * OLD
+	 * 
+	 */
 	// private SharedPreferences mSP;
 	// private SharedPreferences.Editor mEditor;
 	// private Context mContext;
@@ -58,7 +189,7 @@ public abstract class PrefUtil {
 					c.getString(prefKeyResId), c.getString(prefDefResId)));
 			return ret;
 		} catch (Exception e) {
-			Log.w("PrefUtil", "Error formatting int");
+			Log.w("PrefUtil", "Error parsing int");
 			return 0;
 		}
 	}
@@ -124,7 +255,7 @@ public abstract class PrefUtil {
 		return getStringOrNull(c, R.string.pref_key_pattern);
 	}
 
-	public static final boolean getPasswordVibrate(Context c) {
+	public static final boolean getVibrate(Context c) {
 		return getBoolean(c, R.string.pref_key_vibrate,
 				R.string.pref_def_vibrate);
 	}
@@ -183,7 +314,6 @@ public abstract class PrefUtil {
 		SharedPreferences sp = appsPrefs(c);
 		Set<String> apps = new HashSet<String>(sp.getAll().keySet());
 		return apps;
-
 	}
 
 	private static final String getLockType(Context c) {
@@ -223,6 +353,16 @@ public abstract class PrefUtil {
 		} else {
 			return LockService.PATTERN_COLOR_WHITE;
 		}
+	}
+
+	public static final int getPatternWidth(Context c) {
+		String width = getString(c, R.string.pref_key_pattern_size,
+				R.string.pref_def_pattern_size);
+		try {
+			return Integer.parseInt(width);
+		} catch (Exception e) {
+		}
+		return Integer.parseInt(c.getString(R.string.pref_def_pattern_size));
 	}
 
 	/**
@@ -276,14 +416,6 @@ public abstract class PrefUtil {
 		return getStringOrNull(c, R.string.pref_key_recovery_code);
 	}
 
-	public static final String generateRecoveryCode() {
-		final int min = 10000000;
-		final int max = 99999999;
-		final Random rand = new Random();
-		final int newRandom = rand.nextInt(max - min + 1) + min;
-		return "#" + String.valueOf(newRandom);
-	}
-
 	@SuppressLint("NewApi")
 	public static final void apply(SharedPreferences.Editor editor) {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
@@ -303,6 +435,22 @@ public abstract class PrefUtil {
 			c.getPackageManager().setComponentEnabledSetting(cn, setting,
 					PackageManager.DONT_KILL_APP);
 		}
+	}
+
+	/**
+	 * Generates a recovery code based on Android ID
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public static String generateRecoveryCode(Context context) {
+		String androidId = Secure.getString(context.getContentResolver(),
+				Secure.ANDROID_ID);
+		if ((androidId == null) || (androidId.equals("9774d56d682e549c"))
+				|| (androidId.equals("0000000000000000"))) {
+			androidId = "fdaffadfaedfaedf827382164762349787adadfebcbc";
+		}
+		return String.valueOf(androidId.hashCode());
 	}
 
 }

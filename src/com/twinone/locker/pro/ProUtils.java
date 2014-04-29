@@ -1,19 +1,19 @@
 package com.twinone.locker.pro;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
 
 import com.twinone.locker.R;
 import com.twinone.locker.lock.AppLockService;
-import com.twinone.locker.util.PrefUtil;
+import com.twinone.locker.ui.MainActivity;
+import com.twinone.locker.ui.NavigationElement;
+import com.twinone.locker.util.PrefUtils;
 
 public class ProUtils {
 	private static final String PREFS_FILENAME = "com.twinone.locker.pro";
@@ -128,12 +128,12 @@ public class ProUtils {
 	}
 
 	private void toProActivity() {
-		Intent intent = new Intent(mContext, ProActivity.class);
-		// allow from service
-		if (!(mContext instanceof Activity)) {
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		if (!(mContext instanceof MainActivity)) {
+			throw new RuntimeException(
+					"Cannot start pro fragment from outside MainActivity");
 		}
-		mContext.startActivity(intent);
+		((MainActivity) mContext)
+				.navigateToFragment(NavigationElement.TYPE_PRO);
 	}
 
 	@SuppressLint("NewApi")
@@ -149,7 +149,7 @@ public class ProUtils {
 		/** If pro features are enabled, we don't need to lock them */
 		if (proFeaturesEnabled())
 			return;
-		SharedPreferences.Editor editor = PrefUtil.prefs(mContext).edit();
+		SharedPreferences.Editor editor = PrefUtils.prefs(mContext).edit();
 		editor.remove(mContext.getString(R.string.pref_key_background));
 		editor.remove(mContext.getString(R.string.pref_key_pattern_color));
 		editor.remove(mContext.getString(R.string.pref_key_delay_status));
@@ -162,9 +162,9 @@ public class ProUtils {
 		editor.remove(mContext.getString(R.string.pref_key_anim_show_millis));
 		editor.remove(mContext
 				.getString(R.string.pref_key_hide_notification_icon));
-		PrefUtil.apply(editor);
+		PrefUtils.apply(editor);
 		AppLockService.restart(mContext);
-		PrefUtil.setHideApplication(mContext, false);
+		PrefUtils.setHideApplication(mContext, false);
 	}
 
 }

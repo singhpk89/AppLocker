@@ -1,6 +1,6 @@
 package com.twinone.locker.pro.pref;
 
-public interface IProPreference {
+public interface ProPreference {
 
 	public Helper getHelper();
 }

@@ -2,24 +2,12 @@
 <resources>
 
     <string name="application_name">App Locker</string>
-    <string name="action_settings">Settings</string>
 
     <!-- All strings for MainActivity -->
-    <string name="main_start_service">Start lock</string>
-    <string name="main_stop_service">Stop lock</string>
-    <string name="main_change_password">Set password</string>
-    <string name="main_select_apps">Apps</string>
-    <string name="main_change_message">Message</string>
-    <string name="main_change_message_desc">This message will appear under your locked apps\nYou can use %s to represent the app name</string>
-    <string name="main_change_message_saved">Message saved</string>
     <string name="main_share">Share</string>
-    <string name="main_share_tit">Share Locker</string>
-    <string name="main_share_text">Try out Locker, the free app to keep your important apps private. https://play.google.com/store/apps/details?id=com.twinone.locker</string>
 
     <!-- All Strings for applist -->
-    <string name="applist_on">ON</string>
-    <string name="applist_window_title">Locked apps</string>
-    <string name="icon_desc">icon</string>
+
 
     <!-- Change password activity -->
     <string name="change_pass_tit">Change password</string>
@@ -206,7 +194,7 @@
 
     <string name="main_no_password">You have not setup a password yet.\nDo you want to setup a password now?</string>
     <string name="main_setup">Setup</string>
-    <string name="main_choose_lock_type">Choose Lock Type</string>
+    <string name="old_main_choose_lock_type">Choose Lock Type</string>
     <string name="main_no_locked_apps">You have no apps locked.\nDo you want to add some apps now?</string>
     <!-- END v2.0.2 -->
 
@@ -304,6 +292,23 @@
     <string name="applist_app_pkginstaller">App install/uninstall</string>
     <string name="applist_app_dialer">Incoming call</string>
     <string name="applist_app_sysui">Recent tasks</string>
-    <string name="teststring">Test</string>
+    <string name="nav_status">Lock</string>
+    <string name="nav_apps">Applications</string>
+    <string name="nav_change">Change lock</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_statistics">Statistics</string>
+    <string name="nav_pro">Pro</string>
+
+    <!--  -->
+    <string name="fragment_title_apps">Applications</string>
+    <string name="fragment_title_settings">Settings</string>
+    <string name="fragment_title_statistics">Statistics</string>
+    <string name="fragment_title_pro">Pro</string>
+    <string name="setup_new_lock">Setup new lock</string>
+    <!--  -->
+    <string name="pref_tit_pattern_hide_error">Hide error</string>
+    <string name="pref_desc_pattern_hide_error">Don\'t show the error when you enter a wrong pattern</string>
+    <string name="pref_tit_pattern_size">Pattern size</string>
+    <string name="pref_desc_pattern_size">The number of rows and columns that the pattern has</string>
 
 </resources>

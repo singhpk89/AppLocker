@@ -1,0 +1,33 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/navRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical|right"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/element_vertical_margin"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="@dimen/element_vertical_margin" >
+
+    <Switch
+        android:id="@id/navFlag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:clickable="false"
+        android:focusable="false"
+        android:thumb="@drawable/switch_background"
+        android:visibility="gone" >
+    </Switch>
+
+    <TextView
+        android:id="@id/navTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/navFlag"
+        android:textAppearance="@android:style/TextAppearance"
+        android:textColor="#fff" />
+
+</RelativeLayout>

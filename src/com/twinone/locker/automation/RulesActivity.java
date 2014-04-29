@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import com.twinone.locker.util.PrefUtil;
+import com.twinone.locker.util.PrefUtils;
 
 
 public class RulesActivity extends Activity {
@@ -20,7 +20,7 @@ public class RulesActivity extends Activity {
 	}
 
 	public final void addRule(String condition, String action) {
-		SharedPreferences.Editor editor = PrefUtil.appsPrefs(this).edit();
+		SharedPreferences.Editor editor = PrefUtils.appsPrefs(this).edit();
 		// for (String packageName : packageNames) {
 		// if (shouldTrack) {
 		// editor.putBoolean(packageName, true);

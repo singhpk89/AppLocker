@@ -3,17 +3,20 @@
     android:id="@+id/applist_item_category"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/item_selected_bg"
     android:paddingBottom="@dimen/element_vertical_margin"
     android:paddingLeft="@dimen/element_horizontal_margin"
-    android:background="#2c3e50"
     android:paddingRight="@dimen/element_horizontal_margin"
     android:paddingTop="@dimen/element_vertical_margin" >
+
+    <!-- android:background="#2c3e50" -->
 
     <TextView
         android:id="@+id/listName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/listIcon"
+        android:textColor="#fff"
         android:textIsSelectable="false"
         android:textStyle="bold" />
 

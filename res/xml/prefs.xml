@@ -57,6 +57,20 @@
             android:key="@string/pref_key_pattern_stealth"
             android:summary="@string/pref_desc_pattern_stealth"
             android:title="@string/pref_tit_pattern_stealth" />
+
+        <!-- Hide error -->
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_def_pattern_hide_error"
+            android:key="@string/pref_key_pattern_hide_error"
+            android:summary="@string/pref_desc_pattern_hide_error"
+            android:title="@string/pref_tit_pattern_hide_error" />
+
+        <com.twinone.locker.pro.pref.ProEditTextPreference
+            android:defaultValue="@string/pref_def_pattern_size"
+            android:key="@string/pref_key_pattern_size"
+            android:numeric="integer"
+            android:summary="@string/pref_desc_pattern_size"
+            android:title="@string/pref_tit_pattern_size" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="@string/pref_key_cat_general"

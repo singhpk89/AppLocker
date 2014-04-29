@@ -11,8 +11,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
-import com.twinone.locker.MainActivity;
 import com.twinone.locker.R;
+import com.twinone.locker.ui.MainActivity;
 
 public class VersionUtils {
 	private final Context mContext;

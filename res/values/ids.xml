@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="navRoot" type="id"/>
+    <item name="navTitle" type="id"/>
+    <item name="navFlag" type="id"/>
+
+</resources>

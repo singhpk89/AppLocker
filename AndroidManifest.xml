@@ -47,25 +47,25 @@
 
     <!-- 2303 -->
     <!-- Take pictures of intruder -->
-<!--     <uses-permission android:name="android.permission.CAMERA" />
- -->
+    <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
     <!--  -->
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/application_name"
         android:theme="@style/AppTheme" >
-<!--         <meta-data
+
+        <!--
+             <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
- -->
+        -->
         <!-- singleTask solved bug with notification click -->
         <activity
-            android:name="com.twinone.locker.MainActivity"
+            android:name="com.twinone.locker.ui.MainActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/application_name"
-            android:launchMode="singleTask"
-            android:theme="@style/ApplistTheme" >
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -75,7 +75,7 @@
             android:name="com.twinone.locker.MainActivityAlias"
             android:enabled="true"
             android:label="@string/application_name"
-            android:targetActivity="com.twinone.locker.MainActivity" >
+            android:targetActivity="com.twinone.locker.ui.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -83,34 +83,14 @@
             </intent-filter>
         </activity-alias>
 
-        <activity
-            android:name="com.twinone.locker.appselect.SelectActivity"
-            android:configChanges="orientation"
-            android:label="@string/applist_window_title"
-            android:theme="@style/ApplistTheme" >
-        </activity>
-        <activity
-            android:name="com.twinone.locker.PrefsActivity"
-            android:configChanges="orientation|screenSize|screenLayout"
-            android:label="@string/preferences_tit" >
-        </activity>
-        <!-- End derived activities -->
-
-        <activity
-            android:name="com.twinone.locker.StagingActivity"
-            android:theme="@style/Theme_Transparent" >
-        </activity>
-        <activity
-            android:name="com.twinone.locker.pro.ProActivity"
-            android:configChanges="orientation|screenLayout|screenSize" />
-        <!-- ADS -->
-        <!-- Mobfox -->
+        <!-- MobFox -->
         <activity
             android:name="com.adsdk.sdk.banner.InAppWebView"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
         <activity
             android:name="com.adsdk.sdk.mraid.MraidActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+
         <!-- Admob -->
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
@@ -118,6 +98,7 @@
 
         <service android:name="com.twinone.locker.lock.AppLockService" />
         <service android:name="com.twinone.locker.lock.LockService" />
+        <service android:name="com.twinone.locker.lock.NotificationRemover" />
 
         <receiver android:name="com.twinone.locker.receivers.OutgoingCallReceiver" >
             <intent-filter>

@@ -11,8 +11,8 @@ import com.adsdk.sdk.Ad;
 import com.adsdk.sdk.AdListener;
 import com.adsdk.sdk.AdManager;
 import com.adsdk.sdk.banner.AdView;
+import com.twinone.locker.Constants;
 import com.twinone.locker.LockerAnalytics;
-import com.twinone.locker.MainActivity;
 import com.twinone.locker.R;
 import com.twinone.locker.pro.ProUtils;
 import com.twinone.util.Analytics;
@@ -43,7 +43,7 @@ public class AdViewManager implements AdListener {
 	 * Reload {@link #mShowAds}
 	 */
 	private boolean shouldShowAds() {
-		if (MainActivity.DEBUG) {
+		if (Constants.DEBUG) {
 			Log.w(TAG, "not showing ads in debug mode");
 			return false;
 		}

@@ -1,4 +1,4 @@
-package com.twinone.locker;
+package com.twinone.locker.uiold;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -25,13 +25,18 @@ import android.preference.PreferenceScreen;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.twinone.locker.R;
+import com.twinone.locker.R.array;
+import com.twinone.locker.R.string;
+import com.twinone.locker.R.xml;
 import com.twinone.locker.lock.AppLockService;
 import com.twinone.locker.lock.LockService;
 import com.twinone.locker.pro.ProUtils;
-import com.twinone.locker.pro.pref.IProPreference;
+import com.twinone.locker.pro.pref.ProPreference;
 import com.twinone.locker.pro.pref.ProCheckBoxPreference;
 import com.twinone.locker.pro.pref.ProListPreference;
-import com.twinone.locker.util.PrefUtil;
+import com.twinone.locker.ui.MainActivity;
+import com.twinone.locker.util.PrefUtils;
 import com.twinone.util.ChangeLog;
 
 public class PrefsActivity extends PreferenceActivity implements
@@ -69,7 +74,7 @@ public class PrefsActivity extends PreferenceActivity implements
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
 			PreferenceManager pm = getPreferenceManager();
-			pm.setSharedPreferencesName(PrefUtil.PREF_FILE_DEFAULT);
+			pm.setSharedPreferencesName(PrefUtils.PREF_FILE_DEFAULT);
 			pm.setSharedPreferencesMode(MODE_PRIVATE);
 			addPreferencesFromResource(R.xml.prefs);
 
@@ -112,7 +117,7 @@ public class PrefsActivity extends PreferenceActivity implements
 			super.onCreate(savedInstanceState);
 			parent = (PrefsActivity) getActivity();
 			PreferenceManager pm = getPreferenceManager();
-			pm.setSharedPreferencesName(PrefUtil.PREF_FILE_DEFAULT);
+			pm.setSharedPreferencesName(PrefUtils.PREF_FILE_DEFAULT);
 			pm.setSharedPreferencesMode(MODE_PRIVATE);
 			addPreferencesFromResource(R.xml.prefs);
 
@@ -157,7 +162,7 @@ public class PrefsActivity extends PreferenceActivity implements
 			mCatNotif.removePreference(mTransparentPref);
 		}
 
-		String code = PrefUtil.getRecoveryCode(this);
+		String code = PrefUtils.getRecoveryCode(this);
 		if (code != null)
 			mRecoveryPref.setSummary(String.format(
 					getString(R.string.pref_desc_recovery_code), code));
@@ -210,7 +215,7 @@ public class PrefsActivity extends PreferenceActivity implements
 
 		if (key.equals(keyHideIcon)) {
 			boolean shouldHide = mHideIcon.isChecked();
-			PrefUtil.setHideApplication(this, shouldHide);
+			PrefUtils.setHideApplication(this, shouldHide);
 		}
 
 		setupMessagesAndViews();
@@ -233,7 +238,7 @@ public class PrefsActivity extends PreferenceActivity implements
 			mHideIcon.setEnabled(true);
 		}
 		// Password/pattern categories
-		if (PrefUtil.getLockTypeInt(this) == LockService.LOCK_TYPE_PASSWORD) {
+		if (PrefUtils.getLockTypeInt(this) == LockService.LOCK_TYPE_PASSWORD) {
 			mLockTypePref.setSummary(R.string.pref_list_lock_type_password);
 			mPrefScreen.removePreference(mCatPattern);
 			mPrefScreen.addPreference(mCatPassword);
@@ -244,9 +249,9 @@ public class PrefsActivity extends PreferenceActivity implements
 		}
 		for (int i = 0; i < getListView().getCount(); i++) {
 			Preference p = (Preference) getListView().getItemAtPosition(i);
-			if (p instanceof IProPreference) {
+			if (p instanceof ProPreference) {
 
-				((IProPreference) p).getHelper().setProUtils(mProUtils);
+				((ProPreference) p).getHelper().setProUtils(mProUtils);
 				// ((IProPreference) p).getHelper().updateProFlag();
 			}
 		}
@@ -278,7 +283,7 @@ public class PrefsActivity extends PreferenceActivity implements
 			ChangeLog cl = new ChangeLog(this);
 			cl.show(true);
 		} else if (key.equals(lockType)) {
-			getChangePasswordDialog(this).show();
+//			getChangePasswordDialog(this).show();
 		}
 		return false;
 	}
@@ -300,9 +305,9 @@ public class PrefsActivity extends PreferenceActivity implements
 		Log.d("", "onActivityResult");
 		if (req == IMG_REQ_CODE && res == Activity.RESULT_OK) {
 			Uri image = data.getData();
-			SharedPreferences.Editor editor = PrefUtil.prefs(this).edit();
-			PrefUtil.setLockerBackground(editor, this, image.toString());
-			PrefUtil.apply(editor);
+			SharedPreferences.Editor editor = PrefUtils.prefs(this).edit();
+			PrefUtils.setLockerBackground(editor, this, image.toString());
+			PrefUtils.apply(editor);
 		}
 		Toast.makeText(this, R.string.background_changed, Toast.LENGTH_SHORT)
 				.show();
@@ -327,27 +332,5 @@ public class PrefsActivity extends PreferenceActivity implements
 		super.onPause();
 	}
 
-	/**
-	 * The dialog that allows the user to select between password and pattern
-	 * options
-	 * 
-	 * @param c
-	 * @return
-	 */
-	public static AlertDialog getChangePasswordDialog(final Context c) {
-		final AlertDialog.Builder choose = new AlertDialog.Builder(c);
-		choose.setTitle(R.string.main_choose_lock_type);
-		choose.setItems(R.array.lock_type_names, new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				int lockType = which == 0 ? LockService.LOCK_TYPE_PASSWORD
-						: LockService.LOCK_TYPE_PATTERN;
-				Intent i = LockService.getDefaultIntent(c);
-				i.setAction(LockService.ACTION_CREATE);
-				i.putExtra(LockService.EXTRA_VIEW_TYPE, lockType);
-				c.startService(i);
-			}
-		});
-		return choose.create();
-	}
+
 }

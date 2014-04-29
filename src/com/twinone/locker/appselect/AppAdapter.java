@@ -21,19 +21,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.twinone.locker.R;
-import com.twinone.locker.util.PrefUtil;
+import com.twinone.locker.util.PrefUtils;
 
 public class AppAdapter extends BaseAdapter {
 
 	private LayoutInflater mInflater;
 	private PackageManager mPm;
 	private Context mContext;
-	private List<AppInfo> mItems;
+	private List<AppListElement> mItems;
 
 	public AppAdapter(Context context) {
 		mContext = context;
@@ -50,7 +49,7 @@ public class AppAdapter extends BaseAdapter {
 	}
 
 	public boolean areAllAppsLocked() {
-		for (AppInfo app : mItems)
+		for (AppListElement app : mItems)
 			if (app.isApp() && !app.locked)
 				return false;
 		return true;
@@ -64,7 +63,7 @@ public class AppAdapter extends BaseAdapter {
 	public void loadAppsIntoList() {
 
 		// Get all tracked apps from preferences
-		HashSet<AppInfo> apps = new HashSet<AppInfo>();
+		HashSet<AppListElement> apps = new HashSet<AppListElement>();
 		addImportantAndSystemApps(apps);
 
 		// other apps
@@ -74,16 +73,20 @@ public class AppAdapter extends BaseAdapter {
 
 		for (ResolveInfo ri : ris) {
 			if (!mContext.getPackageName().equals(ri.activityInfo.packageName)) {
-				final AppInfo ah = new AppInfo(ri.loadLabel(mPm).toString(),
-						ri.activityInfo, AppInfo.PRIORITY_NORMAL_APPS);
+				final AppListElement ah = new AppListElement(ri.loadLabel(mPm)
+						.toString(), ri.activityInfo,
+						AppListElement.PRIORITY_NORMAL_APPS);
 				apps.add(ah);
 			}
 		}
-		mItems = new ArrayList<AppInfo>(apps);
-		updateLockSwitches();
+		mItems = new ArrayList<AppListElement>(apps);
+		Set<String> lockedApps = PrefUtils.getLockedApps(mContext);
+		for (AppListElement ah : mItems) {
+			ah.locked = lockedApps.contains(ah.packageName);
+		}
 	}
 
-	private void addImportantAndSystemApps(Collection<AppInfo> apps) {
+	private void addImportantAndSystemApps(Collection<AppListElement> apps) {
 		final String phone = "com.android.dialer";
 		final String installer = "com.android.packageinstaller";
 		final String sysui = "com.android.systemui";
@@ -105,51 +108,40 @@ public class AppAdapter extends BaseAdapter {
 				// AppInfo.PRIORITY_SYSTEM_APPS));
 				// haveSystem = true;
 			} else if (sysui.equals(pi.packageName)) {
-				apps.add(new AppInfo(mContext
+				apps.add(new AppListElement(mContext
 						.getString(R.string.applist_app_sysui), pi,
-						AppInfo.PRIORITY_SYSTEM_APPS));
+						AppListElement.PRIORITY_SYSTEM_APPS));
 				haveSystem = true;
 			} else if (installer.equals(pi.packageName)) {
-				apps.add(new AppInfo(mContext
+				apps.add(new AppListElement(mContext
 						.getString(R.string.applist_app_pkginstaller), pi,
-						AppInfo.PRIORITY_IMPORTANT_APPS));
+						AppListElement.PRIORITY_IMPORTANT_APPS));
 				haveImportant = true;
 			}
 			if (important.contains(pi.packageName)) {
-				apps.add(new AppInfo(pi.loadLabel(pm).toString(), pi,
-						AppInfo.PRIORITY_IMPORTANT_APPS));
+				apps.add(new AppListElement(pi.loadLabel(pm).toString(), pi,
+						AppListElement.PRIORITY_IMPORTANT_APPS));
 				haveImportant = true;
 			}
 			if (system.contains(pi.packageName)) {
-				apps.add(new AppInfo(pi.loadLabel(pm).toString(), pi,
-						AppInfo.PRIORITY_SYSTEM_APPS));
+				apps.add(new AppListElement(pi.loadLabel(pm).toString(), pi,
+						AppListElement.PRIORITY_SYSTEM_APPS));
 				haveSystem = true;
 			}
 
-			apps.add(new AppInfo(mContext.getString(R.string.applist_tit_apps),
-					AppInfo.PRIORITY_NORMAL_CATEGORY));
+			apps.add(new AppListElement(mContext
+					.getString(R.string.applist_tit_apps),
+					AppListElement.PRIORITY_NORMAL_CATEGORY));
 			if (haveImportant) {
-				apps.add(new AppInfo(mContext
+				apps.add(new AppListElement(mContext
 						.getString(R.string.applist_tit_important),
-						AppInfo.PRIORITY_IMPORTANT_CATEGORY));
+						AppListElement.PRIORITY_IMPORTANT_CATEGORY));
 			}
 			if (haveSystem) {
-				apps.add(new AppInfo(mContext
+				apps.add(new AppListElement(mContext
 						.getString(R.string.applist_tit_system),
-						AppInfo.PRIORITY_SYSTEM_CATEGORY));
+						AppListElement.PRIORITY_SYSTEM_CATEGORY));
 			}
-		}
-	}
-
-	/**
-	 * Updates the true or false states.
-	 * 
-	 * @param c
-	 */
-	public void updateLockSwitches() {
-		Set<String> lockedApps = PrefUtil.getLockedApps(mContext);
-		for (AppInfo ah : mItems) {
-			ah.locked = lockedApps.contains(ah.packageName);
 		}
 	}
 
@@ -168,7 +160,7 @@ public class AppAdapter extends BaseAdapter {
 		return mItems.get(position);
 	}
 
-	public List<AppInfo> getAllItems() {
+	public List<AppListElement> getAllItems() {
 		return mItems;
 	}
 
@@ -189,7 +181,7 @@ public class AppAdapter extends BaseAdapter {
 
 	private View createSeparatorViewFromResource(int position,
 			View convertView, ViewGroup parent) {
-		AppInfo ah = mItems.get(position);
+		AppListElement ah = mItems.get(position);
 
 		View view = mInflater.inflate(R.layout.applist_item_category, parent,
 				false);
@@ -202,10 +194,11 @@ public class AppAdapter extends BaseAdapter {
 	private View createAppViewFromResource(int position, View convertView,
 			ViewGroup parent) {
 
-		AppInfo ah = mItems.get(position);
+		AppListElement ah = mItems.get(position);
 		View view = mInflater.inflate(R.layout.applist_item_app, parent, false);
-		// Every click
-		final ImageView lock = (ImageView) view.findViewById(R.id.listLocked);
+		// changes with every click
+		final ImageView lock = (ImageView) view
+				.findViewById(R.id.applist_item_image);
 		lock.setVisibility(ah.locked ? View.VISIBLE : View.GONE);
 
 		final TextView name = (TextView) view.findViewById(R.id.listName);

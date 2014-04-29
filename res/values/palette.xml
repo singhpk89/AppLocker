@@ -13,7 +13,22 @@
     <color name="passwordview_button_background">#48333333</color>
 
     <!-- PRO -->
-    <color name="pro_overlay">#72333333</color>
+    <color name="item_bg">#ddd</color>
+    <color name="item_border">#ddd</color>
+    <color name="item_selected_bg">#16a085</color>
+    <color name="item_selected_border">#fff</color>
+    <color name="pro_item_desc">#000</color>
+    <color name="pro_item_tit">#000</color>
+    <color name="pro_item_selected_tit">#fff</color>
+    <color name="pro_item_selected_desc">#fff</color>
+    <color name="pro_item_tit_free">#000</color>
+    <color name="pro_item_tit_ads">#000</color>
+    <color name="pro_item_tit_paid">#000</color>
+    
+    <!-- Switch -->
+    <color name="switch_on_bg">#16a085</color>
+    <color name="switch_off_bg">#888</color>
+    <color name="switch_track">#333</color>
 
     <!-- Holo dark background -->
     <color name="ics_background_start">#ff020202</color>

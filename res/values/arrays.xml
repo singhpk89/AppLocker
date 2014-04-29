@@ -91,5 +91,13 @@
         <item>@string/pro_ft_anim</item>
         <item>@string/pro_ft_more</item>
     </string-array>
+    <string-array name="nav_items">
+        <item>@string/nav_status</item>
+        <item>@string/nav_apps</item>
+        <item>@string/nav_change</item>
+        <item>@string/nav_settings</item>
+        <item>@string/nav_statistics</item>
+        <item>@string/nav_pro</item>
+    </string-array>
 
 </resources>

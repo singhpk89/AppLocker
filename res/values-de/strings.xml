@@ -12,7 +12,7 @@
     <string name="main_start_service">Aktiviere Sperre</string>
     <string name="main_stop_service">Deaktiviere Sperre</string>
     <string name="main_change_password">Passwort setzen</string>
-    <string name="main_select_apps">Apps</string>
+    <string name="fragment_title_apps">Apps</string>
     <string name="main_change_message">Nachricht</string>
     <string name="main_change_message_desc">Diese Nachricht wird unter den gesperrten Apps erscheinen\nDu kannst %s verwenden, um den Namen der App zu verwenden.</string>
     <string name="main_change_message_saved">Nachricht gespeichert</string>
@@ -210,7 +210,7 @@
 
     <string name="main_no_password">Du hast noch kein Passwort gesetzt.\nMöchtest Du jetzt ein Passwort einrichten?</string>
     <string name="main_setup">Einrichtung</string>
-    <string name="main_choose_lock_type">Wähle einen Sperr-Typ</string>
+    <string name="old_main_choose_lock_type">Wähle einen Sperr-Typ</string>
     <string name="main_no_locked_apps">Du hast keine Apps geschützt.\nMöchtest Du jetzt paar Apps schützen?</string>
     <!-- END v2.0.2 -->
 

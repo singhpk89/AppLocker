@@ -34,6 +34,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.SystemClock;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,19 +50,11 @@ import com.twinone.locker.R;
  */
 public class PatternView extends View {
 
-	/**
-	 * This is the width of the matrix (the number of dots per row and column).
-	 * Change this value to change the dimension of the pattern's matrix.
-	 * 
-	 * @since v2.7 beta
-	 * @author Thomas Breitbach
-	 */
-	public static final int MATRIX_WIDTH = 3;
+	public static int mMatrixWidth = 3;
 
-	/**
-	 * The size of the pattern's matrix.
-	 */
-	public static final int MATRIX_SIZE = MATRIX_WIDTH * MATRIX_WIDTH;
+	public static int getMatrixSize() {
+		return mMatrixWidth * mMatrixWidth;
+	}
 
 	private static final boolean PROFILE_DRAWING = false;
 	private boolean mDrawingProfilingStarted = false;
@@ -80,7 +73,18 @@ public class PatternView extends View {
 	private static final int MILLIS_PER_CIRCLE_ANIMATING = 700;
 
 	private OnPatternListener mOnPatternListener;
-	private ArrayList<Cell> mPattern = new ArrayList<Cell>(MATRIX_SIZE);
+	private ArrayList<Cell> mPattern;
+
+	public void init() {
+		mPattern = new ArrayList<Cell>(getMatrixSize());
+		mPatternDrawLookup = new boolean[mMatrixWidth][mMatrixWidth];
+		Cell.sCells = new Cell[mMatrixWidth][mMatrixWidth];
+		for (int i = 0; i < mMatrixWidth; i++) {
+			for (int j = 0; j < mMatrixWidth; j++) {
+				Cell.sCells[i][j] = new Cell(i, j);
+			}
+		}
+	}
 
 	/**
 	 * Lookup table for the circles of the pattern we are currently drawing.
@@ -88,7 +92,7 @@ public class PatternView extends View {
 	 * in which case we use this to hold the cells we are drawing for the in
 	 * progress animation.
 	 */
-	private boolean[][] mPatternDrawLookup = new boolean[MATRIX_WIDTH][MATRIX_WIDTH];
+	private boolean[][] mPatternDrawLookup;
 
 	/**
 	 * the in progress point: - during interaction: where the user's finger is -
@@ -149,14 +153,7 @@ public class PatternView extends View {
 		int mColumn;
 
 		// keep # objects limited to MATRIX_SIZE
-		static Cell[][] sCells = new Cell[MATRIX_WIDTH][MATRIX_WIDTH];
-		static {
-			for (int i = 0; i < MATRIX_WIDTH; i++) {
-				for (int j = 0; j < MATRIX_WIDTH; j++) {
-					sCells[i][j] = new Cell(i, j);
-				}
-			}
-		}
+		static Cell[][] sCells;
 
 		/**
 		 * @param row
@@ -195,7 +192,7 @@ public class PatternView extends View {
 		 * @return the ID.
 		 */
 		public int getId() {
-			return mRow * MATRIX_WIDTH + mColumn;
+			return mRow * mMatrixWidth + mColumn;
 		}// getId()
 
 		/**
@@ -219,23 +216,23 @@ public class PatternView extends View {
 		 * @author Hai Bison
 		 */
 		public static synchronized Cell of(int id) {
-			return of(id / MATRIX_WIDTH, id % MATRIX_WIDTH);
+			return of(id / mMatrixWidth, id % mMatrixWidth);
 		}// of()
 
 		private static void checkRange(int row, int column) {
-			if (row < 0 || row > MATRIX_WIDTH - 1) {
+			if (row < 0 || row > mMatrixWidth - 1) {
 				throw new IllegalArgumentException("row must be in range 0-"
-						+ (MATRIX_WIDTH - 1));
+						+ (mMatrixWidth - 1));
 			}
-			if (column < 0 || column > MATRIX_WIDTH - 1) {
+			if (column < 0 || column > mMatrixWidth - 1) {
 				throw new IllegalArgumentException("column must be in range 0-"
-						+ (MATRIX_WIDTH - 1));
+						+ (mMatrixWidth - 1));
 			}
 		}
 
 		@Override
 		public String toString() {
-			return "(ROW=" + getRow() + ",COL=" + getColumn() + ")";
+			return "(r=" + getRow() + ",c=" + getColumn() + ")";
 		}// toString()
 
 		@Override
@@ -343,6 +340,11 @@ public class PatternView extends View {
 
 	public PatternView(Context context) {
 		this(context, null);
+	}
+
+	public void setSize(int newSize) {
+		mMatrixWidth = newSize;
+		init();
 	}
 
 	public PatternView(Context context, AttributeSet attrs) {
@@ -532,7 +534,25 @@ public class PatternView extends View {
 	 * @return
 	 */
 	public String getPatternString() {
-		return PatternUtils.patternToString(mPattern);
+		return patternToString();
+	}
+
+	/**
+	 * @return a String that represents the current pattern. Never null
+	 */
+	public String patternToString() {
+		if (mPattern == null) {
+			return "";
+		}
+		final int patternSize = mPattern.size();
+		final StringBuilder res = new StringBuilder(patternSize);
+		int padding = String.valueOf(getMatrixSize()).length();
+		for (int i = 0; i < patternSize; i++) {
+			int cell = mPattern.get(i).getId();
+			res.append(String.format("%0" + padding + "d", cell));
+		}
+		Log.d("", "pattern: " + res.toString());
+		return res.toString();
 	}
 
 	private void notifyCellAdded() {
@@ -583,8 +603,8 @@ public class PatternView extends View {
 	 * Clear the pattern lookup table.
 	 */
 	private void clearPatternDrawLookup() {
-		for (int i = 0; i < MATRIX_WIDTH; i++) {
-			for (int j = 0; j < MATRIX_WIDTH; j++) {
+		for (int i = 0; i < mMatrixWidth; i++) {
+			for (int j = 0; j < mMatrixWidth; j++) {
 				mPatternDrawLookup[i][j] = false;
 			}
 		}
@@ -608,10 +628,10 @@ public class PatternView extends View {
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		final int width = w - mPaddingLeft - mPaddingRight;
-		mSquareWidth = width / (float) MATRIX_WIDTH;
+		mSquareWidth = width / (float) mMatrixWidth;
 
 		final int height = h - mPaddingTop - mPaddingBottom;
-		mSquareHeight = height / (float) MATRIX_WIDTH;
+		mSquareHeight = height / (float) mMatrixWidth;
 	}
 
 	@Override
@@ -619,7 +639,7 @@ public class PatternView extends View {
 		// View should be large enough to contain MATRIX_WIDTH side-by-side
 		// target
 		// bitmaps
-		return MATRIX_WIDTH * mBitmapWidth;
+		return mMatrixWidth * mBitmapWidth;
 	}
 
 	@Override
@@ -627,7 +647,7 @@ public class PatternView extends View {
 		// View should be large enough to contain MATRIX_WIDTH side-by-side
 		// target
 		// bitmaps
-		return MATRIX_WIDTH * mBitmapWidth;
+		return mMatrixWidth * mBitmapWidth;
 	}
 
 	@Override
@@ -656,30 +676,38 @@ public class PatternView extends View {
 		if (cell != null) {
 
 			// check for gaps in existing pattern
-			Cell fillInGapCell = null;
-			final ArrayList<Cell> pattern = mPattern;
-			if (!pattern.isEmpty()) {
-				final Cell lastCell = pattern.get(pattern.size() - 1);
+			// Cell fillInGapCelal = null;
+			final ArrayList<Cell> newCells = new ArrayList<Cell>();
+			if (!mPattern.isEmpty()) {
+				final Cell lastCell = mPattern.get(mPattern.size() - 1);
 				int dRow = cell.mRow - lastCell.mRow;
-				int dColumn = cell.mColumn - lastCell.mColumn;
+				int dCol = cell.mColumn - lastCell.mColumn;
+				int rsign = dRow > 0 ? 1 : -1;
+				int csign = dCol > 0 ? 1 : -1;
 
-				int fillInRow = lastCell.mRow;
-				int fillInColumn = lastCell.mColumn;
-
-				if (Math.abs(dRow) == 2 && Math.abs(dColumn) != 1) {
-					fillInRow = lastCell.mRow + ((dRow > 0) ? 1 : -1);
+				if (dRow == 0) {
+					for (int i = 1; i < Math.abs(dCol); i++) {
+						newCells.add(new Cell(lastCell.mRow, lastCell.mColumn
+								+ i * csign));
+					}
+				} else if (dCol == 0) {
+					for (int i = 1; i < Math.abs(dRow); i++) {
+						newCells.add(new Cell(lastCell.mRow + i * rsign,
+								lastCell.mColumn));
+					}
+				} else if (Math.abs(dCol) == Math.abs(dRow)) {
+					for (int i = 1; i < Math.abs(dRow); i++) {
+						newCells.add(new Cell(lastCell.mRow + i * rsign,
+								lastCell.mColumn + i * csign));
+					}
 				}
 
-				if (Math.abs(dColumn) == 2 && Math.abs(dRow) != 1) {
-					fillInColumn = lastCell.mColumn + ((dColumn > 0) ? 1 : -1);
-				}
-
-				fillInGapCell = Cell.of(fillInRow, fillInColumn);
 			}
-
-			if (fillInGapCell != null
-					&& !mPatternDrawLookup[fillInGapCell.mRow][fillInGapCell.mColumn]) {
-				addCellToPattern(fillInGapCell);
+			for (Cell fillInGapCell : newCells) {
+				if (fillInGapCell != null
+						&& !mPatternDrawLookup[fillInGapCell.mRow][fillInGapCell.mColumn]) {
+					addCellToPattern(fillInGapCell);
+				}
 			}
 			addCellToPattern(cell);
 			if (mEnableHapticFeedback) {
@@ -730,7 +758,7 @@ public class PatternView extends View {
 		float hitSize = squareHeight * mHitFactor;
 
 		float offset = mPaddingTop + (squareHeight - hitSize) / 2f;
-		for (int i = 0; i < MATRIX_WIDTH; i++) {
+		for (int i = 0; i < mMatrixWidth; i++) {
 
 			final float hitTop = offset + squareHeight * i;
 			if (y >= hitTop && y <= hitTop + hitSize) {
@@ -752,7 +780,7 @@ public class PatternView extends View {
 		float hitSize = squareWidth * mHitFactor;
 
 		float offset = mPaddingLeft + (squareWidth - hitSize) / 2f;
-		for (int i = 0; i < MATRIX_WIDTH; i++) {
+		for (int i = 0; i < mMatrixWidth; i++) {
 
 			final float hitLeft = offset + squareWidth * i;
 			if (x >= hitLeft && x <= hitLeft + hitSize) {
@@ -1062,11 +1090,11 @@ public class PatternView extends View {
 		final int paddingTop = mPaddingTop;
 		final int paddingLeft = mPaddingLeft;
 
-		for (int i = 0; i < MATRIX_WIDTH; i++) {
+		for (int i = 0; i < mMatrixWidth; i++) {
 			float topY = paddingTop + i * squareHeight;
 			// float centerY = mPaddingTop + i * mSquareHeight + (mSquareHeight
 			// / 2);
-			for (int j = 0; j < MATRIX_WIDTH; j++) {
+			for (int j = 0; j < mMatrixWidth; j++) {
 				float leftX = paddingLeft + j * squareWidth;
 				drawCircle(canvas, (int) leftX, (int) topY, drawLookup[i][j]);
 			}
@@ -1245,8 +1273,7 @@ public class PatternView extends View {
 	@Override
 	protected Parcelable onSaveInstanceState() {
 		Parcelable superState = super.onSaveInstanceState();
-		return new SavedState(superState,
-				PatternUtils.patternToString(mPattern),
+		return new SavedState(superState, patternToString(),
 				mPatternDisplayMode.ordinal(), mInputEnabled, mInStealthMode,
 				mEnableHapticFeedback);
 	}

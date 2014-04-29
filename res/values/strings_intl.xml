@@ -43,6 +43,8 @@
     <string name="pref_key_anim_hide_type">com.twinone.locker.pref.anim_hide_type</string>
     <string name="pref_key_anim_show_millis">com.twinone.locker.pref.anim_show_millis</string>
     <string name="pref_key_anim_hide_millis">com.twinone.locker.pref.anim_hide_millis</string>
+    <string name="pref_key_pattern_size">com.twinone.locker.pref.pattern_width</string>
+    <string name="pref_key_pattern_hide_error">com.twinone.locker.pref.pattern_hide_error</string>
 
     <!-- Temp -->
     <string name="pref_key_temp_wifi_unlock_state">temp.unlockstate</string>
@@ -100,6 +102,12 @@
     <string name="pref_def_ads">false</string>
     <string name="pref_def_anim_show_millis">200</string>
     <string name="pref_def_anim_hide_millis">300</string>
+    <string name="pref_def_pattern_size">3</string>
+    <string name="pref_def_pattern_hide_error">false</string>
+
+    <item name="pref_def_background" type="string">@string/pref_val_bg_default</item>
+    <item name="pref_def_anim_show_type" type="string">@string/pref_val_anim_none</item>
+    <item name="pref_def_anim_hide_type" type="string">@string/pref_val_anim_none</item>
 
     <!--
     Next are numbers on buttons, only translate if your language 
@@ -118,5 +126,13 @@
     <string name="numBack">&lt;</string>
     <!-- Works for 4.4 -->
     <string name="packagename_dialer">com.android.dialer</string>
+
+    <!-- Navigation -->
+    <string name="nav_key_status">status</string>
+    <string name="nav_key_apps">apps</string>
+    <string name="nav_key_change">change</string>
+    <string name="nav_key_settings">settings</string>
+    <string name="nav_key_statistics">statistics</string>
+    <string name="nav_key_pro">Pro</string>
 
 </resources>

@@ -1,4 +1,8 @@
-package com.twinone.locker;
+package com.twinone.locker.uiold;
+
+import com.twinone.locker.R;
+import com.twinone.locker.R.string;
+import com.twinone.locker.ui.MainActivity;
 
 import android.app.Activity;
 import android.content.Intent;

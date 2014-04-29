@@ -20,7 +20,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class PatternUtils {
 
 	public static final String UTF8 = "UTF-8";
@@ -61,25 +60,7 @@ public class PatternUtils {
 	// }
 	// }
 
-	/**
-	 * @param pattern
-	 * @return A string containing the cells of the pattern (0 to 8) or an empty
-	 *         string. Never null
-	 */
-	public static String patternToString(List<PatternView.Cell> pattern) {
-		if (pattern == null) {
-			return "";
-		}
-		final int patternSize = pattern.size();
-
-		final StringBuilder res = new StringBuilder(patternSize);
-		for (int i = 0; i < patternSize; i++) {
-			PatternView.Cell cell = pattern.get(i);
-			res.append(String.valueOf((cell.getRow() * 3 + cell.getColumn())));
-		}
-		return res.toString();
-
-	}
+	
 
 	/**
 	 * Converts a string to a pattern

@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ProEditTextPreference extends EditTextPreference implements IProPreference{
+public class ProEditTextPreference extends EditTextPreference implements ProPreference{
 	private Helper mHelper;
 	public Helper getHelper() {
 		return mHelper;

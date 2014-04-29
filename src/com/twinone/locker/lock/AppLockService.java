@@ -6,6 +6,7 @@ import java.util.Set;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -24,9 +25,9 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.twinone.locker.LockerAnalytics;
-import com.twinone.locker.MainActivity;
 import com.twinone.locker.R;
-import com.twinone.locker.util.PrefUtil;
+import com.twinone.locker.ui.MainActivity;
+import com.twinone.locker.util.PrefUtils;
 import com.twinone.locker.version.VersionManager;
 import com.twinone.locker.version.VersionUtils;
 import com.twinone.util.Analytics;
@@ -34,8 +35,8 @@ import com.twinone.util.Analytics;
 public class AppLockService extends Service {
 
 	private static final int REQUEST_CODE = 0x1234AF;
-	private static final int NOTIFICATION_ID = 0xABCDEF;
-	private static final String TAG = "AlarmService";
+	public static final int NOTIFICATION_ID = 0xABCD32;
+	private static final String TAG = "AppLockService";
 
 	/** Use this action to stop the intent */
 	private static final String ACTION_STOP = "com.twinone.locker.intent.action.stop_lock_service";
@@ -61,6 +62,7 @@ public class AppLockService extends Service {
 
 	private boolean mExplicitStarted;
 	private boolean mAllowDestroy;
+	private boolean mAllowRestart;
 	private Handler mHandler;
 	private BroadcastReceiver mScreenReceiver;
 
@@ -88,6 +90,7 @@ public class AppLockService extends Service {
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
 				Log.i(TAG, "Screen ON");
+				// Trigger package again
 				mLastPackageName = null;
 				startAlarm(AppLockService.this);
 			}
@@ -127,11 +130,11 @@ public class AppLockService extends Service {
 		filter.addAction(Intent.ACTION_SCREEN_OFF);
 		registerReceiver(mScreenReceiver, filter);
 
-		final Set<String> apps = PrefUtil.getLockedApps(this);
+		final Set<String> apps = PrefUtils.getLockedApps(this);
 		for (String s : apps) {
 			mLockedPackages.put(s, true);
 		}
-		SharedPreferences sp = PrefUtil.prefs(this);
+		SharedPreferences sp = PrefUtils.prefs(this);
 
 		boolean defaultDelay = Boolean
 				.parseBoolean(getString(R.string.pref_def_delay_status));
@@ -157,32 +160,39 @@ public class AppLockService extends Service {
 		startNotification();
 		startAlarm(this);
 
-		mExplicitStarted = true;
 		return true;
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (ACTION_START.equals(intent.getAction())) {
+		if (intent == null || ACTION_START.equals(intent.getAction())) {
+			if (intent == null) {
+				Log.d(TAG, "onStartCommand intent==null");
+			}
 			if (!mExplicitStarted) {
-				
-				if (init() == false);
-//					return START_NOT_STICKY;
+				Log.d(TAG, "explicitStarted = false");
+				if (init() == false)
+					;
+				mExplicitStarted = true;
+				// return START_NOT_STICKY;
 			}
 			checkPackageChanged();
 		} else if (ACTION_RESTART.equals(intent.getAction())) {
 			if (mExplicitStarted) {
 				Log.d(TAG, "ACTION_RESTART");
-				init();
+				// init();
+				doRestartSelf(); // not allowed, so service will restart
 			} else {
-				// Stop the just created service
 				doStopSelf();
 			}
 		} else if (ACTION_STOP.equals(intent.getAction())) {
 			Log.d(TAG, "ACTION_STOP");
 			doStopSelf();
 		}
-		return START_NOT_STICKY;
+		// With start_not_sticky we have the auto-close bug
+		// It looks like With start_sticky too (?)
+		// Start sticky causes multiple receivers
+		return START_STICKY;
 	}
 
 	private void checkPackageChanged() {
@@ -298,25 +308,23 @@ public class AppLockService extends Service {
 	}
 
 	private void startNotification() {
-		SharedPreferences sp = PrefUtil.prefs(this);
+		SharedPreferences sp = PrefUtils.prefs(this);
 		boolean defaultShowNotification = Boolean
 				.parseBoolean(getString(R.string.pref_def_show_notification));
 		boolean showNotification = sp.getBoolean(
 				getString(R.string.pref_key_show_notification),
 				defaultShowNotification);
 		mShowNotification = showNotification;
-
-		if (mShowNotification) {
-			showNotification();
-		} else {
-			hideNotification();
+		showNotification();
+		if (!mShowNotification) {
+			NotificationRemover.start(this);
 		}
 	}
 
 	@SuppressLint("InlinedApi")
 	private void showNotification() {
 		Log.d(TAG, "showNotification");
-		SharedPreferences sp = PrefUtil.prefs(this);
+		SharedPreferences sp = PrefUtils.prefs(this);
 		boolean defHideNotifIcon = Boolean
 				.parseBoolean(getString(R.string.pref_def_hide_notification_icon));
 		boolean hideNotifIcon = sp.getBoolean(
@@ -338,13 +346,8 @@ public class AppLockService extends Service {
 		nb.setPriority(priority);
 		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		nm.cancel(NOTIFICATION_ID);
-		nm.notify(NOTIFICATION_ID, nb.build());
 
-	}
-
-	private void hideNotification() {
-		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		nm.cancel(NOTIFICATION_ID);
+		startForeground(NOTIFICATION_ID, nb.build());
 	}
 
 	public static final void start(Context c) {
@@ -352,11 +355,41 @@ public class AppLockService extends Service {
 		startAlarm(c);
 	}
 
+	/**
+	 * 
+	 * @param c
+	 * @return The new state for the service, true for running, false for not
+	 *         running
+	 */
+	public static boolean toggle(Context c) {
+		if (isRunning(c)) {
+			stop(c);
+			return false;
+		} else {
+			start(c);
+			return true;
+		}
+
+	}
+
+	public static boolean isRunning(Context c) {
+		ActivityManager manager = (ActivityManager) c
+				.getSystemService(Context.ACTIVITY_SERVICE);
+		for (RunningServiceInfo service : manager
+				.getRunningServices(Integer.MAX_VALUE)) {
+			if (AppLockService.class.getName().equals(
+					service.service.getClassName())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/** Starts the service */
 	private static final void startAlarm(Context c) {
 		AlarmManager am = (AlarmManager) c.getSystemService(ALARM_SERVICE);
 		PendingIntent pi = getRunIntent(c);
-		SharedPreferences sp = PrefUtil.prefs(c);
+		SharedPreferences sp = PrefUtils.prefs(c);
 		String defaultPerformance = c.getString(R.string.pref_val_perf_normal);
 		String s = sp.getString(c.getString(R.string.pref_key_performance),
 				defaultPerformance);
@@ -367,11 +400,15 @@ public class AppLockService extends Service {
 		am.setRepeating(AlarmManager.ELAPSED_REALTIME, startTime, interval, pi);
 	}
 
+	private static PendingIntent running_intent;
+
 	private static final PendingIntent getRunIntent(Context c) {
-		Intent i = new Intent(c, AppLockService.class);
-		i.setAction(ACTION_START);
-		PendingIntent pi = PendingIntent.getService(c, REQUEST_CODE, i, 0);
-		return pi;
+		if (running_intent == null) {
+			Intent i = new Intent(c, AppLockService.class);
+			i.setAction(ACTION_START);
+			running_intent = PendingIntent.getService(c, REQUEST_CODE, i, 0);
+		}
+		return running_intent;
 	}
 
 	private static final void stopAlarm(Context c) {
@@ -403,19 +440,30 @@ public class AppLockService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		Log.w(TAG, "onDestroy (allowed=" + mAllowDestroy + ")");
-		if (!mAllowDestroy && mExplicitStarted) {
+		if (mAllowRestart) {
+			start(this);
+			mAllowRestart = false;
+			return;
+		}
+
+		Log.i(TAG, "onDestroy (allowed=" + mAllowDestroy + ")");
+		if (!mAllowDestroy) {
 			Log.d(TAG, "Destroy not allowed, restarting service");
 			start(this);
 		}
 		if (mScreenReceiver != null)
 			unregisterReceiver(mScreenReceiver);
 		if (mShowNotification)
-			hideNotification();
+			mAllowDestroy = false;
 	}
 
 	private void doStopSelf() {
 		mAllowDestroy = true;
+		stopSelf();
+	}
+
+	private void doRestartSelf() {
+		mAllowRestart = true;
 		stopSelf();
 	}
 

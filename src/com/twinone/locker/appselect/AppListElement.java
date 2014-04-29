@@ -10,7 +10,7 @@ import android.graphics.drawable.Drawable;
  * @author twinone
  * 
  */
-public class AppInfo implements Comparable<AppInfo> {
+public class AppListElement implements Comparable<AppListElement> {
 
 	public final String title;
 	// null if not an activity
@@ -38,7 +38,7 @@ public class AppInfo implements Comparable<AppInfo> {
 		return pii.loadIcon(pm);
 	}
 
-	public AppInfo(String label, PackageItemInfo pii, int priority) {
+	public AppListElement(String label, PackageItemInfo pii, int priority) {
 		this.title = label;
 		this.pii = pii;
 		this.packageName = pii.packageName;
@@ -46,7 +46,7 @@ public class AppInfo implements Comparable<AppInfo> {
 	}
 
 	/** For separators */
-	public AppInfo(String label, int priority) {
+	public AppListElement(String label, int priority) {
 		this.title = label;
 		this.pii = null;
 		this.packageName = "";
@@ -55,7 +55,7 @@ public class AppInfo implements Comparable<AppInfo> {
 	}
 
 	/** For non activity apps */
-	public AppInfo(String label, String packageName, int priority) {
+	public AppListElement(String label, String packageName, int priority) {
 		this.title = label;
 		this.pii = null;
 		this.packageName = packageName;
@@ -71,9 +71,9 @@ public class AppInfo implements Comparable<AppInfo> {
 	public final boolean equals(Object object) {
 		if (object == null)
 			return false;
-		if (!(object instanceof AppInfo))
+		if (!(object instanceof AppListElement))
 			return false;
-		AppInfo sh = (AppInfo) object;
+		AppListElement sh = (AppListElement) object;
 		if (isApp() != sh.isApp())
 			return false;
 		if (!isApp()) {
@@ -92,7 +92,7 @@ public class AppInfo implements Comparable<AppInfo> {
 	}
 
 	@Override
-	public int compareTo(AppInfo o) {
+	public int compareTo(AppListElement o) {
 		if (priority != o.priority)
 			return o.priority - priority;
 

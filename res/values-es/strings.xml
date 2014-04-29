@@ -12,7 +12,7 @@
     <string name="main_start_service">Iniciar bloqueo</string>
     <string name="main_stop_service">Detener bloqueo</string>
     <string name="main_change_password">Contraseña</string>
-    <string name="main_select_apps">Aplicaciones</string>
+    <string name="fragment_title_apps">Aplicaciones</string>
     <string name="main_change_message">Mensaje</string>
     <string name="main_change_message_desc">Este mensaje saldrá debajo de la aplicación bloqueada\nPuedes usar %s para el nombre de la aplicación.</string>
     <string name="main_change_message_saved">Mensaje guardado</string>
@@ -208,7 +208,7 @@
 
     <string name="main_no_password">Necesitas una contraseña para empezar.\n¿Quieres crear una ahora?</string>
     <string name="main_setup">Configuración</string>
-    <string name="main_choose_lock_type">Tipo de bloqueo</string>
+    <string name="old_main_choose_lock_type">Tipo de bloqueo</string>
     <string name="main_no_locked_apps">No tienes aplicaciones bloqueadas.\n¿Quieres añadir apps ahora?</string>
     <!-- END v2.0.2 -->
 

@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.twinone.locker.lock.AppLockService;
-import com.twinone.locker.util.PrefUtil;
+import com.twinone.locker.util.PrefUtils;
 
 /**
  * Starts the Service at boot if it's specified in the preferences.
@@ -20,7 +20,7 @@ public class BootCompleteReceiver extends BroadcastReceiver {
 	public void onReceive(Context c, Intent i) {
 		Log.d("BootCompleteReceiver", "bootcomplete recevied");
 
-		boolean startAtBoot = PrefUtil.getStartAtBoot(c);
+		boolean startAtBoot = PrefUtils.getStartAtBoot(c);
 		if (startAtBoot) {
 			Log.d("BootCompleteReceiver", "Starting service");
 			AppLockService.start(c);

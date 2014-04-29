@@ -19,7 +19,7 @@ import android.os.Build;
 import android.provider.Settings.Secure;
 import android.util.Log;
 
-import com.twinone.locker.MainActivity;
+import com.twinone.locker.Constants;
 
 public class Analytics {
 
@@ -45,7 +45,6 @@ public class Analytics {
 				Context.MODE_PRIVATE);
 		mEditor = mPrefs.edit();
 		mEnableAnalytics = getEnableAnalytics();
-		// TODO
 		if (!mEnableAnalytics) {
 			mPrefs = null;
 			mEditor = null;
@@ -71,7 +70,7 @@ public class Analytics {
 		final SharedPreferences prefs = mContext.getSharedPreferences(
 				PREF_PERSISTENT_FILE, Context.MODE_PRIVATE);
 		return prefs.getBoolean(PREF_KEY_ENABLE_ANALYTICS, false)
-				|| MainActivity.DEBUG;
+				|| Constants.DEBUG;
 	}
 
 	public long increment(String key) {
@@ -276,6 +275,7 @@ public class Analytics {
 					null);
 			return Uri.parse(url);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 	}

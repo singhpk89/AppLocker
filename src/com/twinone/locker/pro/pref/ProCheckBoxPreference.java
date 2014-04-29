@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ProCheckBoxPreference extends CheckBoxPreference implements IProPreference {
+public class ProCheckBoxPreference extends CheckBoxPreference implements ProPreference {
 	private Helper mHelper;
 
 	public Helper getHelper() {

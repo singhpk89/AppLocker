@@ -27,7 +27,7 @@ public class Helper {
 	 * @return true if the super method should be executed
 	 */
 	public boolean onClick() {
-		if (!mProUtils.proFeaturesEnabled()) {
+		if (mProUtils != null && !mProUtils.proFeaturesEnabled()) {
 			mProUtils.showDialogIfProNotEnabled();
 			return false;
 		} else {

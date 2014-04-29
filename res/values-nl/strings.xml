@@ -12,7 +12,7 @@
     <string name="main_start_service">Vergrendelen</string>
     <string name="main_stop_service">Ontgrendelen</string>
     <string name="main_change_password">Wachtwoord</string>
-    <string name="main_select_apps">Apps</string>
+    <string name="fragment_title_apps">Apps</string>
     <string name="main_change_message">Bericht</string>
     <string name="main_change_message_desc">Dit bericht komt onder de geblokkeerde app te staan\nJe kunt %s gebruiken voor de naam van de app.</string>
     <string name="main_change_message_saved">Bericht opgeslagen</string>
@@ -208,7 +208,7 @@
     <!-- BEGIN v2.0.2 -->
     <string name="main_no_password">Je hebt nog geen wachtwoord.\nWil je er nu een maken?</string>
     <string name="main_setup">Setup</string>
-    <string name="main_choose_lock_type">Kies type</string>
+    <string name="old_main_choose_lock_type">Kies type</string>
     <string name="main_no_locked_apps">Je hebt nog geen apps geblokkeerd.\nWil je nu apps toevoegen?</string>
     <!-- END v2.0.2 -->
     <!-- BEGIN v2.1.1 -->

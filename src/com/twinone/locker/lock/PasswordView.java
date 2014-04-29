@@ -394,9 +394,6 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 		this.mPassword = (password != null) ? password : "";
 	}
 
-	/**
-	 * Shortcut method for {@link #setPassword(String)} with a null argument.
-	 */
 	public void clearPassword() {
 		setPassword(null);
 	}

@@ -43,4 +43,12 @@
         <attr name="isPro" format="boolean"></attr>
     </declare-styleable>
 
+    <!--  -->
+    <declare-styleable name="ProItemView">
+        <attr name="proTitle" format="string"></attr>
+        <attr name="proDescription" format="string"></attr>
+        <attr name="proTitleColor" format="color"></attr>
+        <attr name="proDescriptionColor" format="color"></attr>
+    </declare-styleable>
+
 </resources>

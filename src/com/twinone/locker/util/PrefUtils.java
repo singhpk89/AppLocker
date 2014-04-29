@@ -14,6 +14,7 @@ import android.provider.Settings.Secure;
 import android.util.Log;
 
 import com.twinone.locker.R;
+import com.twinone.locker.lock.LockPreferences;
 import com.twinone.locker.lock.LockService;
 
 /**
@@ -36,46 +37,96 @@ public class PrefUtils {
 	private SharedPreferences mApps;
 	private Editor mEditor;
 
+	/**
+	 * Manages everything relative to preferences
+	 * 
+	 * @param c
+	 */
+	public PrefUtils(Context c) {
+		mContext = c;
+		mPrefs = mContext.getSharedPreferences(PREF_FILE_DEFAULT,
+				Context.MODE_PRIVATE);
+	}
+
 	public Editor editor() {
-		if (mEditor != null) {
+		if (mEditor == null) {
 			mEditor = mPrefs.edit();
 		}
 		return mEditor;
 	}
 
+	public SharedPreferences prefs() {
+		return mPrefs;
+	}
+
 	public SharedPreferences apps() {
-		if (mApps != null) {
+		if (mApps == null) {
 			mApps = mContext.getSharedPreferences(PREF_FILE_APPS,
 					Context.MODE_PRIVATE);
 		}
 		return mApps;
 	}
 
-	public void put(int keyResId, Object value) {
+	public Editor put(int keyResId, Object value) {
 		final String key = mContext.getString(keyResId);
 		if (key == null) {
-
+			throw new IllegalArgumentException(
+					"No resource matched key resource id");
 		}
+		Log.d("", "putting (key=" + key + ",value=" + value + ")");
+		final Editor editor = editor();
 		if (value instanceof String)
-			editor().putString(key, (String) value);
+			editor.putString(key, (String) value);
 		else if (value instanceof Integer)
-			editor().putInt(key, (Integer) value);
+			editor.putInt(key, (Integer) value);
 		else if (value instanceof Boolean)
-			editor().putBoolean(key, (Boolean) value);
+			editor.putBoolean(key, (Boolean) value);
 		else if (value instanceof Float)
-			editor().putFloat(key, (Float) value);
+			editor.putFloat(key, (Float) value);
 		else if (value instanceof Long)
-			editor().putLong(key, (Long) value);
+			editor.putLong(key, (Long) value);
 		else
 			throw new IllegalArgumentException("Unknown data type");
+		return editor;
 	}
 
+	/**
+	 * Put a String by resource id
+	 * 
+	 * @param keyResId
+	 *            the key of the preference
+	 * @param valueResId
+	 *            the res id of the value string
+	 */
+	public Editor putString(int keyResId, int valueResId) {
+		final Editor editor = editor();
+		editor.putString(mContext.getString(keyResId),
+				mContext.getString(valueResId));
+		return editor;
+	}
+
+	/**
+	 * Get a string by res id
+	 * 
+	 * @param keyResId
+	 * @return
+	 */
 	public String getString(int keyResId) {
-		try {
-			return mPrefs.getString(mContext.getString(keyResId), null);
-		} catch (NullPointerException e) {
-			return null;
-		}
+		return mPrefs.getString(mContext.getString(keyResId), null);
+	}
+
+	/**
+	 * Get a string preference whose key is the string of keyResId, if the
+	 * preference is empty, return the string from defResId
+	 * 
+	 * @param keyResId
+	 * @param defResId
+	 * @return
+	 */
+	public String getString(int keyResId, int defResId) {
+		final String key = mContext.getString(keyResId);
+		return (mPrefs.contains(key)) ? mPrefs.getString(key, null) : mContext
+				.getString(defResId);
 	}
 
 	public Integer getInt(int keyResId) {
@@ -116,44 +167,22 @@ public class PrefUtils {
 	}
 
 	public Boolean getBoolean(int keyResId) {
-		try {
-			return mPrefs.getBoolean(mContext.getString(keyResId),
-					(Boolean) null);
-		} catch (NullPointerException e) {
-			return null;
-		}
+		final String key = mContext.getString(keyResId);
+		return (mPrefs.contains(key)) ? mPrefs.getBoolean(key, false) : null;
 	}
 
 	public Float getFloatOrNull(int keyResId) {
-		try {
-			return mPrefs.getFloat(mContext.getString(keyResId), (Float) null);
-		} catch (NullPointerException e) {
-			return null;
-		}
+		final String key = mContext.getString(keyResId);
+		return (mPrefs.contains(key)) ? mPrefs.getFloat(key, 0) : null;
 	}
 
 	public Long getLongOrNull(int keyResId) {
-		try {
-			return mPrefs.getLong(mContext.getString(keyResId), (Long) null);
-		} catch (NullPointerException e) {
-			return null;
-		}
+		final String key = mContext.getString(keyResId);
+		return (mPrefs.contains(key)) ? mPrefs.getLong(key, 0) : null;
 	}
 
-	public String getString(int keyResId, int defResId) {
-		final String value = getString(keyResId);
-		return (value != null) ? value : mContext.getString(defResId);
-	}
-
-	/**
-	 * Manages everything relative to preferences
-	 * 
-	 * @param c
-	 */
-	public PrefUtils(Context c) {
-		mContext = c;
-		mPrefs = mContext.getSharedPreferences(PREF_FILE_DEFAULT,
-				Context.MODE_PRIVATE);
+	public void apply() {
+		apply(editor());
 	}
 
 	/***************************************************************************
@@ -230,17 +259,17 @@ public class PrefUtils {
 		return prefs(c).getString(c.getString(prefKeyResId), null);
 	}
 
-	private static final float getFloat(Context c, int prefKeyResId,
-			int prefDefResId) {
-		return prefs(c).getFloat(c.getString(prefKeyResId),
-				Float.parseFloat(c.getString(prefDefResId)));
-	}
-
-	private static final long parseLong(Context c, int prefKeyResId,
-			int prefDefResId) {
-		return Long.parseLong(prefs(c).getString(c.getString(prefKeyResId),
-				c.getString(prefDefResId)));
-	}
+	// private static final float getFloat(Context c, int prefKeyResId,
+	// int prefDefResId) {
+	// return prefs(c).getFloat(c.getString(prefKeyResId),
+	// Float.parseFloat(c.getString(prefDefResId)));
+	// }
+	//
+	// private static final long parseLong(Context c, int prefKeyResId,
+	// int prefDefResId) {
+	// return Long.parseLong(prefs(c).getString(c.getString(prefKeyResId),
+	// c.getString(prefDefResId)));
+	// }
 
 	public static final boolean getStartAtBoot(Context c) {
 		return getBoolean(c, R.string.pref_key_start_boot,
@@ -322,17 +351,16 @@ public class PrefUtils {
 	}
 
 	/**
-	 * @return One of {@link LockActivity#LOCK_TYPE_PASSWORD} or
-	 *         {@link LockActivity#LOCK_TYPE_PATTERN} or 0 if none was in
-	 *         preferences
+	 * @return One of {@link LockActivity#TYPE_PASSWORD} or
+	 *         {@link LockActivity#TYPE_PATTERN} or 0 if none was in preferences
 	 */
 	public static final int getLockTypeInt(Context c) {
 		String lockType = getLockType(c);
 		if (lockType.equals(c.getString(R.string.pref_val_lock_type_password))) {
-			return LockService.LOCK_TYPE_PASSWORD;
+			return LockPreferences.TYPE_PASSWORD;
 		} else if (lockType.equals(c
 				.getString(R.string.pref_val_lock_type_pattern))) {
-			return LockService.LOCK_TYPE_PATTERN;
+			return LockPreferences.TYPE_PATTERN;
 		} else {
 			return 0;
 		}
@@ -391,10 +419,10 @@ public class PrefUtils {
 	public static final boolean isCurrentPasswordEmpty(Context c) {
 		final int lockType = getLockTypeInt(c);
 		switch (lockType) {
-		case LockService.LOCK_TYPE_PASSWORD:
+		case LockPreferences.TYPE_PASSWORD:
 			final String password = getPassword(c);
 			return password == null || password.length() == 0;
-		case LockService.LOCK_TYPE_PATTERN:
+		case LockPreferences.TYPE_PATTERN:
 			final String pattern = getPattern(c);
 			return pattern == null || pattern.length() == 0;
 		default:

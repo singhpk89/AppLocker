@@ -9,7 +9,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
@@ -44,7 +43,6 @@ import com.twinone.locker.lock.PasswordView.OnNumberListener;
 import com.twinone.locker.lock.PatternView.Cell;
 import com.twinone.locker.lock.PatternView.DisplayMode;
 import com.twinone.locker.lock.PatternView.OnPatternListener;
-import com.twinone.locker.pro.ProUtils;
 import com.twinone.locker.util.PrefUtils;
 import com.twinone.locker.util.Util;
 import com.twinone.util.Analytics;
@@ -73,39 +71,16 @@ public class LockService extends Service implements View.OnClickListener,
 	public static final String ACTION_NOTIFY_PACKAGE_CHANGED = CLASSNAME
 			+ ".action.notify_package_changed";
 	public static final String EXTRA_LOCK = CLASSNAME + ".action.extra_lock";
-	/**
-	 * int extra<br>
-	 * Specifies what lock type to display to the user at first, one of
-	 * {@link #LOCK_TYPE_PASSWORD}, {@link #LOCK_TYPE_PATTERN}
-	 */
-	public static final String EXTRA_VIEW_TYPE = CLASSNAME + ".extra.lock_type";
 
 	/**
-	 * The bitwise or-ed lock types that are allowed to be displayed
+	 * A {@link LockPreferences} providing additional details on how this
+	 * {@link LockService} should behave. You should start with a
+	 * {@link LockPreferences#getDefault(Context)} and change only the
+	 * properties you want to.
+	 * 
+	 * @see LockPreferences#getDefault(Context)
 	 */
-	public static final String EXTRA_VIEW_TYPES = CLASSNAME
-			+ ".extra.allowed_locktypes";
-
-	/**
-	 * Boolean extra<br>
-	 * Specifies whether to vibrate or not
-	 */
-	public static final String EXTRA_VIBRATE = CLASSNAME
-			+ ".extra.vibrate.password";
-
-	/**
-	 * Use in conjunction with {@link #LOCK_TYPE_PASSWORD}<br>
-	 * Specifies the correct password that the number lock must match in order
-	 * to unlock this lock screen
-	 */
-	public static final String EXTRA_PASSWORD = CLASSNAME
-			+ ".extra.number_password";
-	/**
-	 * Use in conjunction with {@link #LOCK_TYPE_PATTERN}<br>
-	 * Specifies the correct pattern that the user must draw in order to unlock
-	 * this lock screen
-	 */
-	public static final String EXTRA_PATTERN = CLASSNAME + ".extra.pattern";
+	public static final String EXTRA_PREFERENCES = CLASSNAME + ".extra.options";
 
 	/**
 	 * When the action is {@link #ACTION_COMPARE} use {@link #EXTRA_PACKAGENAME}
@@ -113,74 +88,6 @@ public class LockService extends Service implements View.OnClickListener,
 	 */
 	public static final String EXTRA_PACKAGENAME = CLASSNAME
 			+ ".extra.target_packagename";
-
-	/**
-	 * Boolean, true when pattern is in stealth mode
-	 */
-	public static final String EXTRA_PATTERN_STEALTH = CLASSNAME
-			+ ".extra.pattern_stealth_mode";
-
-	/**
-	 * Boolean, Swap the action buttons in password
-	 */
-	public static final String EXTRA_PASSWORD_SWITCH_BUTTONS = CLASSNAME
-			+ ".extra.swap_buttons";
-
-	/**
-	 * String, The message to display to the user. If {@link #ACTION_CREATE} is
-	 * specified, this will be overriden
-	 */
-	public static final String EXTRA_MESSAGE = CLASSNAME
-			+ ".extra.unlock_message";
-
-	public static final String EXTRA_PATTERN_CIRCLE_COLOR = CLASSNAME
-			+ ".extra.pattern_circle_color";
-
-	/**
-	 * If this is set, the specified {@link Uri} will be used as image for the
-	 * {@link LockActivity}
-	 */
-	public static final String EXTRA_BACKGROUND_URI = CLASSNAME
-			+ ".extra.background_uri";
-
-	/** Milliseconds that the show animation will take */
-	public static final String EXTRA_ANIM_SHOW_MILLIS = CLASSNAME
-			+ ".extra.anim_show_millis";
-
-	/** Milliseconds that the hide animation will take */
-	public static final String EXTRA_ANIM_HIDE_MILLIS = CLASSNAME
-			+ ".extra.anim_hide_millis";
-
-	/** Animation type for show */
-	public static final String EXTRA_ANIM_SHOW_TYPE = CLASSNAME
-			+ ".extra.anim_show_type";
-
-	/** Animation type for hide */
-	public static final String EXTRA_ANIM_HIDE_TYPE = CLASSNAME
-			+ ".extra.anim_hide_type";
-
-	public static final int ANIM_TYPE_NONE = 1 << 0;
-	public static final int ANIM_TYPE_FADE = 1 << 1;
-	public static final int ANIM_TYPE_SLIDE_LEFT = 1 << 2;
-	public static final int ANIM_TYPE_SLIDE_RIGHT = 1 << 3;
-	/**
-	 * Integer value, one of {@link ActivityInfo#SCREEN_ORIENTATION_SENSOR} or
-	 * {@link ActivityInfo#SCREEN_ORIENTATION_PORTRAIT}
-	 */
-	public static final String EXTRA_ORIENTATION = CLASSNAME
-			+ ".extra.orientation_mode";
-
-	/**
-	 * Indicates the size of the pattern. (For example, if the size is 3, the
-	 * pattern will be 3x3)
-	 */
-	public static final String EXTRA_PATTERN_WIDTH = CLASSNAME
-			+ ".extra.pattern_size";
-
-	public static final int LOCK_TYPE_PASSWORD = 1 << 0; // 1
-	public static final int LOCK_TYPE_PATTERN = 1 << 1; // 2
-	/** The default lock type if none was specified */
-	public static final int LOCK_TYPE_DEFAULT = LOCK_TYPE_PASSWORD;
 
 	public static final int PATTERN_COLOR_WHITE = 0;
 	public static final int PATTERN_COLOR_BLUE = 2;
@@ -191,31 +98,12 @@ public class LockService extends Service implements View.OnClickListener,
 	private String mPackageName;
 	private String mAction;
 
-	private String mBackgroundUriString;
 	private String mNewPassword;
 	private String mNewPattern;
-	private boolean mPatternStealthMode;
-	private int mPatternColorSetting;
-	private String mPassword;
-	private String mPattern;
-	private String mLockMessage;
-	private boolean mEnableVibration;
-
-	private int mAllowedViewTypes;
-	private int mLockViewType = LOCK_TYPE_DEFAULT;
 
 	private static final int MAX_PASSWORD_LENGTH = 8;
-	private boolean mSwitchButtons;
 
-	private String mOrientationSetting;
-
-	private long mAnimShowTime;
-	private long mAnimHideTime;
-
-	private int mAnimShowResId;
-	private int mAnimHideResId;
-
-	private int mPatternWidth;
+	private LockPreferences options;
 
 	// views
 	private RelativeLayout mContainer;
@@ -314,11 +202,12 @@ public class LockService extends Service implements View.OnClickListener,
 	}
 
 	private void showViewAnimate() {
-		if (mAnimShowResId == 0 || mAnimShowTime == 0) {
+		if (options.showAnimationResId == 0 || options.showAnimationMillis == 0) {
 			showViewEnd();
 			return;
 		}
-		mAnimShow = AnimationUtils.loadAnimation(this, mAnimShowResId);
+		mAnimShow = AnimationUtils.loadAnimation(this,
+				options.showAnimationResId);
 		mAnimShow.setAnimationListener(new AnimationListener() {
 
 			@Override
@@ -334,7 +223,7 @@ public class LockService extends Service implements View.OnClickListener,
 				showViewEnd();
 			}
 		});
-		mAnimShow.setDuration(mAnimShowTime);
+		mAnimShow.setDuration(options.showAnimationMillis);
 		mAnimShow.setFillEnabled(true);
 		mContainer.startAnimation(mAnimShow);
 	}
@@ -370,13 +259,16 @@ public class LockService extends Service implements View.OnClickListener,
 	}
 
 	private void hideViewAnimate() {
-		if (mAnimHideResId == 0 || mAnimHideTime == 0) {
+		Log.d(TAG, "animating hide (resId=" + options.hideAnimationResId
+				+ ",millis=" + options.hideAnimationMillis + ")");
+		if (options.hideAnimationResId == 0 || options.hideAnimationMillis == 0) {
 			hideViewEnd();
 			return;
 		}
 
-		mAnimHide = AnimationUtils.loadAnimation(this, mAnimHideResId);
-		mAnimHide.setDuration(mAnimHideTime);
+		mAnimHide = AnimationUtils.loadAnimation(this,
+				options.hideAnimationResId);
+		mAnimHide.setDuration(options.hideAnimationMillis);
 		mAnimHide.setFillEnabled(true);
 		mAnimHide.setDetachWallpaper(false);
 		mAnimHide.setAnimationListener(new AnimationListener() {
@@ -452,26 +344,6 @@ public class LockService extends Service implements View.OnClickListener,
 		mPasswordListener = new MyOnNumberListener();
 		mPatternListener = new MyOnPatternListener();
 		return root;
-	}
-
-	/**
-	 * @param animType
-	 *            the input animtype
-	 * @param show
-	 *            true if show animation, false if hide animation
-	 * @return the resid to be applied
-	 */
-	private int getAnimResId(int animType, boolean show) {
-		switch (animType) {
-		case ANIM_TYPE_NONE:
-			return 0;
-		case ANIM_TYPE_SLIDE_LEFT:
-			return show ? R.anim.slide_in_left : R.anim.slide_out_left;
-		case ANIM_TYPE_SLIDE_RIGHT:
-			return show ? R.anim.slide_in_right : R.anim.slide_out_right;
-		default:
-			return show ? R.anim.fade_in : R.anim.fade_out;
-		}
 	}
 
 	private class MyOnNumberListener implements OnNumberListener {
@@ -570,7 +442,7 @@ public class LockService extends Service implements View.OnClickListener,
 	 */
 	private void doComparePassword(boolean explicit) {
 		final String currentPassword = mLockPasswordView.getPassword();
-		if (currentPassword.equals(mPassword)) {
+		if (currentPassword.equals(options.password)) {
 			exitSuccessCompare();
 			mAnalytics.increment(LockerAnalytics.PASSWORD_SUCCESS);
 		} else if (explicit) {
@@ -609,7 +481,7 @@ public class LockService extends Service implements View.OnClickListener,
 	 */
 	private void doComparePattern() {
 		final String currentPattern = mLockPatternView.getPatternString();
-		if (currentPattern.equals(mPattern)) {
+		if (currentPattern.equals(options.pattern)) {
 			exitSuccessCompare();
 			mAnalytics.increment(LockerAnalytics.PATTERN_SUCCESS);
 		} else {
@@ -660,49 +532,55 @@ public class LockService extends Service implements View.OnClickListener,
 	}
 
 	private void doConfirm() {
-		if (mLockViewType == LOCK_TYPE_PATTERN) {
-			final String newValue = mLockPatternView.getPatternString();
-			if (newValue.equals(mNewPattern)) {
-				final SharedPreferences.Editor editor = PrefUtils.prefs(this)
-						.edit();
-				PrefUtils.setPattern(editor, this, newValue);
-				PrefUtils.setLockType(editor, this,
-						getString(R.string.pref_val_lock_type_pattern));
-				final boolean success = editor.commit();
-				final String toast = getString(success ? R.string.pattern_change_saved
-						: R.string.pattern_change_error);
-				Toast.makeText(this, toast, Toast.LENGTH_SHORT).show();
-				exitCreate();
-			} else {
-				Toast.makeText(this, R.string.pattern_change_not_match,
-						Toast.LENGTH_SHORT).show();
-				mLockPatternView.setDisplayMode(DisplayMode.Wrong);
-				setupFirst();
-			}
+		if (options.type == LockPreferences.TYPE_PATTERN) {
+			doConfirmPattern();
 		} else {
-			String newValue = mLockPasswordView.getPassword();
-			if (newValue.equals(mNewPassword)) {
-				final SharedPreferences.Editor editor = PrefUtils.prefs(this)
-						.edit();
-				PrefUtils.setPassword(editor, this, newValue);
-				PrefUtils.setLockType(editor, this,
-						getString(R.string.pref_val_lock_type_password));
-				final boolean success = editor.commit();
-				final String toast = getString(success ? R.string.password_change_saved
-						: R.string.password_change_error);
-				Toast.makeText(this, toast, Toast.LENGTH_SHORT).show();
-				exitCreate();
-			} else {
-				Toast.makeText(this, R.string.password_change_not_match,
-						Toast.LENGTH_SHORT).show();
-				setupFirst();
-			}
-
+			doConfirmPassword();
 		}
 	}
 
+	private void doConfirmPattern() {
+		final String newValue = mLockPatternView.getPatternString();
+		if (!newValue.equals(mNewPattern)) {
+			Toast.makeText(this, R.string.pattern_change_not_match,
+					Toast.LENGTH_SHORT).show();
+			mLockPatternView.setDisplayMode(DisplayMode.Wrong);
+			setupFirst();
+			return;
+		}
+		// patterns are equal
+		PrefUtils prefs = new PrefUtils(this);
+		prefs.put(R.string.pref_key_pattern, newValue);
+		prefs.putString(R.string.pref_key_lock_type,
+				R.string.pref_val_lock_type_pattern);
+		// Save size as a string
+		prefs.put(R.string.pref_key_pattern_size,
+				String.valueOf(options.patternSize));
+		prefs.apply();
+		Toast.makeText(this, R.string.pattern_change_saved, Toast.LENGTH_SHORT)
+				.show();
+		exitCreate();
+	}
+
+	private void doConfirmPassword() {
+		final String newValue = mLockPasswordView.getPassword();
+		if (!newValue.equals(mNewPassword)) {
+			Toast.makeText(this, R.string.password_change_not_match,
+					Toast.LENGTH_SHORT).show();
+			setupFirst();
+			return;
+		}
+		PrefUtils prefs = new PrefUtils(this);
+		prefs.put(R.string.pref_key_passwd, newValue);
+		prefs.putString(R.string.pref_key_lock_type,
+				R.string.pref_val_lock_type_password);
+		Toast.makeText(this, R.string.password_change_saved, Toast.LENGTH_SHORT)
+				.show();
+		exitCreate();
+	}
+
 	private void setupFirst() {
-		if (mLockViewType == LOCK_TYPE_PATTERN) {
+		if (options.type == LockPreferences.TYPE_PATTERN) {
 			mLockPatternView.setInStealthMode(false);
 			mLockPatternView.clearPattern(PATTERN_DELAY);
 			mViewTitle.setText(R.string.pattern_change_tit);
@@ -723,7 +601,7 @@ public class LockService extends Service implements View.OnClickListener,
 	}
 
 	private void setupSecond() {
-		if (mLockViewType == LOCK_TYPE_PATTERN) {
+		if (options.type == LockPreferences.TYPE_PATTERN) {
 			mNewPattern = mLockPatternView.getPatternString();
 			if (mNewPattern.length() == 0) {
 				return;
@@ -748,10 +626,6 @@ public class LockService extends Service implements View.OnClickListener,
 	}
 
 	private final boolean showPasswordView() {
-		if ((mAllowedViewTypes & LOCK_TYPE_PASSWORD) == 0) {
-			Log.w(TAG, "Called showNumberView but not allowed");
-			return false;
-		}
 		mLockView.removeAllViews();
 		mLockPatternView = null;
 		LayoutInflater li = LayoutInflater.from(this);
@@ -771,18 +645,14 @@ public class LockService extends Service implements View.OnClickListener,
 			mLockPasswordView.setOkButtonVisibility(View.VISIBLE);
 		}
 
-		mLockPasswordView.setTactileFeedbackEnabled(mEnableVibration);
-		mLockPasswordView.setSwitchButtons(mSwitchButtons);
+		mLockPasswordView.setTactileFeedbackEnabled(options.vibration);
+		mLockPasswordView.setSwitchButtons(options.passwordSwitchButtons);
 		mLockPasswordView.setVisibility(View.VISIBLE);
-		mLockViewType = LOCK_TYPE_PASSWORD;
+		options.type = LockPreferences.TYPE_PASSWORD;
 		return true;
 	}
 
 	private final boolean showPatternView() {
-		if ((mAllowedViewTypes & LOCK_TYPE_PATTERN) == 0) {
-			Log.w(TAG, "Called showPatternView but not allowed");
-			return false;
-		}
 
 		mLockView.removeAllViews();
 		mLockPasswordView = null;
@@ -792,17 +662,16 @@ public class LockService extends Service implements View.OnClickListener,
 		mLockPatternView = (PatternView) mLockView
 				.findViewById(R.id.patternView);
 		mLockPatternView.setOnPatternListener(mPatternListener);
-		int id = getPatternCircleResId(mPatternColorSetting);
-		mLockPatternView.setSelectedBitmap(id);
+		mLockPatternView.setSelectedBitmap(options.patternCircleResId);
 		Drawable gd = getResources().getDrawable(
 				R.drawable.passwordview_button_background);
 		Util.setBackgroundDrawable(mLockPatternView, gd);
-		mLockPatternView.setSize(mPatternWidth);
-		mLockPatternView.setTactileFeedbackEnabled(mEnableVibration);
-		mLockPatternView.setInStealthMode(mPatternStealthMode);
+		mLockPatternView.setSize(options.patternSize);
+		mLockPatternView.setTactileFeedbackEnabled(options.vibration);
+		mLockPatternView.setInStealthMode(options.patternStealth);
 		mLockPatternView.onShow();
 		mLockPatternView.setVisibility(View.VISIBLE);
-		mLockViewType = LOCK_TYPE_PATTERN;
+		options.type = LockPreferences.TYPE_PATTERN;
 		return true;
 	}
 
@@ -814,56 +683,25 @@ public class LockService extends Service implements View.OnClickListener,
 			return false;
 		}
 		mAction = mIntent.getAction();
-
 		if (mAction == null) {
 			Log.w(TAG, "Finishing: No action specified");
 			return false;
 		}
+
+		if (mIntent.hasExtra(EXTRA_PREFERENCES)) {
+			options = (LockPreferences) mIntent
+					.getSerializableExtra(EXTRA_PREFERENCES);
+		} else {
+			options = new LockPreferences(this);
+		}
+
 		mPackageName = mIntent.getStringExtra(EXTRA_PACKAGENAME);
-		mPassword = mIntent.getStringExtra(EXTRA_PASSWORD);
-		mPattern = mIntent.getStringExtra(EXTRA_PATTERN);
-
-		mLockViewType = mIntent.getIntExtra(EXTRA_VIEW_TYPE, LOCK_TYPE_DEFAULT);
-		mAllowedViewTypes = mIntent
-				.getIntExtra(EXTRA_VIEW_TYPES, mLockViewType);
-		// Add default if none specified
-		mAllowedViewTypes |= mLockViewType;
-
-		mBackgroundUriString = mIntent.getStringExtra(EXTRA_BACKGROUND_URI);
-
-		mEnableVibration = mIntent.getBooleanExtra(EXTRA_VIBRATE, false);
-
-		mSwitchButtons = mIntent.getBooleanExtra(EXTRA_PASSWORD_SWITCH_BUTTONS,
-				false);
-
-		mPatternWidth = mIntent.getIntExtra(EXTRA_PATTERN_WIDTH, 3);
-
-		mPatternColorSetting = mIntent.getIntExtra(EXTRA_PATTERN_CIRCLE_COLOR,
-				PATTERN_COLOR_WHITE);
-		getPatternCircleResId(mPatternColorSetting);
-
-		// Stealth modes
-		mPatternStealthMode = mIntent.getBooleanExtra(EXTRA_PATTERN_STEALTH,
-				false);
-
-		mLockMessage = mIntent.getStringExtra(EXTRA_MESSAGE);
-
-		mOrientationSetting = mIntent.getStringExtra(EXTRA_ORIENTATION);
 
 		if (ACTION_CREATE.equals(mAction)) {
-			mPatternStealthMode = false;
+			options.patternStealth = false;
 		}
 
 		// animations
-
-		mAnimShowTime = mIntent.getIntExtra(EXTRA_ANIM_SHOW_MILLIS, 0);
-		mAnimHideTime = mIntent.getIntExtra(EXTRA_ANIM_HIDE_MILLIS, 0);
-		int showType = mIntent
-				.getIntExtra(EXTRA_ANIM_SHOW_TYPE, ANIM_TYPE_NONE);
-		int hideType = mIntent
-				.getIntExtra(EXTRA_ANIM_HIDE_TYPE, ANIM_TYPE_NONE);
-		mAnimShowResId = getAnimResId(showType, true);
-		mAnimHideResId = getAnimResId(hideType, false);
 
 		mLayoutParams = new WindowManager.LayoutParams(
 				WindowManager.LayoutParams.MATCH_PARENT,
@@ -880,17 +718,6 @@ public class LockService extends Service implements View.OnClickListener,
 		return true;
 	}
 
-	private int getPatternCircleResId(int setting) {
-		switch (setting) {
-		case PATTERN_COLOR_BLUE:
-			return R.drawable.pattern_circle_blue;
-		case PATTERN_COLOR_GREEN:
-			return R.drawable.pattern_circle_green;
-		default:
-			return R.drawable.pattern_circle_white;
-		}
-	}
-
 	private void setBackground() {
 		String def = getString(R.string.pref_val_bg_default);
 		String blue = getString(R.string.pref_val_bg_blue);
@@ -901,37 +728,37 @@ public class LockService extends Service implements View.OnClickListener,
 		String orange = getString(R.string.pref_val_bg_orange);
 		String turquoise = getString(R.string.pref_val_bg_turquoise);
 		mViewBackground.setImageBitmap(null);
-		if (blue.equals(mBackgroundUriString)) {
+		if (blue.equals(options.background)) {
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_blue));
-		} else if (dark_blue.equals(mBackgroundUriString)) {
+		} else if (dark_blue.equals(options.background)) {
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_dark_blue));
-		} else if (green.equals(mBackgroundUriString)) {
+		} else if (green.equals(options.background)) {
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_green));
-		} else if (purple.equals(mBackgroundUriString)) {
+		} else if (purple.equals(options.background)) {
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_purple));
-		} else if (red.equals(mBackgroundUriString)) {
+		} else if (red.equals(options.background)) {
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_red));
-		} else if (turquoise.equals(mBackgroundUriString)) {
+		} else if (turquoise.equals(options.background)) {
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_turquoise));
-		} else if (orange.equals(mBackgroundUriString)) {
+		} else if (orange.equals(options.background)) {
 			mViewBackground.setBackgroundColor(getResources().getColor(
 					R.color.flat_orange));
-		} else if (def.equals(mBackgroundUriString) || !setBackgroundFromUri()) {
+		} else if (def.equals(options.background) || !setBackgroundFromUri()) {
 			mViewBackground
 					.setImageResource(R.drawable.locker_default_background);
 		}
 	}
 
 	private boolean setBackgroundFromUri() {
-		if (mBackgroundUriString == null)
+		if (options.background == null)
 			return false;
-		Uri uri = Uri.parse(mBackgroundUriString);
+		Uri uri = Uri.parse(options.background);
 		if (uri == null)
 			return false;
 
@@ -1014,11 +841,11 @@ public class LockService extends Service implements View.OnClickListener,
 			bindService(i, mConnection, 0);
 		}
 
-		switch (mLockViewType) {
-		case LOCK_TYPE_PATTERN:
+		switch (options.type) {
+		case LockPreferences.TYPE_PATTERN:
 			showPatternView();
 			break;
-		case LOCK_TYPE_PASSWORD:
+		case LockPreferences.TYPE_PASSWORD:
 			showPasswordView();
 			break;
 		}
@@ -1033,9 +860,9 @@ public class LockService extends Service implements View.OnClickListener,
 				Drawable icon = ai.loadIcon(getPackageManager());
 				Util.setBackgroundDrawable(mAppIcon, icon);
 				mViewTitle.setText(label);
-				if (mLockMessage != null && mLockMessage.length() != 0) {
+				if (options.message != null && options.message.length() != 0) {
 					mViewMessage.setVisibility(View.VISIBLE);
-					mViewMessage.setText(mLockMessage.replace("%s", label));
+					mViewMessage.setText(options.message.replace("%s", label));
 				} else {
 					mViewMessage.setVisibility(View.GONE);
 				}
@@ -1054,53 +881,6 @@ public class LockService extends Service implements View.OnClickListener,
 		Intent i = new Intent(c, LockService.class);
 		i.setAction(ACTION_HIDE);
 		c.startService(i);
-	}
-
-	public static final Intent getDefaultIntent(final Context c) {
-		final Intent i = new Intent(c, LockService.class);
-		int lockType = PrefUtils.getLockTypeInt(c);
-		boolean pro = new ProUtils(c).proFeaturesEnabled();
-		i.putExtra(EXTRA_VIEW_TYPE, lockType);
-		i.putExtra(EXTRA_ORIENTATION, PrefUtils.getLockOrientation(c));
-		i.putExtra(EXTRA_VIBRATE, PrefUtils.getVibrate(c));
-		i.putExtra(EXTRA_MESSAGE, PrefUtils.getMessage(c));
-		i.putExtra(EXTRA_PATTERN_WIDTH, PrefUtils.getPatternWidth(c));
-		if (pro) {
-			i.putExtra(EXTRA_BACKGROUND_URI, PrefUtils.getLockerBackground(c));
-			i.putExtra(EXTRA_ANIM_SHOW_TYPE,
-					getAnimType(c, PrefUtils.getAnimShowType(c)));
-			i.putExtra(EXTRA_ANIM_HIDE_TYPE,
-					getAnimType(c, PrefUtils.getAnimHideType(c)));
-			i.putExtra(EXTRA_ANIM_SHOW_MILLIS, PrefUtils.getAnimShowMillis(c));
-			i.putExtra(EXTRA_ANIM_HIDE_MILLIS, PrefUtils.getAnimHideMillis(c));
-		}
-		if (lockType == LOCK_TYPE_PASSWORD) {
-			i.putExtra(EXTRA_PASSWORD, PrefUtils.getPassword(c));
-			i.putExtra(EXTRA_PASSWORD_SWITCH_BUTTONS,
-					PrefUtils.getPasswordSwitchButtons(c));
-		} else if (lockType == LOCK_TYPE_PATTERN) {
-			i.putExtra(EXTRA_PATTERN, PrefUtils.getPattern(c));
-			i.putExtra(EXTRA_PATTERN_STEALTH, PrefUtils.getPatternStealth(c));
-			if (pro) {
-				i.putExtra(EXTRA_PATTERN_CIRCLE_COLOR,
-						PrefUtils.getPatternCircleColor(c));
-			}
-		}
-		return i;
-	}
-
-	private static int getAnimType(Context c, String animType) {
-		if (animType.equals(c.getString(R.string.pref_val_anim_slide_left))) {
-			return ANIM_TYPE_SLIDE_LEFT;
-		} else if (animType.equals(c
-				.getString(R.string.pref_val_anim_slide_right))) {
-			return ANIM_TYPE_SLIDE_RIGHT;
-		} else if (animType.equals(c.getString(R.string.pref_val_anim_none))) {
-			return ANIM_TYPE_NONE;
-		} else {
-			// default
-			return ANIM_TYPE_FADE;
-		}
 	}
 
 	private final ServiceConnection mConnection = new ServiceConnection() {
@@ -1166,12 +946,12 @@ public class LockService extends Service implements View.OnClickListener,
 		String port = getString(R.string.pref_val_orientation_portrait);
 		String auto = getString(R.string.pref_val_orientation_auto_rotate);
 		String land = getString(R.string.pref_val_orientation_landscape);
-		if (port.equals(mOrientationSetting)) {
+		if (port.equals(options.orientation)) {
 			return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-		} else if (land.equals(mOrientationSetting)) {
+		} else if (land.equals(options.orientation)) {
 			// workaround for older versions
 			return getLandscapeCompat();
-		} else if (auto.equals(mOrientationSetting)) {
+		} else if (auto.equals(options.orientation)) {
 			return ActivityInfo.SCREEN_ORIENTATION_SENSOR;
 		} else {
 			// default to system setting
@@ -1198,14 +978,48 @@ public class LockService extends Service implements View.OnClickListener,
 		}
 	}
 
-	public static final int getLockTypeInt(Context c, String lockType) {
-		if (lockType.equals(c.getString(R.string.pref_val_lock_type_password))) {
-			return LockService.LOCK_TYPE_PASSWORD;
-		} else if (lockType.equals(c
-				.getString(R.string.pref_val_lock_type_pattern))) {
-			return LockService.LOCK_TYPE_PATTERN;
-		} else {
-			return 0;
-		}
+	/**
+	 * Get the lock intent (no options are provided)
+	 * 
+	 * @param c
+	 * @param packageName
+	 * @return
+	 */
+	public static Intent getLockIntent(Context c, String packageName) {
+		Intent i = new Intent(c, LockService.class);
+		i.setAction(ACTION_COMPARE);
+		i.putExtra(EXTRA_PACKAGENAME, packageName);
+		return i;
+	}
+
+	/**
+	 * Show this {@link LockService} for the given package name
+	 * 
+	 * @param c
+	 * @param packageName
+	 */
+	public static void showCompare(Context c, String packageName) {
+		c.startService(getLockIntent(c, packageName));
+	}
+
+	public static void showCreate(Context c, int type) {
+		Log.d(TAG, "showCreate (type=" + type + ")");
+		Intent i = new Intent(c, LockService.class);
+		i.setAction(ACTION_CREATE);
+		LockPreferences prefs = new LockPreferences(c);
+		prefs.type = type;
+		i.putExtra(EXTRA_PREFERENCES, prefs);
+		c.startService(i);
+	}
+
+	public static void showCreate(Context c, int type, int size) {
+		Log.d(TAG, "showCreate (type=" + type + ",size=" + size + ")");
+		Intent i = new Intent(c, LockService.class);
+		i.setAction(ACTION_CREATE);
+		LockPreferences prefs = new LockPreferences(c);
+		prefs.type = type;
+		prefs.patternSize = size;
+		i.putExtra(EXTRA_PREFERENCES, prefs);
+		c.startService(i);
 	}
 }

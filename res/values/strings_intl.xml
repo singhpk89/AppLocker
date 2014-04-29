@@ -108,6 +108,7 @@
     <item name="pref_def_background" type="string">@string/pref_val_bg_default</item>
     <item name="pref_def_anim_show_type" type="string">@string/pref_val_anim_none</item>
     <item name="pref_def_anim_hide_type" type="string">@string/pref_val_anim_none</item>
+    <item name="pref_def_lock_type" type="string">@string/pref_val_lock_type_password</item>
 
     <!--
     Next are numbers on buttons, only translate if your language 

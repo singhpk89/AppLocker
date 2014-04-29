@@ -92,10 +92,7 @@ public class MainActivity extends ActionBarActivity implements
 			unlocked = true;
 		}
 		if (!unlocked) {
-			Intent i = LockService.getDefaultIntent(this);
-			i.setAction(LockService.ACTION_COMPARE);
-			i.putExtra(LockService.EXTRA_PACKAGENAME, getPackageName());
-			startService(i);
+			LockService.showCompare(this, getPackageName());
 		}
 		getIntent().putExtra(EXTRA_UNLOCKED, false);
 		// showDialogs();

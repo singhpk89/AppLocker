@@ -44,6 +44,7 @@ import android.widget.Toast;
 
 import com.twinone.locker.R;
 import com.twinone.locker.lock.AppLockService;
+import com.twinone.locker.lock.LockPreferences;
 import com.twinone.locker.lock.LockService;
 import com.twinone.locker.pro.ProUtils;
 import com.twinone.locker.pro.pref.ProCheckBoxPreference;
@@ -108,6 +109,11 @@ public class SettingsFragment extends PreferenceFragment implements
 		mBackground = (ProListPreference) findPreference(getString(R.string.pref_key_background));
 		mPatternSize = (ProEditTextPreference) findPreference(getString(R.string.pref_key_pattern_size));
 		initialize();
+	}
+
+	private void refreshPreferences() {
+		PrefUtils prefs = new PrefUtils(getActivity());
+		mPrefs = prefs.prefs();
 	}
 
 	@Override
@@ -200,10 +206,8 @@ public class SettingsFragment extends PreferenceFragment implements
 				newPatternWidth = Integer.parseInt(getActivity().getString(
 						R.string.pref_def_pattern_size));
 			}
-			Intent i = LockService.getDefaultIntent(getActivity());
-			i.setAction(LockService.ACTION_CREATE);
-			i.putExtra(LockService.EXTRA_PATTERN_WIDTH, newPatternWidth);
-			getActivity().startService(i);
+			LockService.showCreate(getActivity(), LockPreferences.TYPE_PATTERN,
+					newPatternWidth);
 			return false;
 		}
 		return true;
@@ -213,10 +217,14 @@ public class SettingsFragment extends PreferenceFragment implements
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sp, String key) {
 		String keyHideIcon = getString(R.string.pref_key_hide_launcher_icon);
+		mPrefs = sp;
 
+		Log.d("", "SharedPreference changed on disk (key=" + key + ")");
 		if (key.equals(keyHideIcon)) {
 			boolean shouldHide = mHideIcon.isChecked();
 			PrefUtils.setHideApplication(getActivity(), shouldHide);
+		} else if (key.equals(mPatternSize.getKey())) {
+			mPatternSize.setText(sp.getString(key, null));
 		}
 
 		setupMessagesAndViews();
@@ -252,7 +260,7 @@ public class SettingsFragment extends PreferenceFragment implements
 	}
 
 	private void showCategory() {
-		if (PrefUtils.getLockTypeInt(getActivity()) == LockService.LOCK_TYPE_PASSWORD) {
+		if (PrefUtils.getLockTypeInt(getActivity()) == LockPreferences.TYPE_PASSWORD) {
 			mLockTypePref.setSummary(R.string.pref_list_lock_type_password);
 			mPrefScreen.removePreference(mCatPattern);
 			mPrefScreen.addPreference(mCatPassword);
@@ -274,15 +282,18 @@ public class SettingsFragment extends PreferenceFragment implements
 
 	@Override
 	public boolean onPreferenceClick(Preference preference) {
-		String key = preference.getKey();
-		String lockType = getString(R.string.pref_key_lock_type);
-		String changelog = getString(R.string.pref_key_changelog);
+		final String key = preference.getKey();
+		final String lockType = getString(R.string.pref_key_lock_type);
+		final String changelog = getString(R.string.pref_key_changelog);
+		final String patternSize = getString(R.string.pref_key_pattern_size);
 
 		if (key.equals(changelog)) {
 			ChangeLog cl = new ChangeLog(getActivity());
 			cl.show(true);
 		} else if (key.equals(lockType)) {
 			getChangePasswordDialog(getActivity()).show();
+		} else if (key.equals(patternSize)) {
+			mPatternSize.setText(mPrefs.getString(patternSize, null));
 		}
 		return false;
 	}
@@ -327,12 +338,9 @@ public class SettingsFragment extends PreferenceFragment implements
 		choose.setItems(R.array.lock_type_names, new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				int lockType = which == 0 ? LockService.LOCK_TYPE_PASSWORD
-						: LockService.LOCK_TYPE_PATTERN;
-				Intent i = LockService.getDefaultIntent(c);
-				i.setAction(LockService.ACTION_CREATE);
-				i.putExtra(LockService.EXTRA_VIEW_TYPE, lockType);
-				c.startService(i);
+				int lockType = which == 0 ? LockPreferences.TYPE_PASSWORD
+						: LockPreferences.TYPE_PATTERN;
+				LockService.showCreate(c, lockType);
 			}
 		});
 		return choose.create();

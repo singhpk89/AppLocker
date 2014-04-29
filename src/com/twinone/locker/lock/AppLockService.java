@@ -223,7 +223,7 @@ public class AppLockService extends Service {
 	}
 
 	private void showLocker(String packageName) {
-		Intent intent = LockService.getDefaultIntent(this);
+		Intent intent = LockService.getLockIntent(this, packageName);
 		intent.setAction(LockService.ACTION_COMPARE);
 		intent.putExtra(LockService.EXTRA_PACKAGENAME, packageName);
 		startService(intent);
@@ -440,6 +440,11 @@ public class AppLockService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		if (mScreenReceiver != null)
+			unregisterReceiver(mScreenReceiver);
+		if (mShowNotification)
+			stopForeground(true);
+
 		if (mAllowRestart) {
 			start(this);
 			mAllowRestart = false;
@@ -451,10 +456,7 @@ public class AppLockService extends Service {
 			Log.d(TAG, "Destroy not allowed, restarting service");
 			start(this);
 		}
-		if (mScreenReceiver != null)
-			unregisterReceiver(mScreenReceiver);
-		if (mShowNotification)
-			mAllowDestroy = false;
+		mAllowDestroy = false;
 	}
 
 	private void doStopSelf() {

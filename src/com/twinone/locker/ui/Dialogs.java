@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.twinone.locker.R;
+import com.twinone.locker.lock.LockPreferences;
 import com.twinone.locker.lock.LockService;
 import com.twinone.locker.util.PrefUtils;
 import com.twinone.util.DialogSequencer;
@@ -42,12 +43,9 @@ public class Dialogs {
 		choose.setItems(R.array.lock_type_names, new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				int lockType = which == 0 ? LockService.LOCK_TYPE_PASSWORD
-						: LockService.LOCK_TYPE_PATTERN;
-				Intent i = LockService.getDefaultIntent(c);
-				i.setAction(LockService.ACTION_CREATE);
-				i.putExtra(LockService.EXTRA_VIEW_TYPE, lockType);
-				c.startService(i);
+				int type = which == 0 ? LockPreferences.TYPE_PASSWORD
+						: LockPreferences.TYPE_PATTERN;
+				LockService.showCreate(c, type);
 			}
 		});
 		return choose.create();

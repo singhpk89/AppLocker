@@ -22,7 +22,6 @@
     <!-- All strings for LockActivity -->
     <string name="locker_footer_default">Enter password to unlock</string>
     <string name="locker_enter_password">Enter password</string>
-    <string name="locker_invalid_password">Invalid password</string>
     <string name="upper_ok">OK</string>
     <string name="upper_back">BACK</string>
     <string name="cancel">Cancel</string>
@@ -310,5 +309,8 @@
     <string name="pref_desc_pattern_hide_error">Don\'t show the error when you enter a wrong pattern</string>
     <string name="pref_tit_pattern_size">Pattern size</string>
     <string name="pref_desc_pattern_size">The number of rows and columns that the pattern has</string>
+    <!--  -->
+    <string name="locker_invalid_password">Wrong password</string>
+    <string name="locker_invalid_pattern">Wrong pattern</string>
 
 </resources>

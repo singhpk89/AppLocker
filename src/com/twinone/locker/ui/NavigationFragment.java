@@ -61,8 +61,9 @@ public class NavigationFragment extends Fragment {
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mListView;
-	private View mFragmentContainerView;
+	private View mFragmentView;
 
+	private boolean isOpen;
 	private int mCurrentSelectedPosition = -1;
 	private boolean mFromSavedInstanceState;
 	private boolean mUserLearnedDrawer;
@@ -74,6 +75,10 @@ public class NavigationFragment extends Fragment {
 	}
 
 	public NavigationFragment() {
+	}
+
+	public boolean isOpen() {
+		return isOpen;
 	}
 
 	@Override
@@ -130,7 +135,7 @@ public class NavigationFragment extends Fragment {
 
 	public boolean isDrawerOpen() {
 		return mDrawerLayout != null
-				&& mDrawerLayout.isDrawerOpen(mFragmentContainerView);
+				&& mDrawerLayout.isDrawerOpen(mFragmentView);
 	}
 
 	/**
@@ -143,7 +148,7 @@ public class NavigationFragment extends Fragment {
 	 *            The DrawerLayout containing this fragment's UI.
 	 */
 	public void setUp(int fragmentId, DrawerLayout drawerLayout) {
-		mFragmentContainerView = getActivity().findViewById(fragmentId);
+		mFragmentView = getActivity().findViewById(fragmentId);
 		mDrawerLayout = drawerLayout;
 
 		// set a custom shadow that overlays the main content when the drawer
@@ -164,6 +169,7 @@ public class NavigationFragment extends Fragment {
 			@Override
 			public void onDrawerClosed(View drawerView) {
 				super.onDrawerClosed(drawerView);
+				isOpen = false;
 				if (!isAdded()) {
 					return;
 				}
@@ -175,6 +181,7 @@ public class NavigationFragment extends Fragment {
 			@Override
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
+				isOpen = true;
 				if (!isAdded()) {
 					return;
 				}
@@ -200,7 +207,7 @@ public class NavigationFragment extends Fragment {
 		// them to the drawer,
 		// per the navigation drawer design guidelines.
 		if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
-			mDrawerLayout.openDrawer(mFragmentContainerView);
+			mDrawerLayout.openDrawer(mFragmentView);
 		}
 
 		// Defer code dependent on restoration of previous instance state.
@@ -226,7 +233,7 @@ public class NavigationFragment extends Fragment {
 							.getItem(position)).type);
 		}
 		if (mDrawerLayout != null && close) {
-			mDrawerLayout.closeDrawer(mFragmentContainerView);
+			mDrawerLayout.closeDrawer(mFragmentView);
 		}
 	}
 
@@ -317,4 +324,11 @@ public class NavigationFragment extends Fragment {
 
 	}
 
+	public void open() {
+		mDrawerLayout.openDrawer(mFragmentView);
+	}
+
+	public void close() {
+		mDrawerLayout.closeDrawer(mFragmentView);
+	}
 }

@@ -139,8 +139,8 @@ public class AdViewManager implements AdListener {
 		return "63db1a5b579e6c250d9c7d7ed6c3efd5";
 	}
 
-	private String getAdMobId() {
-		return "a152407835a94a7";
-	}
+	// private String getAdMobId() {
+	// return "a152407835a94a7";
+	// }
 
 }

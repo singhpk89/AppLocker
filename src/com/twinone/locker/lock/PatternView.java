@@ -106,6 +106,7 @@ public class PatternView extends View {
 	private DisplayMode mPatternDisplayMode = DisplayMode.Correct;
 	private boolean mInputEnabled = true;
 	private boolean mInStealthMode = false;
+	private boolean mInErrorStealthMode = false;
 	private boolean mEnableHapticFeedback = true;
 	private boolean mPatternInProgress = false;
 
@@ -429,6 +430,17 @@ public class PatternView extends View {
 	 */
 	public void setInStealthMode(boolean inStealthMode) {
 		mInStealthMode = inStealthMode;
+	}
+
+	/**
+	 * Set whether the view is in erro stealth mode, If true, there will be no
+	 * visible feedback when the user enters a wrong pattern
+	 * 
+	 * @param inStealthMode
+	 *            Whether in stealth mode.
+	 */
+	public void setInErrorStealthMode(boolean inErrorStealthMode) {
+		mInErrorStealthMode = inErrorStealthMode;
 	}
 
 	/**
@@ -1105,7 +1117,9 @@ public class PatternView extends View {
 		// only the last segment of the path should be computed here
 		// draw the path of the pattern (unless the user is in progress, and
 		// we are in stealth mode)
-		final boolean drawPath = (!mInStealthMode || mPatternDisplayMode == DisplayMode.Wrong);
+		final boolean drawPath = (!mInStealthMode
+				&& mPatternDisplayMode == DisplayMode.Correct || !mInErrorStealthMode
+				&& mPatternDisplayMode == DisplayMode.Wrong);
 
 		// draw the arrows associated with the path (unless the user is in
 		// progress, and
@@ -1113,24 +1127,27 @@ public class PatternView extends View {
 		boolean oldFlag = (mPaint.getFlags() & Paint.FILTER_BITMAP_FLAG) != 0;
 		mPaint.setFilterBitmap(true); // draw with higher quality since we
 		// render with transforms
-		if (drawPath) {
-			for (int i = 0; i < count - 1; i++) {
-				Cell cell = pattern.get(i);
-				Cell next = pattern.get(i + 1);
-
-				// only draw the part of the pattern stored in
-				// the lookup table (this is only different in the case
-				// of animation).
-				if (!drawLookup[next.mRow][next.mColumn]) {
-					break;
-				}
-
-				float leftX = paddingLeft + cell.mColumn * squareWidth;
-				float topY = paddingTop + cell.mRow * squareHeight;
-
-				drawArrow(canvas, leftX, topY, cell, next);
-			}
-		}
+		
+		
+		// Not drawing arrows
+		// if (drawPath) {
+		// for (int i = 0; i < count - 1; i++) {
+		// Cell cell = pattern.get(i);
+		// Cell next = pattern.get(i + 1);
+		//
+		// // only draw the part of the pattern stored in
+		// // the lookup table (this is only different in the case
+		// // of animation).
+		// if (!drawLookup[next.mRow][next.mColumn]) {
+		// break;
+		// }
+		//
+		// float leftX = paddingLeft + cell.mColumn * squareWidth;
+		// float topY = paddingTop + cell.mRow * squareHeight;
+		//
+		// drawArrow(canvas, leftX, topY, cell, next);
+		// }
+		// }
 
 		if (drawPath) {
 			boolean anyCircles = false;
@@ -1165,8 +1182,8 @@ public class PatternView extends View {
 		mPaint.setFilterBitmap(oldFlag); // restore default flag
 	}
 
-	private void drawArrow(Canvas canvas, float leftX, float topY, Cell start,
-			Cell end) {
+	private void drawArrowUnused(Canvas canvas, float leftX, float topY,
+			Cell start, Cell end) {
 		boolean green = mPatternDisplayMode != DisplayMode.Wrong;
 
 		final int endRow = end.mRow;
@@ -1226,7 +1243,8 @@ public class PatternView extends View {
 		Bitmap innerCircle;
 
 		if (!partOfPattern
-				|| (mInStealthMode && mPatternDisplayMode != DisplayMode.Wrong)) {
+				|| (mInStealthMode && mPatternDisplayMode == DisplayMode.Correct)
+				|| (mInErrorStealthMode && mPatternDisplayMode == DisplayMode.Wrong)) {
 			// unselected circle
 			outerCircle = mBitmapCircleDefault;
 			innerCircle = mBitmapBtnDefault;

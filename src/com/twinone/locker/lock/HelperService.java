@@ -26,7 +26,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-public class NotificationRemover extends Service {
+public class HelperService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -55,7 +55,7 @@ public class NotificationRemover extends Service {
 	}
 
 	public static void start(Context c) {
-		Intent i = new Intent(c, NotificationRemover.class);
+		Intent i = new Intent(c, HelperService.class);
 		c.startService(i);
 	}
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.twinone.locker.R;
 import com.twinone.locker.lock.LockService;
 import com.twinone.locker.ui.MainActivity;
 import com.twinone.locker.util.PrefUtils;
@@ -15,11 +16,16 @@ public class OutgoingCallReceiver extends BroadcastReceiver {
 	public void onReceive(Context c, Intent i) {
 		Log.d("OutgoingCallReceiver", "Outgoing call recevied");
 
-		final boolean launch = PrefUtils.getDialLaunch(c);
-		final String number = i.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
-		final String launch_number = PrefUtils.getDialLaunchNumber(c);
-		final String recovery = PrefUtils.getRecoveryCode(c);
-		if (launch && number.equals(launch_number)) {
+		PrefUtils prefs = new PrefUtils(c);
+		boolean launch = prefs.getBoolean(R.string.pref_key_dial_launch,
+				R.bool.pref_def_dial_launch);
+		String number = i.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
+		String launchNumber = prefs.getString(
+				R.string.pref_key_dial_launch_number,
+				R.string.pref_def_dial_launch_number);
+		String recovery = prefs.getString(R.string.pref_key_recovery_code);
+
+		if (launch && number.equals(launchNumber)) {
 			Log.d("Receiver", "Starting app with launch number");
 			setResultData(null);
 			Intent intent = new Intent(c, MainActivity.class);
@@ -34,5 +40,4 @@ public class OutgoingCallReceiver extends BroadcastReceiver {
 		}
 
 	}
-
 }

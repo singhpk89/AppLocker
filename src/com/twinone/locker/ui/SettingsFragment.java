@@ -23,7 +23,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -61,7 +60,7 @@ public class SettingsFragment extends PreferenceFragment implements
 	SharedPreferences mPrefs;
 	SharedPreferences.Editor mEditor;
 	// private static final String TAG = "PrefsActivity";
-	private ProCheckBoxPreference mShowNotification;
+	// private ProCheckBoxPreference mShowNotification;
 	private ProCheckBoxPreference mShortExit;
 	private EditTextPreference mShortExitTime;
 	private CheckBoxPreference mTransparentPref;
@@ -79,12 +78,14 @@ public class SettingsFragment extends PreferenceFragment implements
 	private ProEditTextPreference mPatternSize;
 
 	private ProUtils mProUtils;
+	private PrefUtils mPrefUtils;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		mProUtils = new ProUtils(getActivity());
+		mPrefUtils = new PrefUtils(getActivity());
 
 		PreferenceManager pm = getPreferenceManager();
 		pm.setSharedPreferencesName(PrefUtils.PREF_FILE_DEFAULT);
@@ -93,7 +94,8 @@ public class SettingsFragment extends PreferenceFragment implements
 
 		mPrefs = pm.getSharedPreferences();
 		mEditor = pm.getSharedPreferences().edit();
-		mShowNotification = (ProCheckBoxPreference) findPreference(getString(R.string.pref_key_show_notification));
+		// mShowNotification = (ProCheckBoxPreference)
+		// findPreference(getString(R.string.pref_key_show_notification));
 		mShortExitTime = (EditTextPreference) findPreference(getString(R.string.pref_key_delay_time));
 		mShortExit = (ProCheckBoxPreference) findPreference(getString(R.string.pref_key_delay_status));
 		mCatNotif = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_notification));
@@ -109,11 +111,6 @@ public class SettingsFragment extends PreferenceFragment implements
 		mBackground = (ProListPreference) findPreference(getString(R.string.pref_key_background));
 		mPatternSize = (ProEditTextPreference) findPreference(getString(R.string.pref_key_pattern_size));
 		initialize();
-	}
-
-	private void refreshPreferences() {
-		PrefUtils prefs = new PrefUtils(getActivity());
-		mPrefs = prefs.prefs();
 	}
 
 	@Override
@@ -139,7 +136,6 @@ public class SettingsFragment extends PreferenceFragment implements
 	protected void initialize() {
 
 		showCategory();
-
 		mPrefs.registerOnSharedPreferenceChangeListener(this);
 		mShortExitTime.setOnPreferenceChangeListener(this);
 		mHideIcon.setOnPreferenceChangeListener(this);
@@ -154,7 +150,7 @@ public class SettingsFragment extends PreferenceFragment implements
 			mCatNotif.removePreference(mTransparentPref);
 		}
 
-		String code = PrefUtils.getRecoveryCode(getActivity());
+		String code = mPrefUtils.getString(R.string.pref_key_recovery_code);
 		if (code != null)
 			mRecoveryPref.setSummary(String.format(
 					getString(R.string.pref_desc_recovery_code), code));
@@ -260,7 +256,7 @@ public class SettingsFragment extends PreferenceFragment implements
 	}
 
 	private void showCategory() {
-		if (PrefUtils.getLockTypeInt(getActivity()) == LockPreferences.TYPE_PASSWORD) {
+		if (mPrefUtils.getCurrentLockTypeInt() == LockPreferences.TYPE_PASSWORD) {
 			mLockTypePref.setSummary(R.string.pref_list_lock_type_password);
 			mPrefScreen.removePreference(mCatPattern);
 			mPrefScreen.addPreference(mCatPassword);
@@ -313,12 +309,8 @@ public class SettingsFragment extends PreferenceFragment implements
 	public void onActivityResult(int req, int res, Intent data) {
 		Log.d("", "onActivityResult");
 		if (req == IMG_REQ_CODE && res == Activity.RESULT_OK) {
-			Uri image = data.getData();
-			SharedPreferences.Editor editor = PrefUtils.prefs(getActivity())
-					.edit();
-			PrefUtils.setLockerBackground(editor, getActivity(),
-					image.toString());
-			PrefUtils.apply(editor);
+			String image = data.getData().toString();
+			mPrefUtils.put(R.string.pref_key_background, image).apply();
 		}
 		Toast.makeText(getActivity(), R.string.background_changed,
 				Toast.LENGTH_SHORT).show();

@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
 
 import com.twinone.locker.R;
 import com.twinone.locker.lock.LockPreferences;
@@ -67,7 +66,7 @@ public class Dialogs {
 	 */
 	public static boolean addEmptyPasswordDialog(Context c,
 			final DialogSequencer ds) {
-		final boolean empty = PrefUtils.isCurrentPasswordEmpty(c);
+		final boolean empty = new PrefUtils(c).isCurrentPasswordEmpty();
 		if (empty) {
 			ds.addDialog(getChangePasswordDialog(c));
 			return true;
@@ -93,17 +92,15 @@ public class Dialogs {
 	// }
 
 	public static AlertDialog getRecoveryCodeDialog(final Context c) {
-		if (PrefUtils.getRecoveryCode(c) != null) {
+		PrefUtils prefs = new PrefUtils(c);
+		String code = prefs.getString(R.string.pref_key_recovery_code);
+		if (code != null) {
 			return null;
 		}
-		String code = PrefUtils.getRecoveryCode(c);
-		if (code == null) {
-			code = PrefUtils.generateRecoveryCode(c);
-			// save it directly to avoid it to change
-			final SharedPreferences.Editor editor = PrefUtils.prefs(c).edit();
-			editor.putString(c.getString(R.string.pref_key_recovery_code), code);
-			PrefUtils.apply(editor);
-		}
+		// Code = null
+		code = PrefUtils.generateRecoveryCode(c);
+		// save it directly to avoid it to change
+		prefs.put(R.string.pref_key_recovery_code, code).apply();
 		final String finalcode = code;
 		AlertDialog.Builder ab = new AlertDialog.Builder(c);
 		ab.setCancelable(false);

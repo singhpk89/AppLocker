@@ -17,7 +17,6 @@ import com.twinone.locker.lock.AppLockService;
 import com.twinone.locker.lock.LockService;
 import com.twinone.locker.ui.NavigationFragment.NavigationListener;
 import com.twinone.locker.util.PrefUtils;
-import com.twinone.util.Analytics;
 import com.twinone.util.DialogSequencer;
 
 public class MainActivity extends ActionBarActivity implements
@@ -31,16 +30,16 @@ public class MainActivity extends ActionBarActivity implements
 
 	private static final String ANALYTICS_PRD = "https://twinone.org/apps/locker/dbg-analytics.php";
 	private static final String ANALYTICS_DBG = "https://twinone.org/apps/locker/analytics.php";
-	private static final String VERSION_URL = Constants.DEBUG ? VERSION_URL_DBG
+	public static final String VERSION_URL = Constants.DEBUG ? VERSION_URL_DBG
 			: VERSION_URL_PRD;
-	private static final String ANALYTICS_URL = Constants.DEBUG ? ANALYTICS_DBG
+	public static final String ANALYTICS_URL = Constants.DEBUG ? ANALYTICS_DBG
 			: ANALYTICS_PRD;
 	// private VersionManager mVersionManager;
 
 	// private static final String TAG = "Main";
 
 	private DialogSequencer mSequencer;
-	private Analytics mAnalytics;
+	// private Analytics mAnalytics;
 
 	public static final String EXTRA_UNLOCKED = "com.twinone.locker.unlocked";
 
@@ -88,7 +87,7 @@ public class MainActivity extends ActionBarActivity implements
 	protected void onResume() {
 		super.onResume();
 		boolean unlocked = getIntent().getBooleanExtra(EXTRA_UNLOCKED, false);
-		if (PrefUtils.isCurrentPasswordEmpty(this)) {
+		if (new PrefUtils(this).isCurrentPasswordEmpty()) {
 			unlocked = true;
 		}
 		if (!unlocked) {
@@ -96,7 +95,7 @@ public class MainActivity extends ActionBarActivity implements
 		}
 		getIntent().putExtra(EXTRA_UNLOCKED, false);
 		// showDialogs();
-		mNavigationDrawerFragment.getAdapter().setServiceState(
+		mNavFragment.getAdapter().setServiceState(
 				AppLockService.isRunning(this));
 
 	}
@@ -107,32 +106,6 @@ public class MainActivity extends ActionBarActivity implements
 		// mSequencer.stop();
 		LockService.hide(this);
 	}
-
-	// private void showShareDialog() {
-	// AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	// final View dialogRoot = getLayoutInflater().inflate(
-	// R.layout.share_dialog, null);
-	// final EditText etShareText = (EditText) dialogRoot
-	// .findViewById(R.id.etShareText);
-	// etShareText.setText(R.string.main_share_text);
-	// builder.setTitle(R.string.main_share_tit);
-	// builder.setView(dialogRoot);
-	// builder.setPositiveButton(android.R.string.ok, new OnClickListener() {
-	// @Override
-	// public void onClick(DialogInterface dialog, int which) {
-	// mAnalytics.increment(LockerAnalytics.SHARE);
-	// // Intent i = new Intent(MainActivity.this,
-	// // StagingActivity.class);
-	// // i.setAction(StagingActivity.ACTION_SHARE);
-	// // i.putExtra(StagingActivity.EXTRA_TEXT, etShareText.getText()
-	// // .toString());
-	// // startActivity(i);
-	// // dialog.cancel();
-	// }
-	// });
-	// builder.setNegativeButton(android.R.string.cancel, null);
-	// builder.show();
-	// }
 
 	/**
 	 * Provide a way back to {@link MainActivity} without having to provide a
@@ -147,12 +120,6 @@ public class MainActivity extends ActionBarActivity implements
 			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		}
 		context.startActivity(i);
-	}
-
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-		moveTaskToBack(true);
 	}
 
 	/**
@@ -192,7 +159,7 @@ public class MainActivity extends ActionBarActivity implements
 	 * Fragment managing the behaviors, interactions and presentation of the
 	 * navigation drawer.
 	 */
-	private NavigationFragment mNavigationDrawerFragment;
+	private NavigationFragment mNavFragment;
 
 	/**
 	 * Used to store the last screen title. For use in
@@ -207,24 +174,26 @@ public class MainActivity extends ActionBarActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		mNavigationDrawerFragment = (NavigationFragment) getSupportFragmentManager()
+		mNavFragment = (NavigationFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.navigation_drawer);
 		// Set up the drawer.
-		mNavigationDrawerFragment.setUp(R.id.navigation_drawer,
+		mNavFragment.setUp(R.id.navigation_drawer,
 				(DrawerLayout) findViewById(R.id.drawer_layout));
 		mTitle = getTitle();
 
 		mActionBar = getSupportActionBar();
 
 		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.container, new AppsFragment()).commit();
+				.add(R.id.container, new AppsFragment()).commit();
+		mCurrentFragmentType = NavigationElement.TYPE_APPS;
 
 		AppLockService.start(this);
 
-		mNavigationDrawerFragment.getAdapter().setServiceState(true);
+		mNavFragment.getAdapter().setServiceState(true);
 
 		mSequencer = new DialogSequencer();
 		showDialogs();
+
 	}
 
 	public void setActionBarTitle(int resId) {
@@ -233,7 +202,7 @@ public class MainActivity extends ActionBarActivity implements
 
 	private boolean mNavPending;
 	int mCurrentFragmentType;
-	int mNavPendingType;
+	int mNavPendingType = -1;
 
 	@Override
 	public boolean onNavigationElementSelected(int type) {
@@ -258,7 +227,7 @@ public class MainActivity extends ActionBarActivity implements
 		} else {
 			newState = AppLockService.toggle(this);
 		}
-		mNavigationDrawerFragment.getAdapter().setServiceState(newState);
+		mNavFragment.getAdapter().setServiceState(newState);
 	}
 
 	@Override
@@ -274,6 +243,8 @@ public class MainActivity extends ActionBarActivity implements
 			mNavPending = false;
 		}
 	}
+
+	private static final String BACK_STACK_NAME = "default";
 
 	/**
 	 * Open a specific Fragment
@@ -306,9 +277,13 @@ public class MainActivity extends ActionBarActivity implements
 			fragment = new ProFragment();
 			break;
 		}
-		FragmentManager fragmentManager = getSupportFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container, fragment)
-				.commit();
+		FragmentManager fm = getSupportFragmentManager();
+		// Don't re-add the already present fragment
+		if (type != NavigationElement.TYPE_APPS) {
+			fm.popBackStack();
+			fm.beginTransaction().replace(R.id.container, fragment)
+					.addToBackStack(BACK_STACK_NAME).commit();
+		}
 		mCurrentFragmentType = type;
 	}
 

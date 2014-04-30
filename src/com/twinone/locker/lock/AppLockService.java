@@ -134,28 +134,19 @@ public class AppLockService extends Service {
 		for (String s : apps) {
 			mLockedPackages.put(s, true);
 		}
-		SharedPreferences sp = PrefUtils.prefs(this);
+		PrefUtils prefs = new PrefUtils(this);
+		boolean delay = prefs.getBoolean(R.string.pref_key_delay_status,
+				R.bool.pref_def_delay_status);
 
-		boolean defaultDelay = Boolean
-				.parseBoolean(getString(R.string.pref_def_delay_status));
-		boolean delayEnabled = sp.getBoolean(
-				getString(R.string.pref_key_delay_status), defaultDelay);
-
-		if (delayEnabled) {
-			String delaySeconds = sp.getString(
-					getString(R.string.pref_key_delay_time),
-					getString(R.string.pref_def_delay_time));
-			if (delaySeconds.length() == 0)
-				delaySeconds = "0";
-			mShortExitMillis = Long.parseLong(delaySeconds) * 1000;
+		if (delay) {
+			int secs = prefs.parseInt(R.string.pref_key_delay_time,
+					R.string.pref_def_delay_time);
+			mShortExitMillis = secs * 1000;
 		}
 
-		boolean defaultScreenOffRelock = Boolean
-				.parseBoolean(getString(R.string.pref_def_relock_after_screenoff));
-		boolean relock = sp.getBoolean(
-				getString(R.string.pref_key_relock_after_screenoff),
-				defaultScreenOffRelock);
-		mRelockScreenOff = relock;
+		mRelockScreenOff = prefs.getBoolean(
+				R.string.pref_key_relock_after_screenoff,
+				R.bool.pref_def_relock_after_screenoff);
 
 		startNotification();
 		startAlarm(this);
@@ -191,7 +182,9 @@ public class AppLockService extends Service {
 		}
 		// With start_not_sticky we have the auto-close bug
 		// It looks like With start_sticky too (?)
-		// Start sticky causes multiple receivers
+		// Start sticky causes multiple receivers (NO)
+		// Multiple receivers are caused by multiple initialize calls without
+		// onDestroy() / stopSelf()
 		return START_STICKY;
 	}
 
@@ -308,29 +301,24 @@ public class AppLockService extends Service {
 	}
 
 	private void startNotification() {
-		SharedPreferences sp = PrefUtils.prefs(this);
-		boolean defaultShowNotification = Boolean
-				.parseBoolean(getString(R.string.pref_def_show_notification));
-		boolean showNotification = sp.getBoolean(
-				getString(R.string.pref_key_show_notification),
-				defaultShowNotification);
-		mShowNotification = showNotification;
+		mShowNotification = new PrefUtils(this).getBoolean(
+				R.string.pref_key_show_notification,
+				R.bool.pref_def_show_notification);
+
 		showNotification();
 		if (!mShowNotification) {
-			NotificationRemover.start(this);
+			HelperService.start(this);
 		}
 	}
 
 	@SuppressLint("InlinedApi")
 	private void showNotification() {
 		Log.d(TAG, "showNotification");
-		SharedPreferences sp = PrefUtils.prefs(this);
-		boolean defHideNotifIcon = Boolean
-				.parseBoolean(getString(R.string.pref_def_hide_notification_icon));
-		boolean hideNotifIcon = sp.getBoolean(
-				getString(R.string.pref_key_hide_notification_icon),
-				defHideNotifIcon);
-		int priority = hideNotifIcon ? Notification.PRIORITY_MIN
+
+		boolean hide = new PrefUtils(this).getBoolean(
+				R.string.pref_key_hide_notification_icon,
+				R.bool.pref_def_hide_notification_icon);
+		int priority = hide ? Notification.PRIORITY_MIN
 				: Notification.PRIORITY_DEFAULT;
 		Intent i = new Intent(this, MainActivity.class);
 		PendingIntent pi = PendingIntent.getActivity(this, 0, i, 0);

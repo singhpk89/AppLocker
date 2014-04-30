@@ -15,7 +15,6 @@ import android.util.Log;
 
 import com.twinone.locker.R;
 import com.twinone.locker.lock.LockPreferences;
-import com.twinone.locker.lock.LockService;
 
 /**
  * This class contains utility methods for accessing various preferences in
@@ -116,11 +115,13 @@ public class PrefUtils {
 	}
 
 	/**
-	 * Get a string preference whose key is the string of keyResId, if the
-	 * preference is empty, return the string from defResId
+	 * Get a string preference
 	 * 
 	 * @param keyResId
 	 * @param defResId
+	 *            the res id of the string that should be returned if the
+	 *            preference was not set (note that this should be the resid of
+	 *            a string, not the resid of a preference key)
 	 * @return
 	 */
 	public String getString(int keyResId, int defResId) {
@@ -129,10 +130,35 @@ public class PrefUtils {
 				.getString(defResId);
 	}
 
+	/**
+	 * Get a string preference
+	 * 
+	 * @param keyResId
+	 * @param defValue
+	 *            The string to return if the preference was not set
+	 * @return
+	 */
+	public String getString(int keyResId, String defValue) {
+		return mPrefs.getString(mContext.getString(keyResId), defValue);
+	}
+
 	public Integer getInt(int keyResId) {
 		try {
 			return mPrefs.getInt(mContext.getString(keyResId), (Integer) null);
 		} catch (NullPointerException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * Parse an Integer that is stored as a string
+	 * 
+	 * @return The Integer or null if there was an error
+	 */
+	public Integer parseInt(int keyResId) {
+		try {
+			return Integer.parseInt(getString(keyResId));
+		} catch (Exception e) {
 			return null;
 		}
 	}
@@ -154,11 +180,11 @@ public class PrefUtils {
 	}
 
 	/**
-	 * Parse an Integer that is stored as a string
+	 * Same as {@link #parseInt(int)}
 	 * 
-	 * @return The Integer or null if there was an error
+	 * @return The Long or null if there was an error
 	 */
-	public Integer parseInt(int keyResId) {
+	public Integer parseLong(int keyResId) {
 		try {
 			return Integer.parseInt(getString(keyResId));
 		} catch (Exception e) {
@@ -166,7 +192,29 @@ public class PrefUtils {
 		}
 	}
 
-	public Boolean getBoolean(int keyResId) {
+	/**
+	 * Same as {@link #parseInt(int)}
+	 */
+	public Long parseLong(int keyResId, int defResId) {
+		final Integer result = parseInt(keyResId);
+		return (result != null) ? result : Long.parseLong(mContext
+				.getString(defResId));
+	}
+
+	/**
+	 * 
+	 * @param keyResId
+	 * @param defResId
+	 *            a res id of a boolean resource (in {@link R.bool}
+	 * @return
+	 */
+	public boolean getBoolean(int keyResId, int defResId) {
+		final Boolean result = getBooleanOrNull(keyResId);
+		return result != null ? result : mContext.getResources().getBoolean(
+				defResId);
+	}
+
+	private Boolean getBooleanOrNull(int keyResId) {
 		final String key = mContext.getString(keyResId);
 		return (mPrefs.contains(key)) ? mPrefs.getBoolean(key, false) : null;
 	}
@@ -181,8 +229,12 @@ public class PrefUtils {
 		return (mPrefs.contains(key)) ? mPrefs.getLong(key, 0) : null;
 	}
 
+	/**
+	 * After applying, call {@link #editor()} again.
+	 */
 	public void apply() {
 		apply(editor());
+		mEditor = null;
 	}
 
 	/***************************************************************************
@@ -211,237 +263,54 @@ public class PrefUtils {
 		return c.getSharedPreferences(PREF_FILE_APPS, Context.MODE_PRIVATE);
 	}
 
-	private static final int parseInt(Context c, int prefKeyResId,
-			int prefDefResId) {
-		try {
-			int ret = Integer.parseInt(prefs(c).getString(
-					c.getString(prefKeyResId), c.getString(prefDefResId)));
-			return ret;
-		} catch (Exception e) {
-			Log.w("PrefUtil", "Error parsing int");
-			return 0;
-		}
-	}
-
-	public static final int getAnimShowMillis(Context c) {
-		return parseInt(c, R.string.pref_key_anim_show_millis,
-				R.string.pref_def_anim_show_millis);
-	}
-
-	public static final int getAnimHideMillis(Context c) {
-		return parseInt(c, R.string.pref_key_anim_hide_millis,
-				R.string.pref_def_anim_hide_millis);
-	}
-
-	public static final String getAnimShowType(Context c) {
-		return getString(c, R.string.pref_key_anim_show_type,
-				R.string.pref_val_anim_none);
-	}
-
-	public static final String getAnimHideType(Context c) {
-		return getString(c, R.string.pref_key_anim_hide_type,
-				R.string.pref_val_anim_fade);
-	}
-
-	private static final boolean getBoolean(Context c, int prefKeyResId,
-			int prefDefResId) {
-		return prefs(c).getBoolean(c.getString(prefKeyResId),
-				Boolean.parseBoolean(c.getString(prefDefResId)));
-	}
-
-	private static final String getString(Context c, int prefKeyResId,
-			int prefDefResId) {
-		return prefs(c).getString(c.getString(prefKeyResId),
-				c.getString(prefDefResId));
-	}
-
-	private static final String getStringOrNull(Context c, int prefKeyResId) {
-		return prefs(c).getString(c.getString(prefKeyResId), null);
-	}
-
-	// private static final float getFloat(Context c, int prefKeyResId,
-	// int prefDefResId) {
-	// return prefs(c).getFloat(c.getString(prefKeyResId),
-	// Float.parseFloat(c.getString(prefDefResId)));
-	// }
-	//
-	// private static final long parseLong(Context c, int prefKeyResId,
-	// int prefDefResId) {
-	// return Long.parseLong(prefs(c).getString(c.getString(prefKeyResId),
-	// c.getString(prefDefResId)));
-	// }
-
-	public static final boolean getStartAtBoot(Context c) {
-		return getBoolean(c, R.string.pref_key_start_boot,
-				R.string.pref_def_start_boot);
-	}
-
-	public static final String getPassword(Context c) {
-		return getStringOrNull(c, R.string.pref_key_passwd);
-	}
-
-	public static final String getPattern(Context c) {
-		return getStringOrNull(c, R.string.pref_key_pattern);
-	}
-
-	public static final boolean getVibrate(Context c) {
-		return getBoolean(c, R.string.pref_key_vibrate,
-				R.string.pref_def_vibrate);
-	}
-
-	public static final boolean getAds(Context c) {
-		return getBoolean(c, R.string.pref_key_ads, R.string.pref_def_ads);
-	}
-
-	public static final boolean getPasswordStealth(Context c) {
-		return getBoolean(c, R.string.pref_key_hide_dots,
-				R.string.pref_def_hide_dots);
-	}
-
-	public static final boolean getPatternStealth(Context c) {
-		return getBoolean(c, R.string.pref_key_pattern_stealth,
-				R.string.pref_def_pattern_stealth);
-	}
-
-	// SETTERS
-
-	public static final SharedPreferences.Editor setPassword(
-			SharedPreferences.Editor editor, Context c, String password) {
-		editor.putString(c.getString(R.string.pref_key_passwd), password);
-		return editor;
-	}
-
-	public static final SharedPreferences.Editor setPattern(
-			SharedPreferences.Editor editor, Context c, String pattern) {
-		editor.putString(c.getString(R.string.pref_key_pattern), pattern);
-		return editor;
-	}
-
-	public static final String getMessage(Context c) {
-		return getString(c, R.string.pref_key_lock_message,
-				R.string.locker_footer_default);
-	}
-
-	public static final boolean getDialLaunch(Context c) {
-		return getBoolean(c, R.string.pref_key_dial_launch,
-				R.string.pref_def_dial_launch);
-	}
-
-	public static final String getDialLaunchNumber(Context c) {
-		return getString(c, R.string.pref_key_dial_launch_number,
-				R.string.pref_def_dial_launch_number);
-	}
-
-	public static final SharedPreferences.Editor setMessage(
-			SharedPreferences.Editor editor, Context c, String value) {
-		editor.putString(c.getString(R.string.pref_key_lock_message), value);
-		return editor;
-
-	}
-
 	public static final Set<String> getLockedApps(Context c) {
 		SharedPreferences sp = appsPrefs(c);
 		Set<String> apps = new HashSet<String>(sp.getAll().keySet());
 		return apps;
 	}
 
-	private static final String getLockType(Context c) {
-		return getString(c, R.string.pref_key_lock_type,
-				R.string.pref_val_lock_type_password);
-	}
-
 	/**
-	 * @return One of {@link LockActivity#TYPE_PASSWORD} or
-	 *         {@link LockActivity#TYPE_PATTERN} or 0 if none was in preferences
-	 */
-	public static final int getLockTypeInt(Context c) {
-		String lockType = getLockType(c);
-		if (lockType.equals(c.getString(R.string.pref_val_lock_type_password))) {
-			return LockPreferences.TYPE_PASSWORD;
-		} else if (lockType.equals(c
-				.getString(R.string.pref_val_lock_type_pattern))) {
-			return LockPreferences.TYPE_PATTERN;
-		} else {
-			return 0;
-		}
-	}
-
-	/**
-	 * @return
-	 */
-	public static final int getPatternCircleColor(Context c) {
-		String color = getString(c, R.string.pref_key_pattern_color,
-				R.string.pref_val_pattern_color_white);
-		String blue = c.getString(R.string.pref_val_pattern_color_blue);
-		String green = c.getString(R.string.pref_val_pattern_color_green);
-		if (color.equals(green)) {
-			return LockService.PATTERN_COLOR_GREEN;
-		} else if (color.equals(blue)) {
-			return LockService.PATTERN_COLOR_BLUE;
-		} else {
-			return LockService.PATTERN_COLOR_WHITE;
-		}
-	}
-
-	public static final int getPatternWidth(Context c) {
-		String width = getString(c, R.string.pref_key_pattern_size,
-				R.string.pref_def_pattern_size);
-		try {
-			return Integer.parseInt(width);
-		} catch (Exception e) {
-		}
-		return Integer.parseInt(c.getString(R.string.pref_def_pattern_size));
-	}
-
-	/**
-	 * May be null
+	 * Never null
 	 * 
-	 * @param c
 	 * @return
 	 */
-	public static final String getLockerBackground(Context c) {
-		return getString(c, R.string.pref_key_background,
-				R.string.pref_val_bg_default);
+	public String getCurrentLockType() {
+		return getString(R.string.pref_key_lock_type,
+				R.string.pref_def_lock_type);
 	}
 
-	public static final SharedPreferences.Editor setLockerBackground(
-			SharedPreferences.Editor editor, Context c, String value) {
-		editor.putString(c.getString(R.string.pref_key_background), value);
-		return editor;
+	public int getCurrentLockTypeInt() {
+		final String type = getCurrentLockType();
+		if (type.equals(mContext
+				.getString(R.string.pref_val_lock_type_password)))
+			return LockPreferences.TYPE_PASSWORD;
+		else if (type.equals(mContext
+				.getString(R.string.pref_val_lock_type_pattern)))
+			return LockPreferences.TYPE_PATTERN;
+		return 0;
+
 	}
 
-	public static final SharedPreferences.Editor setLockType(
-			SharedPreferences.Editor editor, Context c, String value) {
-		editor.putString(c.getString(R.string.pref_key_lock_type), value);
-		return editor;
-	}
-
-	public static final boolean isCurrentPasswordEmpty(Context c) {
-		final int lockType = getLockTypeInt(c);
+	/**
+	 * Returns the current password or pattern
+	 * 
+	 * @return
+	 */
+	public String getCurrentPassword() {
+		int lockType = getCurrentLockTypeInt();
+		String password = null;
 		switch (lockType) {
 		case LockPreferences.TYPE_PASSWORD:
-			final String password = getPassword(c);
-			return password == null || password.length() == 0;
+			password = getString(R.string.pref_key_password);
 		case LockPreferences.TYPE_PATTERN:
-			final String pattern = getPattern(c);
-			return pattern == null || pattern.length() == 0;
-		default:
-			return true;
+			password = getString(R.string.pref_key_pattern);
 		}
+		return password;
 	}
 
-	public static final boolean getPasswordSwitchButtons(Context c) {
-		return getBoolean(c, R.string.pref_key_switch_buttons,
-				R.string.pref_def_switch_buttons);
-	}
-
-	public static final String getLockOrientation(Context c) {
-		return getString(c, R.string.pref_key_orientation,
-				R.string.pref_val_orientation_system);
-	}
-
-	public static final String getRecoveryCode(Context c) {
-		return getStringOrNull(c, R.string.pref_key_recovery_code);
+	public boolean isCurrentPasswordEmpty() {
+		String password = getCurrentPassword();
+		return password == null || password.isEmpty();
 	}
 
 	@SuppressLint("NewApi")

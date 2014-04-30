@@ -486,8 +486,14 @@ public class LockService extends Service implements View.OnClickListener,
 			mAnalytics.increment(LockerAnalytics.PATTERN_SUCCESS);
 		} else {
 			mAnalytics.increment(LockerAnalytics.PATTERN_FAILED);
-			mLockPatternView.setDisplayMode(DisplayMode.Wrong);
-			mLockPatternView.clearPattern(PATTERN_DELAY);
+			if (options.patternErrorStealth) {
+				Toast.makeText(this, R.string.locker_invalid_pattern,
+						Toast.LENGTH_SHORT).show();
+				mLockPatternView.clearPattern();
+			} else {
+				mLockPatternView.setDisplayMode(DisplayMode.Wrong);
+				mLockPatternView.clearPattern(PATTERN_DELAY);
+			}
 		}
 	}
 
@@ -571,9 +577,10 @@ public class LockService extends Service implements View.OnClickListener,
 			return;
 		}
 		PrefUtils prefs = new PrefUtils(this);
-		prefs.put(R.string.pref_key_passwd, newValue);
+		prefs.put(R.string.pref_key_password, newValue);
 		prefs.putString(R.string.pref_key_lock_type,
 				R.string.pref_val_lock_type_password);
+		prefs.apply();
 		Toast.makeText(this, R.string.password_change_saved, Toast.LENGTH_SHORT)
 				.show();
 		exitCreate();
@@ -669,6 +676,7 @@ public class LockService extends Service implements View.OnClickListener,
 		mLockPatternView.setSize(options.patternSize);
 		mLockPatternView.setTactileFeedbackEnabled(options.vibration);
 		mLockPatternView.setInStealthMode(options.patternStealth);
+		mLockPatternView.setInErrorStealthMode(options.patternErrorStealth);
 		mLockPatternView.onShow();
 		mLockPatternView.setVisibility(View.VISIBLE);
 		options.type = LockPreferences.TYPE_PATTERN;

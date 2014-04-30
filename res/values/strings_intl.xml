@@ -3,7 +3,7 @@
 
     <string name="pref_key_version">com.twinone.locker.old_version</string>
     <!-- Keys -->
-    <string name="pref_key_passwd">com.twinone.locker.pref.passwd</string>
+    <string name="pref_key_password">com.twinone.locker.pref.passwd</string>
     <string name="pref_key_pattern">com.twinone.locker.pref.pattern</string>
     <string name="pref_key_lock_message">com.twinone.locker.pref.message_key</string>
     <string name="pref_key_start_boot">com.twinone.locker.pref.start_boot</string>
@@ -84,36 +84,56 @@
     <string name="pref_val_bg_orange">bg_orange</string>
 
     <!-- Defaults -->
+    <!--
     <string name="pref_def_delay_status">false</string>
     <string name="pref_def_vibrate">true</string>
     <string name="pref_def_relock_after_screenoff">true</string>
-    <string name="pref_def_delay_time">60</string>
-    <string name="pref_def_show_notification">true</string>
+    -->
+
+
+    <!--
     <string name="pref_def_hide_launcher_icon">false</string>
     <string name="pref_def_dial_launch">false</string>
     <string name="pref_def_hide_notification_icon">false</string>
     <string name="pref_def_hide_dots">false</string>
+    -->
     <string name="pref_def_password_expiry">0</string>
     <string name="pref_def_max_password_retries">0</string>
+    <!--
     <string name="pref_def_pattern_stealth">false</string>
     <string name="pref_def_switch_buttons">false</string>
     <string name="pref_def_start_boot">true</string>
+    -->
     <string name="pref_def_dial_launch_number">#12345</string>
-    <string name="pref_def_ads">false</string>
+    <!-- <string name="pref_def_ads">false</string> -->
     <string name="pref_def_anim_show_millis">200</string>
     <string name="pref_def_anim_hide_millis">300</string>
     <string name="pref_def_pattern_size">3</string>
-    <string name="pref_def_pattern_hide_error">false</string>
 
+    <!-- Preference defaults -->
     <item name="pref_def_background" type="string">@string/pref_val_bg_default</item>
     <item name="pref_def_anim_show_type" type="string">@string/pref_val_anim_none</item>
     <item name="pref_def_anim_hide_type" type="string">@string/pref_val_anim_none</item>
     <item name="pref_def_lock_type" type="string">@string/pref_val_lock_type_password</item>
+    <item name="pref_def_vibrate" type="bool">false</item>
+    <item name="pref_def_switch_buttons" type="bool">false</item>
+    <item name="pref_def_pattern_size" type="integer">3</item>
+    <item name="pref_def_show_notification" type="bool">false</item>
+    <item name="pref_def_hide_notification_icon" type="bool">false</item>
+    <item name="pref_def_hide_launcher_icon" type="bool">false</item>
+    <item name="pref_def_dial_launch" type="bool">false</item>
+    <item name="pref_def_delay_status" type="bool">false</item>
+    <item name="pref_def_relock_after_screenoff" type="bool">true</item>
+    <item name="pref_def_start_boot" type="bool">false</item>
+    <item name="pref_def_pattern_stealth" type="bool">false</item>
+    <item name="pref_def_pattern_error_stealth" type="bool">false</item>
 
-    <!--
-    Next are numbers on buttons, only translate if your language 
-    doesn't have decimal numbers (also please contact me in that case)
-    -->
+    <string name="pref_def_delay_time">60</string>
+
+    <!-- <item name="pref_def_" type="bool">false</item> -->
+
+
+    <!--  -->
     <string name="num0">0</string>
     <string name="num1">1</string>
     <string name="num2">2</string>

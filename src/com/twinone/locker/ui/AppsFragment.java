@@ -38,7 +38,7 @@ import com.twinone.locker.util.PrefUtils;
 public class AppsFragment extends Fragment implements OnItemClickListener {
 	private ListView mListView;
 	private AppAdapter mAdapter;
-	private boolean mAllLocked;
+	// private boolean mAllLocked;
 	private SharedPreferences.Editor mEditor;
 
 	@Override
@@ -80,7 +80,9 @@ public class AppsFragment extends Fragment implements OnItemClickListener {
 		}
 	}
 
-	private void setAllLocked(boolean lock) {
+	// TODO add a button for this
+	public// private
+	void setAllLocked(boolean lock) {
 		ArrayList<String> apps = new ArrayList<String>();
 		for (AppListElement ah : mAdapter.getAllItems()) {
 			if (ah.isApp())

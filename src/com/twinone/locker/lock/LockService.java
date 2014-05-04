@@ -51,321 +51,41 @@ import com.twinone.util.Analytics;
 public class LockService extends Service implements View.OnClickListener,
 		View.OnKeyListener {
 
-	public static final String CLASSNAME = LockService.class.getName();
-
-	private static final String TAG = LockService.class.getSimpleName();
-
-	/**
-	 * Check a currently set password, (either number or pattern)
-	 */
-	public static final String ACTION_COMPARE = CLASSNAME + ".action.compare";
-
-	private static final String ACTION_HIDE = CLASSNAME + ".action.hide";
-
-	/**
-	 * Create a new password by asking the user to enter it twice (either number
-	 * or pattern)
-	 */
-	public static final String ACTION_CREATE = CLASSNAME + ".action.create";
-
-	public static final String ACTION_NOTIFY_PACKAGE_CHANGED = CLASSNAME
-			+ ".action.notify_package_changed";
-	public static final String EXTRA_LOCK = CLASSNAME + ".action.extra_lock";
-
-	/**
-	 * A {@link LockPreferences} providing additional details on how this
-	 * {@link LockService} should behave. You should start with a
-	 * {@link LockPreferences#getDefault(Context)} and change only the
-	 * properties you want to.
-	 * 
-	 * @see LockPreferences#getDefault(Context)
-	 */
-	public static final String EXTRA_PREFERENCES = CLASSNAME + ".extra.options";
-
-	/**
-	 * When the action is {@link #ACTION_COMPARE} use {@link #EXTRA_PACKAGENAME}
-	 * for specifying the target app.
-	 */
-	public static final String EXTRA_PACKAGENAME = CLASSNAME
-			+ ".extra.target_packagename";
-
-	public static final int PATTERN_COLOR_WHITE = 0;
-	public static final int PATTERN_COLOR_BLUE = 2;
-	public static final int PATTERN_COLOR_GREEN = 1;
-	private static final long PATTERN_DELAY = 600;
-
-	// options
-	private String mPackageName;
-	private String mAction;
-
-	private String mNewPassword;
-	private String mNewPattern;
-
-	private static final int MAX_PASSWORD_LENGTH = 8;
-
-	private LockPreferences options;
-
-	// views
-	private RelativeLayout mContainer;
-	private ImageView mViewBackground;
-	private TextView mTextViewPassword;
-	private TextView mViewTitle;
-	private TextView mViewMessage;
-	private ImageView mAppIcon;
-	private ViewGroup mLockView;
-	private LinearLayout mFooterButtons;
-	private Button mLeftButton;
-	private Button mRightButton;
-	private RightButtonAction mRightButtonAction;
-	private LeftButtonAction mLeftButtonAction;
-
-	private PatternView mLockPatternView;
-	private PasswordView mLockPasswordView;
-	private OnPatternListener mPatternListener;
-	private OnNumberListener mPasswordListener;
-
-	// private AppLockService mAppLockService;
-	private AppLockService mAlarmService;
-	private boolean mBound;
-
-	private Intent mIntent;
-	private Analytics mAnalytics;
-
-	private enum RightButtonAction {
-		CONTINUE, CONFIRM
-	}
-
 	private enum LeftButtonAction {
 		BACK, CANCEL
 	}
 
-	@Override
-	public IBinder onBind(Intent intent) {
-		return null;
-	}
+	private ViewState mViewState = ViewState.HIDDEN;
 
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent == null) {
-			return START_NOT_STICKY;
-		}
-		Log.d(TAG, "action: " + intent.getAction());
-		if (ACTION_HIDE.equals(intent.getAction())) {
-			finish(true);
-			return START_NOT_STICKY;
-		}
-		if (ACTION_NOTIFY_PACKAGE_CHANGED.equals(intent.getAction())) {
-			String newPackageName = intent.getStringExtra(EXTRA_PACKAGENAME);
-			if (newPackageName == null
-					|| !getPackageName().equals(newPackageName)) {
-				finish(true);
-				return START_NOT_STICKY;
-			}
-		} else {
-			mIntent = intent;
-			mAnalytics = new Analytics(this);
-			onBeforeInflate();
-			showView(true);
-			onAfterInflate();
-		}
-		return super.onStartCommand(intent, flags, startId);
-	}
-
-	private WindowManager mWindowManager;
-	private View mRootView;
-	private WindowManager.LayoutParams mLayoutParams;
-	private boolean mViewDisplayed;
-	private boolean mViewShowing;
-	private boolean mViewHiding;
-	private Animation mAnimShow;
-	private Animation mAnimHide;
-
-	private void showView(boolean animate) {
-		if (mViewShowing) {
-			Log.i(TAG, "not showing, already showing");
-			return;
-		}
-
-		// if (mViewShowing || mViewDisplayed)
-		// return;
-		hideViewCancel();
-		hideView(false);
-		mViewShowing = true;
-
-		mRootView = inflateRootView();
-		mWindowManager.addView(mRootView, mLayoutParams);
-
-		if (animate)
-			showViewAnimate();
-		else
-			showViewEnd();
-	}
-
-	private void showViewAnimate() {
-		if (options.showAnimationResId == 0 || options.showAnimationMillis == 0) {
-			showViewEnd();
-			return;
-		}
-		mAnimShow = AnimationUtils.loadAnimation(this,
-				options.showAnimationResId);
-		mAnimShow.setAnimationListener(new AnimationListener() {
-
-			@Override
-			public void onAnimationStart(Animation animation) {
-			}
-
-			@Override
-			public void onAnimationRepeat(Animation animation) {
-			}
-
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				showViewEnd();
-			}
-		});
-		mAnimShow.setDuration(options.showAnimationMillis);
-		mAnimShow.setFillEnabled(true);
-		mContainer.startAnimation(mAnimShow);
-	}
-
-	private void showViewEnd() {
-		Log.d(TAG, "showViewEnd");
-		mViewDisplayed = true;
-		mViewShowing = false;
-		mAnimShow = null;
-	}
-
-	private void hideView(boolean animate) {
-		if (mAdMobManager != null) {
-			mAdMobManager.pause();
-		}
-		if (mViewHiding) {
-			Log.w(TAG, "Already hiding!");
-			return;
-		}
-		if (!mViewDisplayed) {
-			return;
-		}
-		if (mRootView == null) {
-			Log.w(TAG, "rootView = null");
-			return;
-		}
-
-		// if (mViewHiding || !mViewDisplayed || mRootView == null)
-		// return;
-		mViewHiding = true;
-		if (animate)
-			hideViewAnimate();
-		else
-			hideViewEnd();
-	}
-
-	private void hideViewAnimate() {
-		Log.d(TAG, "animating hide (resId=" + options.hideAnimationResId
-				+ ",millis=" + options.hideAnimationMillis + ")");
-		if (options.hideAnimationResId == 0 || options.hideAnimationMillis == 0) {
-			hideViewEnd();
-			return;
-		}
-
-		mAnimHide = AnimationUtils.loadAnimation(this,
-				options.hideAnimationResId);
-		mAnimHide.setDuration(options.hideAnimationMillis);
-		mAnimHide.setFillEnabled(true);
-		mAnimHide.setDetachWallpaper(false);
-		mAnimHide.setAnimationListener(new AnimationListener() {
-
-			@Override
-			public void onAnimationStart(Animation animation) {
-			}
-
-			@Override
-			public void onAnimationRepeat(Animation animation) {
-			}
-
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				// Avoid ugly android error message
-				new Handler().post(new Runnable() {
-
-					@Override
-					public void run() {
-						hideViewEnd();
-					}
-				});
-			}
-		});
-		mContainer.startAnimation(mAnimHide);
-	}
-
-	private void hideViewEnd() {
-		mWindowManager.removeView(mRootView);
-		mViewDisplayed = false;
-		mViewHiding = false;
-		mAnimHide = null;
-
-		// If this isn't in, the ad view will not load
-		stopSelf();
-	}
-
-	// avoid hiding the view when the trigger is done
-	private void hideViewCancel() {
-		Log.d(TAG, "hideViewCancel");
-		if (!mViewHiding) {
-			return;
-		}
-		if (mAnimHide == null) {
-			Log.d(TAG, "anim already null");
-			return;
-		}
-		mAnimHide.setAnimationListener(null);
-		mAnimHide.cancel();
-		mAnimHide = null;
-		mViewHiding = false;
-	}
-
-	/**
-	 * Should be only called from {@link #showRootView(boolean)}
-	 * 
-	 * @return
-	 */
-	private View inflateRootView() {
-		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-		LayoutInflater li = LayoutInflater.from(this);
-		setTheme(R.style.LockActivityTheme);
-		View root = (View) li.inflate(R.layout.layout_alias_locker, null);
-		mContainer = (RelativeLayout) root.findViewById(R.id.rlContainer);
-		mViewBackground = (ImageView) root.findViewById(R.id.ivBackground);
-		root.setOnKeyListener(this);
-		root.setFocusable(true);
-		root.setFocusableInTouchMode(true);
-
-		mViewTitle = (TextView) root.findViewById(R.id.tvHeader);
-		mViewMessage = (TextView) root.findViewById(R.id.tvFooter);
-		mAppIcon = (ImageView) root.findViewById(R.id.ivAppIcon);
-		mLockView = (ViewGroup) root.findViewById(R.id.lockView);
-
-		mFooterButtons = (LinearLayout) root.findViewById(R.id.llBottomButtons);
-		mLeftButton = (Button) root.findViewById(R.id.bFooterLeft);
-		mRightButton = (Button) root.findViewById(R.id.bFooterRight);
-
-		mRightButton.setOnClickListener(this);
-		mLeftButton.setOnClickListener(this);
-
-		mPasswordListener = new MyOnNumberListener();
-		mPatternListener = new MyOnPatternListener();
-		return root;
+	private enum ViewState {
+		/**
+		 * The view is visible but not yet completely shown
+		 */
+		SHOWING,
+		/**
+		 * The view has been completely animated and the user is ready to
+		 * interact with it
+		 */
+		SHOWN,
+		/**
+		 * The user has unlocked / pressed back, and the view is animating
+		 */
+		HIDING,
+		/**
+		 * The view is not visible to the user
+		 */
+		HIDDEN
 	}
 
 	private class MyOnNumberListener implements OnNumberListener {
 
 		@Override
-		public void onBackButtonLong() {
+		public void onBackButton() {
 			updatePassword();
 		}
 
 		@Override
-		public void onBackButton() {
+		public void onBackButtonLong() {
 			updatePassword();
 		}
 
@@ -382,37 +102,35 @@ public class LockService extends Service implements View.OnClickListener,
 		}
 
 		@Override
-		public void onOkButtonLong() {
-		}
-
-		@Override
 		public void onOkButton() {
 			if (ACTION_COMPARE.equals(mAction)) {
 				doComparePassword(true);
 			}
 		}
-	};
 
-	/**
-	 * Updates the password, trimming it if necessary, also updates
-	 * {@link #mTextViewPassword}
-	 */
-	private void updatePassword() {
-		String pwd = mLockPasswordView.getPassword();
-		if (MAX_PASSWORD_LENGTH != 0) {
-			if (pwd.length() >= MAX_PASSWORD_LENGTH) {
-				mLockPasswordView.setPassword(pwd.substring(0,
-						MAX_PASSWORD_LENGTH));
-			}
+		@Override
+		public void onOkButtonLong() {
 		}
-		updatePasswordTextView(mLockPasswordView.getPassword());
-	}
-
-	private void updatePasswordTextView(String newText) {
-		mTextViewPassword.setText(newText);
 	}
 
 	private class MyOnPatternListener implements OnPatternListener {
+
+		@Override
+		public void onPatternCellAdded(List<Cell> pattern) {
+		}
+
+		@Override
+		public void onPatternCleared() {
+		}
+
+		@Override
+		public void onPatternDetected(List<Cell> pattern) {
+			if (ACTION_COMPARE.equals(mAction)) {
+				doComparePattern();
+			} else if (ACTION_CREATE.equals(mAction)) {
+				mViewMessage.setText(R.string.pattern_detected);
+			}
+		}
 
 		@Override
 		public void onPatternStart() {
@@ -426,103 +144,223 @@ public class LockService extends Service implements View.OnClickListener,
 				}
 			}
 		}
+	}
 
-		@Override
-		public void onPatternDetected(List<Cell> pattern) {
-			if (ACTION_COMPARE.equals(mAction)) {
-				doComparePattern();
-			} else if (ACTION_CREATE.equals(mAction)) {
-				mViewMessage.setText(R.string.pattern_detected);
+	private enum RightButtonAction {
+		CONFIRM, CONTINUE
+	}
+
+	public static final String CLASSNAME = LockService.class.getName();
+
+	/**
+	 * Check a currently set password, (either number or pattern)
+	 */
+	public static final String ACTION_COMPARE = CLASSNAME + ".action.compare";
+
+	/**
+	 * Create a new password by asking the user to enter it twice (either number
+	 * or pattern)
+	 */
+	public static final String ACTION_CREATE = CLASSNAME + ".action.create";
+
+	public static final String ACTION_NOTIFY_PACKAGE_CHANGED = CLASSNAME
+			+ ".action.notify_package_changed";
+
+	public static final String EXTRA_LOCK = CLASSNAME + ".action.extra_lock";
+
+	/**
+	 * When the action is {@link #ACTION_COMPARE} use {@link #EXTRA_PACKAGENAME}
+	 * for specifying the target app.
+	 */
+	public static final String EXTRA_PACKAGENAME = CLASSNAME
+			+ ".extra.target_packagename";
+	/**
+	 * A {@link LockPreferences} providing additional details on how this
+	 * {@link LockService} should behave. You should start with a
+	 * {@link LockPreferences#getDefault(Context)} and change only the
+	 * properties you want to.
+	 * 
+	 * @see LockPreferences#getDefault(Context)
+	 */
+	public static final String EXTRA_PREFERENCES = CLASSNAME + ".extra.options";
+	public static final int PATTERN_COLOR_BLUE = 2;
+	public static final int PATTERN_COLOR_GREEN = 1;
+
+	public static final int PATTERN_COLOR_WHITE = 0;
+	private static final String ACTION_HIDE = CLASSNAME + ".action.hide";
+
+	private static final int MAX_PASSWORD_LENGTH = 8;
+	private static final long PATTERN_DELAY = 600;
+
+	private static final String TAG = LockService.class.getSimpleName();
+
+	public static int calculateInSampleSize(BitmapFactory.Options options,
+			int reqWidth, int reqHeight) {
+		int scale = 1;
+		int width = options.outWidth;
+		int height = options.outHeight;
+		while (true) {
+			if (width / 2 < reqWidth || height / 2 < reqHeight) {
+				break;
 			}
+			width /= 2;
+			height /= 2;
+			scale *= 2;
+		}
+		return scale;
+	}
+
+	/**
+	 * Get the lock intent (no options are provided)
+	 * 
+	 * @param c
+	 * @param packageName
+	 * @return
+	 */
+	public static Intent getLockIntent(Context c, String packageName) {
+		Intent i = new Intent(c, LockService.class);
+		i.setAction(ACTION_COMPARE);
+		i.putExtra(EXTRA_PACKAGENAME, packageName);
+		return i;
+	}
+
+	public static final void hide(Context c) {
+		Intent i = new Intent(c, LockService.class);
+		i.setAction(ACTION_HIDE);
+		c.startService(i);
+	}
+
+	/**
+	 * Show this {@link LockService} for the given package name
+	 * 
+	 * @param c
+	 * @param packageName
+	 */
+	public static void showCompare(Context c, String packageName) {
+		c.startService(getLockIntent(c, packageName));
+	}
+
+	public static void showCreate(Context c, int type) {
+		Log.d(TAG, "showCreate (type=" + type + ")");
+		Intent i = new Intent(c, LockService.class);
+		i.setAction(ACTION_CREATE);
+		LockPreferences prefs = new LockPreferences(c);
+		prefs.type = type;
+		i.putExtra(EXTRA_PREFERENCES, prefs);
+		c.startService(i);
+	}
+
+	public static void showCreate(Context c, int type, int size) {
+		Log.d(TAG, "showCreate (type=" + type + ",size=" + size + ")");
+		Intent i = new Intent(c, LockService.class);
+		i.setAction(ACTION_CREATE);
+		LockPreferences prefs = new LockPreferences(c);
+		prefs.type = type;
+		prefs.patternSize = size;
+		i.putExtra(EXTRA_PREFERENCES, prefs);
+		c.startService(i);
+	}
+
+	@SuppressLint("InlinedApi")
+	private static int getLandscapeCompat() {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
+			return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+		} else {
+			return ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
+		}
+	}
+
+	private String mAction;
+	private AdMobManager mAdMobManager;
+	/**
+	 * Called after views are inflated
+	 */
+	private AdViewManager mAdViewManager;
+	// private AppLockService mAppLockService;
+	private AppLockService mAlarmService;
+	private Analytics mAnalytics;
+	private Animation mAnimHide;
+
+	private Animation mAnimShow;
+	private ImageView mAppIcon;
+	private boolean mBound;
+	private final ServiceConnection mConnection = new ServiceConnection() {
+
+		@Override
+		public void onServiceConnected(ComponentName cn, IBinder binder) {
+			Log.v(TAG, "LockViewService is now bound");
+			final AppLockService.LocalBinder b = (AppLockService.LocalBinder) binder;
+			mAlarmService = b.getInstance();
+			mBound = true;
 		}
 
 		@Override
-		public void onPatternCleared() {
-		}
-
-		@Override
-		public void onPatternCellAdded(List<Cell> pattern) {
+		public void onServiceDisconnected(ComponentName cn) {
+			Log.v(TAG, "LockViewService is now unbound");
+			mBound = false;
 		}
 	};
 
-	/**
-	 * 
-	 * @param explicit
-	 *            true if the user has clicked the OK button to explicitly ask
-	 *            for a password check (this should never happen)
-	 */
-	private void doComparePassword(boolean explicit) {
-		final String currentPassword = mLockPasswordView.getPassword();
-		if (currentPassword.equals(options.password)) {
-			exitSuccessCompare();
-			mAnalytics.increment(LockerAnalytics.PASSWORD_SUCCESS);
-		} else if (explicit) {
-			mAnalytics.increment(LockerAnalytics.PASSWORD_FAILED);
-			mLockPasswordView.clearPassword();
-			updatePassword();
-			Toast.makeText(this, R.string.locker_invalid_password,
-					Toast.LENGTH_SHORT).show();
-		}
+	// views
+	private RelativeLayout mContainer;
+	private LinearLayout mFooterButtons;
+
+	private Intent mIntent;
+	private WindowManager.LayoutParams mLayoutParams;
+
+	private Button mLeftButton;
+
+	private LeftButtonAction mLeftButtonAction;
+
+	private PasswordView mLockPasswordView;
+
+	private PatternView mLockPatternView;
+
+	private ViewGroup mLockView;
+	private String mNewPassword;
+	private String mNewPattern;
+	// options
+	private String mPackageName;
+	private OnNumberListener mPasswordListener;
+	private OnPatternListener mPatternListener;
+	private Button mRightButton;
+	private RightButtonAction mRightButtonAction;
+
+	private View mRootView;
+
+	private TextView mTextViewPassword;
+
+	private ImageView mViewBackground;
+
+	private TextView mViewMessage;
+
+	private TextView mViewTitle;
+
+	private WindowManager mWindowManager;;
+
+	private LockPreferences options;
+
+	public Bitmap decodeSampledBitmapFromUri(Uri uri, int reqWidth,
+			int reqHeight) throws FileNotFoundException {
+		// First decode with inJustDecodeBounds=true to check dimensions
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeStream(getContentResolver().openInputStream(uri),
+				null, options);
+
+		options.inSampleSize = calculateInSampleSize(options, reqWidth,
+				reqHeight);
+
+		options.inJustDecodeBounds = false;
+		Bitmap bm = BitmapFactory.decodeStream(getContentResolver()
+				.openInputStream(uri), null, options);
+		return bm;
 	}
 
-	// private void showAchievementDialog(long count) {
-	// // check if it's multiple of 500, 1000, 5000
-	// boolean show = false;
-	// long tmp = 500;
-	// while (true) {
-	// if (tmp > count)
-	// break;
-	// if (count % tmp == 0)
-	// show = true;
-	// tmp *= 2;
-	// if (tmp > count)
-	// break;
-	// if (count % tmp == 0)
-	// show = true;
-	// tmp *= 5;
-	// }
-	// if (!show)
-	// return;
-	//
-	// }
-
-	/**
-	 * Called every time a pattern has been detected by the user and the action
-	 * was {@link #ACTION_COMPARE}
-	 */
-	private void doComparePattern() {
-		final String currentPattern = mLockPatternView.getPatternString();
-		if (currentPattern.equals(options.pattern)) {
-			exitSuccessCompare();
-			mAnalytics.increment(LockerAnalytics.PATTERN_SUCCESS);
-		} else {
-			mAnalytics.increment(LockerAnalytics.PATTERN_FAILED);
-			if (options.patternErrorStealth) {
-				Toast.makeText(this, R.string.locker_invalid_pattern,
-						Toast.LENGTH_SHORT).show();
-				mLockPatternView.clearPattern();
-			} else {
-				mLockPatternView.setDisplayMode(DisplayMode.Wrong);
-				mLockPatternView.clearPattern(PATTERN_DELAY);
-			}
-		}
-	}
-
-	/**
-	 * Exit when an app has been unlocked successfully
-	 */
-	private void exitSuccessCompare() {
-		if (mPackageName == null || mPackageName.equals(getPackageName())) {
-			finish(true);
-			return;
-		}
-		if (mBound) {
-			mAlarmService.unlockApp(mPackageName);
-		} else {
-			Log.w(TAG, "Not bound to lockservice");
-		}
-		finish(true);
-	}
+	@Override
+	public IBinder onBind(Intent intent) {
+		return null;
+	};
 
 	@Override
 	public void onClick(final View v) {
@@ -548,12 +386,153 @@ public class LockService extends Service implements View.OnClickListener,
 		}
 	}
 
+	// private void showAchievementDialog(long count) {
+	// // check if it's multiple of 500, 1000, 5000
+	// boolean show = false;
+	// long tmp = 500;
+	// while (true) {
+	// if (tmp > count)
+	// break;
+	// if (count % tmp == 0)
+	// show = true;
+	// tmp *= 2;
+	// if (tmp > count)
+	// break;
+	// if (count % tmp == 0)
+	// show = true;
+	// tmp *= 5;
+	// }
+	// if (!show)
+	// return;
+	//
+	// }
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		Log.d(TAG, "onConfigChange");
+		// super.onConfigurationChanged(newConfig);
+		if (mViewState == ViewState.SHOWING || mViewState == ViewState.SHOWN) {
+			showView();
+		}
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (mAdMobManager != null) {
+			mAdMobManager.destroy();
+		}
+		if (mAdViewManager != null)
+			mAdViewManager.onDestroy();
+	}
+
+	@Override
+	public boolean onKey(View v, int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			finish(false);
+			return true;
+		}
+		return true;
+	}
+
+	@Override
+	public void onLowMemory() {
+		super.onLowMemory();
+		Log.d(TAG, "onLowMemory()");
+	}
+
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		if (intent == null) {
+			return START_NOT_STICKY;
+		}
+		Log.d(TAG, "action: " + intent.getAction());
+		if (ACTION_HIDE.equals(intent.getAction())) {
+			finish(true);
+			return START_NOT_STICKY;
+		}
+		if (ACTION_NOTIFY_PACKAGE_CHANGED.equals(intent.getAction())) {
+			String newPackageName = intent.getStringExtra(EXTRA_PACKAGENAME);
+			if (newPackageName == null
+					|| !getPackageName().equals(newPackageName)) {
+				finish(true);
+				return START_NOT_STICKY;
+			}
+		} else {
+			mIntent = intent;
+			mAnalytics = new Analytics(this);
+			showView();
+		}
+		return super.onStartCommand(intent, flags, startId);
+	}
+
+	/**
+	 * 
+	 * @param explicit
+	 *            true if the user has clicked the OK button to explicitly ask
+	 *            for a password check (this should never happen)
+	 */
+	private void doComparePassword(boolean explicit) {
+		final String currentPassword = mLockPasswordView.getPassword();
+		if (currentPassword.equals(options.password)) {
+			exitSuccessCompare();
+			mAnalytics.increment(LockerAnalytics.PASSWORD_SUCCESS);
+		} else if (explicit) {
+			mAnalytics.increment(LockerAnalytics.PASSWORD_FAILED);
+			mLockPasswordView.clearPassword();
+			updatePassword();
+			Toast.makeText(this, R.string.locker_invalid_password,
+					Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	/**
+	 * Called every time a pattern has been detected by the user and the action
+	 * was {@link #ACTION_COMPARE}
+	 */
+	private void doComparePattern() {
+		final String currentPattern = mLockPatternView.getPatternString();
+		if (currentPattern.equals(options.pattern)) {
+			exitSuccessCompare();
+			mAnalytics.increment(LockerAnalytics.PATTERN_SUCCESS);
+		} else {
+			mAnalytics.increment(LockerAnalytics.PATTERN_FAILED);
+			if (options.patternErrorStealth) {
+				Toast.makeText(this, R.string.locker_invalid_pattern,
+						Toast.LENGTH_SHORT).show();
+				mLockPatternView.clearPattern();
+			} else {
+				mLockPatternView.setDisplayMode(DisplayMode.Wrong);
+				mLockPatternView.clearPattern(PATTERN_DELAY);
+			}
+		}
+	}
+
 	private void doConfirm() {
 		if (options.type == LockPreferences.TYPE_PATTERN) {
 			doConfirmPattern();
 		} else {
 			doConfirmPassword();
 		}
+	}
+
+	private void doConfirmPassword() {
+		final String newValue = mLockPasswordView.getPassword();
+		if (!newValue.equals(mNewPassword)) {
+			Toast.makeText(this, R.string.password_change_not_match,
+					Toast.LENGTH_SHORT).show();
+			setupFirst();
+			return;
+		}
+		PrefUtils prefs = new PrefUtils(this);
+		prefs.put(R.string.pref_key_password, newValue);
+		prefs.putString(R.string.pref_key_lock_type,
+				R.string.pref_val_lock_type_password);
+		prefs.apply();
+		Toast.makeText(this, R.string.password_change_saved, Toast.LENGTH_SHORT)
+				.show();
+		exitCreate();
 	}
 
 	private void doConfirmPattern() {
@@ -579,125 +558,252 @@ public class LockService extends Service implements View.OnClickListener,
 		exitCreate();
 	}
 
-	private void doConfirmPassword() {
-		final String newValue = mLockPasswordView.getPassword();
-		if (!newValue.equals(mNewPassword)) {
-			Toast.makeText(this, R.string.password_change_not_match,
-					Toast.LENGTH_SHORT).show();
-			setupFirst();
+	private void exitCreate() {
+		AppLockService.forceRestart(this);
+		finish(true);
+	}
+
+	/**
+	 * Exit when an app has been unlocked successfully
+	 */
+	private void exitSuccessCompare() {
+		if (mPackageName == null || mPackageName.equals(getPackageName())) {
+			finish(true);
 			return;
 		}
-		PrefUtils prefs = new PrefUtils(this);
-		prefs.put(R.string.pref_key_password, newValue);
-		prefs.putString(R.string.pref_key_lock_type,
-				R.string.pref_val_lock_type_password);
-		prefs.apply();
-		Toast.makeText(this, R.string.password_change_saved, Toast.LENGTH_SHORT)
-				.show();
-		exitCreate();
-	}
-
-	private void setupFirst() {
-		if (options.type == LockPreferences.TYPE_PATTERN) {
-			mLockPatternView.setInStealthMode(false);
-			mLockPatternView.clearPattern(PATTERN_DELAY);
-			mViewTitle.setText(R.string.pattern_change_tit);
-			mViewMessage.setText(R.string.pattern_change_head);
-			mNewPattern = null;
+		if (mBound) {
+			mAlarmService.unlockApp(mPackageName);
 		} else {
-			mLockPasswordView.clearPassword();
-			updatePassword();
-
-			mViewTitle.setText(R.string.password_change_tit);
-			mViewMessage.setText(R.string.password_change_head);
-			mNewPassword = null;
+			Log.w(TAG, "Not bound to lockservice");
 		}
-		mLeftButton.setText(android.R.string.cancel);
-		mRightButton.setText(R.string.button_continue);
-		mLeftButtonAction = LeftButtonAction.CANCEL;
-		mRightButtonAction = RightButtonAction.CONTINUE;
+		finish(true);
 	}
 
-	private void setupSecond() {
-		if (options.type == LockPreferences.TYPE_PATTERN) {
-			mNewPattern = mLockPatternView.getPatternString();
-			if (mNewPattern.length() == 0) {
-				return;
-			}
-			mViewMessage.setText(R.string.pattern_change_confirm);
-			mLockPatternView.clearPattern();
+	private void finish(boolean unlocked) {
+		if (mBound) {
+			unbindService(mConnection);
+			mBound = false;
+		}
+		if (!unlocked && ACTION_COMPARE.equals(mAction)) {
+			final Intent i = new Intent(Intent.ACTION_MAIN);
+			i.addCategory(Intent.CATEGORY_HOME);
+			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(i);
+		}
+		hideView();
+	}
+
+	private int getScreenOrientation() {
+		String port = getString(R.string.pref_val_orientation_portrait);
+		String auto = getString(R.string.pref_val_orientation_auto_rotate);
+		String land = getString(R.string.pref_val_orientation_landscape);
+		if (port.equals(options.orientation)) {
+			return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+		} else if (land.equals(options.orientation)) {
+			// workaround for older versions
+			return getLandscapeCompat();
+		} else if (auto.equals(options.orientation)) {
+			return ActivityInfo.SCREEN_ORIENTATION_SENSOR;
 		} else {
-			mNewPassword = mLockPasswordView.getPassword();
-			if (mNewPassword.length() == 0) {
-				Toast.makeText(this, R.string.password_empty,
-						Toast.LENGTH_SHORT).show();
-				return;
-			}
-			mLockPasswordView.setPassword("");
-			updatePassword();
-			mViewMessage.setText(R.string.password_change_confirm);
+			// default to system setting
+			return ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 		}
-		mLeftButton.setText(R.string.button_back);
-		mRightButton.setText(R.string.button_confirm);
-		mLeftButtonAction = LeftButtonAction.BACK;
-		mRightButtonAction = RightButtonAction.CONFIRM;
 	}
 
-	private final boolean showPasswordView() {
-		mLockView.removeAllViews();
-		mLockPatternView = null;
+	@SuppressWarnings("deprecation")
+	@SuppressLint("NewApi")
+	private Point getSizeCompat(Display display) {
+		Point p = new Point();
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2) {
+			p.x = display.getWidth();
+			p.y = display.getHeight();
+		} else {
+			display.getSize(p);
+		}
+		return p;
+	}
+
+	/**
+	 * Hides the view from the window, and stops the service
+	 */
+	private void hideView() {
+		Log.v(TAG, "called hideView" + " (mViewState=" + mViewState + ")");
+		if (mViewState == ViewState.HIDING || mViewState == ViewState.HIDDEN) {
+			Log.w(TAG, "called hideView not hiding (mViewState=" + mViewState
+					+ ")");
+			return;
+		}
+		if (mViewState == ViewState.SHOWING) {
+			cancelAnimations();
+		}
+		mViewState = ViewState.HIDING;
+		hideViewAnimate();
+	}
+
+	private void hideViewAnimate() {
+		Log.v(TAG, "called hideViewAnimate" + " (mViewState=" + mViewState
+				+ ")");
+		Log.d(TAG, "animating hide (resId=" + options.hideAnimationResId
+				+ ",millis=" + options.hideAnimationMillis + ")");
+		if (options.hideAnimationResId == 0 || options.hideAnimationMillis == 0) {
+			onViewHidden();
+			return;
+		}
+
+		mAnimHide = AnimationUtils.loadAnimation(this,
+				options.hideAnimationResId);
+		mAnimHide.setDuration(options.hideAnimationMillis);
+		mAnimHide.setFillEnabled(true);
+		mAnimHide.setDetachWallpaper(false);
+		mAnimHide.setAnimationListener(new BaseAnimationListener() {
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				// Avoid ugly android error message
+				new Handler().post(new Runnable() {
+
+					@Override
+					public void run() {
+						onViewHidden();
+					}
+				});
+			}
+
+		});
+		mContainer.startAnimation(mAnimHide);
+	}
+
+	private void cancelAnimations() {
+		Log.v(TAG, "called hideViewCancel" + " (mViewState=" + mViewState + ")");
+		if (mViewState == ViewState.HIDING) {
+			mAnimHide.setAnimationListener(null);
+			mAnimHide.cancel();
+			mAnimHide = null;
+		} else if (mViewState == ViewState.SHOWING) {
+			mAnimShow.setAnimationListener(null);
+			mAnimShow.cancel();
+			mAnimShow = null;
+		}
+	}
+
+	private void onViewHidden() {
+		Log.v(TAG, "called onViewHidden" + " (mViewState=" + mViewState + ")");
+		mViewState = ViewState.HIDDEN;
+		mWindowManager.removeView(mRootView);
+		mAnimHide = null;
+
+		if (mAdMobManager != null) {
+			mAdMobManager.pause();
+		}
+
+		// With stopSelf there is a problem with the rotation
+		// If this isn't in, the ad view will not load
+
+		stopSelf();
+	}
+
+	/**
+	 * Should be only called from {@link #showRootView(boolean)}
+	 * 
+	 * @return
+	 */
+	private View inflateRootView() {
+		Log.v(TAG, "called inflateRootView" + " (mViewState=" + mViewState
+				+ ")");
+		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 		LayoutInflater li = LayoutInflater.from(this);
 
-		mTextViewPassword = (TextView) li.inflate(
-				R.layout.view_lock_number_textview, null);
-		mLockView.addView(mTextViewPassword);
+		setTheme(R.style.LockActivityTheme);
+		View root = (View) li.inflate(R.layout.layout_alias_locker, null);
+		mContainer = (RelativeLayout) root.findViewById(R.id.rlContainer);
+		mViewBackground = (ImageView) root.findViewById(R.id.ivBackground);
+		root.setOnKeyListener(this);
+		root.setFocusable(true);
+		root.setFocusableInTouchMode(true);
 
-		mLockPasswordView = (PasswordView) li.inflate(
-				R.layout.view_lock_number, null);
-		mLockView.addView(mLockPasswordView);
+		mViewTitle = (TextView) root.findViewById(R.id.tvHeader);
+		mViewMessage = (TextView) root.findViewById(R.id.tvFooter);
+		mAppIcon = (ImageView) root.findViewById(R.id.ivAppIcon);
+		mLockView = (ViewGroup) root.findViewById(R.id.lockView);
 
-		mLockPasswordView.setListener(mPasswordListener);
-		if (ACTION_CREATE.equals(mAction)) {
-			mLockPasswordView.setOkButtonVisibility(View.INVISIBLE);
-		} else {
-			mLockPasswordView.setOkButtonVisibility(View.VISIBLE);
-		}
+		mFooterButtons = (LinearLayout) root.findViewById(R.id.llBottomButtons);
+		mLeftButton = (Button) root.findViewById(R.id.bFooterLeft);
+		mRightButton = (Button) root.findViewById(R.id.bFooterRight);
 
-		mLockPasswordView.setTactileFeedbackEnabled(options.vibration);
-		mLockPasswordView.setSwitchButtons(options.passwordSwitchButtons);
-		mLockPasswordView.setVisibility(View.VISIBLE);
-		options.type = LockPreferences.TYPE_PASSWORD;
-		return true;
+		mRightButton.setOnClickListener(this);
+		mLeftButton.setOnClickListener(this);
+
+		mPasswordListener = new MyOnNumberListener();
+		mPatternListener = new MyOnPatternListener();
+		return root;
 	}
 
-	private final boolean showPatternView() {
+	private void afterInflate() {
+		setBackground();
+		if (options.showAds) {
+			if (mAdMobManager == null) {
+				mAdMobManager = new AdMobManager(this,
+						mRootView.findViewById(R.id.adContainer));
+			}
+			mAdMobManager.loadAd();
+		} else {
+			// Don't use precious space
+			mRootView.findViewById(R.id.adContainer).setVisibility(View.GONE);
+		}
+		// if (!AdViewManager.isOnEmulator() && !ACTION_CREATE.equals(mAction))
+		// {
+		// if (mAdViewManager == null) {
+		// mAdViewManager = new AdViewManager(this);
+		// }
+		// mAdViewManager.showAds(mRootView);
+		// }
+		// bind to AppLockService
+		if (!getPackageName().equals(mPackageName)) {
+			Intent i = new Intent(this, AppLockService.class);
+			bindService(i, mConnection, 0);
+		}
 
-		mLockView.removeAllViews();
-		mLockPasswordView = null;
-		LayoutInflater li = LayoutInflater.from(this);
-		li.inflate(R.layout.view_lock_pattern, mLockView, true);
-
-		mLockPatternView = (PatternView) mLockView
-				.findViewById(R.id.patternView);
-		mLockPatternView.setOnPatternListener(mPatternListener);
-		mLockPatternView.setSelectedBitmap(options.patternCircleResId);
-		Drawable gd = getResources().getDrawable(
-				R.drawable.passwordview_button_background);
-		Util.setBackgroundDrawable(mLockPatternView, gd);
-		mLockPatternView.setSize(options.patternSize);
-		mLockPatternView.setTactileFeedbackEnabled(options.vibration);
-		mLockPatternView.setInStealthMode(options.patternStealth);
-		mLockPatternView.setInErrorStealthMode(options.patternErrorStealth);
-		mLockPatternView.onShow();
-		mLockPatternView.setVisibility(View.VISIBLE);
-		options.type = LockPreferences.TYPE_PATTERN;
-		return true;
+		switch (options.type) {
+		case LockPreferences.TYPE_PATTERN:
+			showPatternView();
+			break;
+		case LockPreferences.TYPE_PASSWORD:
+			showPasswordView();
+			break;
+		}
+		// Views
+		if (ACTION_COMPARE.equals(mAction)) {
+			mAppIcon.setVisibility(View.VISIBLE);
+			mFooterButtons.setVisibility(View.GONE);
+			ApplicationInfo ai = Util.getaApplicationInfo(mPackageName, this);
+			if (ai != null) {
+				// Load info of Locker
+				String label = ai.loadLabel(getPackageManager()).toString();
+				Drawable icon = ai.loadIcon(getPackageManager());
+				Util.setBackgroundDrawable(mAppIcon, icon);
+				mViewTitle.setText(label);
+				if (options.message != null && options.message.length() != 0) {
+					mViewMessage.setVisibility(View.VISIBLE);
+					// Don't use String.format, because this is user input
+					mViewMessage.setText(options.message.replace("%s", label));
+				} else {
+					mViewMessage.setVisibility(View.GONE);
+				}
+			} else {
+				// if we can't load, don't take up space
+				mAppIcon.setVisibility(View.GONE);
+			}
+		} else if (ACTION_CREATE.equals(mAction)) {
+			mAppIcon.setVisibility(View.GONE);
+			mFooterButtons.setVisibility(View.VISIBLE);
+			setupFirst();
+		}
 	}
 
 	/**
 	 * Before inflating views
 	 */
-	private boolean onBeforeInflate() {
+	private boolean beforeInflate() {
 		if (mIntent == null) {
 			return false;
 		}
@@ -799,269 +905,202 @@ public class LockService extends Service implements View.OnClickListener,
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
-	@SuppressLint("NewApi")
-	private Point getSizeCompat(Display display) {
-		Point p = new Point();
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2) {
-			p.x = display.getWidth();
-			p.y = display.getHeight();
+	private void setupFirst() {
+		if (options.type == LockPreferences.TYPE_PATTERN) {
+			mLockPatternView.setInStealthMode(false);
+			mLockPatternView.clearPattern(PATTERN_DELAY);
+			mViewTitle.setText(R.string.pattern_change_tit);
+			mViewMessage.setText(R.string.pattern_change_head);
+			mNewPattern = null;
 		} else {
-			display.getSize(p);
+			mLockPasswordView.clearPassword();
+			updatePassword();
+
+			mViewTitle.setText(R.string.password_change_tit);
+			mViewMessage.setText(R.string.password_change_head);
+			mNewPassword = null;
 		}
-		return p;
+		mLeftButton.setText(android.R.string.cancel);
+		mRightButton.setText(R.string.button_continue);
+		mLeftButtonAction = LeftButtonAction.CANCEL;
+		mRightButtonAction = RightButtonAction.CONTINUE;
 	}
 
-	public Bitmap decodeSampledBitmapFromUri(Uri uri, int reqWidth,
-			int reqHeight) throws FileNotFoundException {
-		// First decode with inJustDecodeBounds=true to check dimensions
-		final BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		BitmapFactory.decodeStream(getContentResolver().openInputStream(uri),
-				null, options);
-
-		options.inSampleSize = calculateInSampleSize(options, reqWidth,
-				reqHeight);
-
-		options.inJustDecodeBounds = false;
-		Bitmap bm = BitmapFactory.decodeStream(getContentResolver()
-				.openInputStream(uri), null, options);
-		return bm;
-	}
-
-	public static int calculateInSampleSize(BitmapFactory.Options options,
-			int reqWidth, int reqHeight) {
-		int scale = 1;
-		int width = options.outWidth;
-		int height = options.outHeight;
-		while (true) {
-			if (width / 2 < reqWidth || height / 2 < reqHeight) {
-				break;
+	private void setupSecond() {
+		if (options.type == LockPreferences.TYPE_PATTERN) {
+			mNewPattern = mLockPatternView.getPatternString();
+			if (mNewPattern.length() == 0) {
+				return;
 			}
-			width /= 2;
-			height /= 2;
-			scale *= 2;
-		}
-		return scale;
-	}
-
-	/**
-	 * Called after views are inflated
-	 */
-	private AdViewManager mAdViewManager;
-
-	private AdMobManager mAdMobManager;
-
-	private void onAfterInflate() {
-		setBackground();
-		if (options.showAds) {
-			if (mAdMobManager == null) {
-				mAdMobManager = new AdMobManager(this,
-						mRootView.findViewById(R.id.adContainer));
-			}
-			mAdMobManager.loadAd();
+			mViewMessage.setText(R.string.pattern_change_confirm);
+			mLockPatternView.clearPattern();
 		} else {
-			// Don't use precious space
-			mRootView.findViewById(R.id.adContainer).setVisibility(View.GONE);
-		}
-		// if (!AdViewManager.isOnEmulator() && !ACTION_CREATE.equals(mAction))
-		// {
-		// if (mAdViewManager == null) {
-		// mAdViewManager = new AdViewManager(this);
-		// }
-		// mAdViewManager.showAds(mRootView);
-		// }
-		// bind to AppLockService
-		if (!getPackageName().equals(mPackageName)) {
-			Intent i = new Intent(this, AppLockService.class);
-			bindService(i, mConnection, 0);
-		}
-
-		switch (options.type) {
-		case LockPreferences.TYPE_PATTERN:
-			showPatternView();
-			break;
-		case LockPreferences.TYPE_PASSWORD:
-			showPasswordView();
-			break;
-		}
-		// Views
-		if (ACTION_COMPARE.equals(mAction)) {
-			mAppIcon.setVisibility(View.VISIBLE);
-			mFooterButtons.setVisibility(View.GONE);
-			ApplicationInfo ai = Util.getaApplicationInfo(mPackageName, this);
-			if (ai != null) {
-				// Load info of Locker
-				String label = ai.loadLabel(getPackageManager()).toString();
-				Drawable icon = ai.loadIcon(getPackageManager());
-				Util.setBackgroundDrawable(mAppIcon, icon);
-				mViewTitle.setText(label);
-				if (options.message != null && options.message.length() != 0) {
-					mViewMessage.setVisibility(View.VISIBLE);
-					// Don't use String.format, because this is user input
-					mViewMessage.setText(options.message.replace("%s", label));
-				} else {
-					mViewMessage.setVisibility(View.GONE);
-				}
-			} else {
-				// if we can't load, don't take up space
-				mAppIcon.setVisibility(View.GONE);
+			mNewPassword = mLockPasswordView.getPassword();
+			if (mNewPassword.length() == 0) {
+				Toast.makeText(this, R.string.password_empty,
+						Toast.LENGTH_SHORT).show();
+				return;
 			}
-		} else if (ACTION_CREATE.equals(mAction)) {
-			mAppIcon.setVisibility(View.GONE);
-			mFooterButtons.setVisibility(View.VISIBLE);
-			setupFirst();
+			mLockPasswordView.setPassword("");
+			updatePassword();
+			mViewMessage.setText(R.string.password_change_confirm);
 		}
+		mLeftButton.setText(R.string.button_back);
+		mRightButton.setText(R.string.button_confirm);
+		mLeftButtonAction = LeftButtonAction.BACK;
+		mRightButtonAction = RightButtonAction.CONFIRM;
 	}
 
-	public static final void hide(Context c) {
-		Intent i = new Intent(c, LockService.class);
-		i.setAction(ACTION_HIDE);
-		c.startService(i);
-	}
+	private final boolean showPasswordView() {
+		mLockView.removeAllViews();
+		mLockPatternView = null;
+		LayoutInflater li = LayoutInflater.from(this);
 
-	private final ServiceConnection mConnection = new ServiceConnection() {
+		mTextViewPassword = (TextView) li.inflate(
+				R.layout.view_lock_number_textview, null);
+		mLockView.addView(mTextViewPassword);
 
-		@Override
-		public void onServiceConnected(ComponentName cn, IBinder binder) {
-			Log.v(TAG, "LockViewService is now bound");
-			final AppLockService.LocalBinder b = (AppLockService.LocalBinder) binder;
-			mAlarmService = b.getInstance();
-			mBound = true;
+		mLockPasswordView = (PasswordView) li.inflate(
+				R.layout.view_lock_number, null);
+		mLockView.addView(mLockPasswordView);
+
+		mLockPasswordView.setListener(mPasswordListener);
+		if (ACTION_CREATE.equals(mAction)) {
+			mLockPasswordView.setOkButtonVisibility(View.INVISIBLE);
+		} else {
+			mLockPasswordView.setOkButtonVisibility(View.VISIBLE);
 		}
 
-		@Override
-		public void onServiceDisconnected(ComponentName cn) {
-			Log.v(TAG, "LockViewService is now unbound");
-			mBound = false;
-		}
-	};
-
-	private void exitCreate() {
-		AppLockService.forceRestart(this);
-		finish(true);
-	}
-
-	private void finish(boolean unlocked) {
-		if (mBound) {
-			unbindService(mConnection);
-			mBound = false;
-		}
-		if (!unlocked && ACTION_COMPARE.equals(mAction)) {
-			final Intent i = new Intent(Intent.ACTION_MAIN);
-			i.addCategory(Intent.CATEGORY_HOME);
-			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(i);
-		}
-		hideView(true);
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		if (mAdMobManager != null) {
-			mAdMobManager.destroy();
-		}
-		if (mAdViewManager != null)
-			mAdViewManager.onDestroy();
-	}
-
-	@Override
-	public void onLowMemory() {
-		super.onLowMemory();
-		Log.d(TAG, "onLowMemory()");
-	}
-
-	@Override
-	public boolean onKey(View v, int keyCode, KeyEvent event) {
-		switch (keyCode) {
-		case KeyEvent.KEYCODE_BACK:
-			finish(false);
-			return true;
-		}
+		mLockPasswordView.setTactileFeedbackEnabled(options.vibration);
+		mLockPasswordView.setSwitchButtons(options.passwordSwitchButtons);
+		mLockPasswordView.setVisibility(View.VISIBLE);
+		options.type = LockPreferences.TYPE_PASSWORD;
 		return true;
 	}
 
-	private int getScreenOrientation() {
-		String port = getString(R.string.pref_val_orientation_portrait);
-		String auto = getString(R.string.pref_val_orientation_auto_rotate);
-		String land = getString(R.string.pref_val_orientation_landscape);
-		if (port.equals(options.orientation)) {
-			return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-		} else if (land.equals(options.orientation)) {
-			// workaround for older versions
-			return getLandscapeCompat();
-		} else if (auto.equals(options.orientation)) {
-			return ActivityInfo.SCREEN_ORIENTATION_SENSOR;
-		} else {
-			// default to system setting
-			return ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
-		}
-	}
+	private final boolean showPatternView() {
 
-	@SuppressLint("InlinedApi")
-	private static int getLandscapeCompat() {
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
-			return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-		} else {
-			return ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
-		}
-	}
+		mLockView.removeAllViews();
+		mLockPasswordView = null;
+		LayoutInflater li = LayoutInflater.from(this);
+		li.inflate(R.layout.view_lock_pattern, mLockView, true);
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		Log.d(TAG, "onConfigChange");
-		// super.onConfigurationChanged(newConfig);
-		if (mViewDisplayed) {
-			// mLayoutParams.screenOrientation = getScreenOrientation();
-			onBeforeInflate();
-			showView(false);
-			onAfterInflate();
-		}
+		mLockPatternView = (PatternView) mLockView
+				.findViewById(R.id.patternView);
+		mLockPatternView.setOnPatternListener(mPatternListener);
+		mLockPatternView.setSelectedBitmap(options.patternCircleResId);
+		Drawable gd = getResources().getDrawable(
+				R.drawable.passwordview_button_background);
+		Util.setBackgroundDrawable(mLockPatternView, gd);
+		mLockPatternView.setSize(options.patternSize);
+		mLockPatternView.setTactileFeedbackEnabled(options.vibration);
+		mLockPatternView.setInStealthMode(options.patternStealth);
+		mLockPatternView.setInErrorStealthMode(options.patternErrorStealth);
+		mLockPatternView.onShow();
+		mLockPatternView.setVisibility(View.VISIBLE);
+		options.type = LockPreferences.TYPE_PATTERN;
+		return true;
 	}
 
 	/**
-	 * Get the lock intent (no options are provided)
-	 * 
-	 * @param c
-	 * @param packageName
-	 * @return
+	 * Runs {@link #beforeInflate()}, inflates the view, adds it to the window,
+	 * and calls {@link #afterInflate()}<br>
+	 * It removes any previous view if it were present
 	 */
-	public static Intent getLockIntent(Context c, String packageName) {
-		Intent i = new Intent(c, LockService.class);
-		i.setAction(ACTION_COMPARE);
-		i.putExtra(EXTRA_PACKAGENAME, packageName);
-		return i;
+	private void showView() {
+		Log.v(TAG, "called showView" + " (mViewState=" + mViewState + ")");
+		if (mViewState == ViewState.SHOWING) {
+			// Do nothing, we're already showing the view
+		} else if (mViewState == ViewState.HIDING) {
+			cancelAnimations();
+		} else if (mViewState == ViewState.SHOWN) {
+			Log.w(TAG, "called showView butt view was already shown");
+			mWindowManager.removeView(mRootView);
+		}
+
+		// Prepare everything
+		beforeInflate();
+		// Create the view
+		mRootView = inflateRootView();
+		// Show the view
+		mWindowManager.addView(mRootView, mLayoutParams);
+		// Do some extra stuff when the view's ready
+		afterInflate();
+
+		if (mViewState != ViewState.SHOWN) {
+			mViewState = ViewState.SHOWING;
+			showViewAnimate();
+		} else {
+			onViewShown();
+		}
+	}
+
+	private void showViewAnimate() {
+		Log.v(TAG, "called showViewAnimate" + " (mViewState=" + mViewState
+				+ ")");
+		if (options.showAnimationResId == 0 || options.showAnimationMillis == 0) {
+			onViewShown();
+			return;
+		}
+		mAnimShow = AnimationUtils.loadAnimation(this,
+				options.showAnimationResId);
+		mAnimShow.setAnimationListener(new BaseAnimationListener() {
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				onViewShown();
+			}
+		});
+		mAnimShow.setDuration(options.showAnimationMillis);
+		mAnimShow.setFillEnabled(true);
+		mContainer.startAnimation(mAnimShow);
 	}
 
 	/**
-	 * Show this {@link LockService} for the given package name
+	 * Helper class for not needing to
 	 * 
-	 * @param c
-	 * @param packageName
+	 * @author twinone
+	 * 
 	 */
-	public static void showCompare(Context c, String packageName) {
-		c.startService(getLockIntent(c, packageName));
+	private static abstract class BaseAnimationListener implements
+			AnimationListener {
+
+		@Override
+		public void onAnimationStart(Animation animation) {
+		}
+
+		@Override
+		public void onAnimationEnd(Animation animation) {
+		}
+
+		@Override
+		public void onAnimationRepeat(Animation animation) {
+		}
+
 	}
 
-	public static void showCreate(Context c, int type) {
-		Log.d(TAG, "showCreate (type=" + type + ")");
-		Intent i = new Intent(c, LockService.class);
-		i.setAction(ACTION_CREATE);
-		LockPreferences prefs = new LockPreferences(c);
-		prefs.type = type;
-		i.putExtra(EXTRA_PREFERENCES, prefs);
-		c.startService(i);
+	private void onViewShown() {
+		Log.v(TAG, "called onViewShown" + " (mViewState=" + mViewState + ")");
+		mViewState = ViewState.SHOWN;
+		mAnimShow = null;
 	}
 
-	public static void showCreate(Context c, int type, int size) {
-		Log.d(TAG, "showCreate (type=" + type + ",size=" + size + ")");
-		Intent i = new Intent(c, LockService.class);
-		i.setAction(ACTION_CREATE);
-		LockPreferences prefs = new LockPreferences(c);
-		prefs.type = type;
-		prefs.patternSize = size;
-		i.putExtra(EXTRA_PREFERENCES, prefs);
-		c.startService(i);
+	/**
+	 * Updates the password, trimming it if necessary, also updates
+	 * {@link #mTextViewPassword}
+	 */
+	private void updatePassword() {
+		String pwd = mLockPasswordView.getPassword();
+		if (MAX_PASSWORD_LENGTH != 0) {
+			if (pwd.length() >= MAX_PASSWORD_LENGTH) {
+				mLockPasswordView.setPassword(pwd.substring(0,
+						MAX_PASSWORD_LENGTH));
+			}
+		}
+		updatePasswordTextView(mLockPasswordView.getPassword());
+	}
+
+	private void updatePasswordTextView(String newText) {
+		mTextViewPassword.setText(newText);
 	}
 }

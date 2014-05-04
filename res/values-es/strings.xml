@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
- 
     <!--
     Added in Locker v1.0
     Author: TwinoneDevs
@@ -294,8 +293,7 @@
     <string name="applist_app_pkginstaller">Instalar/Desinstalar apps</string>
     <string name="applist_app_dialer">Llamada entrante</string>
     <string name="applist_app_sysui">Apps recientes</string>
-    
-    
+
     <!-- BEGIN v2320 -->
     <string name="nav_status">Bloqueo</string>
     <string name="nav_apps">Applications</string>
@@ -342,5 +340,5 @@
     <string name="apps_toast_locked_all">Todas las aplicaciones bloqueadas</string>
     <string name="apps_toast_unlocked_single">%s desbloqueado</string>
     <string name="apps_toast_unlocked_all">Todas las aplicaciones desbloqueadas</string>
-   
+
 </resources>

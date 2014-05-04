@@ -23,7 +23,6 @@
     <!-- All Strings for applist -->
     <string name="applist_on">EIN</string>
     <string name="applist_window_title">Gesperrte Apps</string>
-    <string name="icon_desc">icon</string>
 
     <!-- Change password activity -->
     <string name="change_pass_tit">Passwort ändern</string>
@@ -276,5 +275,7 @@
     <string name="pref_list_anim_slide_right">Nach rechts ausblenden</string>
     <string name="pref_list_anim_slide_left">Nach links ausblenden</string>
     <string name="pref_list_anim_none">Deaktiviert</string>
+    
+    
 
 </resources>

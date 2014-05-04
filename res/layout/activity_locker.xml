@@ -25,10 +25,12 @@
 
         <RelativeLayout
             android:id="@+id/adContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" >
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:minHeight="50dp" >
         </RelativeLayout>
 
         <!-- HEAD -->
@@ -68,8 +70,7 @@
                             android:id="@+id/ivAppIcon"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:layout_marginRight="8dp"
-                            android:contentDescription="@string/icon_desc" />
+                            android:layout_marginRight="8dp" />
 
                         <TextView
                             android:id="@+id/tvHeader"

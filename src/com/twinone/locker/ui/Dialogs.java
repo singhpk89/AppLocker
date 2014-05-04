@@ -111,9 +111,10 @@ public class Dialogs {
 						Intent i = new Intent(
 								android.content.Intent.ACTION_SEND);
 						i.setType("text/plain");
-						i.putExtra(Intent.EXTRA_TEXT, "Locker: " + finalcode);
+						i.putExtra(Intent.EXTRA_TEXT, c.getString(
+								R.string.recovery_intent_message, finalcode));
 						c.startActivity(Intent.createChooser(i,
-								c.getString(R.string.main_share_tit)));
+								c.getString(R.string.recovery_intent_tit)));
 					}
 				});
 		ab.setPositiveButton(android.R.string.ok, null);

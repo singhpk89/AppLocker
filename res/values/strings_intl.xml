@@ -115,7 +115,7 @@
     <item name="pref_def_anim_show_type" type="string">@string/pref_val_anim_none</item>
     <item name="pref_def_anim_hide_type" type="string">@string/pref_val_anim_none</item>
     <item name="pref_def_lock_type" type="string">@string/pref_val_lock_type_password</item>
-    <item name="pref_def_vibrate" type="bool">false</item>
+    <item name="pref_def_vibrate" type="bool">true</item>
     <item name="pref_def_switch_buttons" type="bool">false</item>
     <item name="pref_def_pattern_size" type="integer">3</item>
     <item name="pref_def_show_notification" type="bool">false</item>
@@ -124,7 +124,7 @@
     <item name="pref_def_dial_launch" type="bool">false</item>
     <item name="pref_def_delay_status" type="bool">false</item>
     <item name="pref_def_relock_after_screenoff" type="bool">true</item>
-    <item name="pref_def_start_boot" type="bool">false</item>
+    <item name="pref_def_start_boot" type="bool">true</item>
     <item name="pref_def_pattern_stealth" type="bool">false</item>
     <item name="pref_def_pattern_error_stealth" type="bool">false</item>
 

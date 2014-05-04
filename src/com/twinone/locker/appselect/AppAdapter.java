@@ -11,10 +11,12 @@ import java.util.Set;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.twinone.locker.R;
+import com.twinone.locker.lock.AppLockService;
 import com.twinone.locker.util.PrefUtils;
 
 public class AppAdapter extends BaseAdapter {
@@ -32,20 +35,52 @@ public class AppAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
 	private PackageManager mPm;
 	private Context mContext;
+	private Set<AppListElement> mInitialItems;
 	private List<AppListElement> mItems;
+	private Editor mEditor;
 
 	public AppAdapter(Context context) {
 		mContext = context;
 		mInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mPm = context.getPackageManager();
-		loadAppsIntoList();
-		Collections.sort(mItems);
+		// Empty
+		mInitialItems = new HashSet<AppListElement>();
+		mItems = new ArrayList<AppListElement>();
+		mEditor = PrefUtils.appsPrefs(context).edit();
+
+		new LoaderClass().execute((Void[]) null);
+		// Collections.sort(mItems);
 	}
 
-	@Override
-	public void notifyDataSetChanged() {
-		super.notifyDataSetChanged();
+	private class LoaderClass extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			loadAppsIntoList();
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			sort();
+			if (mListener != null) {
+				mListener.onLoadComplete();
+			}
+		}
+
+	}
+
+	private OnEventListener mListener;
+
+	public void setOnEventListener(OnEventListener listener) {
+		mListener = listener;
+	}
+
+	public interface OnEventListener {
+		public void onLoadComplete();
+
+		public void onDirtyStateChanged(boolean dirty);
 	}
 
 	public boolean areAllAppsLocked() {
@@ -57,14 +92,14 @@ public class AppAdapter extends BaseAdapter {
 
 	/**
 	 * Creates a completely new list with the apps. Should only be called once.
+	 * Does not sort
 	 * 
 	 * @param mContext
 	 */
 	public void loadAppsIntoList() {
 
 		// Get all tracked apps from preferences
-		HashSet<AppListElement> apps = new HashSet<AppListElement>();
-		addImportantAndSystemApps(apps);
+		addImportantAndSystemApps(mInitialItems);
 
 		// other apps
 		final Intent i = new Intent(Intent.ACTION_MAIN);
@@ -76,18 +111,17 @@ public class AppAdapter extends BaseAdapter {
 				final AppListElement ah = new AppListElement(ri.loadLabel(mPm)
 						.toString(), ri.activityInfo,
 						AppListElement.PRIORITY_NORMAL_APPS);
-				apps.add(ah);
+				mInitialItems.add(ah);
 			}
 		}
-		mItems = new ArrayList<AppListElement>(apps);
-		Set<String> lockedApps = PrefUtils.getLockedApps(mContext);
-		for (AppListElement ah : mItems) {
+		final Set<String> lockedApps = PrefUtils.getLockedApps(mContext);
+		for (AppListElement ah : mInitialItems) {
 			ah.locked = lockedApps.contains(ah.packageName);
 		}
+		mItems = new ArrayList<AppListElement>(mInitialItems);
 	}
 
 	private void addImportantAndSystemApps(Collection<AppListElement> apps) {
-		final String phone = "com.android.dialer";
 		final String installer = "com.android.packageinstaller";
 		final String sysui = "com.android.systemui";
 
@@ -102,12 +136,7 @@ public class AppAdapter extends BaseAdapter {
 		boolean haveSystem = false;
 		boolean haveImportant = false;
 		for (ApplicationInfo pi : list) {
-			if (phone.equals(pi.packageName)) {
-				// apps.add(new AppInfo(mContext
-				// .getString(R.string.applist_app_dialer), pi,
-				// AppInfo.PRIORITY_SYSTEM_APPS));
-				// haveSystem = true;
-			} else if (sysui.equals(pi.packageName)) {
+			if (sysui.equals(pi.packageName)) {
 				apps.add(new AppListElement(mContext
 						.getString(R.string.applist_app_sysui), pi,
 						AppListElement.PRIORITY_SYSTEM_APPS));
@@ -145,9 +174,14 @@ public class AppAdapter extends BaseAdapter {
 		}
 	}
 
+	/**
+	 * Sort the apps and notify the ListView that the items have changed. Should
+	 * be called from the working thread
+	 */
 	public void sort() {
-		Log.d("", "Sort");
 		Collections.sort(mItems);
+		notifyDataSetChanged();
+		notifyDirtyStateChanged(false);
 	}
 
 	@Override
@@ -170,6 +204,17 @@ public class AppAdapter extends BaseAdapter {
 	}
 
 	@Override
+	public int getViewTypeCount() {
+		// Number of different views we have
+		return 2;
+	}
+
+	@Override
+	public int getItemViewType(int position) {
+		return mItems.get(position).isApp() ? 0 : 1;
+	}
+
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (mItems.get(position).isApp()) {
 			return createAppViewFromResource(position, convertView, parent);
@@ -183,8 +228,10 @@ public class AppAdapter extends BaseAdapter {
 			View convertView, ViewGroup parent) {
 		AppListElement ah = mItems.get(position);
 
-		View view = mInflater.inflate(R.layout.applist_item_category, parent,
-				false);
+		View view = convertView;
+		if (view == null)
+			view = mInflater.inflate(R.layout.applist_item_category, parent,
+					false);
 		TextView tv = (TextView) view.findViewById(R.id.listName);
 		tv.setText(ah.title);
 
@@ -195,14 +242,17 @@ public class AppAdapter extends BaseAdapter {
 			ViewGroup parent) {
 
 		AppListElement ah = mItems.get(position);
-		View view = mInflater.inflate(R.layout.applist_item_app, parent, false);
+		View view = convertView;
+		if (view == null)
+			view = mInflater.inflate(R.layout.applist_item_app, parent, false);
 		// changes with every click
+
 		final ImageView lock = (ImageView) view
 				.findViewById(R.id.applist_item_image);
 		lock.setVisibility(ah.locked ? View.VISIBLE : View.GONE);
 
 		final TextView name = (TextView) view.findViewById(R.id.listName);
-		name.setText(ah.title);
+		name.setText(ah.getLabel(mPm));
 
 		final ImageView icon = (ImageView) view.findViewById(R.id.listIcon);
 		final Drawable bg = ah.getIcon(mPm);
@@ -212,6 +262,76 @@ public class AppAdapter extends BaseAdapter {
 			setBackgroundCompat(icon, bg);
 
 		return view;
+	}
+
+	// TODO
+	// TODO
+	// TODO
+	// TODO
+	// TODO Important: Undo action.
+	private ArrayList<AppListElement> mUndoItems;
+
+	public void prepareUndo() {
+		mUndoItems = new ArrayList<AppListElement>(mItems);
+	}
+
+	public void undo() {
+		mItems = new ArrayList<AppListElement>(mUndoItems);
+		notifyDataSetChanged();
+	}
+
+	public void setAllLocked(boolean lock) {
+		ArrayList<String> apps = new ArrayList<String>();
+		for (AppListElement app : mItems) {
+			if (app.isApp()) {
+				app.locked = lock;
+				apps.add(app.packageName);
+			}
+		}
+		setLocked(lock, apps.toArray(new String[apps.size()]));
+		sort();
+		save();
+	}
+
+	private boolean mDirtyState;
+
+	private void notifyDirtyStateChanged(boolean dirty) {
+		if (mDirtyState != dirty) {
+			mDirtyState = dirty;
+			if (mListener != null) {
+				mListener.onDirtyStateChanged(dirty);
+			}
+		}
+	}
+
+	public void toggle(AppListElement item) {
+		if (item.isApp()) {
+			item.locked = !item.locked;
+			setLocked(item.locked, item.packageName);
+			save();
+		}
+		List<AppListElement> list = new ArrayList<AppListElement>(mItems);
+		Collections.sort(list);
+		boolean dirty = !list.equals(mItems);
+		Log.d("", "dirty=" + dirty + ", mDirtyState = " + mDirtyState);
+
+		notifyDirtyStateChanged(dirty);
+	}
+
+	public void save() {
+		PrefUtils.apply(mEditor);
+		AppLockService.restart(mContext);
+	}
+
+	public void setLocked(boolean lock, String... packageNames) {
+		Log.d("", "setLocked");
+		for (String packageName : packageNames) {
+			if (lock) {
+				mEditor.putBoolean(packageName, true);
+			} else {
+				mEditor.remove(packageName);
+			}
+		}
 	}
 
 	@SuppressWarnings("deprecation")

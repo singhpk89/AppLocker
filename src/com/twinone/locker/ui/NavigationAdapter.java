@@ -15,6 +15,9 @@
  */
 package com.twinone.locker.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
@@ -35,7 +38,7 @@ public class NavigationAdapter extends BaseAdapter {
 
 	// private Context mContext;
 	private LayoutInflater mInflater;
-	private NavigationElement[] mItems;
+	private List<NavigationElement> mItems;
 
 	private boolean mServiceRunning = false;
 
@@ -43,17 +46,18 @@ public class NavigationAdapter extends BaseAdapter {
 		// mContext = context;
 		mInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		setupElements();
 		mServiceRunning = AppLockService.isRunning(context);
+		mItems = new ArrayList<NavigationElement>();
+		setupElements();
 	}
 
 	public NavigationElement getItemFor(int type) {
-		return mItems[getPositionFor(type)];
+		return mItems.get(getPositionFor(type));
 	}
 
 	public int getPositionFor(int type) {
-		for (int i = 0; i < mItems.length; i++) {
-			if (mItems[i].type == type) {
+		for (int i = 0; i < mItems.size(); i++) {
+			if (mItems.get(i).type == type) {
 				return i;
 			}
 		}
@@ -61,7 +65,7 @@ public class NavigationAdapter extends BaseAdapter {
 	}
 
 	public int getTypeOf(int position) {
-		return mItems[position].type;
+		return mItems.get(position).type;
 	}
 
 	public void setServiceState(boolean newState) {
@@ -71,52 +75,35 @@ public class NavigationAdapter extends BaseAdapter {
 		}
 	}
 
+	private void addElement(int title, int type) {
+		final NavigationElement el = new NavigationElement();
+		el.title = title;
+		el.type = type;
+		mItems.add(el);
+	}
+
 	private void setupElements() {
-		NavigationElement status = new NavigationElement();
-		status.title = R.string.nav_status;
-		status.type = NavigationElement.TYPE_STATUS;
-
-		final NavigationElement apps = new NavigationElement();
-		apps.title = R.string.nav_apps;
-		apps.type = NavigationElement.TYPE_APPS;
-
-		final NavigationElement change = new NavigationElement();
-		change.title = R.string.nav_change;
-		change.type = NavigationElement.TYPE_CHANGE;
-
-		final NavigationElement settings = new NavigationElement();
-		settings.title = R.string.nav_settings;
-		settings.type = NavigationElement.TYPE_SETTINGS;
-
-		final NavigationElement statistics = new NavigationElement();
-		statistics.title = R.string.nav_statistics;
-		statistics.type = NavigationElement.TYPE_STATISTICS;
-
-		final NavigationElement pro = new NavigationElement();
-		pro.title = R.string.nav_pro;
-		pro.type = NavigationElement.TYPE_PRO;
-
-		// Add test is necessary
+		addElement(R.string.nav_status, NavigationElement.TYPE_STATUS);
+		addElement(R.string.nav_apps, NavigationElement.TYPE_APPS);
+		addElement(R.string.nav_change, NavigationElement.TYPE_CHANGE);
+		addElement(R.string.nav_settings, NavigationElement.TYPE_SETTINGS);
 		if (Constants.DEBUG) {
-			final NavigationElement test = new NavigationElement();
-			test.title = R.string.nav_apps;
-			test.type = NavigationElement.TYPE_TEST;
-			mItems = new NavigationElement[] { status, apps, change, settings,
-					statistics, pro, test };
-		} else {
-			mItems = new NavigationElement[] { status, apps, change, settings,
-					statistics, pro };
+			addElement(R.string.nav_statistics,
+					NavigationElement.TYPE_STATISTICS);
+
+			addElement(R.string.nav_test, NavigationElement.TYPE_TEST);
 		}
+		addElement(R.string.nav_pro, NavigationElement.TYPE_PRO);
 	}
 
 	@Override
 	public int getCount() {
-		return mItems.length;
+		return mItems.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return mItems[position];
+		return mItems.get(position);
 	}
 
 	@Override
@@ -129,7 +116,7 @@ public class NavigationAdapter extends BaseAdapter {
 		ViewGroup root = (ViewGroup) mInflater.inflate(
 				R.layout.navigation_drawer_list_item, null);
 
-		if (mItems[position].type == NavigationElement.TYPE_STATUS) {
+		if (mItems.get(position).type == NavigationElement.TYPE_STATUS) {
 			final CompoundButton cb = (CompoundButton) root
 					.findViewById(R.id.navFlag);
 			cb.setChecked(mServiceRunning);
@@ -137,7 +124,7 @@ public class NavigationAdapter extends BaseAdapter {
 		}
 
 		TextView navTitle = (TextView) root.findViewById(R.id.navTitle);
-		navTitle.setText(mItems[position].title);
+		navTitle.setText(mItems.get(position).title);
 		return root;
 	}
 

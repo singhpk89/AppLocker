@@ -19,6 +19,7 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.Display;
@@ -47,13 +48,12 @@ import com.twinone.locker.util.PrefUtils;
 import com.twinone.locker.util.Util;
 import com.twinone.util.Analytics;
 
-// TODO have all views re attach automatically
 public class LockService extends Service implements View.OnClickListener,
 		View.OnKeyListener {
 
 	public static final String CLASSNAME = LockService.class.getName();
 
-	private static final String TAG = CLASSNAME;
+	private static final String TAG = LockService.class.getSimpleName();
 
 	/**
 	 * Check a currently set password, (either number or pattern)
@@ -236,12 +236,14 @@ public class LockService extends Service implements View.OnClickListener,
 	}
 
 	private void hideView(boolean animate) {
+		if (mAdMobManager != null) {
+			mAdMobManager.pause();
+		}
 		if (mViewHiding) {
 			Log.w(TAG, "Already hiding!");
 			return;
 		}
 		if (!mViewDisplayed) {
-			Log.w(TAG, "Not displayed!");
 			return;
 		}
 		if (mRootView == null) {
@@ -283,7 +285,14 @@ public class LockService extends Service implements View.OnClickListener,
 
 			@Override
 			public void onAnimationEnd(Animation animation) {
-				hideViewEnd();
+				// Avoid ugly android error message
+				new Handler().post(new Runnable() {
+
+					@Override
+					public void run() {
+						hideViewEnd();
+					}
+				});
 			}
 		});
 		mContainer.startAnimation(mAnimHide);
@@ -294,13 +303,15 @@ public class LockService extends Service implements View.OnClickListener,
 		mViewDisplayed = false;
 		mViewHiding = false;
 		mAnimHide = null;
+
+		// If this isn't in, the ad view will not load
+		stopSelf();
 	}
 
 	// avoid hiding the view when the trigger is done
 	private void hideViewCancel() {
 		Log.d(TAG, "hideViewCancel");
 		if (!mViewHiding) {
-			Log.w(TAG, "not cancelling,  was not hiding");
 			return;
 		}
 		if (mAnimHide == null) {
@@ -705,6 +716,10 @@ public class LockService extends Service implements View.OnClickListener,
 
 		mPackageName = mIntent.getStringExtra(EXTRA_PACKAGENAME);
 
+		if (ACTION_CREATE.equals(mAction) || mPackageName == getPackageName()) {
+			options.showAds = false;
+		}
+
 		if (ACTION_CREATE.equals(mAction)) {
 			options.patternStealth = false;
 		}
@@ -835,14 +850,27 @@ public class LockService extends Service implements View.OnClickListener,
 	 */
 	private AdViewManager mAdViewManager;
 
+	private AdMobManager mAdMobManager;
+
 	private void onAfterInflate() {
 		setBackground();
-		if (!AdViewManager.isOnEmulator() && !ACTION_CREATE.equals(mAction)) {
-			if (mAdViewManager == null) {
-				mAdViewManager = new AdViewManager(this);
+		if (options.showAds) {
+			if (mAdMobManager == null) {
+				mAdMobManager = new AdMobManager(this,
+						mRootView.findViewById(R.id.adContainer));
 			}
-			mAdViewManager.showAds(mRootView);
+			mAdMobManager.loadAd();
+		} else {
+			// Don't use precious space
+			mRootView.findViewById(R.id.adContainer).setVisibility(View.GONE);
 		}
+		// if (!AdViewManager.isOnEmulator() && !ACTION_CREATE.equals(mAction))
+		// {
+		// if (mAdViewManager == null) {
+		// mAdViewManager = new AdViewManager(this);
+		// }
+		// mAdViewManager.showAds(mRootView);
+		// }
 		// bind to AppLockService
 		if (!getPackageName().equals(mPackageName)) {
 			Intent i = new Intent(this, AppLockService.class);
@@ -863,13 +891,14 @@ public class LockService extends Service implements View.OnClickListener,
 			mFooterButtons.setVisibility(View.GONE);
 			ApplicationInfo ai = Util.getaApplicationInfo(mPackageName, this);
 			if (ai != null) {
-				// Load info of this application
+				// Load info of Locker
 				String label = ai.loadLabel(getPackageManager()).toString();
 				Drawable icon = ai.loadIcon(getPackageManager());
 				Util.setBackgroundDrawable(mAppIcon, icon);
 				mViewTitle.setText(label);
 				if (options.message != null && options.message.length() != 0) {
 					mViewMessage.setVisibility(View.VISIBLE);
+					// Don't use String.format, because this is user input
 					mViewMessage.setText(options.message.replace("%s", label));
 				} else {
 					mViewMessage.setVisibility(View.GONE);
@@ -909,7 +938,7 @@ public class LockService extends Service implements View.OnClickListener,
 	};
 
 	private void exitCreate() {
-		AppLockService.restart(this);
+		AppLockService.forceRestart(this);
 		finish(true);
 	}
 
@@ -930,6 +959,9 @@ public class LockService extends Service implements View.OnClickListener,
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		if (mAdMobManager != null) {
+			mAdMobManager.destroy();
+		}
 		if (mAdViewManager != null)
 			mAdViewManager.onDestroy();
 	}
@@ -979,8 +1011,10 @@ public class LockService extends Service implements View.OnClickListener,
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		Log.d(TAG, "onConfigChange");
-		super.onConfigurationChanged(newConfig);
+		// super.onConfigurationChanged(newConfig);
 		if (mViewDisplayed) {
+			// mLayoutParams.screenOrientation = getScreenOrientation();
+			onBeforeInflate();
 			showView(false);
 			onAfterInflate();
 		}

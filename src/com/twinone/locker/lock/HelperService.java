@@ -54,7 +54,7 @@ public class HelperService extends Service {
 		return START_NOT_STICKY;
 	}
 
-	public static void start(Context c) {
+	public static void removeNotification(Context c) {
 		Intent i = new Intent(c, HelperService.class);
 		c.startService(i);
 	}

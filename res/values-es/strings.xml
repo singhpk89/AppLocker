@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+ 
     <!--
     Added in Locker v1.0
     Author: TwinoneDevs
@@ -12,7 +13,6 @@
     <string name="main_start_service">Iniciar bloqueo</string>
     <string name="main_stop_service">Detener bloqueo</string>
     <string name="main_change_password">Contraseña</string>
-    <string name="fragment_title_apps">Aplicaciones</string>
     <string name="main_change_message">Mensaje</string>
     <string name="main_change_message_desc">Este mensaje saldrá debajo de la aplicación bloqueada\nPuedes usar %s para el nombre de la aplicación.</string>
     <string name="main_change_message_saved">Mensaje guardado</string>
@@ -23,8 +23,6 @@
     <!-- All Strings for applist -->
     <string name="applist_on">SI</string>
     <string name="applist_window_title">Aplicationes bloqueadas</string>
-    <string name="icon_desc">icon</string>
-
     <!-- Change password activity -->
     <string name="change_pass_tit">Nueva contraseña</string>
     <string name="change_pass_desc">Introduce la nueva contraseña\nSe recomienda 4 o más dígitos</string>
@@ -38,7 +36,6 @@
     <!-- All strings for LockActivity -->
     <string name="locker_footer_default">Introduce la contraseña para desbloquear</string>
     <string name="locker_enter_password">Introduce contraseña</string>
-    <string name="locker_invalid_password">Contraseña incorrecta</string>
     <string name="upper_ok">OK</string>
     <string name="upper_back">ATRÁS</string>
     <string name="cancel">Cancelar</string>
@@ -114,12 +111,6 @@
 
 
     <!-- BEGIN v2.0.8 Strings -->
-    <string name="recovery_tit">Importante</string>
-    <string name="recovery_dlgmsg">Si te olvidas de tu contraseña, podrás recuperarla escribiendo este código. Por favor, escríbela o envíatela a ti mismo.\nTu código es: %s\n</string>
-    <string name="recovery_code_send_button">Enviar</string>
-    <string name="pref_tit_recovery_code">Código de recuperación</string>
-    <string name="old_pref_desc_recovery_code">Podrás acceder a tu contraseña si la pierdes llamando a este numero</string>
-    <string name="pref_desc_recovery_code">Código actual: %s</string>
     <!-- PASSWORD -->
     <string name="password_change_tit">Cambiar contraseña</string>
     <string name="password_change_head">Introduce una nueva contraseña</string>
@@ -303,5 +294,53 @@
     <string name="applist_app_pkginstaller">Instalar/Desinstalar apps</string>
     <string name="applist_app_dialer">Llamada entrante</string>
     <string name="applist_app_sysui">Apps recientes</string>
+    
+    
+    <!-- BEGIN v2320 -->
+    <string name="nav_status">Bloqueo</string>
+    <string name="nav_apps">Applications</string>
+    <string name="nav_change">Change lock</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_statistics">Statistics</string>
+    <string name="nav_pro">Pro</string>
+    <string name="nav_test">Test</string>
+    <!--  -->
+    <string name="fragment_title_apps">Aplicaciones</string>
+    <string name="fragment_title_settings">Ajustes</string>
+    <string name="fragment_title_statistics">Estadísticas</string>
+    <string name="fragment_title_pro">Pro</string>
+    <string name="setup_new_lock">Crear bloqueo</string>
+    <!--  -->
+    <string name="pref_tit_pattern_hide_error">Ocultar error</string>
+    <string name="pref_desc_pattern_hide_error">Cuando introduces un patrón incorrecto, no mostrarlo.</string>
+    <string name="pref_tit_pattern_size">Tamaño patrón</string>
+    <string name="pref_desc_pattern_size">Número de filas y columnas del patrón</string>
+    <!--  -->
+    <string name="locker_invalid_password">Contraseña incorrecta</string>
+    <string name="locker_invalid_pattern">Patrón incorrecto</string>
 
+    <!-- Recovery dialog -->
+    <string name="recovery_tit">Código de recuperación</string>
+    <string name="recovery_dlgmsg">Tu código de recuperación es %s\nEs importante que te lo envíes (por si olvidas tu contraseña). Puedes encontrar este código en ajustes.</string>
+    <string name="recovery_code_send_button">Enviar</string>
+    <!-- Recovery preference -->
+    <string name="pref_tit_recovery_code">Código de recuperación</string>
+    <string name="pref_desc_recovery_code">Código actual: %s</string>
+    <string name="pref_dlgmsg_recovery_code">Tu código actual es %s</string>
+    <!-- Recovery intent chooser -->
+    <string name="recovery_intent_tit">Enviar código de recuperación</string>
+    <string name="recovery_intent_message">Tu código de recuperación de Twinone App Locker.\nPara poder acceder a tu dispositivo de nuevo y restablecer tu contraseña, abre marcador y llama al siguiente número: %s</string>
+    <!-- Da menu -->
+    <string name="apps_menu_sort">Ordenar</string>
+    <string name="apps_menu_lock_all">Bloquear todo</string>
+    <string name="apps_menu_unlock_all">Desbloquear todo</string>
+    <string name="apps_menu_search">Buscar</string>
+    <string name="apps_menu_search_hint">Buscar aplicaciones</string>
+
+    <!-- Example: WhatsApp locked -->
+    <string name="apps_toast_locked_single">%s bloqueado</string>
+    <string name="apps_toast_locked_all">Todas las aplicaciones bloqueadas</string>
+    <string name="apps_toast_unlocked_single">%s desbloqueado</string>
+    <string name="apps_toast_unlocked_all">Todas las aplicaciones desbloqueadas</string>
+   
 </resources>

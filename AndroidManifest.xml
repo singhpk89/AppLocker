@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.twinone.locker"
-    android:versionCode="2311"
-    android:versionName="2.3.1.2" >
+    android:versionCode="2320"
+    android:versionName="2.3.2" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -55,19 +55,31 @@
         android:label="@string/application_name"
         android:theme="@style/AppTheme" >
 
-        <!--
-             <meta-data
+        <!-- For goole play services -->
+        <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        -->
+
         <!-- singleTask solved bug with notification click -->
         <activity
             android:name="com.twinone.locker.ui.MainActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/application_name"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
+
+            <!--
+                 <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+            -->
+            <meta-data
+                android:name="android.app.searchable"
+                android:value="@xml/searchable" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
 

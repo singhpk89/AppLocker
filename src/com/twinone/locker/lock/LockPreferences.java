@@ -34,6 +34,8 @@ public class LockPreferences implements Serializable {
 	public static final int TYPE_PATTERN = 1 << 1; // 2
 
 	// Common
+	/** Whether this user has pro features enabled or no */
+	public boolean pro;
 	public int type;
 	public String orientation;
 	public Boolean vibration;
@@ -59,6 +61,8 @@ public class LockPreferences implements Serializable {
 	// Pro & pattern only
 	public int patternCircleResId;
 
+	public boolean showAds;
+
 	/**
 	 * You should use this constructor which loads all properties into the
 	 * object automatically
@@ -67,7 +71,9 @@ public class LockPreferences implements Serializable {
 	 * @return
 	 */
 	public LockPreferences(Context c) {
-		boolean pro = new ProUtils(c).proFeaturesEnabled();
+		final ProUtils p = new ProUtils(c);
+		pro = p.proFeaturesEnabled();
+		showAds = p.showAds();
 		PrefUtils prefs = new PrefUtils(c);
 		// Common
 		type = prefs.getCurrentLockTypeInt();

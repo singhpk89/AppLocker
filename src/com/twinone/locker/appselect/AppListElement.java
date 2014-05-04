@@ -12,11 +12,12 @@ import android.graphics.drawable.Drawable;
  */
 public class AppListElement implements Comparable<AppListElement> {
 
-	public final String title;
+	public String title;
 	// null if not an activity
 	private final PackageItemInfo pii;
 	// null if not an activity
 	public final String packageName;
+	private Drawable mIcon;
 
 	/**
 	 * Indicates the priority of this item. The higher the priority, the higher
@@ -33,9 +34,19 @@ public class AppListElement implements Comparable<AppListElement> {
 	public boolean locked = true;
 
 	public Drawable getIcon(PackageManager pm) {
-		if (pii == null)
-			return null;
-		return pii.loadIcon(pm);
+		if (mIcon == null) {
+			if (pii == null)
+				return null;
+			mIcon = pii.loadIcon(pm);
+		}
+		return mIcon;
+	}
+
+	public String getLabel(PackageManager pm) {
+		if (title == null) {
+			title = (String) pii.loadLabel(pm);
+		}
+		return title;
 	}
 
 	public AppListElement(String label, PackageItemInfo pii, int priority) {
@@ -64,7 +75,7 @@ public class AppListElement implements Comparable<AppListElement> {
 	}
 
 	public boolean isApp() {
-		return packageName.length() > 0;
+		return packageName != null && packageName.length() > 0;
 	}
 
 	@Override
@@ -77,18 +88,18 @@ public class AppListElement implements Comparable<AppListElement> {
 		if (isApp() != sh.isApp())
 			return false;
 		if (!isApp()) {
-			return title.equals(sh.title);
+			return title != null && title.equals(sh.title);
 		}
-		return packageName.equals(sh.packageName);
+		return packageName != null && packageName.equals(sh.packageName);
 	}
 
 	@Override
 	public int hashCode() {
 		if (isApp()) {
-			return new StringBuilder("1").append(packageName).toString()
-					.hashCode();
+			return new StringBuilder("bypkgname").append(packageName)
+					.toString().hashCode();
 		}
-		return new StringBuilder("2").append(title).toString().hashCode();
+		return new StringBuilder("bytitle").append(title).toString().hashCode();
 	}
 
 	@Override
@@ -98,7 +109,9 @@ public class AppListElement implements Comparable<AppListElement> {
 
 		if (this.locked != o.locked)
 			return this.locked ? -1 : 1;
-
+		if (this.title == null || o.title == null) {
+			return 0;
+		}
 		return this.title.compareTo(o.title);
 	}
 }

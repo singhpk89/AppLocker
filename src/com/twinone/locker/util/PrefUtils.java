@@ -302,8 +302,10 @@ public class PrefUtils {
 		switch (lockType) {
 		case LockPreferences.TYPE_PASSWORD:
 			password = getString(R.string.pref_key_password);
+			break;
 		case LockPreferences.TYPE_PATTERN:
 			password = getString(R.string.pref_key_pattern);
+			break;
 		}
 		return password;
 	}
@@ -347,7 +349,7 @@ public class PrefUtils {
 				|| (androidId.equals("0000000000000000"))) {
 			androidId = "fdaffadfaedfaedf827382164762349787adadfebcbc";
 		}
-		return String.valueOf(androidId.hashCode());
+		return "#" + String.valueOf(androidId.hashCode());
 	}
 
 }

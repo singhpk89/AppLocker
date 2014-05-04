@@ -124,8 +124,8 @@ public class PatternView extends View {
 	private Bitmap mBitmapCircleSelected;
 	private Bitmap mBitmapCircleRed;
 
-	private Bitmap mBitmapArrowGreenUp;
-	private Bitmap mBitmapArrowRedUp;
+	// private Bitmap mBitmapArrowGreenUp;
+	// private Bitmap mBitmapArrowRedUp;
 
 	private final Path mCurrentPath = new Path();
 	private final Rect mInvalidate = new Rect();
@@ -133,7 +133,7 @@ public class PatternView extends View {
 	private int mBitmapWidth;
 	private int mBitmapHeight;
 
-	private final Matrix mArrowMatrix = new Matrix();
+	// private final Matrix mArrowMatrix = new Matrix();
 	private final Matrix mCircleMatrix = new Matrix();
 
 	private final int mPadding = 0;
@@ -396,8 +396,9 @@ public class PatternView extends View {
 		mBitmapCircleSelected = getBitmapFor(mBitmapCircleSelectedResourceId);
 		mBitmapCircleRed = getBitmapFor(R.drawable.indicator_code_lock_point_area_red_holo);
 
-		mBitmapArrowGreenUp = getBitmapFor(R.drawable.indicator_code_lock_drag_direction_green_up);
-		mBitmapArrowRedUp = getBitmapFor(R.drawable.pattern_circle_red);
+		// mBitmapArrowGreenUp =
+		// getBitmapFor(R.drawable.indicator_code_lock_drag_direction_green_up);
+		// mBitmapArrowRedUp = getBitmapFor(R.drawable.pattern_circle_red);
 
 		// bitmaps have the size of the largest bitmap in this group
 		final Bitmap[] bitmaps = { mBitmapBtnDefault,
@@ -1127,8 +1128,7 @@ public class PatternView extends View {
 		boolean oldFlag = (mPaint.getFlags() & Paint.FILTER_BITMAP_FLAG) != 0;
 		mPaint.setFilterBitmap(true); // draw with higher quality since we
 		// render with transforms
-		
-		
+
 		// Not drawing arrows
 		// if (drawPath) {
 		// for (int i = 0; i < count - 1; i++) {
@@ -1182,53 +1182,55 @@ public class PatternView extends View {
 		mPaint.setFilterBitmap(oldFlag); // restore default flag
 	}
 
-	private void drawArrowUnused(Canvas canvas, float leftX, float topY,
-			Cell start, Cell end) {
-		boolean green = mPatternDisplayMode != DisplayMode.Wrong;
-
-		final int endRow = end.mRow;
-		final int startRow = start.mRow;
-		final int endColumn = end.mColumn;
-		final int startColumn = start.mColumn;
-
-		// offsets for centering the bitmap in the cell
-		final int offsetX = ((int) mSquareWidth - mBitmapWidth) / 2;
-		final int offsetY = ((int) mSquareHeight - mBitmapHeight) / 2;
-
-		// compute transform to place arrow bitmaps at correct angle inside
-		// circle.
-		// This assumes that the arrow image is drawn at 12:00 with it's top
-		// edge
-		// coincident with the circle bitmap's top edge.
-		Bitmap arrow = green ? mBitmapArrowGreenUp : mBitmapArrowRedUp;
-		final int cellWidth = mBitmapWidth;
-		final int cellHeight = mBitmapHeight;
-
-		// the up arrow bitmap is at 12:00, so find the rotation from x axis and
-		// add 90 degrees.
-		final float theta = (float) Math.atan2((double) (endRow - startRow),
-				(double) (endColumn - startColumn));
-		final float angle = (float) Math.toDegrees(theta) + 90.0f;
-
-		// compose matrix
-		float sx = Math.min(mSquareWidth / mBitmapWidth, 1.0f);
-		float sy = Math.min(mSquareHeight / mBitmapHeight, 1.0f);
-		mArrowMatrix.setTranslate(leftX + offsetX, topY + offsetY); // transform
-		// to cell
-		// position
-		mArrowMatrix.preTranslate(mBitmapWidth / 2, mBitmapHeight / 2);
-		mArrowMatrix.preScale(sx, sy);
-		mArrowMatrix.preTranslate(-mBitmapWidth / 2, -mBitmapHeight / 2);
-		mArrowMatrix.preRotate(angle, cellWidth / 2.0f, cellHeight / 2.0f); // rotate
-		// about
-		// cell
-		// center
-		mArrowMatrix.preTranslate((cellWidth - arrow.getWidth()) / 2.0f, 0.0f); // translate
-		// to
-		// 12:00
-		// pos
-		canvas.drawBitmap(arrow, mArrowMatrix, mPaint);
-	}
+	// private void drawArrowUnused(Canvas canvas, float leftX, float topY,
+	// Cell start, Cell end) {
+	// boolean green = mPatternDisplayMode != DisplayMode.Wrong;
+	//
+	// final int endRow = end.mRow;
+	// final int startRow = start.mRow;
+	// final int endColumn = end.mColumn;
+	// final int startColumn = start.mColumn;
+	//
+	// // offsets for centering the bitmap in the cell
+	// final int offsetX = ((int) mSquareWidth - mBitmapWidth) / 2;
+	// final int offsetY = ((int) mSquareHeight - mBitmapHeight) / 2;
+	//
+	// // compute transform to place arrow bitmaps at correct angle inside
+	// // circle.
+	// // This assumes that the arrow image is drawn at 12:00 with it's top
+	// // edge
+	// // coincident with the circle bitmap's top edge.
+	// Bitmap arrow = green ? mBitmapArrowGreenUp : mBitmapArrowRedUp;
+	// final int cellWidth = mBitmapWidth;
+	// final int cellHeight = mBitmapHeight;
+	//
+	// // the up arrow bitmap is at 12:00, so find the rotation from x axis and
+	// // add 90 degrees.
+	// final float theta = (float) Math.atan2((double) (endRow - startRow),
+	// (double) (endColumn - startColumn));
+	// final float angle = (float) Math.toDegrees(theta) + 90.0f;
+	//
+	// // compose matrix
+	// float sx = Math.min(mSquareWidth / mBitmapWidth, 1.0f);
+	// float sy = Math.min(mSquareHeight / mBitmapHeight, 1.0f);
+	// mArrowMatrix.setTranslate(leftX + offsetX, topY + offsetY); // transform
+	// // to cell
+	// // position
+	// mArrowMatrix.preTranslate(mBitmapWidth / 2, mBitmapHeight / 2);
+	// mArrowMatrix.preScale(sx, sy);
+	// mArrowMatrix.preTranslate(-mBitmapWidth / 2, -mBitmapHeight / 2);
+	// mArrowMatrix.preRotate(angle, cellWidth / 2.0f, cellHeight / 2.0f); //
+	// rotate
+	// // about
+	// // cell
+	// // center
+	// mArrowMatrix.preTranslate((cellWidth - arrow.getWidth()) / 2.0f, 0.0f);
+	// // translate
+	// // to
+	// // 12:00
+	// // pos
+	// canvas.drawBitmap(arrow, mArrowMatrix, mPaint);
+	// }
 
 	/**
 	 * @param canvas

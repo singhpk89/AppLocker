@@ -8,15 +8,12 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/element_vertical_margin" >
 
-    <!-- android:background="@drawable/image_bg" -->
-
     <ImageView
         android:id="@+id/listIcon"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentLeft="true"
-        android:layout_marginRight="@dimen/image_right_margin"
-        android:contentDescription="@string/icon_desc" />
+        android:layout_marginRight="@dimen/image_right_margin" />
 
     <TextView
         android:id="@+id/listName"
@@ -35,7 +32,7 @@
         android:clickable="false"
         android:focusable="false"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_action_secure"
+        android:src="@drawable/ic_action_secure_holo_light"
         android:visibility="gone" />
 
 </RelativeLayout>

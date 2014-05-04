@@ -12,7 +12,6 @@
     <string name="main_start_service">Vergrendelen</string>
     <string name="main_stop_service">Ontgrendelen</string>
     <string name="main_change_password">Wachtwoord</string>
-    <string name="fragment_title_apps">Apps</string>
     <string name="main_change_message">Bericht</string>
     <string name="main_change_message_desc">Dit bericht komt onder de geblokkeerde app te staan\nJe kunt %s gebruiken voor de naam van de app.</string>
     <string name="main_change_message_saved">Bericht opgeslagen</string>
@@ -23,7 +22,6 @@
     <!-- All Strings for applist -->
     <string name="applist_on">AAN</string>
     <string name="applist_window_title">Geblokkeerde apps</string>
-    <string name="icon_desc">icon</string>
 
     <!-- Change password activity -->
     <string name="change_pass_tit">Nieuw wachtwoord</string>
@@ -38,7 +36,6 @@
     <!-- All strings for LockActivity -->
     <string name="locker_footer_default">Voer het wachtwoord in om te ontgrendelen</string>
     <string name="locker_enter_password">Voer wachtwoord in</string>
-    <string name="locker_invalid_password">Contraseña incorrecta</string>
     <string name="upper_ok">OK</string>
     <string name="upper_back">TERUG</string>
     <string name="cancel">Annuleren</string>
@@ -116,12 +113,6 @@
 
 
     <!-- BEGIN v2.0.8 Strings -->
-    <string name="recovery_tit">Belangrijk</string>
-    <string name="recovery_dlgmsg">Als je ooit je wachtwoord vergeet, kun je je herstelcode bellen om toegang terug te krijgen. Je kunt de code opschrijven, of naar jezelf e-mailen.\nJe code is: %s\n</string>
-    <string name="recovery_code_send_button">Versturen</string>
-    <string name="pref_tit_recovery_code">Herstel code</string>
-    <string name="old_pref_desc_recovery_code">Door dit nummer te bellen krijg je weer toegang.</string>
-    <string name="pref_desc_recovery_code">Code: %s</string>
     <!-- PASSWORD -->
     <string name="password_change_tit">Wachtwoord veranderen</string>
     <string name="password_change_head">Typ een nieuw wachtwoord</string>
@@ -256,8 +247,8 @@
     <!-- BEGIN v2205 -->
     <string name="pref_tit_ads">Advertenties</string>
     <string name="pref_desc_ads">Als je Locker leuk vindt, help ons dan door advertenties in te schakelen<stirng></stirng></string>
-	<string name="pref_desc_ads_forced">Je kunt op dit moment reclame niet uitschakelen</string>
-        <!-- BEGIN v2300 -->
+    <string name="pref_desc_ads_forced">Je kunt op dit moment reclame niet uitschakelen</string>
+    <!-- BEGIN v2300 -->
     <!-- animations for the lock screen -->
     <string name="pref_tit_cat_anim_show">In animatie</string>
     <string name="pref_tit_cat_anim_hide">Uit animatie</string>
@@ -269,7 +260,7 @@
     <string name="pref_list_anim_slide_right">Schuif lechts</string>
     <string name="pref_list_anim_slide_left">Schuif links</string>
     <string name="pref_list_anim_none">Uitgeschakeld</string>
-	 <!-- BEGIN v2302 -->
+    <!-- BEGIN v2302 -->
     <string name="background_default">Standaard</string>
     <!-- Pro stuff -->
     <string name="pro_b_main">Pro</string>
@@ -301,5 +292,53 @@
     <string name="applist_app_pkginstaller">App installeren/verwijderen</string>
     <string name="applist_app_dialer">Inkomende oproep</string>
     <string name="applist_app_sysui">Recente apps</string>
-    
+
+    <!-- BEGIN v2320 -->
+    <string name="nav_status">Vergrendeling</string>
+    <string name="nav_apps">Applicaties</string>
+    <string name="nav_change">Slot veranderen</string>
+    <string name="nav_settings">Instellingen</string>
+    <string name="nav_statistics">Statistieken</string>
+    <string name="nav_pro">Pro</string>
+    <string name="nav_test">Test</string>
+
+    <!--  -->
+    <string name="fragment_title_apps">Applicaties</string>
+    <string name="fragment_title_settings">Instellingen</string>
+    <string name="fragment_title_statistics">Statistieken</string>
+    <string name="fragment_title_pro">Pro</string>
+    <string name="setup_new_lock">Nieuw slot maken</string>
+    <!--  -->
+    <string name="pref_tit_pattern_hide_error">Verberg fout</string>
+    <string name="pref_desc_pattern_hide_error">Vertoon het patroon niet als het fout is</string>
+    <string name="pref_tit_pattern_size">Patroon grootte</string>
+    <string name="pref_desc_pattern_size">Het aantal rijen en kolommen dat het patroon heeft</string>
+    <!--  -->
+    <string name="locker_invalid_password">Verkeerd wachtwoord</string>
+    <string name="locker_invalid_pattern">Verkeerd patroon</string>
+
+    <!-- Recovery dialog -->
+    <string name="recovery_tit">Herstel code</string>
+    <string name="recovery_dlgmsg">Je herstel code is %s\nHet is belangrijk dat je jezelf stuurt (voor het geval dat je je wachtwoord vergeet). Je kunt deze code terugvinden in instellingen.</string>
+    <string name="recovery_code_send_button">Versturen</string>
+    <!-- Recovery preference -->
+    <string name="pref_tit_recovery_code">Herstel code</string>
+    <string name="pref_desc_recovery_code">Huidige code: %s</string>
+    <string name="pref_dlgmsg_recovery_code">Je huidige code is: %s</string>
+    <!-- Recovery intent chooser -->
+    <string name="recovery_intent_tit">Stuur herstel code</string>
+    <string name="recovery_intent_message">Je Twinone App Locker herstel code.\nOm weer toegang te krijgen tot je toestel en je wacthwoord te herstellen, open bel je het volgende nummer: %s</string>
+    <!-- Da menu -->
+    <string name="apps_menu_sort">Sorteren</string>
+    <string name="apps_menu_lock_all">Vergrendel alles</string>
+    <string name="apps_menu_unlock_all">Ontgrendel alles</string>
+    <string name="apps_menu_search">Zoeken</string>
+    <string name="apps_menu_search_hint">Zoek apps</string>
+
+    <!-- Example: WhatsApp locked -->
+    <string name="apps_toast_locked_single">%s vergrendeld</string>
+    <string name="apps_toast_locked_all">Alle apps vergrendeld</string>
+    <string name="apps_toast_unlocked_single">%s ontgrendeld</string>
+    <string name="apps_toast_unlocked_all">Alle apps ontgrendeld</string>
+
 </resources>

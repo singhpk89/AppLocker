@@ -1,16 +1,22 @@
 package com.twinone.locker.ui;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 
+import com.twinone.androidlib.DebugTools;
 import com.twinone.locker.Constants;
 import com.twinone.locker.R;
 import com.twinone.locker.lock.AppLockService;
@@ -45,6 +51,8 @@ public class MainActivity extends ActionBarActivity implements
 
 	private void doTest() {
 	}
+
+	private Fragment mCurrentFragment;
 
 	// /**
 	// * Added in version 2204
@@ -86,6 +94,23 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		Log.d("", "onResume");
+		showLockerIfNotUnlocked(true);
+		registerReceiver(mReceiver, mFilter);
+		updateLayout();
+
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.global, menu);
+		return true;
+	}
+
+	private void showLockerIfNotUnlocked(boolean relock) {
+		DebugTools.lap("posting onStartCommand (relock=" + relock + ")");
 		boolean unlocked = getIntent().getBooleanExtra(EXTRA_UNLOCKED, false);
 		if (new PrefUtils(this).isCurrentPasswordEmpty()) {
 			unlocked = true;
@@ -93,11 +118,7 @@ public class MainActivity extends ActionBarActivity implements
 		if (!unlocked) {
 			LockService.showCompare(this, getPackageName());
 		}
-		getIntent().putExtra(EXTRA_UNLOCKED, false);
-		// showDialogs();
-		mNavFragment.getAdapter().setServiceState(
-				AppLockService.isRunning(this));
-
+		getIntent().putExtra(EXTRA_UNLOCKED, !relock);
 	}
 
 	@Override
@@ -105,6 +126,8 @@ public class MainActivity extends ActionBarActivity implements
 		super.onPause();
 		// mSequencer.stop();
 		LockService.hide(this);
+		unregisterReceiver(mReceiver);
+		mSequencer.stop();
 	}
 
 	/**
@@ -123,39 +146,6 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	/**
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
-	/**
 	 * Fragment managing the behaviors, interactions and presentation of the
 	 * navigation drawer.
 	 */
@@ -168,11 +158,34 @@ public class MainActivity extends ActionBarActivity implements
 	private CharSequence mTitle;
 
 	private ActionBar mActionBar;
+	private BroadcastReceiver mReceiver;
+	private IntentFilter mFilter;
+
+	private class ServiceStateReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Log.d("MainACtivity",
+					"Received broadcast (action=" + intent.getAction());
+			updateLayout();
+		}
+	}
+
+	private void updateLayout() {
+		mNavFragment.getAdapter().setServiceState(
+				AppLockService.isRunning(this));
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		handleIntent();
+
+		mReceiver = new ServiceStateReceiver();
+		mFilter = new IntentFilter();
+		mFilter.addCategory(AppLockService.CATEGORY_STATE_EVENTS);
+		mFilter.addAction(AppLockService.BROADCAST_SERVICE_STARTED);
+		mFilter.addAction(AppLockService.BROADCAST_SERVICE_STOPPED);
 
 		mNavFragment = (NavigationFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.navigation_drawer);
@@ -182,18 +195,40 @@ public class MainActivity extends ActionBarActivity implements
 		mTitle = getTitle();
 
 		mActionBar = getSupportActionBar();
-
+		mCurrentFragment = new AppsFragment();
 		getSupportFragmentManager().beginTransaction()
-				.add(R.id.container, new AppsFragment()).commit();
+				.add(R.id.container, mCurrentFragment).commit();
 		mCurrentFragmentType = NavigationElement.TYPE_APPS;
 
-		AppLockService.start(this);
-
-		mNavFragment.getAdapter().setServiceState(true);
-
 		mSequencer = new DialogSequencer();
-		showDialogs();
+		if (showDialogs()) {
+			AppLockService.start(this);
+		}
+		showLockerIfNotUnlocked(false);
+	}
 
+	@Override
+	protected void onNewIntent(Intent intent) {
+		Log.d("", "onNewIntent");
+		super.onNewIntent(intent);
+		setIntent(intent);
+		handleIntent();
+	}
+
+	/**
+	 * Handle this Intent for searching...
+	 */
+	private void handleIntent() {
+		if (getIntent().getAction().equals(Intent.ACTION_SEARCH)) {
+			Log.d("MainActivity", "Action search!");
+			if (mCurrentFragmentType == NavigationElement.TYPE_APPS) {
+				final String query = getIntent().getStringExtra(
+						SearchManager.QUERY);
+				if (query != null) {
+					((AppsFragment) mCurrentFragment).onSearch(query);
+				}
+			}
+		}
 	}
 
 	public void setActionBarTitle(int resId) {
@@ -244,8 +279,6 @@ public class MainActivity extends ActionBarActivity implements
 		}
 	}
 
-	private static final String BACK_STACK_NAME = "default";
-
 	/**
 	 * Open a specific Fragment
 	 * 
@@ -262,28 +295,24 @@ public class MainActivity extends ActionBarActivity implements
 			return;
 		}
 
-		Fragment fragment = null;
 		switch (type) {
 		case NavigationElement.TYPE_APPS:
-			fragment = new AppsFragment();
+			mCurrentFragment = new AppsFragment();
 			break;
 		case NavigationElement.TYPE_SETTINGS:
-			fragment = new SettingsFragment();
+			mCurrentFragment = new SettingsFragment();
 			break;
 		case NavigationElement.TYPE_STATISTICS:
-			fragment = new StatisticsFragment();
+			mCurrentFragment = new StatisticsFragment();
 			break;
 		case NavigationElement.TYPE_PRO:
-			fragment = new ProFragment();
+			mCurrentFragment = new ProFragment();
 			break;
 		}
 		FragmentManager fm = getSupportFragmentManager();
 		// Don't re-add the already present fragment
-		if (type != NavigationElement.TYPE_APPS) {
-			fm.popBackStack();
-			fm.beginTransaction().replace(R.id.container, fragment)
-					.addToBackStack(BACK_STACK_NAME).commit();
-		}
+		fm.beginTransaction().replace(R.id.container, mCurrentFragment)
+				.commit();
 		mCurrentFragmentType = type;
 	}
 

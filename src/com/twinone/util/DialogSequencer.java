@@ -34,6 +34,10 @@ public class DialogSequencer {
 		mListener = listener;
 	}
 
+	public int size() {
+		return mDialogs.size();
+	}
+
 	public void setListener(DialogSequenceListener listener) {
 		mListener = listener;
 	}
@@ -69,6 +73,9 @@ public class DialogSequencer {
 	/**
 	 * Always call stop in {@link Activity#onResume()}, to hide dialogs that
 	 * were still open.
+	 * 
+	 * <br>
+	 * This will do nothing if there are no dialogs left
 	 * 
 	 * @return
 	 */

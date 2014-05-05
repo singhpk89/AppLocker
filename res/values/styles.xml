@@ -18,10 +18,7 @@
 
     <style name="LockActivityTheme" parent="AppBaseTheme">
         <item name="android:buttonStyle">@style/Theme_Lock_Button</item>
-        <item name="android:windowEnterAnimation">@anim/fade_in</item>
-        <item name="android:windowExitAnimation">@anim/fade_out</item>
-        <!-- Don't set background here because it will load 2 times -->
-        <!-- <item name="android:windowBackground">@drawable/locker_default_background</item> -->
+        <item name="android:imageButtonStyle">@style/Theme_Lock_ImageButton</item>
         <item name="android:textColor">#ffffff</item>
     </style>
 
@@ -41,6 +38,12 @@
         <item name="android:textColor">#ffffff</item>
         <item name="android:padding">16dp</item>
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Theme_Lock_ImageButton" parent="@android:style/Widget.ImageButton">
+        <item name="android:background">@drawable/passwordview_button_background</item>
+        <item name="android:textColor">#ff0000</item>
+        <item name="android:padding">16dp</item>
     </style>
 
     <style name="Theme_Applist_Button" parent="@android:style/Widget.Button">

@@ -5,13 +5,13 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.twinone.locker.R;
 import com.twinone.locker.util.Util;
@@ -28,8 +28,8 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 	/** The default is left for back, right for OK */
 	// private boolean mSwapActionButtons = false;
 
-	private Button mBackButton;
-	private Button mOkButton;
+	private ImageButton mBackButton;
+	private ImageButton mOkButton;
 
 	private int mRows = 3;
 	private int mCols = 3;
@@ -49,6 +49,9 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 	private int mMaxWidth;
 	private int mHeight;
 	private int mWidth;
+
+	private int mOkImageResource = R.drawable.ic_action_accept;
+	private int mBackImageResource = R.drawable.ic_action_cancel;
 
 	/** How many times may the view be taller than wide? */
 	private float mMaxVScale = 1.2f;
@@ -146,22 +149,14 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 		for (Button b : mButtons)
 			b.setOnClickListener(this);
 
-		// if (mSwapActionButtons) {
-		// mBackButton = (Button) findViewById(R.id.numlock_bRight);
-		// mOkButton = (Button) findViewById(R.id.numlock_bLeft);
-		// } else {
-		mBackButton = (Button) findViewById(R.id.numlock_bLeft);
-		mOkButton = (Button) findViewById(R.id.numlock_bRight);
-		// }
+		mBackButton = (ImageButton) findViewById(R.id.numlock_bLeft);
+		mOkButton = (ImageButton) findViewById(R.id.numlock_bRight);
 
-		mBackButton.setText(R.string.numBack);
-		// mBackButton.setTextSize(new Button(getContext()).getTextSize());
-		mOkButton.setText(android.R.string.ok);
-		// mOkButton.setTextSize(15.0F);
-
+		mBackButton.setImageResource(mBackImageResource);
 		mBackButton.setOnClickListener(this);
 		mBackButton.setOnLongClickListener(this);
 
+		mOkButton.setImageResource(mOkImageResource);
 		mOkButton.setOnClickListener(this);
 		mOkButton.setOnLongClickListener(this);
 	}
@@ -431,19 +426,16 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 		int okVisibility = mOkButton.getVisibility();
 		int backVisibility = mBackButton.getVisibility();
 		if (swap) {
-			mBackButton = (Button) findViewById(R.id.numlock_bRight);
-			mOkButton = (Button) findViewById(R.id.numlock_bLeft);
+			mBackButton = (ImageButton) findViewById(R.id.numlock_bRight);
+			mOkButton = (ImageButton) findViewById(R.id.numlock_bLeft);
 		} else {
-			mBackButton = (Button) findViewById(R.id.numlock_bLeft);
-			mOkButton = (Button) findViewById(R.id.numlock_bRight);
+			mBackButton = (ImageButton) findViewById(R.id.numlock_bLeft);
+			mOkButton = (ImageButton) findViewById(R.id.numlock_bRight);
 		}
+		mOkButton.setImageResource(mOkImageResource);
+		mBackButton.setImageResource(mBackImageResource);
 		mOkButton.setVisibility(okVisibility);
 		mBackButton.setVisibility(backVisibility);
-		mBackButton.setText(R.string.numBack);
-
-		mBackButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
-		mOkButton.setText(android.R.string.ok);
-		mOkButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15F);
 
 	}
 

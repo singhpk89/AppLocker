@@ -684,6 +684,7 @@ public class LockService extends Service implements View.OnClickListener,
 			mAnimShow.cancel();
 			mAnimShow = null;
 		}
+		mWindowManager.removeView(mRootView);
 	}
 
 	private void onViewHidden() {
@@ -1011,6 +1012,8 @@ public class LockService extends Service implements View.OnClickListener,
 		Log.v(TAG, "called showView" + " (mViewState=" + mViewState + ")");
 		if (mViewState == ViewState.SHOWING) {
 			// Do nothing, we're already showing the view
+			// We should still inflate the view, and call the before and after
+			// methods
 		} else if (mViewState == ViewState.HIDING) {
 			cancelAnimations();
 		} else if (mViewState == ViewState.SHOWN) {

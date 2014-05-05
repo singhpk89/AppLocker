@@ -105,13 +105,12 @@
         android:textSize="@dimen/locker_button_text_size"
         android:textStyle="bold" />
 
-    <Button
+    <ImageButton
         android:id="@+id/numlock_bLeft"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:padding="0px"
-        android:textSize="@dimen/locker_button_text_size" />
+        android:padding="0px" />
 
     <Button
         android:id="@+id/numlock_b0"
@@ -123,12 +122,11 @@
         android:textSize="@dimen/locker_button_text_size"
         android:textStyle="bold" />
 
-    <Button
+    <ImageButton
         android:id="@+id/numlock_bRight"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:padding="0px"
-        android:textSize="@dimen/locker_button_text_size" />
+        android:padding="0px" />
 
 </com.twinone.locker.lock.PasswordView>

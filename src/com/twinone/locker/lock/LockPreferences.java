@@ -81,8 +81,8 @@ public class LockPreferences implements Serializable {
 		vibration = prefs.getBoolean(R.string.pref_key_vibrate,
 				R.bool.pref_def_vibrate);
 		message = prefs.getString(R.string.pref_key_lock_message);
+
 		if (pro) {
-			// Pro only
 			background = prefs.getString(R.string.pref_key_background,
 					R.string.pref_def_background);
 			// Show animation
@@ -102,7 +102,23 @@ public class LockPreferences implements Serializable {
 			hideAnimationMillis = prefs.parseInt(
 					R.string.pref_key_anim_hide_millis,
 					R.string.pref_def_anim_hide_millis);
+		} else {
+			background = c.getString(R.string.pref_def_background);
+			// Show animation
+			final String showAnim = c
+					.getString(R.string.pref_def_anim_show_type);
+			showAnimationResId = getAnimationResId(c, showAnim, true);
+			showAnimationMillis = Integer.parseInt(c
+					.getString(R.string.pref_def_anim_show_millis));
+
+			// Hide animation
+			final String hideAnim = c
+					.getString(R.string.pref_def_anim_hide_type);
+			hideAnimationResId = getAnimationResId(c, hideAnim, false);
+			hideAnimationMillis = Integer.parseInt(c
+					.getString(R.string.pref_def_anim_hide_millis));
 		}
+
 		// Load both password and pattern because user could override the type
 		// setting
 		password = prefs.getString(R.string.pref_key_password);
@@ -119,11 +135,8 @@ public class LockPreferences implements Serializable {
 		patternSize = prefs.parseInt(R.string.pref_key_pattern_size,
 				R.string.pref_def_pattern_size);
 
-		// // Pro && pattern only
-		if (pro) {
-			patternCircleResId = getPatternCircleResId(c,
-					prefs.getString(R.string.pref_key_pattern_color));
-		}
+		patternCircleResId = getPatternCircleResId(c, pro,
+				prefs.getString(R.string.pref_key_pattern_color));
 	}
 
 	/**
@@ -146,8 +159,9 @@ public class LockPreferences implements Serializable {
 		return 0;
 	}
 
-	private static int getPatternCircleResId(Context c, String setting) {
-		if (setting != null) {
+	private static int getPatternCircleResId(Context c, boolean hasPro,
+			String setting) {
+		if (setting != null && hasPro) {
 			if (setting.equals(c
 					.getString(R.string.pref_val_pattern_color_blue)))
 				return R.drawable.pattern_circle_blue;
@@ -157,5 +171,4 @@ public class LockPreferences implements Serializable {
 		}
 		return R.drawable.pattern_circle_white;
 	}
-
 }

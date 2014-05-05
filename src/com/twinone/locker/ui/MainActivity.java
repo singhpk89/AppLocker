@@ -94,7 +94,7 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.d("", "onResume");
+		Log.d("Main", "onResume");
 		showLockerIfNotUnlocked(true);
 		registerReceiver(mReceiver, mFilter);
 		updateLayout();
@@ -128,6 +128,16 @@ public class MainActivity extends ActionBarActivity implements
 		LockService.hide(this);
 		unregisterReceiver(mReceiver);
 		mSequencer.stop();
+
+		Log.d("Main", "onPause, finishing");
+		// FIXME
+		finish();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		Log.v("Main", "onDestroy");
+		super.onDestroy();
 	}
 
 	/**

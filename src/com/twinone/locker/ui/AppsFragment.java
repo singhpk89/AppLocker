@@ -127,8 +127,10 @@ public class AppsFragment extends Fragment implements OnItemClickListener,
 
 	private void updateMenuLayout() {
 		boolean all = mAdapter.areAllAppsLocked();
-		mMenu.findItem(R.id.apps_menu_lock_all).setVisible(!all);
-		mMenu.findItem(R.id.apps_menu_unlock_all).setVisible(all);
+		if (mMenu != null && mAdapter.isLoadComplete()) {
+			mMenu.findItem(R.id.apps_menu_lock_all).setVisible(!all);
+			mMenu.findItem(R.id.apps_menu_unlock_all).setVisible(all);
+		}
 	}
 
 	@Override

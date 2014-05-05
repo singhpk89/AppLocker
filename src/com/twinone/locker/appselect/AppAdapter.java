@@ -65,10 +65,17 @@ public class AppAdapter extends BaseAdapter {
 		protected void onPostExecute(Void result) {
 			sort();
 			if (mListener != null) {
+				mLoadComplete = true;
 				mListener.onLoadComplete();
 			}
 		}
 
+	}
+
+	private boolean mLoadComplete;
+
+	public boolean isLoadComplete() {
+		return mLoadComplete;
 	}
 
 	private OnEventListener mListener;

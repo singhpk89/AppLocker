@@ -51,11 +51,11 @@
     <string name="pref_key_temp_wifi_ssid">temp.ssid</string>
 
     <!-- Values -->
-    <string name="pref_val_perf_very_high">100</string>
-    <string name="pref_val_perf_high">125</string>
-    <string name="pref_val_perf_normal">150</string>
-    <string name="pref_val_perf_low">200</string>
-    <string name="pref_val_perf_very_low">250</string>
+    <string name="pref_val_perf_very_high">150</string>
+    <string name="pref_val_perf_high">200</string>
+    <string name="pref_val_perf_normal">250</string>
+    <string name="pref_val_perf_low">300</string>
+    <string name="pref_val_perf_very_low">350</string>
     <!--  -->
     <string name="pref_val_lock_type_password">password</string>
     <string name="pref_val_lock_type_pattern">pattern</string>

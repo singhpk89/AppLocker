@@ -146,6 +146,7 @@ public class AppLockService extends Service {
 
 		mHandler = new Handler();
 		mActivityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+
 		mUnlockMap = new HashMap<String, Runnable>();
 		mLockedPackages = new HashMap<String, Boolean>();
 		mScreenReceiver = new ScreenReceiver();
@@ -210,11 +211,7 @@ public class AppLockService extends Service {
 			Log.d(TAG, "ACTION_STOP");
 			doStopSelf();
 		}
-		// With start_not_sticky we have the auto-close bug
-		// It looks like With start_sticky too (?)
-		// Start sticky causes multiple receivers (NO)
-		// Multiple receivers are caused by multiple initialize calls without
-		// onDestroy() / stopSelf()
+
 		return START_STICKY;
 	}
 
@@ -249,6 +246,7 @@ public class AppLockService extends Service {
 
 	private void onLockedAppOpen(final String open, final String close) {
 		final boolean locked = mLockedPackages.get(open);
+		Log.d(TAG, "onLockedAPpOpen (locked=" + locked + ")");
 		if (locked) {
 			showLocker(open);
 		}
@@ -324,6 +322,7 @@ public class AppLockService extends Service {
 	 * @param appName
 	 */
 	public void unlockApp(String packageName) {
+		Log.d(TAG, "unlocking app (packageName=" + packageName + ")");
 		if (mLockedPackages.containsKey(packageName)) {
 			mLockedPackages.put(packageName, false);
 		}
@@ -353,10 +352,10 @@ public class AppLockService extends Service {
 		// If the user doesn't want a notification (default), remove it
 		if (!mShowNotification) {
 			// Retain foreground state
-			HelperService.removeNotification(this);
+			// HelperService.removeNotification(this);
 
 			// Remove foreground
-			// stopForeground(true);
+			stopForeground(true);
 		}
 	}
 
@@ -431,6 +430,7 @@ public class AppLockService extends Service {
 		if (s.length() == 0)
 			s = "0";
 		long interval = Long.parseLong(s);
+		Log.d(TAG, "Scheduling alarm (interval=" + interval + ")");
 		long startTime = SystemClock.elapsedRealtime();
 		am.setRepeating(AlarmManager.ELAPSED_REALTIME, startTime, interval, pi);
 	}

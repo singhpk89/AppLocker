@@ -12,7 +12,6 @@
     <string name="main_start_service">Aktiviere Sperre</string>
     <string name="main_stop_service">Deaktiviere Sperre</string>
     <string name="main_change_password">Passwort setzen</string>
-    <string name="fragment_title_apps">Apps</string>
     <string name="main_change_message">Nachricht</string>
     <string name="main_change_message_desc">Diese Nachricht wird unter den gesperrten Apps erscheinen\nDu kannst %s verwenden, um den Namen der App zu verwenden.</string>
     <string name="main_change_message_saved">Nachricht gespeichert</string>
@@ -37,7 +36,6 @@
     <!-- All strings for LockActivity -->
     <string name="locker_footer_default">Zum Entsperren Passwort eingeben</string>
     <string name="locker_enter_password">Passwort eingeben</string>
-    <string name="locker_invalid_password">Falsches Passwort</string>
     <string name="upper_ok">OK</string>
     <string name="upper_back">ZURÜCK</string>
     <string name="cancel">Abbrechen</string>
@@ -115,12 +113,6 @@
 
 
     <!-- BEGIN v2.0.8 Strings -->
-    <string name="recovery_tit">Wichtig</string>
-    <string name="recovery_dlgmsg">Solltest du dein Passwort vergessen, kannst du durch einen Anruf an den Wiederherstellungscode das Passwort zurücksetzen.\nBitte nimm dir kurz Zeit, den Code abzuspeichern oder niederzuschreiben.\nDein Code ist: %s\n</string>
-    <string name="recovery_code_send_button">Senden</string>
-    <string name="pref_tit_recovery_code">Code wiederherstellen</string>
-    <string name="old_pref_desc_recovery_code">Wenn du dein Passwort vergessen hast, kannst du diese Nummer anrufen, um wieder Zugriff auf die App zu erhalten</string>
-    <string name="pref_desc_recovery_code">Derzeitiger Code: %s</string>
     <!-- PASSWORD -->
     <string name="password_change_tit">Passwort ändern</string>
     <string name="password_change_head">Gib ein neues Passwort ein</string>
@@ -275,7 +267,84 @@
     <string name="pref_list_anim_slide_right">Nach rechts ausblenden</string>
     <string name="pref_list_anim_slide_left">Nach links ausblenden</string>
     <string name="pref_list_anim_none">Deaktiviert</string>
-    
-    
+
+    <!-- BEGIN v2302 -->
+    <string name="background_default">Standard</string>
+    <!-- Pro stuff -->
+    <string name="pro_b_main">Pro</string>
+    <string name="pro_window_title">Pro Funktionen</string>
+    <!--  -->
+    <string name="pro_ft_tit">Pro Funktionen:</string>
+    <string name="pro_ft_bg">Benutzerdefiniertes Hintergrundbild</string>
+    <string name="pro_ft_hide">Verstecke Locker-App</string>
+    <string name="pro_ft_hide_notif">Verstecke Benachrichtigung</string>
+    <string name="pro_ft_pcolor">Muster-Farbe ändern</string>
+    <string name="pro_ft_short_exit">Schnelles Beenden</string>
+    <string name="pro_ft_anim">Animationen</string>
+    <string name="pro_ft_more">Mehr kommt bald</string>
+    <string name="pro_header">Wähle deinen Plan:</string>
+    <string name="pro_tit_ads">Locker Ads</string>
+    <string name="pro_desc_ads">Alle Pro-Funktionen sind verfügbar, aber Werbung wird eingeblendet</string>
+    <string name="pro_tit_free">Locker Free</string>
+    <string name="pro_desc_free">Keine Pro-Funktionen sind verfügbar, dafür wird auch keine Werbung eingeblendet</string>
+    <!--  -->
+    <string name="pro_tit_paid">Locker Pro</string>
+    <string name="pro_desc_paid">Alle Pro-Funktionen sind verfügbar und es wird keine Werbung angezeigt</string>
+    <!--  -->
+    <string name="pro_required">Das ist ein eine Pro-Funktionalität. Möchtest Du die Pro-Funktionen kostenlos aktivieren?</string>
+    <string name="pro_tofree_tit">Kostenloser Modus</string>
+    <string name="pro_tofree_msg">Du verlierst alle Pro-Funktionen.\nBist Du dir sicher, dass Du in den kostenlosen Modus wechseln möchtest?</string>
+    <string name="applist_tit_apps">Apps</string>
+    <string name="applist_tit_important">Wichtig</string>
+    <string name="applist_tit_system">System</string>
+    <string name="applist_app_pkginstaller">App Installation/Deinstallation</string>
+    <string name="applist_app_dialer">Eingehender Anruf</string>
+    <string name="applist_app_sysui">Aktuelle Aufgaben</string>
+    <string name="nav_status">Sperre</string>
+    <string name="nav_apps">Applikationen</string>
+    <string name="nav_change">Sperre ändern</string>
+    <string name="nav_settings">Einstellungen</string>
+    <string name="nav_statistics">Statistiken</string>
+    <string name="nav_pro">Pro</string>
+    <string name="nav_test">Testen</string>
+
+    <!--  -->
+    <string name="fragment_title_apps">Applikationen</string>
+    <string name="fragment_title_settings">Einstellungen</string>
+    <string name="fragment_title_statistics">Statistiken</string>
+    <string name="fragment_title_pro">Pro</string>
+    <string name="setup_new_lock">Neue Sperre einrichten</string>
+    <!--  -->
+    <string name="pref_tit_pattern_hide_error">Fehler verstecken</string>
+    <string name="pref_desc_pattern_hide_error">Keinen Fehler anzeigen, wenn ein falsches Muster eingegeben wurde</string>
+    <string name="pref_tit_pattern_size">Muster-Größe</string>
+    <string name="pref_desc_pattern_size">Die Nummer der Spalten und Zeilen, welches das Muster hat</string>
+    <!--  -->
+    <string name="locker_invalid_password">Falsches Passwort</string>
+    <string name="locker_invalid_pattern">Falsches Muster</string>
+
+    <!-- Recovery dialog -->
+    <string name="recovery_tit">Wiederherstellungscode</string>
+    <string name="recovery_dlgmsg">Dein Wiederherstellungscode ist %s\nEs ist wichtig, dass Du den Code sicher aufbewahrst (falls Du dein Passwort vergessen solltest), aber Du kannst diesen Code jederzeit in den Einstellungen einsehen.</string>
+    <string name="recovery_code_send_button">Senden</string>
+    <!-- Recovery preference -->
+    <string name="pref_tit_recovery_code">Wiederherstellungscode</string>
+    <string name="pref_desc_recovery_code">Aktueller Code: %s</string>
+    <string name="pref_dlgmsg_recovery_code">Dein aktueller Code ist: %s</string>
+    <!-- Recovery intent chooser -->
+    <string name="recovery_intent_tit">Wiederherstellungscode senden</string>
+    <string name="recovery_intent_message">Dein Twinone App Locker Wiederherstellungscode.\nUm auf dein Gerät wieder zugreifen und um das Passwort wieder ändern zu können, öffne bitte das Wahlfeld und rufe folgende Nummer an: %s</string>
+    <!-- Da menu -->
+    <string name="apps_menu_sort">Sortieren</string>
+    <string name="apps_menu_lock_all">Alle sperren</string>
+    <string name="apps_menu_unlock_all">Alle entsperren</string>
+    <string name="apps_menu_search">Suche</string>
+    <string name="apps_menu_search_hint">Suche Apps</string>
+
+    <!-- Example: WhatsApp locked -->
+    <string name="apps_toast_locked_single">%s gesperrt</string>
+    <string name="apps_toast_locked_all">Alle Apps gesperrt</string>
+    <string name="apps_toast_unlocked_single">%s entsperrt</string>
+    <string name="apps_toast_unlocked_all">Alle Apps entsperrt</string>
 
 </resources>

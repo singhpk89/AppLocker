@@ -444,27 +444,27 @@ public class LockService extends Service implements View.OnClickListener,
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent == null) {
-			return START_NOT_STICKY;
-		}
-		Log.d(TAG, "action: " + intent.getAction());
-		if (ACTION_HIDE.equals(intent.getAction())) {
-			finish(true);
-			return START_NOT_STICKY;
-		}
-		if (ACTION_NOTIFY_PACKAGE_CHANGED.equals(intent.getAction())) {
-			String newPackageName = intent.getStringExtra(EXTRA_PACKAGENAME);
-			if (newPackageName == null
-					|| !getPackageName().equals(newPackageName)) {
-				finish(true);
-				return START_NOT_STICKY;
-			}
-		} else {
-			mIntent = intent;
-			mAnalytics = new Analytics(this);
-			showView();
-		}
-		return super.onStartCommand(intent, flags, startId);
+//		if (intent == null) {
+//			return START_NOT_STICKY;
+//		}
+//		Log.d(TAG, "action: " + intent.getAction());
+//		if (ACTION_HIDE.equals(intent.getAction())) {
+//			finish(true);
+//			return START_NOT_STICKY;
+//		}
+//		if (ACTION_NOTIFY_PACKAGE_CHANGED.equals(intent.getAction())) {
+//			String newPackageName = intent.getStringExtra(EXTRA_PACKAGENAME);
+//			if (newPackageName == null
+//					|| !getPackageName().equals(newPackageName)) {
+//				finish(true);
+//				return START_NOT_STICKY;
+//			}
+//		} else {
+//			mIntent = intent;
+//			mAnalytics = new Analytics(this);
+//			showView();
+//		}
+		return START_NOT_STICKY;
 	}
 
 	/**
@@ -631,6 +631,7 @@ public class LockService extends Service implements View.OnClickListener,
 		if (mViewState == ViewState.HIDING || mViewState == ViewState.HIDDEN) {
 			Log.w(TAG, "called hideView not hiding (mViewState=" + mViewState
 					+ ")");
+			onViewHidden();
 			return;
 		}
 		if (mViewState == ViewState.SHOWING) {
@@ -689,8 +690,10 @@ public class LockService extends Service implements View.OnClickListener,
 
 	private void onViewHidden() {
 		Log.v(TAG, "called onViewHidden" + " (mViewState=" + mViewState + ")");
-		mViewState = ViewState.HIDDEN;
-		mWindowManager.removeView(mRootView);
+		if (mViewState != ViewState.HIDDEN) {
+			mViewState = ViewState.HIDDEN;
+			mWindowManager.removeView(mRootView);
+		}
 		mAnimHide = null;
 
 		if (mAdMobManager != null) {

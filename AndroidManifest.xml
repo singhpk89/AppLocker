@@ -64,6 +64,8 @@
         <activity
             android:name="com.twinone.locker.ui.MainActivity"
             android:configChanges="orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
             android:label="@string/application_name"
             android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >

@@ -130,10 +130,14 @@ public class MainActivity extends ActionBarActivity implements
 		mSequencer.stop();
 
 		Log.d("Main", "onPause, finishing");
-		// FIXME
-		finish();
+
+		if (mCurrentFragmentType != NavigationElement.TYPE_SETTINGS) {
+			// Keep settings open because the user could navigate to gallery to
+			// change background
+			finish();
+		}
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		Log.v("Main", "onDestroy");

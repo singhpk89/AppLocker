@@ -24,6 +24,7 @@
         android:id="@+id/apps_menu_unlock_all"
         android:icon="@drawable/ic_action_not_secure"
         android:title="@string/apps_menu_unlock_all"
+        android:visible="false"
         app:showAsAction="ifRoom"/>
 
 </menu>

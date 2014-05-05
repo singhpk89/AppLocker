@@ -444,26 +444,26 @@ public class LockService extends Service implements View.OnClickListener,
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-//		if (intent == null) {
-//			return START_NOT_STICKY;
-//		}
-//		Log.d(TAG, "action: " + intent.getAction());
-//		if (ACTION_HIDE.equals(intent.getAction())) {
-//			finish(true);
-//			return START_NOT_STICKY;
-//		}
-//		if (ACTION_NOTIFY_PACKAGE_CHANGED.equals(intent.getAction())) {
-//			String newPackageName = intent.getStringExtra(EXTRA_PACKAGENAME);
-//			if (newPackageName == null
-//					|| !getPackageName().equals(newPackageName)) {
-//				finish(true);
-//				return START_NOT_STICKY;
-//			}
-//		} else {
-//			mIntent = intent;
-//			mAnalytics = new Analytics(this);
-//			showView();
-//		}
+		if (intent == null) {
+			return START_NOT_STICKY;
+		}
+		Log.d(TAG, "action: " + intent.getAction());
+		if (ACTION_HIDE.equals(intent.getAction())) {
+			finish(true);
+			return START_NOT_STICKY;
+		}
+		if (ACTION_NOTIFY_PACKAGE_CHANGED.equals(intent.getAction())) {
+			String newPackageName = intent.getStringExtra(EXTRA_PACKAGENAME);
+			if (newPackageName == null
+					|| !getPackageName().equals(newPackageName)) {
+				finish(true);
+				return START_NOT_STICKY;
+			}
+		} else {
+			mIntent = intent;
+			mAnalytics = new Analytics(this);
+			showView();
+		}
 		return START_NOT_STICKY;
 	}
 

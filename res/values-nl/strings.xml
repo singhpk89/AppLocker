@@ -167,8 +167,6 @@
     <!-- Pattern specific settings -->
     <string name="pref_tit_vibrate_pattern">Vibration</string>
     <string name="pref_desc_vibrate_pattern">Tril als je een patroon tekent</string>
-    <string name="pref_tit_pattern_stealth">Onzichtbare modus</string>
-    <string name="pref_desc_pattern_stealth">Het patroon wordt onzichtbaar</string>
     <string name="pref_tit_switch_buttons">Knoppen omwisselen</string>
     <string name="pref_desc_switch_buttons">De OK en terug knoppen worden omgewisseld</string>
     <string name="pref_list_orientation_portrait">Staand</string>
@@ -309,6 +307,8 @@
     <string name="fragment_title_pro">Pro</string>
     <string name="setup_new_lock">Nieuw slot maken</string>
     <!--  -->
+    <string name="pref_tit_pattern_stealth">Verberg patroon</string>
+    <string name="pref_desc_pattern_stealth">Vertoon het patroon niet</string>
     <string name="pref_tit_pattern_hide_error">Verberg fout</string>
     <string name="pref_desc_pattern_hide_error">Vertoon het patroon niet als het fout is</string>
     <string name="pref_tit_pattern_size">Patroon grootte</string>

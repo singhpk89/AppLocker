@@ -2,12 +2,10 @@
     android:id="@id/navRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical|right"
+    android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/element_vertical_margin"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="@dimen/element_vertical_margin" >
+    android:paddingRight="16dp" >
 
     <Switch
         android:id="@id/navFlag"
@@ -23,8 +21,11 @@
 
     <TextView
         android:id="@id/navTitle"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/navFlag"
         android:textAppearance="@android:style/TextAppearance"

@@ -133,7 +133,7 @@ public class MainActivity extends ActionBarActivity implements
 		// FIXME
 		finish();
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		Log.v("Main", "onDestroy");

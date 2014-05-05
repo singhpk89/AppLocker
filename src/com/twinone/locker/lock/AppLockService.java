@@ -352,10 +352,10 @@ public class AppLockService extends Service {
 		// If the user doesn't want a notification (default), remove it
 		if (!mShowNotification) {
 			// Retain foreground state
-			// HelperService.removeNotification(this);
+			HelperService.removeNotification(this);
 
 			// Remove foreground
-			stopForeground(true);
+			// stopForeground(true);
 		}
 	}
 

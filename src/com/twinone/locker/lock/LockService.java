@@ -51,6 +51,9 @@ import com.twinone.util.Analytics;
 public class LockService extends Service implements View.OnClickListener,
 		View.OnKeyListener {
 
+	private static final boolean DEBUG_VIEW = false;
+	private static final boolean DEBUG_BIND = true;
+
 	private enum LeftButtonAction {
 		BACK, CANCEL
 	}
@@ -277,27 +280,52 @@ public class LockService extends Service implements View.OnClickListener,
 	 */
 	private AdViewManager mAdViewManager;
 	// private AppLockService mAppLockService;
-	private AppLockService mAlarmService;
+	private AppLockService mAppLockService;
 	private Analytics mAnalytics;
 	private Animation mAnimHide;
 
 	private Animation mAnimShow;
 	private ImageView mAppIcon;
-	private boolean mBound;
+
+	private ServiceState mServiceState = ServiceState.NOT_BOUND;
+
+	private enum ServiceState {
+		/**
+		 * Service is not bound
+		 */
+		NOT_BOUND,
+		/**
+		 * We have requested binding, but not yet received it...
+		 */
+		BINDING,
+		/**
+		 * Service is successfully bound (we can interact with it)
+		 */
+		BOUND,
+		/**
+		 * Service requesting unbind
+		 */
+		UNBINDING
+	}
+
 	private final ServiceConnection mConnection = new ServiceConnection() {
 
 		@Override
 		public void onServiceConnected(ComponentName cn, IBinder binder) {
-			Log.v(TAG, "LockViewService is now bound");
+			if (DEBUG_BIND)
+				Log.v(TAG, "Service bound (mServiceState=" + mServiceState
+						+ ")");
 			final AppLockService.LocalBinder b = (AppLockService.LocalBinder) binder;
-			mAlarmService = b.getInstance();
-			mBound = true;
+			mAppLockService = b.getInstance();
+			mServiceState = ServiceState.BOUND;
 		}
 
 		@Override
 		public void onServiceDisconnected(ComponentName cn) {
-			Log.v(TAG, "LockViewService is now unbound");
-			mBound = false;
+			if (DEBUG_BIND)
+				Log.v(TAG, "Unbound service (mServiceState=" + mServiceState
+						+ ")");
+			mServiceState = ServiceState.NOT_BOUND;
 		}
 	};
 
@@ -424,6 +452,13 @@ public class LockService extends Service implements View.OnClickListener,
 		}
 		if (mAdViewManager != null)
 			mAdViewManager.onDestroy();
+		if (DEBUG_BIND)
+			Log.v(TAG, "onDestroy (mServiceState=" + mServiceState + ")");
+		if (mServiceState != ServiceState.NOT_BOUND) {
+			Log.v(TAG, "onDestroy unbinding");
+			unbindService(mConnection);
+			mServiceState = ServiceState.NOT_BOUND;
+		}
 	}
 
 	@Override
@@ -571,19 +606,17 @@ public class LockService extends Service implements View.OnClickListener,
 			finish(true);
 			return;
 		}
-		if (mBound) {
-			mAlarmService.unlockApp(mPackageName);
+		if (mServiceState == ServiceState.BOUND) {
+			mAppLockService.unlockApp(mPackageName);
 		} else {
-			Log.w(TAG, "Not bound to lockservice");
+			if (DEBUG_BIND)
+				Log.w(TAG, "Not bound to lockservice (mServiceState="
+						+ mServiceState + ")");
 		}
 		finish(true);
 	}
 
 	private void finish(boolean unlocked) {
-		if (mBound) {
-			unbindService(mConnection);
-			mBound = false;
-		}
 		if (!unlocked && ACTION_COMPARE.equals(mAction)) {
 			final Intent i = new Intent(Intent.ACTION_MAIN);
 			i.addCategory(Intent.CATEGORY_HOME);
@@ -627,7 +660,8 @@ public class LockService extends Service implements View.OnClickListener,
 	 * Hides the view from the window, and stops the service
 	 */
 	private void hideView() {
-		Log.v(TAG, "called hideView" + " (mViewState=" + mViewState + ")");
+		if (DEBUG_VIEW)
+			Log.v(TAG, "called hideView" + " (mViewState=" + mViewState + ")");
 		if (mViewState == ViewState.HIDING || mViewState == ViewState.HIDDEN) {
 			Log.w(TAG, "called hideView not hiding (mViewState=" + mViewState
 					+ ")");
@@ -642,10 +676,11 @@ public class LockService extends Service implements View.OnClickListener,
 	}
 
 	private void hideViewAnimate() {
-		Log.v(TAG, "called hideViewAnimate" + " (mViewState=" + mViewState
-				+ ")");
-		Log.d(TAG, "animating hide (resId=" + options.hideAnimationResId
-				+ ",millis=" + options.hideAnimationMillis + ")");
+		if (DEBUG_VIEW)
+			Log.v(TAG, "called hideViewAnimate" + " (mViewState=" + mViewState
+					+ ")");
+		// Log.d(TAG, "animating hide (resId=" + options.hideAnimationResId
+		// + ",millis=" + options.hideAnimationMillis + ")");
 		if (options.hideAnimationResId == 0 || options.hideAnimationMillis == 0) {
 			onViewHidden();
 			return;
@@ -675,7 +710,9 @@ public class LockService extends Service implements View.OnClickListener,
 	}
 
 	private void cancelAnimations() {
-		Log.v(TAG, "called hideViewCancel" + " (mViewState=" + mViewState + ")");
+		if (DEBUG_VIEW)
+			Log.v(TAG, "called hideViewCancel" + " (mViewState=" + mViewState
+					+ ")");
 		if (mViewState == ViewState.HIDING) {
 			mAnimHide.setAnimationListener(null);
 			mAnimHide.cancel();
@@ -689,7 +726,9 @@ public class LockService extends Service implements View.OnClickListener,
 	}
 
 	private void onViewHidden() {
-		Log.v(TAG, "called onViewHidden" + " (mViewState=" + mViewState + ")");
+		if (DEBUG_VIEW)
+			Log.v(TAG, "called onViewHidden" + " (mViewState=" + mViewState
+					+ ")");
 		if (mViewState != ViewState.HIDDEN) {
 			mViewState = ViewState.HIDDEN;
 			mWindowManager.removeView(mRootView);
@@ -706,14 +745,35 @@ public class LockService extends Service implements View.OnClickListener,
 		stopSelf();
 	}
 
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		if (!getPackageName().equals(mPackageName)) {
+			Intent i = new Intent(this, AppLockService.class);
+			if (mServiceState == ServiceState.NOT_BOUND) {
+				if (DEBUG_BIND)
+					Log.v(TAG, "Binding service (mServiceState="
+							+ mServiceState + ")");
+				mServiceState = ServiceState.BINDING;
+				bindService(i, mConnection, 0);
+			} else {
+				if (DEBUG_BIND)
+					Log.v(TAG,
+							"Not binding service in afterInflate (mServiceState="
+									+ mServiceState + ")");
+			}
+		}
+	}
+
 	/**
 	 * Should be only called from {@link #showRootView(boolean)}
 	 * 
 	 * @return
 	 */
 	private View inflateRootView() {
-		Log.v(TAG, "called inflateRootView" + " (mViewState=" + mViewState
-				+ ")");
+		if (DEBUG_VIEW)
+			Log.v(TAG, "called inflateRootView" + " (mViewState=" + mViewState
+					+ ")");
 		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 		LayoutInflater li = LayoutInflater.from(this);
 
@@ -762,10 +822,6 @@ public class LockService extends Service implements View.OnClickListener,
 		// mAdViewManager.showAds(mRootView);
 		// }
 		// bind to AppLockService
-		if (!getPackageName().equals(mPackageName)) {
-			Intent i = new Intent(this, AppLockService.class);
-			bindService(i, mConnection, 0);
-		}
 
 		switch (options.type) {
 		case LockPreferences.TYPE_PATTERN:
@@ -1012,7 +1068,8 @@ public class LockService extends Service implements View.OnClickListener,
 	 * It removes any previous view if it were present
 	 */
 	private void showView() {
-		Log.v(TAG, "called showView" + " (mViewState=" + mViewState + ")");
+		if (DEBUG_VIEW)
+			Log.v(TAG, "called showView" + " (mViewState=" + mViewState + ")");
 		if (mViewState == ViewState.SHOWING) {
 			// Do nothing, we're already showing the view
 			// We should still inflate the view, and call the before and after
@@ -1020,7 +1077,8 @@ public class LockService extends Service implements View.OnClickListener,
 		} else if (mViewState == ViewState.HIDING) {
 			cancelAnimations();
 		} else if (mViewState == ViewState.SHOWN) {
-			Log.w(TAG, "called showView butt view was already shown");
+			if (DEBUG_VIEW)
+				Log.w(TAG, "called showView butt view was already shown");
 			mWindowManager.removeView(mRootView);
 		}
 
@@ -1042,8 +1100,9 @@ public class LockService extends Service implements View.OnClickListener,
 	}
 
 	private void showViewAnimate() {
-		Log.v(TAG, "called showViewAnimate" + " (mViewState=" + mViewState
-				+ ")");
+		if (DEBUG_VIEW)
+			Log.v(TAG, "called showViewAnimate" + " (mViewState=" + mViewState
+					+ ")");
 		if (options.showAnimationResId == 0 || options.showAnimationMillis == 0) {
 			onViewShown();
 			return;
@@ -1086,7 +1145,9 @@ public class LockService extends Service implements View.OnClickListener,
 	}
 
 	private void onViewShown() {
-		Log.v(TAG, "called onViewShown" + " (mViewState=" + mViewState + ")");
+		if (DEBUG_VIEW)
+			Log.v(TAG, "called onViewShown" + " (mViewState=" + mViewState
+					+ ")");
 		mViewState = ViewState.SHOWN;
 		mAnimShow = null;
 	}

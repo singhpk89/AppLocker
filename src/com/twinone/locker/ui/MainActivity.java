@@ -131,11 +131,11 @@ public class MainActivity extends ActionBarActivity implements
 
 		Log.d("Main", "onPause, finishing");
 
-//		if (mCurrentFragmentType != NavigationElement.TYPE_SETTINGS) {
-//			// Keep settings open because the user could navigate to gallery to
-//			// change background
-//			finish();
-//		}
+		// if (mCurrentFragmentType != NavigationElement.TYPE_SETTINGS) {
+		// // Keep settings open because the user could navigate to gallery to
+		// // change background
+		// finish();
+		// }
 	}
 
 	@Override
@@ -276,7 +276,8 @@ public class MainActivity extends ActionBarActivity implements
 		} else {
 			newState = AppLockService.toggle(this);
 		}
-		mNavFragment.getAdapter().setServiceState(newState);
+		if (mNavFragment != null)
+			mNavFragment.getAdapter().setServiceState(newState);
 	}
 
 	@Override

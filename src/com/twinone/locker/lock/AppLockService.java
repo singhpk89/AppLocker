@@ -185,7 +185,7 @@ public class AppLockService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-//		Log.d(TAG, "test");
+		// Log.d(TAG, "test");
 		if (intent == null || ACTION_START.equals(intent.getAction())) {
 			if (intent == null) {
 				Log.d(TAG, "onStartCommand intent==null");

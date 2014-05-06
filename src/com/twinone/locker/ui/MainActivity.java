@@ -54,19 +54,6 @@ public class MainActivity extends ActionBarActivity implements
 
 	private Fragment mCurrentFragment;
 
-	// /**
-	// * Added in version 2204
-	// *
-	// * @return true if it's deprecated and should update forcedly
-	// */
-	// private void showVersionDialogs() {
-	// if (mVersionManager.isDeprecated()) {
-	// new VersionUtils(this).getDeprecatedDialog().show();
-	// } else if (mVersionManager.shouldWarn()) {
-	// new VersionUtils(this).getUpdateAvailableDialog().show();
-	// }
-	// }
-
 	/**
 	 * 
 	 * @return True if the service is allowed to start
@@ -98,7 +85,6 @@ public class MainActivity extends ActionBarActivity implements
 		showLockerIfNotUnlocked(true);
 		registerReceiver(mReceiver, mFilter);
 		updateLayout();
-
 	}
 
 	@Override
@@ -128,8 +114,6 @@ public class MainActivity extends ActionBarActivity implements
 		LockService.hide(this);
 		unregisterReceiver(mReceiver);
 		mSequencer.stop();
-
-		Log.d("Main", "onPause, finishing");
 
 		// if (mCurrentFragmentType != NavigationElement.TYPE_SETTINGS) {
 		// // Keep settings open because the user could navigate to gallery to
@@ -185,6 +169,9 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	private void updateLayout() {
+		Log.d("Main",
+				"UPDATE LAYOUT Setting service state: "
+						+ AppLockService.isRunning(this));
 		mNavFragment.getAdapter().setServiceState(
 				AppLockService.isRunning(this));
 	}
@@ -215,9 +202,10 @@ public class MainActivity extends ActionBarActivity implements
 		mCurrentFragmentType = NavigationElement.TYPE_APPS;
 
 		mSequencer = new DialogSequencer();
-		if (showDialogs()) {
-			AppLockService.start(this);
-		}
+		showDialogs();
+		// if (showDialogs()) {
+		// AppLockService.start(this);
+		// }
 		showLockerIfNotUnlocked(false);
 	}
 

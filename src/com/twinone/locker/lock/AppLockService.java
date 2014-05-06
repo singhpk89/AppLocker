@@ -513,6 +513,7 @@ public class AppLockService extends Service {
 	private void doStopSelf() {
 		stopAlarm(this);
 		mAllowDestroy = true;
+		stopForeground(true);
 		stopSelf();
 	}
 

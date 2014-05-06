@@ -202,10 +202,10 @@ public class MainActivity extends ActionBarActivity implements
 		mCurrentFragmentType = NavigationElement.TYPE_APPS;
 
 		mSequencer = new DialogSequencer();
-		showDialogs();
-		// if (showDialogs()) {
-		// AppLockService.start(this);
-		// }
+		if (showDialogs()) {
+			// Don't auto-start, for debugging purposes
+			// AppLockService.start(this);
+		}
 		showLockerIfNotUnlocked(false);
 	}
 

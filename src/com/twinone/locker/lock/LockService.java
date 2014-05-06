@@ -51,7 +51,7 @@ import com.twinone.util.Analytics;
 public class LockService extends Service implements View.OnClickListener,
 		View.OnKeyListener {
 
-	private static final boolean DEBUG_VIEW = false;
+	private static final boolean DEBUG_VIEW = true;
 	private static final boolean DEBUG_BIND = true;
 
 	private enum LeftButtonAction {
@@ -745,26 +745,6 @@ public class LockService extends Service implements View.OnClickListener,
 		stopSelf();
 	}
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		if (!getPackageName().equals(mPackageName)) {
-			Intent i = new Intent(this, AppLockService.class);
-			if (mServiceState == ServiceState.NOT_BOUND) {
-				if (DEBUG_BIND)
-					Log.v(TAG, "Binding service (mServiceState="
-							+ mServiceState + ")");
-				mServiceState = ServiceState.BINDING;
-				bindService(i, mConnection, 0);
-			} else {
-				if (DEBUG_BIND)
-					Log.v(TAG,
-							"Not binding service in afterInflate (mServiceState="
-									+ mServiceState + ")");
-			}
-		}
-	}
-
 	/**
 	 * Should be only called from {@link #showRootView(boolean)}
 	 * 
@@ -867,6 +847,7 @@ public class LockService extends Service implements View.OnClickListener,
 		if (mIntent == null) {
 			return false;
 		}
+
 		mAction = mIntent.getAction();
 		if (mAction == null) {
 			Log.w(TAG, "Finishing: No action specified");
@@ -881,6 +862,22 @@ public class LockService extends Service implements View.OnClickListener,
 		}
 
 		mPackageName = mIntent.getStringExtra(EXTRA_PACKAGENAME);
+
+		if (!getPackageName().equals(mPackageName)) {
+			Intent i = new Intent(this, AppLockService.class);
+			if (mServiceState == ServiceState.NOT_BOUND) {
+				if (DEBUG_BIND)
+					Log.v(TAG, "Binding service (mServiceState="
+							+ mServiceState + ")");
+				mServiceState = ServiceState.BINDING;
+				bindService(i, mConnection, 0);
+			} else {
+				if (DEBUG_BIND)
+					Log.v(TAG,
+							"Not binding service in afterInflate (mServiceState="
+									+ mServiceState + ")");
+			}
+		}
 
 		if (ACTION_CREATE.equals(mAction) || mPackageName == getPackageName()) {
 			options.showAds = false;

@@ -62,7 +62,8 @@ public class Receiver extends BroadcastReceiver {
 		data.put(LockerAnalytics.PRO_TYPE, proUtils.getProTypeString());
 		data.put(LockerAnalytics.LOCKED_APPS_COUNT,
 				String.valueOf(PrefUtils.getLockedApps(c).size()));
-		analytics.queryServer(data);
+		Log.d("Receiver", "Test");
+		analytics.setDefaultUrl(LockerAnalytics.URL).query(data);
 
 	}
 

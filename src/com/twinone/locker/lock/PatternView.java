@@ -145,6 +145,25 @@ public class PatternView extends View {
 	private int mMaxSize = 0;
 
 	/**
+	 * 
+	 * @return The distance in inches that the finger has swiped over the
+	 *         pattern<br>
+	 *         This is calculated as the distance between the pattern circles,
+	 *         not the real distance of the finger
+	 */
+	public float getFingerDistance() {
+		// TODO Pixel to inch
+		float xppi = getResources().getDisplayMetrics().xdpi;
+		float yppi = getResources().getDisplayMetrics().ydpi;
+		float ppi = (xppi + yppi) / 2;
+		float inchesPerDot = (mBitmapWidth + mBitmapHeight) / 2 / ppi;
+		float totalInches = inchesPerDot * mPattern.size();
+		Log.d("PatternView", "Distance in inch (per dot):" + inchesPerDot);
+		Log.d("PatternView", "Distance in inch (total)  :" + totalInches);
+		return totalInches;
+	}
+
+	/**
 	 * Represents a cell in the MATRIX_WIDTH x MATRIX_WIDTH matrix of the unlock
 	 * pattern view.
 	 */

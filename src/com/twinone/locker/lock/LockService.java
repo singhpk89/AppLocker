@@ -83,6 +83,11 @@ public class LockService extends Service implements View.OnClickListener,
 	private class MyOnNumberListener implements OnNumberListener {
 
 		@Override
+		public void onStart() {
+			mTimeFirstFingerDown = System.nanoTime();
+		}
+
+		@Override
 		public void onBackButton() {
 			updatePassword();
 		}
@@ -137,6 +142,7 @@ public class LockService extends Service implements View.OnClickListener,
 
 		@Override
 		public void onPatternStart() {
+			mTimeFirstFingerDown = System.nanoTime();
 			mLockPatternView.cancelClearDelay();
 			mLockPatternView.setDisplayMode(DisplayMode.Correct);
 			if (ACTION_CREATE.equals(mAction)) {
@@ -196,6 +202,23 @@ public class LockService extends Service implements View.OnClickListener,
 	private static final long PATTERN_DELAY = 600;
 
 	private static final String TAG = LockService.class.getSimpleName();
+
+	/**
+	 * Time in terms of {@link System#nanoTime()} when the first finger was
+	 * placed on the view
+	 */
+	private long mTimeFirstFingerDown;
+
+	/**
+	 * Time in terms of {@link System#nanoTime()} when the view was completely
+	 * shown
+	 */
+	private long mTimeViewShown;
+
+	/**
+	 * Finger distance in inches
+	 */
+	private float mFingerDistance;
 
 	public static int calculateInSampleSize(BitmapFactory.Options options,
 			int reqWidth, int reqHeight) {
@@ -478,6 +501,13 @@ public class LockService extends Service implements View.OnClickListener,
 	}
 
 	@Override
+	public void onCreate() {
+		super.onCreate();
+		mAnalytics = new Analytics(this);
+
+	}
+
+	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (intent == null) {
 			return START_NOT_STICKY;
@@ -496,7 +526,6 @@ public class LockService extends Service implements View.OnClickListener,
 			}
 		} else {
 			mIntent = intent;
-			mAnalytics = new Analytics(this);
 			showView();
 		}
 		return START_NOT_STICKY;
@@ -511,10 +540,10 @@ public class LockService extends Service implements View.OnClickListener,
 	private void doComparePassword(boolean explicit) {
 		final String currentPassword = mLockPasswordView.getPassword();
 		if (currentPassword.equals(options.password)) {
+			mFingerDistance = mLockPasswordView.getFingerDistance();
 			exitSuccessCompare();
-			mAnalytics.increment(LockerAnalytics.PASSWORD_SUCCESS);
 		} else if (explicit) {
-			mAnalytics.increment(LockerAnalytics.PASSWORD_FAILED);
+			mAnalytics.increment(LockerAnalytics.UNLOCK_ERROR);
 			mLockPasswordView.clearPassword();
 			updatePassword();
 			Toast.makeText(this, R.string.locker_invalid_password,
@@ -529,10 +558,10 @@ public class LockService extends Service implements View.OnClickListener,
 	private void doComparePattern() {
 		final String currentPattern = mLockPatternView.getPatternString();
 		if (currentPattern.equals(options.pattern)) {
+			mFingerDistance = mLockPatternView.getFingerDistance();
 			exitSuccessCompare();
-			mAnalytics.increment(LockerAnalytics.PATTERN_SUCCESS);
 		} else {
-			mAnalytics.increment(LockerAnalytics.PATTERN_FAILED);
+			mAnalytics.increment(LockerAnalytics.UNLOCK_ERROR);
 			if (options.patternErrorStealth) {
 				Toast.makeText(this, R.string.locker_invalid_pattern,
 						Toast.LENGTH_SHORT).show();
@@ -602,6 +631,19 @@ public class LockService extends Service implements View.OnClickListener,
 	 * Exit when an app has been unlocked successfully
 	 */
 	private void exitSuccessCompare() {
+
+		long current = System.nanoTime();
+		long total = (current - mTimeViewShown) / 1000000;
+		long interacting = (current - mTimeFirstFingerDown) / 1000000;
+		Log.d(TAG, "total:" + total);
+		mAnalytics.increment(LockerAnalytics.TIME_SPENT_IN_LOCKSCREEN, total);
+		mAnalytics.increment(LockerAnalytics.TIME_SPENT_INTERACTING,
+				interacting);
+		mAnalytics.increment(LockerAnalytics.UNLOCK_SUCCESS);
+		Log.d(TAG, "Adding finger distance: " + mFingerDistance);
+		mAnalytics.incrementFloat(LockerAnalytics.FINGER_DISTANCE,
+				mFingerDistance);
+
 		if (mPackageName == null || mPackageName.equals(getPackageName())) {
 			finish(true);
 			return;
@@ -721,11 +763,15 @@ public class LockService extends Service implements View.OnClickListener,
 			mAnimShow.setAnimationListener(null);
 			mAnimShow.cancel();
 			mAnimShow = null;
+		} else if (mViewState != ViewState.HIDDEN) {
+			mWindowManager.removeView(mRootView);
+		} else if (mViewState == ViewState.HIDDEN) {
+			Log.e(TAG, "cancelAnimations() (mViewState=HIDDEN)");
 		}
-		mWindowManager.removeView(mRootView);
 	}
 
 	private void onViewHidden() {
+
 		if (DEBUG_VIEW)
 			Log.v(TAG, "called onViewHidden" + " (mViewState=" + mViewState
 					+ ")");
@@ -1142,6 +1188,8 @@ public class LockService extends Service implements View.OnClickListener,
 	}
 
 	private void onViewShown() {
+
+		mTimeViewShown = System.nanoTime();
 		if (DEBUG_VIEW)
 			Log.v(TAG, "called onViewShown" + " (mViewState=" + mViewState
 					+ ")");

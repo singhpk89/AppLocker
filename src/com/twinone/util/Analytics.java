@@ -2,12 +2,17 @@ package com.twinone.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -30,8 +35,14 @@ public class Analytics {
 	public static final String PREF_KEY_ANALYTICS_URL = "com.twinone.analytics.url";
 	public static final String TAG = "Analytics";
 
-	public static final String ANALYTIC_UID = "uid";
-
+	/**
+	 * Auto included key that has the installation id for this user
+	 */
+	public static final String ANALYTICS_KEY_UID = "_uid";
+	/**
+	 * Auto included key that provides the android version for this device
+	 */
+	public static final String ANALYTICS_KEY_ANDROID_VERSION = "_android_version";
 	// private Context mContext;
 	private SharedPreferences mPrefs;
 	private SharedPreferences.Editor mEditor;
@@ -75,11 +86,22 @@ public class Analytics {
 
 	public long increment(String key) {
 		if (mEnableAnalytics) {
-			long value = mPrefs.getLong(key, 0);
-			value++;
-			mEditor.putLong(key, value);
+			long stored = mPrefs.getLong(key, 0);
+			stored++;
+			mEditor.putLong(key, stored);
 			autoSave();
-			return value;
+			return stored;
+		}
+		return -1;
+	}
+
+	public long increment(String key, long value) {
+		if (mEnableAnalytics) {
+			long stored = mPrefs.getLong(key, 0);
+			stored += value;
+			mEditor.putLong(key, stored);
+			autoSave();
+			return stored;
 		}
 		return -1;
 	}
@@ -95,6 +117,63 @@ public class Analytics {
 		return -1;
 	}
 
+	public long decrement(String key, long value) {
+		if (mEnableAnalytics) {
+			long stored = mPrefs.getLong(key, 0);
+			stored -= value;
+			mEditor.putLong(key, stored);
+			autoSave();
+			return stored;
+		}
+		return -1;
+	}
+
+	// Floats
+
+	public float incrementFloat(String key) {
+		if (mEnableAnalytics) {
+			float stored = mPrefs.getFloat(key, 0);
+			stored++;
+			mEditor.putFloat(key, stored);
+			autoSave();
+			return stored;
+		}
+		return -1;
+	}
+
+	public float incrementFloat(String key, float value) {
+		if (mEnableAnalytics) {
+			float stored = mPrefs.getFloat(key, 0);
+			stored += value;
+			mEditor.putFloat(key, stored);
+			autoSave();
+			return stored;
+		}
+		return -1;
+	}
+
+	public float decrementFloat(String key) {
+		if (mEnableAnalytics) {
+			float value = mPrefs.getFloat(key, 0);
+			value--;
+			mEditor.putFloat(key, value);
+			autoSave();
+			return value;
+		}
+		return -1;
+	}
+
+	public float decrementFloat(String key, float value) {
+		if (mEnableAnalytics) {
+			float stored = mPrefs.getFloat(key, 0);
+			stored -= value;
+			mEditor.putFloat(key, stored);
+			autoSave();
+			return stored;
+		}
+		return -1;
+	}
+
 	/**
 	 * Returns all analytics, never null
 	 * 
@@ -106,7 +185,9 @@ public class Analytics {
 			for (Map.Entry<String, ?> e : mPrefs.getAll().entrySet()) {
 				result.put(e.getKey(), String.valueOf(e.getValue()));
 			}
-			result.put(ANALYTIC_UID, getDeviceId());
+			result.put(ANALYTICS_KEY_UID, getInstallationId());
+			result.put(ANALYTICS_KEY_ANDROID_VERSION,
+					String.valueOf(Build.VERSION.SDK_INT));
 		}
 		return result;
 	}
@@ -148,20 +229,20 @@ public class Analytics {
 		public void onServerResponse(String response);
 	}
 
-	public void queryServer() {
-		queryServer((AnalyticsListener) null);
+	public void query() {
+		query((AnalyticsListener) null);
 	}
 
 	/**
 	 * Primary method that should be called when you want to know something
 	 * about the device's version (async, so a listener is needed)
 	 */
-	public void queryServer(AnalyticsListener listener) {
-		queryServer(listener, null);
+	public void query(AnalyticsListener listener) {
+		query(listener, null);
 	}
 
-	public void queryServer(Map<String, String> params) {
-		queryServer(null, params);
+	public void query(Map<String, String> params) {
+		query(null, params);
 	}
 
 	/**
@@ -170,8 +251,7 @@ public class Analytics {
 	 * @param params
 	 *            Additional parameters to be appended to the GET request
 	 */
-	public void queryServer(AnalyticsListener listener,
-			Map<String, String> params) {
+	public void query(AnalyticsListener listener, Map<String, String> params) {
 		Log.d(TAG, "queryserver!");
 		if (!mEnableAnalytics) {
 			Log.w(TAG, "Analytics are not enabled for this device");
@@ -190,12 +270,7 @@ public class Analytics {
 			ub.appendQueryParameter(e.getKey(), e.getValue());
 		}
 
-		Uri uri = ub.build();
-		if (uri == null) {
-			Log.w(TAG, "You should provide a URL with setUrlOnce()");
-			return;
-		}
-		new QueryServerTask(listener).execute(uri);
+		new QueryServerTask(listener).execute(ub.build());
 	}
 
 	private class QueryServerTask extends AsyncTask<Uri, Void, String> {
@@ -264,22 +339,43 @@ public class Analytics {
 		applyCompat(editor);
 	}
 
+	private String mDefaultUrl = null;
+
+	/**
+	 * 
+	 * @param url
+	 * @return This analytics for fluent API concatenation
+	 */
+	public Analytics setDefaultUrl(String url) {
+		mDefaultUrl = url;
+		return this;
+	}
+
 	/**
 	 * Return the current URL, or null if it was not yet set.<br>
 	 * This will also append the ?v=versionCode to the URL
 	 */
 	private Uri getUrl() {
+		if (mDefaultUrl == null)
+			throw new IllegalStateException(
+					"Should have called setDefaultUrl() first!");
+
 		try {
 			String url = mContext.getSharedPreferences(PREF_PERSISTENT_FILE,
 					Context.MODE_PRIVATE).getString(PREF_KEY_ANALYTICS_URL,
 					null);
 			return Uri.parse(url);
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			return Uri.parse(mDefaultUrl);
 		}
 	}
 
+	/**
+	 * You should not use this method, use {@link #getInstallationId()} instead,
+	 * which will reset with a factory reset
+	 * 
+	 * @return
+	 */
 	public String getDeviceId() {
 		String id = Secure.getString(mContext.getContentResolver(),
 				Secure.ANDROID_ID);
@@ -297,6 +393,43 @@ public class Analytics {
 		} else {
 			editor.apply();
 		}
+	}
+
+	/**
+	 * Installation id
+	 */
+	private static String INSTALLATION_ID = null;
+	private static final String INSTALLATION = "com.twinone.analytics.installation_id";
+
+	public synchronized String getInstallationId() {
+		if (INSTALLATION_ID == null) {
+			File installation = new File(mContext.getFilesDir(), INSTALLATION);
+			try {
+				if (!installation.exists())
+					writeInstallationFile(installation);
+				INSTALLATION_ID = readInstallationFile(installation);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return INSTALLATION_ID;
+	}
+
+	private static String readInstallationFile(File installation)
+			throws IOException {
+		RandomAccessFile f = new RandomAccessFile(installation, "r");
+		byte[] bytes = new byte[(int) f.length()];
+		f.readFully(bytes);
+		f.close();
+		return new String(bytes);
+	}
+
+	private static void writeInstallationFile(File installation)
+			throws IOException {
+		FileOutputStream out = new FileOutputStream(installation);
+		String id = UUID.randomUUID().toString();
+		out.write(id.getBytes());
+		out.close();
 	}
 
 }

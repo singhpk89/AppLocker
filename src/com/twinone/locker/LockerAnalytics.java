@@ -2,19 +2,18 @@ package com.twinone.locker;
 
 public abstract class LockerAnalytics {
 
+	private static final String ANALYTICS_PRD = "https://twinone.org/apps/locker/dbg-analytics.php";
+	private static final String ANALYTICS_DBG = "https://twinone.org/apps/locker/analytics.php";
+	public static final String URL = Constants.DEBUG ? ANALYTICS_DBG
+			: ANALYTICS_PRD;
+
 	// MainActivity
 	public static final String SHARE = "main_shared";
 	public static final String RATE = "main_rated";
 
-	// User enters correct password
-	public static final String PASSWORD_SUCCESS = "password_success";
-	// User enters incorrect password
-	public static final String PASSWORD_FAILED = "password_failed";
-	// User enters correct password
-	public static final String PATTERN_SUCCESS = "pattern_success";
-	// User enters incorrect password
-	public static final String PATTERN_FAILED = "pattern_failed";
-	// User cancels the lock screen (back or home)
+	public static final String UNLOCK_SUCCESS = "unlock_success";
+	public static final String UNLOCK_ERROR = "unlock_error";
+
 	public static final String UNLOCK_CANCEL = "unlock_cancel";
 
 	public static final String AD_CLICKED = "ad_clicked";
@@ -29,5 +28,14 @@ public abstract class LockerAnalytics {
 
 	public static final String SERVICE_START = "service_start";
 	public static final String SERVICE_STOP = "service_stop";
+
+	// In inch, float
+	public static final String FINGER_DISTANCE = "finger_distance";
+
+	// In ms (long)
+	public static final String TIME_SPENT_INTERACTING = "time_spent_interacting";
+
+	// In ms (long)
+	public static final String TIME_SPENT_IN_LOCKSCREEN = "time_spent_in_lockscreen";
 
 }

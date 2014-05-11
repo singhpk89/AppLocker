@@ -1,5 +1,8 @@
 package com.twinone.locker.ui;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
@@ -18,11 +21,14 @@ import android.view.View;
 
 import com.twinone.androidlib.DebugTools;
 import com.twinone.locker.Constants;
+import com.twinone.locker.LockerAnalytics;
 import com.twinone.locker.R;
 import com.twinone.locker.lock.AppLockService;
 import com.twinone.locker.lock.LockService;
+import com.twinone.locker.pro.ProUtils;
 import com.twinone.locker.ui.NavigationFragment.NavigationListener;
 import com.twinone.locker.util.PrefUtils;
+import com.twinone.util.Analytics;
 import com.twinone.util.DialogSequencer;
 
 public class MainActivity extends ActionBarActivity implements
@@ -33,13 +39,9 @@ public class MainActivity extends ActionBarActivity implements
 	// public static final boolean DEBUG = false;
 	private static final String VERSION_URL_PRD = "https://twinone.org/apps/locker/update.php";
 	private static final String VERSION_URL_DBG = "https://twinone.org/apps/locker/dbg-update.php";
-
-	private static final String ANALYTICS_PRD = "https://twinone.org/apps/locker/dbg-analytics.php";
-	private static final String ANALYTICS_DBG = "https://twinone.org/apps/locker/analytics.php";
 	public static final String VERSION_URL = Constants.DEBUG ? VERSION_URL_DBG
 			: VERSION_URL_PRD;
-	public static final String ANALYTICS_URL = Constants.DEBUG ? ANALYTICS_DBG
-			: ANALYTICS_PRD;
+
 	// private VersionManager mVersionManager;
 
 	// private static final String TAG = "Main";
@@ -50,6 +52,17 @@ public class MainActivity extends ActionBarActivity implements
 	public static final String EXTRA_UNLOCKED = "com.twinone.locker.unlocked";
 
 	private void doTest() {
+		Log.d("", "Querying from test");
+		// new VersionManager(c).queryServer(null);
+
+		// analytics
+		Analytics analytics = new Analytics(this);
+		ProUtils proUtils = new ProUtils(this);
+		Map<String, String> data = new HashMap<String, String>();
+		data.put(LockerAnalytics.PRO_TYPE, proUtils.getProTypeString());
+		data.put(LockerAnalytics.LOCKED_APPS_COUNT,
+				String.valueOf(PrefUtils.getLockedApps(this).size()));
+		analytics.setDefaultUrl(LockerAnalytics.URL).query(data);
 	}
 
 	private Fragment mCurrentFragment;
@@ -221,13 +234,15 @@ public class MainActivity extends ActionBarActivity implements
 	 * Handle this Intent for searching...
 	 */
 	private void handleIntent() {
-		if (getIntent().getAction().equals(Intent.ACTION_SEARCH)) {
-			Log.d("MainActivity", "Action search!");
-			if (mCurrentFragmentType == NavigationElement.TYPE_APPS) {
-				final String query = getIntent().getStringExtra(
-						SearchManager.QUERY);
-				if (query != null) {
-					((AppsFragment) mCurrentFragment).onSearch(query);
+		if (getIntent() != null && getIntent().getAction() != null) {
+			if (getIntent().getAction().equals(Intent.ACTION_SEARCH)) {
+				Log.d("MainActivity", "Action search!");
+				if (mCurrentFragmentType == NavigationElement.TYPE_APPS) {
+					final String query = getIntent().getStringExtra(
+							SearchManager.QUERY);
+					if (query != null) {
+						((AppsFragment) mCurrentFragment).onSearch(query);
+					}
 				}
 			}
 		}

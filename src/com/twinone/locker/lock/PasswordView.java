@@ -58,6 +58,8 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 	/** How many times may the view be wider than tall? */
 	private float mMaxHScale = 1.2f;
 
+	private boolean mStarted;
+
 	/**
 	 * If this is true, all children will be square, so the height of this view
 	 * will be {@link #mChildHeight} * {@link #mRows} and the width will be
@@ -178,6 +180,9 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 	}
 
 	public interface OnNumberListener {
+
+		public void onStart();
+
 		public void onNumberButton(String newNumber);
 
 		public void onOkButton();
@@ -191,6 +196,10 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 
 	@Override
 	public void onClick(View v) {
+		if (!mStarted) {
+			mListener.onStart();
+			mStarted = true;
+		}
 
 		if (v.getId() == mOkButton.getId()) {
 			onOkButtonImpl();
@@ -207,8 +216,32 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 		}
 	}
 
+	/**
+	 * 
+	 * @return The distance in inches that the finger has swiped over the
+	 *         pattern<br>
+	 *         This is calculated as the distance between the pattern circles,
+	 *         not the real distance of the finger
+	 */
+	public float getFingerDistance() {
+		// TODO Pixel to inch
+		float xppi = getResources().getDisplayMetrics().xdpi;
+		float yppi = getResources().getDisplayMetrics().ydpi;
+		float ppi = (xppi + yppi) / 2;
+		float inchesPerDot = (mChildWidth + mChildHeight) / 2 / ppi;
+		float totalInches = inchesPerDot * mPassword.length();
+		Log.d("PatternView", "Distance in inch (per dot):" + inchesPerDot);
+		Log.d("PatternView", "Distance in inch (total)  :" + totalInches);
+		return totalInches;
+	}
+
 	@Override
 	public boolean onLongClick(View v) {
+		if (!mStarted) {
+			mListener.onStart();
+			mStarted = true;
+		}
+
 		if (v.getId() == mOkButton.getId()) {
 			onOkButtonLongImpl();
 		} else if (v.getId() == mBackButton.getId()) {

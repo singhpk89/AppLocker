@@ -416,7 +416,7 @@ public class LockService extends Service implements View.OnClickListener,
 	@Override
 	public void onClick(final View v) {
 		switch (v.getId()) {
-		case R.id.bFooterLeft:
+		case R.id.lock_footer_b_left:
 			if (ACTION_CREATE.equals(mAction)) {
 				if (mLeftButtonAction == LeftButtonAction.BACK) {
 					setupFirst();
@@ -425,7 +425,7 @@ public class LockService extends Service implements View.OnClickListener,
 				}
 			}
 			break;
-		case R.id.bFooterRight:
+		case R.id.lock_footer_b_right:
 			if (ACTION_CREATE.equals(mAction)) {
 				if (mRightButtonAction == RightButtonAction.CONTINUE) {
 					setupSecond();
@@ -805,20 +805,22 @@ public class LockService extends Service implements View.OnClickListener,
 
 		setTheme(R.style.LockActivityTheme);
 		View root = (View) li.inflate(R.layout.layout_alias_locker, null);
-		mContainer = (RelativeLayout) root.findViewById(R.id.rlContainer);
-		mViewBackground = (ImageView) root.findViewById(R.id.ivBackground);
+		mContainer = (RelativeLayout) root.findViewById(R.id.lock_container);
+		mViewBackground = (ImageView) root
+				.findViewById(R.id.lock_iv_background);
 		root.setOnKeyListener(this);
 		root.setFocusable(true);
 		root.setFocusableInTouchMode(true);
 
-		mViewTitle = (TextView) root.findViewById(R.id.tvHeader);
-		mViewMessage = (TextView) root.findViewById(R.id.tvFooter);
-		mAppIcon = (ImageView) root.findViewById(R.id.ivAppIcon);
-		mLockView = (ViewGroup) root.findViewById(R.id.lockView);
+		mViewTitle = (TextView) root.findViewById(R.id.lock_tv_title);
+		mViewMessage = (TextView) root.findViewById(R.id.lock_tv_footer);
+		mAppIcon = (ImageView) root.findViewById(R.id.lock_iv_app_icon);
+		mLockView = (ViewGroup) root.findViewById(R.id.lock_lockview);
 
-		mFooterButtons = (LinearLayout) root.findViewById(R.id.llBottomButtons);
-		mLeftButton = (Button) root.findViewById(R.id.bFooterLeft);
-		mRightButton = (Button) root.findViewById(R.id.bFooterRight);
+		mFooterButtons = (LinearLayout) root
+				.findViewById(R.id.lock_footer_buttons);
+		mLeftButton = (Button) root.findViewById(R.id.lock_footer_b_left);
+		mRightButton = (Button) root.findViewById(R.id.lock_footer_b_right);
 
 		mRightButton.setOnClickListener(this);
 		mLeftButton.setOnClickListener(this);
@@ -831,14 +833,17 @@ public class LockService extends Service implements View.OnClickListener,
 	private void afterInflate() {
 		setBackground();
 		if (options.showAds) {
-			if (mAdMobManager == null) {
-				mAdMobManager = new AdMobManager(this,
-						mRootView.findViewById(R.id.adContainer));
+			if (mAdMobManager != null) {
+				mAdMobManager.destroy();
 			}
+			mAdMobManager = new AdMobManager(this,
+					mRootView.findViewById(R.id.lock_ad_container));
 			mAdMobManager.loadAd();
+
 		} else {
 			// Don't use precious space
-			mRootView.findViewById(R.id.adContainer).setVisibility(View.GONE);
+			mRootView.findViewById(R.id.lock_ad_container).setVisibility(
+					View.GONE);
 		}
 		// if (!AdViewManager.isOnEmulator() && !ACTION_CREATE.equals(mAction))
 		// {

@@ -75,7 +75,8 @@ public class AdViewManager implements AdListener {
 		}
 		removeAdFromParent();
 		// old parent can be useless, so get the new one
-		mAdContainer = (RelativeLayout) rootView.findViewById(R.id.adContainer);
+		mAdContainer = (RelativeLayout) rootView
+				.findViewById(R.id.lock_ad_container);
 		mAdContainer.addView(mMobFoxAdView);
 		mShown = true;
 	}

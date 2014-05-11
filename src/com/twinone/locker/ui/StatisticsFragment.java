@@ -30,6 +30,7 @@ public class StatisticsFragment extends Fragment {
 			Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_statistics, container,
 				false);
+		
 
 		getActivity().setTitle(R.string.fragment_title_statistics);
 		return root;

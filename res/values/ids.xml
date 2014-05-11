@@ -5,4 +5,22 @@
     <item name="navTitle" type="id"/>
     <item name="navFlag" type="id"/>
 
+    <!-- Lock screen -->
+    <item name="lock_root_view" type="id"></item>
+    <item name="lock_container" type="id"></item>
+    <item name="lock_ad_container" type="id"></item>
+    <item name="lock_left_panel" type="id"></item>
+    <item name="lock_right_panel" type="id"></item>
+    <item name="lock_footer_buttons" type="id"></item>
+    <item name="lock_tv_footer" type="id"></item>
+    <item name="lock_tv_title" type="id"></item>
+    <item name="lock_iv_app_icon" type="id"></item>
+    <item name="lock_iv_background" type="id"></item>
+    <item name="lock_lockview" type="id"></item>
+    <item name="lock_footer_b_left" type="id"></item>
+    <item name="lock_footer_b_right" type="id"></item>
+    <item name="lock_tv_password" type="id"></item>
+    <item name="lock_twopanes_left_scroller" type="id"></item>
+    
+    
 </resources>

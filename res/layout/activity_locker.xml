@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rlLockerRoot"
+    android:id="@id/lock_root_view"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content" >
 
     <!-- CONTAINER -->
 
     <RelativeLayout
-        android:id="@+id/rlContainer"
+        android:id="@id/lock_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <!-- BACKGROUND -->
 
         <ImageView
-            android:id="@+id/ivBackground"
+            android:id="@id/lock_iv_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
@@ -24,7 +24,7 @@
         <!-- AD -->
 
         <RelativeLayout
-            android:id="@+id/adContainer"
+            android:id="@id/lock_ad_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -38,7 +38,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/adContainer"
+            android:layout_above="@id/lock_ad_container"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -67,13 +67,13 @@
                         android:orientation="horizontal" >
 
                         <ImageView
-                            android:id="@+id/ivAppIcon"
+                            android:id="@id/lock_iv_app_icon"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:layout_marginRight="8dp" />
 
                         <TextView
-                            android:id="@+id/tvHeader"
+                            android:id="@id/lock_tv_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="24sp" >
@@ -84,7 +84,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/tvFooter"
+                        android:id="@id/lock_tv_footer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAppearance="@android:style/TextAppearance.Small" />
@@ -93,7 +93,7 @@
             <!-- LOCKVIEW -->
 
             <LinearLayout
-                android:id="@+id/lockView"
+                android:id="@id/lock_lockview"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="5"
@@ -102,10 +102,25 @@
 
                 <!-- This view dynamically adapts to the LockType chosen by the user -->
 
+                <TextView
+                    android:id="@id/lock_tv_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:enabled="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:gravity="center"
+                    android:inputType="textPassword"
+                    android:textColor="#ffffff"
+                    android:textSize="30dp"
+                    android:visibility="gone" >
+                </TextView>
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/llBottomButtons"
+                android:id="@id/lock_footer_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -113,7 +128,7 @@
                 android:visibility="gone" >
 
                 <Button
-                    android:id="@+id/bFooterLeft"
+                    android:id="@id/lock_footer_b_left"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginRight="3dp"
@@ -121,7 +136,7 @@
                     android:text="@android:string/cancel" />
 
                 <Button
-                    android:id="@+id/bFooterRight"
+                    android:id="@id/lock_footer_b_right"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="3dp"

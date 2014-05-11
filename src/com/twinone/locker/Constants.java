@@ -19,6 +19,6 @@ import android.os.Build;
 
 public abstract class Constants {
 
-	public static final boolean DEBUG = BuildConfig.DEBUG;
+	public static final boolean DEBUG = false;
 
 }

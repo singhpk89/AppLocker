@@ -278,9 +278,10 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 
 	private void onBackButtonImpl() {
 		if (mPassword.length() != 0) {
-			StringBuilder sb = new StringBuilder(mPassword);
-			sb.deleteCharAt(sb.length() - 1);
-			setPassword(sb.toString());
+//			StringBuilder sb = new StringBuilder(mPassword);
+//			sb.deleteCharAt(sb.length() - 1);
+//			setPassword(sb.toString());
+			clearPassword();
 		}
 		if (mListener != null) {
 			mListener.onBackButton();

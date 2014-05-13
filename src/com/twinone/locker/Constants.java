@@ -15,10 +15,9 @@
  */
 package com.twinone.locker;
 
-import android.os.Build;
 
 public abstract class Constants {
 
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = BuildConfig.DEBUG;
 
 }

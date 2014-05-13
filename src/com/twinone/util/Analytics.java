@@ -38,11 +38,12 @@ public class Analytics {
 	/**
 	 * Auto included key that has the installation id for this user
 	 */
-	public static final String ANALYTICS_KEY_UID = "_uid";
+	public static final String ANALYTICS_KEY_INSTALLATION_ID = "_installation_id";
 	/**
 	 * Auto included key that provides the android version for this device
 	 */
 	public static final String ANALYTICS_KEY_ANDROID_VERSION = "_android_version";
+
 	// private Context mContext;
 	private SharedPreferences mPrefs;
 	private SharedPreferences.Editor mEditor;
@@ -185,7 +186,7 @@ public class Analytics {
 			for (Map.Entry<String, ?> e : mPrefs.getAll().entrySet()) {
 				result.put(e.getKey(), String.valueOf(e.getValue()));
 			}
-			result.put(ANALYTICS_KEY_UID, getInstallationId());
+			result.put(ANALYTICS_KEY_INSTALLATION_ID, getInstallationId());
 			result.put(ANALYTICS_KEY_ANDROID_VERSION,
 					String.valueOf(Build.VERSION.SDK_INT));
 		}

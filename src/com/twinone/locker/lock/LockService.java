@@ -751,6 +751,9 @@ public class LockService extends Service implements View.OnClickListener,
 		mContainer.startAnimation(mAnimHide);
 	}
 
+	/**
+	 * Cancels the animation but DOES NOT REMOVE THE VIEW FROM WINDOWMANAGER
+	 */
 	private void cancelAnimations() {
 		if (DEBUG_VIEW)
 			Log.v(TAG, "called hideViewCancel" + " (mViewState=" + mViewState
@@ -763,10 +766,6 @@ public class LockService extends Service implements View.OnClickListener,
 			mAnimShow.setAnimationListener(null);
 			mAnimShow.cancel();
 			mAnimShow = null;
-		} else if (mViewState != ViewState.HIDDEN) {
-			mWindowManager.removeView(mRootView);
-		} else if (mViewState == ViewState.HIDDEN) {
-			Log.e(TAG, "cancelAnimations() (mViewState=HIDDEN)");
 		}
 	}
 
@@ -1118,15 +1117,13 @@ public class LockService extends Service implements View.OnClickListener,
 	private void showView() {
 		if (DEBUG_VIEW)
 			Log.v(TAG, "called showView" + " (mViewState=" + mViewState + ")");
-		if (mViewState == ViewState.SHOWING) {
-			// Do nothing, we're already showing the view
-			// We should still inflate the view, and call the before and after
-			// methods
-		} else if (mViewState == ViewState.HIDING) {
+		if (mViewState == ViewState.HIDING || mViewState == ViewState.SHOWING) {
 			cancelAnimations();
-		} else if (mViewState == ViewState.SHOWN) {
+		}
+
+		if (mViewState != ViewState.HIDDEN) {
 			if (DEBUG_VIEW)
-				Log.w(TAG, "called showView butt view was already shown");
+				Log.w(TAG, "called showView but was not hidden");
 			mWindowManager.removeView(mRootView);
 		}
 
@@ -1139,12 +1136,8 @@ public class LockService extends Service implements View.OnClickListener,
 		// Do some extra stuff when the view's ready
 		afterInflate();
 
-		if (mViewState != ViewState.SHOWN) {
-			mViewState = ViewState.SHOWING;
-			showViewAnimate();
-		} else {
-			onViewShown();
-		}
+		mViewState = ViewState.SHOWING;
+		showViewAnimate();
 	}
 
 	private void showViewAnimate() {

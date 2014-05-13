@@ -1,6 +1,5 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-
     <style name="Switch_TextColor">
         <item name="android:textColor">#fff</item>
     </style>

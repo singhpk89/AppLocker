@@ -296,10 +296,10 @@
 
     <!-- BEGIN v2320 -->
     <string name="nav_status">Bloqueo</string>
-    <string name="nav_apps">Applications</string>
-    <string name="nav_change">Change lock</string>
-    <string name="nav_settings">Settings</string>
-    <string name="nav_statistics">Statistics</string>
+    <string name="nav_apps">Aplicaciones</string>
+    <string name="nav_change">Cambiar bloqueo</string>
+    <string name="nav_settings">Ajustes</string>
+    <string name="nav_statistics">Estadísticas</string>
     <string name="nav_pro">Pro</string>
     <string name="nav_test">Test</string>
     <!--  -->
@@ -340,5 +340,13 @@
     <string name="apps_toast_locked_all">Todas las aplicaciones bloqueadas</string>
     <string name="apps_toast_unlocked_single">%s desbloqueado</string>
     <string name="apps_toast_unlocked_all">Todas las aplicaciones desbloqueadas</string>
+
+    <!-- BEGIN v2332 -->
+    <string name="nav_b_share">Compartir</string>
+    <string name="nav_b_rate">Valorar</string>
+    <string name="share_dlg_tit">Compartir Locker</string>
+    <string name="share_dlg_msg">Si te gusta esta app, considera ayudar a mejorarla compartíendola con tus amigos.</string>
+    <!-- May be used for twitter -->
+    <string name="share_promo_text">Echa un vistazo a Twinone App Locker, la app gratuita que protege tu privacidad y aplicaciones. https://play.google.com/store/apps/details?id=com.twinone.locker</string>
 
 </resources>

@@ -16,7 +16,7 @@
     <color name="item_bg">#ddd</color>
     <color name="item_border">#ddd</color>
     <color name="item_selected_bg">#16a085</color>
-    <color name="item_selected_border">#fff</color>
+    <color name="item_selected_border">#00000000</color>
     <color name="pro_item_desc">#000</color>
     <color name="pro_item_tit">#000</color>
     <color name="pro_item_selected_tit">#fff</color>

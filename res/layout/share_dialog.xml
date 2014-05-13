@@ -5,12 +5,15 @@
     android:orientation="vertical" >
 
     <EditText
-        android:id="@+id/etShareText"
+        android:id="@id/share_dlg_et_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/main_share"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-         />
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:hint="@string/share_dlg_tit"
+        android:text="@string/share_promo_text" >
+    </EditText>
 
 </LinearLayout>

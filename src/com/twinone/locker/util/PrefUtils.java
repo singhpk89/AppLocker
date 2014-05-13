@@ -349,7 +349,7 @@ public class PrefUtils {
 				|| (androidId.equals("0000000000000000"))) {
 			androidId = "fdaffadfaedfaedf827382164762349787adadfebcbc";
 		}
-		return "#" + String.valueOf(androidId.hashCode());
+		return "#" + String.valueOf(Math.abs(androidId.hashCode()));
 	}
 
 }

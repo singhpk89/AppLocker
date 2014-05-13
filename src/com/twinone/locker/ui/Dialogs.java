@@ -20,6 +20,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 
 import com.twinone.locker.R;
 import com.twinone.locker.lock.LockPreferences;
@@ -124,4 +127,38 @@ public class Dialogs {
 		return ab.create();
 	}
 
+	/**
+	 * 
+	 * Get the dialog to share the app
+	 */
+	public static AlertDialog getShareEditDialog(final Context c) {
+		final AlertDialog.Builder ab = new AlertDialog.Builder(c);
+
+		LayoutInflater inflater = (LayoutInflater) c
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		final View v = inflater.inflate(R.layout.share_dialog, null);
+		ab.setView(v);
+
+		ab.setCancelable(false);
+		ab.setTitle(R.string.share_dlg_tit);
+		ab.setMessage(R.string.share_dlg_msg);
+		ab.setPositiveButton(android.R.string.ok, new OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Intent intent = new Intent();
+				intent.setAction(Intent.ACTION_SEND);
+				intent.setType("text/plain");
+				final String text = ((EditText) v
+						.findViewById(R.id.share_dlg_et_content)).getText()
+						.toString();
+				intent.putExtra(Intent.EXTRA_TEXT, text);
+				Intent sender = Intent.createChooser(intent,
+						c.getString(R.string.share_dlg_tit));
+				c.startActivity(sender);
+			}
+		});
+		ab.setNegativeButton(android.R.string.cancel, null);
+		return ab.create();
+	}
 }

@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -334,4 +335,19 @@ public class MainActivity extends ActionBarActivity implements
 		mCurrentFragmentType = type;
 	}
 
+	@Override
+	public void onShareButton() {
+		Dialogs.getShareEditDialog(this).show();
+	}
+
+	@Override
+	public void onRateButton() {
+		toGooglePlay();
+	}
+
+	private void toGooglePlay() {
+		Intent intent = new Intent(Intent.ACTION_VIEW);
+		intent.setData(Uri.parse("market://details?id=" + getPackageName()));
+		startActivity(intent);
+	}
 }

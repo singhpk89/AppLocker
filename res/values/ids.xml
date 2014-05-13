@@ -21,6 +21,14 @@
     <item name="lock_footer_b_right" type="id"></item>
     <item name="lock_tv_password" type="id"></item>
     <item name="lock_twopanes_left_scroller" type="id"></item>
-    
-    
+
+    <!-- Navigation drawer -->
+    <item name="nav_bottom_buttons" type="id"></item>
+    <item name="nav_b_share" type="id"></item>
+    <item name="nav_b_rate" type="id"></item>
+    <item name="nav_list" type="id"></item>
+
+    <!-- Share dialog -->
+    <item name="share_dlg_et_content" type="id"></item>
+
 </resources>

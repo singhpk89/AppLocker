@@ -247,7 +247,7 @@ public class AppLockService extends Service {
 
 	private void onLockedAppOpen(final String open, final String close) {
 		final boolean locked = mLockedPackages.get(open);
-		Log.d(TAG, "onLockedAPpOpen (locked=" + locked + ")");
+		// Log.d(TAG, "onLockedAppOpen (locked=" + locked + ")");
 		if (locked) {
 			showLocker(open);
 		}
@@ -270,9 +270,16 @@ public class AppLockService extends Service {
 
 	private void onLockedAppClose(String close, String open) {
 		setRelockTimer(close);
-		if (!getPackageName().equals(close) && !getPackageName().equals(open)) {
-			LockService.hide(this);
+		if (getPackageName().equals(close) || getPackageName().equals(open)) {
+			// Don't interact with own app
+			return;
 		}
+
+		if (mLockedPackages.containsKey(open)) {
+			// The newly opened app needs a lock screen, so don't hide previous
+			return;
+		}
+		LockService.hide(this);
 	}
 
 	private void setRelockTimer(String packageName) {

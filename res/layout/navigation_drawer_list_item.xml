@@ -2,7 +2,6 @@
     android:id="@id/navRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingLeft="16dp"
     android:paddingRight="16dp" >
@@ -21,11 +20,11 @@
     <TextView
         android:id="@id/navTitle"
         android:layout_width="match_parent"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
         android:layout_toLeftOf="@id/navFlag"
         android:textAppearance="@android:style/TextAppearance"
         android:textColor="#fff" />

@@ -62,4 +62,14 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
+    <!-- For navigation drawer -->
+    <style name="ButtonBarButton">
+        <item name="android:background">#0000</item>
+        <item name="android:textColor">#fff</item>
+    </style>
+
+    <style name="ButtonBar" parent="@android:style/ButtonBar">
+        <item name="android:background">#0000</item>
+    </style>
+
 </resources>

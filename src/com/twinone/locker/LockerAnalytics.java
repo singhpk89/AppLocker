@@ -11,6 +11,9 @@ public abstract class LockerAnalytics {
 	public static final String SHARE = "main_shared";
 	public static final String RATE = "main_rated";
 
+	/**
+	 * Number of apps successfully unlocked
+	 */
 	public static final String UNLOCK_SUCCESS = "unlock_success";
 	public static final String UNLOCK_ERROR = "unlock_error";
 

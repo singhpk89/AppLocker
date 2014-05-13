@@ -33,11 +33,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.twinone.locker.R;
 
-public class NavigationFragment extends Fragment {
+public class NavigationFragment extends Fragment implements
+		View.OnClickListener {
 	/**
 	 * Remember the position of the selected item.
 	 */
@@ -52,7 +54,7 @@ public class NavigationFragment extends Fragment {
 	/**
 	 * A pointer to the current callbacks instance (the Activity).
 	 */
-	private NavigationListener mCallbacks;
+	private NavigationListener mListener;
 
 	/**
 	 * Helper component that ties the action bar to the navigation drawer.
@@ -62,6 +64,9 @@ public class NavigationFragment extends Fragment {
 	private DrawerLayout mDrawerLayout;
 	private ListView mListView;
 	private View mFragmentView;
+
+	private Button bRate;
+	private Button bShare;
 
 	private boolean isOpen;
 	private int mCurrentSelectedPosition = -1;
@@ -119,8 +124,16 @@ public class NavigationFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		mListView = (ListView) inflater.inflate(
-				R.layout.fragment_navigation_drawer, container, false);
+		View root = inflater.inflate(R.layout.fragment_nav, container, false);
+
+		bRate = (Button) root.findViewById(R.id.nav_b_rate);
+		bRate.setOnClickListener(this);
+		bShare = (Button) root.findViewById(R.id.nav_b_share);
+		bShare.setOnClickListener(this);
+
+		mListView = (ListView) root.findViewById(R.id.nav_list);
+		// mListView = (ListView) inflater.inflate(
+		// R.layout.fragment_navigation_drawer, container, false);
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -130,7 +143,7 @@ public class NavigationFragment extends Fragment {
 		});
 		mListView.setAdapter(mAdapter);
 		mListView.setItemChecked(mCurrentSelectedPosition, true);
-		return mListView;
+		return root;
 	}
 
 	public boolean isDrawerOpen() {
@@ -175,7 +188,7 @@ public class NavigationFragment extends Fragment {
 				}
 				getActivity().supportInvalidateOptionsMenu(); // calls
 																// onPrepareOptionsMenu()
-				mCallbacks.onDrawerClosed(drawerView);
+				mListener.onDrawerClosed(drawerView);
 			}
 
 			@Override
@@ -199,7 +212,7 @@ public class NavigationFragment extends Fragment {
 
 				getActivity().supportInvalidateOptionsMenu(); // calls
 																// onPrepareOptionsMenu()
-				mCallbacks.onDrawerOpened(drawerView);
+				mListener.onDrawerOpened(drawerView);
 			}
 		};
 
@@ -227,8 +240,8 @@ public class NavigationFragment extends Fragment {
 			mListView.setItemChecked(position, true);
 		}
 		boolean close = true;
-		if (mCallbacks != null) {
-			close = mCallbacks
+		if (mListener != null) {
+			close = mListener
 					.onNavigationElementSelected(((NavigationElement) mAdapter
 							.getItem(position)).type);
 		}
@@ -241,17 +254,17 @@ public class NavigationFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mCallbacks = (NavigationListener) activity;
+			mListener = (NavigationListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(
-					"Activity must implement NavigationDrawerCallbacks.");
+					"Activity must implement NavigationListener.");
 		}
 	}
 
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		mCallbacks = null;
+		mListener = null;
 	}
 
 	@Override
@@ -322,6 +335,10 @@ public class NavigationFragment extends Fragment {
 
 		void onDrawerClosed(View drawerView);
 
+		void onShareButton();
+
+		void onRateButton();
+
 	}
 
 	public void open() {
@@ -330,5 +347,19 @@ public class NavigationFragment extends Fragment {
 
 	public void close() {
 		mDrawerLayout.closeDrawer(mFragmentView);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.nav_b_rate:
+			if (mListener != null)
+				mListener.onRateButton();
+			break;
+		case R.id.nav_b_share:
+			if (mListener != null)
+				mListener.onShareButton();
+			break;
+		}
 	}
 }

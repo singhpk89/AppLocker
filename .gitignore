@@ -2,3 +2,4 @@ bin/
 gen/
 proguard/
 proguard-releases/
+.settings/

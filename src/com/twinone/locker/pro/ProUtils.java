@@ -35,7 +35,7 @@ public class ProUtils {
 	 *         {@link #TYPE_PAID}
 	 */
 	public boolean proFeaturesEnabled() {
-		final int type = getStoredProType();
+		final int type = getProType();
 		return type == TYPE_ADS || (type == TYPE_PAID && validatePro());
 	}
 
@@ -61,7 +61,7 @@ public class ProUtils {
 	 * @return true if ads mode is enabled
 	 */
 	public boolean showAds() {
-		return getStoredProType() == TYPE_ADS;
+		return getProType() == TYPE_ADS;
 	}
 
 	/**
@@ -71,12 +71,12 @@ public class ProUtils {
 	 * @return The pro type of the user (stored in prefs).<br>
 	 *         one of {@link #TYPE_ADS} {@link #TYPE_FREE} or {@link #TYPE_PAID}
 	 */
-	public int getStoredProType() {
+	public int getProType() {
 		return prefs().getInt(KEY_PRO_ENABLED, TYPE_ADS);
 	}
 
 	public String getProTypeString() {
-		switch (getStoredProType()) {
+		switch (getProType()) {
 		case TYPE_ADS:
 			return "ads";
 		case TYPE_PAID:

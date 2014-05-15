@@ -15,6 +15,8 @@
  */
 package com.twinone.locker.ui;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -23,6 +25,8 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -299,8 +303,15 @@ public class SettingsFragment extends PreferenceFragment implements
 		Intent intent = new Intent();
 		intent.setType("image/*");
 		intent.setAction(Intent.ACTION_PICK);
-		startActivityForResult(Intent.createChooser(intent, null), IMG_REQ_CODE);
-
+		List<ResolveInfo> ris = getActivity().getPackageManager()
+				.queryIntentActivities(intent,
+						PackageManager.MATCH_DEFAULT_ONLY);
+		if (ris.size() > 0) {
+			startActivityForResult(Intent.createChooser(intent, null),
+					IMG_REQ_CODE);
+		} else {
+			Toast.makeText(getActivity(), "Error - No gallery app(?)", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	private static final int IMG_REQ_CODE = 0;

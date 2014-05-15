@@ -33,17 +33,18 @@ import android.widget.TextView;
 import com.twinone.locker.Constants;
 import com.twinone.locker.R;
 import com.twinone.locker.lock.AppLockService;
+import com.twinone.locker.pro.ProUtils;
 
 public class NavigationAdapter extends BaseAdapter {
 
-	// private Context mContext;
+	private Context mContext;
 	private LayoutInflater mInflater;
 	private List<NavigationElement> mItems;
 
 	private boolean mServiceRunning = false;
 
 	public NavigationAdapter(Context context) {
-		// mContext = context;
+		mContext = context;
 		mInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mServiceRunning = AppLockService.isRunning(context);
@@ -93,7 +94,10 @@ public class NavigationAdapter extends BaseAdapter {
 
 			addElement(R.string.nav_test, NavigationElement.TYPE_TEST);
 		}
-		addElement(R.string.nav_pro, NavigationElement.TYPE_PRO);
+		// Only allow to switch pro if the user has free
+		if (new ProUtils(mContext).getProType() == ProUtils.TYPE_FREE)
+			addElement(R.string.nav_pro, NavigationElement.TYPE_PRO);
+
 	}
 
 	@Override

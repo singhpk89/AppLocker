@@ -73,7 +73,7 @@ public class ProFragment extends Fragment implements OnClickListener {
 	}
 
 	private void updateLayout() {
-		int type = mProUtils.getStoredProType();
+		int type = mProUtils.getProType();
 
 		mPvFree.setSelectedLockType(type == ProUtils.TYPE_FREE);
 		mPvAds.setSelectedLockType(type == ProUtils.TYPE_ADS);

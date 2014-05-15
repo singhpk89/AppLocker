@@ -142,14 +142,6 @@ public class PrefUtils {
 		return mPrefs.getString(mContext.getString(keyResId), defValue);
 	}
 
-	public Integer getInt(int keyResId) {
-		try {
-			return mPrefs.getInt(mContext.getString(keyResId), (Integer) null);
-		} catch (NullPointerException e) {
-			return null;
-		}
-	}
-
 	/**
 	 * Parse an Integer that is stored as a string
 	 * 

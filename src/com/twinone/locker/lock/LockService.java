@@ -301,7 +301,7 @@ public class LockService extends Service implements View.OnClickListener,
 	/**
 	 * Called after views are inflated
 	 */
-	private AdViewManager mAdViewManager;
+//	private AdViewManager mAdViewManager;
 	// private AppLockService mAppLockService;
 	private AppLockService mAppLockService;
 	private Analytics mAnalytics;
@@ -473,8 +473,8 @@ public class LockService extends Service implements View.OnClickListener,
 		if (mAdMobManager != null) {
 			mAdMobManager.destroy();
 		}
-		if (mAdViewManager != null)
-			mAdViewManager.onDestroy();
+//		if (mAdViewManager != null)
+//			mAdViewManager.onDestroy();
 		if (DEBUG_BIND)
 			Log.v(TAG, "onDestroy (mServiceState=" + mServiceState + ")");
 		if (mServiceState != ServiceState.NOT_BOUND) {

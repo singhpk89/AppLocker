@@ -12,6 +12,19 @@ Contribute
 If you want to add a feature or correct a bug (there are a lot! :D), you can send me a pull request.
 I'll be happy to review and merge them.
 
+Translate
+=========
+
+The app is currently available in 4 languages (Name/Translator):
+
+English/Twinone
+Spanish/Twinone
+German/Patschi
+Dutch/Twinone
+
+If you want to translate the app, send a pull request with the added file /values-XX/strings.xml
+
+
 
 Download
 ========

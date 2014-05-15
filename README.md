@@ -17,13 +17,10 @@ Translate
 
 The app is currently available in 4 languages (Name/Translator):
 
-English/Twinone
-
-Spanish/Twinone
-
-German/Patschi
-
-Dutch/Twinone
+ * English/Twinone
+ * Spanish/Twinone
+ * German/Patschi
+ * Dutch/Twinone
 
 If you want to translate the app, send a pull request with the added file /values-XX/strings.xml
 

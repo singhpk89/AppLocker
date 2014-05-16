@@ -301,7 +301,7 @@ public class LockService extends Service implements View.OnClickListener,
 	/**
 	 * Called after views are inflated
 	 */
-//	private AdViewManager mAdViewManager;
+	// private AdViewManager mAdViewManager;
 	// private AppLockService mAppLockService;
 	private AppLockService mAppLockService;
 	private Analytics mAnalytics;
@@ -473,8 +473,8 @@ public class LockService extends Service implements View.OnClickListener,
 		if (mAdMobManager != null) {
 			mAdMobManager.destroy();
 		}
-//		if (mAdViewManager != null)
-//			mAdViewManager.onDestroy();
+		// if (mAdViewManager != null)
+		// mAdViewManager.onDestroy();
 		if (DEBUG_BIND)
 			Log.v(TAG, "onDestroy (mServiceState=" + mServiceState + ")");
 		if (mServiceState != ServiceState.NOT_BOUND) {
@@ -631,18 +631,16 @@ public class LockService extends Service implements View.OnClickListener,
 	 * Exit when an app has been unlocked successfully
 	 */
 	private void exitSuccessCompare() {
-
 		long current = System.nanoTime();
 		long total = (current - mTimeViewShown) / 1000000;
 		long interacting = (current - mTimeFirstFingerDown) / 1000000;
-		Log.d(TAG, "total:" + total);
 		mAnalytics.increment(LockerAnalytics.TIME_SPENT_IN_LOCKSCREEN, total);
 		mAnalytics.increment(LockerAnalytics.TIME_SPENT_INTERACTING,
 				interacting);
 		mAnalytics.increment(LockerAnalytics.UNLOCK_SUCCESS);
-		Log.d(TAG, "Adding finger distance: " + mFingerDistance);
 		mAnalytics.incrementFloat(LockerAnalytics.FINGER_DISTANCE,
 				mFingerDistance);
+		Log.d(TAG, "Time in screen: " + total + ", interacting:" + interacting);
 
 		if (mPackageName == null || mPackageName.equals(getPackageName())) {
 			finish(true);
@@ -660,6 +658,7 @@ public class LockService extends Service implements View.OnClickListener,
 
 	private void finish(boolean unlocked) {
 		if (!unlocked && ACTION_COMPARE.equals(mAction)) {
+			mAnalytics.increment(LockerAnalytics.UNLOCK_CANCEL);
 			final Intent i = new Intent(Intent.ACTION_MAIN);
 			i.addCategory(Intent.CATEGORY_HOME);
 			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

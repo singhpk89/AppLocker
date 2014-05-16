@@ -34,7 +34,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.SystemClock;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
@@ -158,8 +157,6 @@ public class PatternView extends View {
 		float ppi = (xppi + yppi) / 2;
 		float inchesPerDot = (mBitmapWidth + mBitmapHeight) / 2 / ppi;
 		float totalInches = inchesPerDot * mPattern.size();
-		Log.d("PatternView", "Distance in inch (per dot):" + inchesPerDot);
-		Log.d("PatternView", "Distance in inch (total)  :" + totalInches);
 		return totalInches;
 	}
 
@@ -583,7 +580,6 @@ public class PatternView extends View {
 			int cell = mPattern.get(i).getId();
 			res.append(String.format("%0" + padding + "d", cell));
 		}
-		Log.d("", "pattern: " + res.toString());
 		return res.toString();
 	}
 

@@ -34,29 +34,43 @@ import com.twinone.util.DialogSequencer;
 
 public class MainActivity extends ActionBarActivity implements
 		NavigationListener {
-	// private static final String RUN_ONCE =
-	// "com.twinone.locker.pref.run_once";
 
-	// public static final boolean DEBUG = false;
 	private static final String VERSION_URL_PRD = "https://twinone.org/apps/locker/update.php";
 	private static final String VERSION_URL_DBG = "https://twinone.org/apps/locker/dbg-update.php";
 	public static final String VERSION_URL = Constants.DEBUG ? VERSION_URL_DBG
 			: VERSION_URL_PRD;
-
-	// private VersionManager mVersionManager;
-
-	// private static final String TAG = "Main";
+	public static final String EXTRA_UNLOCKED = "com.twinone.locker.unlocked";
 
 	private DialogSequencer mSequencer;
-	// private Analytics mAnalytics;
+	private Fragment mCurrentFragment;
+	/**
+	 * Fragment managing the behaviors, interactions and presentation of the
+	 * navigation drawer.
+	 */
+	private NavigationFragment mNavFragment;
 
-	public static final String EXTRA_UNLOCKED = "com.twinone.locker.unlocked";
+	/**
+	 * Used to store the last screen title. For use in
+	 * {@link #restoreActionBar()}.
+	 */
+	private CharSequence mTitle;
+
+	private ActionBar mActionBar;
+	private BroadcastReceiver mReceiver;
+	private IntentFilter mFilter;
+
+	private class ServiceStateReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Log.d("MainACtivity",
+					"Received broadcast (action=" + intent.getAction());
+			updateLayout();
+		}
+	}
 
 	private void doTest() {
 		Log.d("", "Querying from test");
-		// new VersionManager(c).queryServer(null);
 
-		// analytics
 		Analytics analytics = new Analytics(this);
 		ProUtils proUtils = new ProUtils(this);
 		Map<String, String> data = new HashMap<String, String>();
@@ -65,8 +79,6 @@ public class MainActivity extends ActionBarActivity implements
 				String.valueOf(PrefUtils.getLockedApps(this).size()));
 		analytics.setDefaultUrl(LockerAnalytics.URL).query(data);
 	}
-
-	private Fragment mCurrentFragment;
 
 	/**
 	 * 
@@ -157,31 +169,6 @@ public class MainActivity extends ActionBarActivity implements
 		context.startActivity(i);
 	}
 
-	/**
-	 * Fragment managing the behaviors, interactions and presentation of the
-	 * navigation drawer.
-	 */
-	private NavigationFragment mNavFragment;
-
-	/**
-	 * Used to store the last screen title. For use in
-	 * {@link #restoreActionBar()}.
-	 */
-	private CharSequence mTitle;
-
-	private ActionBar mActionBar;
-	private BroadcastReceiver mReceiver;
-	private IntentFilter mFilter;
-
-	private class ServiceStateReceiver extends BroadcastReceiver {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			Log.d("MainACtivity",
-					"Received broadcast (action=" + intent.getAction());
-			updateLayout();
-		}
-	}
-
 	private void updateLayout() {
 		Log.d("Main",
 				"UPDATE LAYOUT Setting service state: "
@@ -216,10 +203,8 @@ public class MainActivity extends ActionBarActivity implements
 		mCurrentFragmentType = NavigationElement.TYPE_APPS;
 
 		mSequencer = new DialogSequencer();
-		if (showDialogs()) {
-			// Don't auto-start, for debugging purposes
-			// AppLockService.start(this);
-		}
+		new Analytics(this).increment(LockerAnalytics.OPEN_MAIN);
+		showDialogs();
 		showLockerIfNotUnlocked(false);
 	}
 
@@ -329,7 +314,6 @@ public class MainActivity extends ActionBarActivity implements
 			break;
 		}
 		FragmentManager fm = getSupportFragmentManager();
-		// Don't re-add the already present fragment
 		fm.beginTransaction().replace(R.id.container, mCurrentFragment)
 				.commit();
 		mCurrentFragmentType = type;

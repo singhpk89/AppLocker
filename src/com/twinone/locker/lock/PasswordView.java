@@ -123,14 +123,12 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 		mPaddingBottom = getPaddingBottom();
 		setPadding(0, 0, 0, 0);
 
-		if (mSquareChildren) {
-			if (mHorizontalSpacing == mVerticalSpacing) {
-				mMaxHScale = (float) mCols / mRows;
-				mMaxVScale = (float) mRows / mCols;
-			} else {
-				Log.i(TAG,
-						"Ignoring squareChildren because horizontal and vertical spacing are not equal");
-			}
+		if (mSquareChildren && mHorizontalSpacing == mVerticalSpacing) {
+			mMaxHScale = (float) mCols / mRows;
+			mMaxVScale = (float) mRows / mCols;
+		} else if (mSquareChildren) {
+			Log.w(TAG,
+					"To get square children, horizontal and vertical spacing should be set to equal!");
 		}
 	}
 
@@ -230,8 +228,6 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 		float ppi = (xppi + yppi) / 2;
 		float inchesPerDot = (mChildWidth + mChildHeight) / 2 / ppi;
 		float totalInches = inchesPerDot * mPassword.length();
-		Log.d("PatternView", "Distance in inch (per dot):" + inchesPerDot);
-		Log.d("PatternView", "Distance in inch (total)  :" + totalInches);
 		return totalInches;
 	}
 
@@ -278,9 +274,9 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 
 	private void onBackButtonImpl() {
 		if (mPassword.length() != 0) {
-//			StringBuilder sb = new StringBuilder(mPassword);
-//			sb.deleteCharAt(sb.length() - 1);
-//			setPassword(sb.toString());
+			// StringBuilder sb = new StringBuilder(mPassword);
+			// sb.deleteCharAt(sb.length() - 1);
+			// setPassword(sb.toString());
 			clearPassword();
 		}
 		if (mListener != null) {
@@ -374,7 +370,6 @@ public class PasswordView extends ViewGroup implements OnClickListener,
 				+ (mHorizontalSpacing * (mCols - 1));
 		mHeight = mPaddingTop + mPaddingBottom + (mChildHeight * mRows)
 				+ (mVerticalSpacing * (mRows - 1));
-		// Log.d(TAG, "ReW: " + mWidth + " ReH: " + mHeight);
 	}
 
 	@Override

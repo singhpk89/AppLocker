@@ -68,6 +68,116 @@ public class MainActivity extends ActionBarActivity implements
 		}
 	}
 
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		handleIntent();
+
+		mReceiver = new ServiceStateReceiver();
+		mFilter = new IntentFilter();
+		mFilter.addCategory(AppLockService.CATEGORY_STATE_EVENTS);
+		mFilter.addAction(AppLockService.BROADCAST_SERVICE_STARTED);
+		mFilter.addAction(AppLockService.BROADCAST_SERVICE_STOPPED);
+
+		mNavFragment = (NavigationFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.navigation_drawer);
+		// Set up the drawer.
+		mNavFragment.setUp(R.id.navigation_drawer,
+				(DrawerLayout) findViewById(R.id.drawer_layout));
+		mTitle = getTitle();
+
+		mActionBar = getSupportActionBar();
+		mCurrentFragment = new AppsFragment();
+		getSupportFragmentManager().beginTransaction()
+				.add(R.id.container, mCurrentFragment).commit();
+		mCurrentFragmentType = NavigationElement.TYPE_APPS;
+
+		mSequencer = new DialogSequencer();
+		Analytics a = new Analytics(this);
+		long count = a.increment(LockerAnalytics.OPEN_MAIN);
+		boolean never = a.getBoolean(LockerAnalytics.SHARE_NEVER);
+		// Every 5 times the user opens the app, but only after 10 initial opens
+		if (!never && count >= 10 && count % 5 == 0) {
+			mSequencer.addDialog(Dialogs.getShareEditDialog(this, true));
+		}
+		showDialogs();
+		showLockerIfNotUnlocked(false);
+
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d("Main", "onResume");
+		showLockerIfNotUnlocked(true);
+		registerReceiver(mReceiver, mFilter);
+		updateLayout();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		// mSequencer.stop();
+		LockService.hide(this);
+		unregisterReceiver(mReceiver);
+		mSequencer.stop();
+
+		// if (mCurrentFragmentType != NavigationElement.TYPE_SETTINGS) {
+		// // Keep settings open because the user could navigate to gallery to
+		// // change background
+		// finish();
+		// }
+	}
+
+	@Override
+	protected void onDestroy() {
+		Log.v("Main", "onDestroy");
+		super.onDestroy();
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		Log.d("", "onNewIntent");
+		super.onNewIntent(intent);
+		setIntent(intent);
+		handleIntent();
+	}
+
+	@Override
+	public void setTitle(CharSequence title) {
+		super.setTitle(title);
+		mTitle = title;
+		getSupportActionBar().setTitle(title);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.global, menu);
+		return true;
+	}
+
+	/**
+	 * Provide a way back to {@link MainActivity} without having to provide a
+	 * password again. It finishes the calling {@link Activity}
+	 * 
+	 * @param context
+	 */
+	public static final void showWithoutPassword(Context context) {
+		Intent i = new Intent(context, MainActivity.class);
+		i.putExtra(EXTRA_UNLOCKED, true);
+		if (!(context instanceof Activity)) {
+			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		}
+		context.startActivity(i);
+	}
+
+	public void setActionBarTitle(int resId) {
+		mActionBar.setTitle(resId);
+	}
+
 	private void doTest() {
 		Log.d("", "Querying from test");
 
@@ -97,30 +207,6 @@ public class MainActivity extends ActionBarActivity implements
 		return !deny;
 	}
 
-	@Override
-	public void setTitle(CharSequence title) {
-		super.setTitle(title);
-		mTitle = title;
-		getSupportActionBar().setTitle(title);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		Log.d("Main", "onResume");
-		showLockerIfNotUnlocked(true);
-		registerReceiver(mReceiver, mFilter);
-		updateLayout();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.global, menu);
-		return true;
-	}
-
 	private void showLockerIfNotUnlocked(boolean relock) {
 		DebugTools.lap("posting onStartCommand (relock=" + relock + ")");
 		boolean unlocked = getIntent().getBooleanExtra(EXTRA_UNLOCKED, false);
@@ -133,87 +219,12 @@ public class MainActivity extends ActionBarActivity implements
 		getIntent().putExtra(EXTRA_UNLOCKED, !relock);
 	}
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-		// mSequencer.stop();
-		LockService.hide(this);
-		unregisterReceiver(mReceiver);
-		mSequencer.stop();
-
-		// if (mCurrentFragmentType != NavigationElement.TYPE_SETTINGS) {
-		// // Keep settings open because the user could navigate to gallery to
-		// // change background
-		// finish();
-		// }
-	}
-
-	@Override
-	protected void onDestroy() {
-		Log.v("Main", "onDestroy");
-		super.onDestroy();
-	}
-
-	/**
-	 * Provide a way back to {@link MainActivity} without having to provide a
-	 * password again. It finishes the calling {@link Activity}
-	 * 
-	 * @param context
-	 */
-	public static final void showWithoutPassword(Context context) {
-		Intent i = new Intent(context, MainActivity.class);
-		i.putExtra(EXTRA_UNLOCKED, true);
-		if (!(context instanceof Activity)) {
-			i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		}
-		context.startActivity(i);
-	}
-
 	private void updateLayout() {
 		Log.d("Main",
 				"UPDATE LAYOUT Setting service state: "
 						+ AppLockService.isRunning(this));
 		mNavFragment.getAdapter().setServiceState(
 				AppLockService.isRunning(this));
-	}
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		handleIntent();
-
-		mReceiver = new ServiceStateReceiver();
-		mFilter = new IntentFilter();
-		mFilter.addCategory(AppLockService.CATEGORY_STATE_EVENTS);
-		mFilter.addAction(AppLockService.BROADCAST_SERVICE_STARTED);
-		mFilter.addAction(AppLockService.BROADCAST_SERVICE_STOPPED);
-
-		mNavFragment = (NavigationFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.navigation_drawer);
-		// Set up the drawer.
-		mNavFragment.setUp(R.id.navigation_drawer,
-				(DrawerLayout) findViewById(R.id.drawer_layout));
-		mTitle = getTitle();
-
-		mActionBar = getSupportActionBar();
-		mCurrentFragment = new AppsFragment();
-		getSupportFragmentManager().beginTransaction()
-				.add(R.id.container, mCurrentFragment).commit();
-		mCurrentFragmentType = NavigationElement.TYPE_APPS;
-
-		mSequencer = new DialogSequencer();
-		new Analytics(this).increment(LockerAnalytics.OPEN_MAIN);
-		showDialogs();
-		showLockerIfNotUnlocked(false);
-	}
-
-	@Override
-	protected void onNewIntent(Intent intent) {
-		Log.d("", "onNewIntent");
-		super.onNewIntent(intent);
-		setIntent(intent);
-		handleIntent();
 	}
 
 	/**
@@ -232,10 +243,6 @@ public class MainActivity extends ActionBarActivity implements
 				}
 			}
 		}
-	}
-
-	public void setActionBarTitle(int resId) {
-		mActionBar.setTitle(resId);
 	}
 
 	private boolean mNavPending;
@@ -321,7 +328,8 @@ public class MainActivity extends ActionBarActivity implements
 
 	@Override
 	public void onShareButton() {
-		Dialogs.getShareEditDialog(this).show();
+		// Don't add never button, the user wanted to share
+		Dialogs.getShareEditDialog(this, false).show();
 	}
 
 	@Override

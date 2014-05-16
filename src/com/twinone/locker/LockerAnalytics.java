@@ -11,6 +11,8 @@ public abstract class LockerAnalytics {
 
 	// MainActivity
 	public static final String SHARE = "main_shared";
+	/** When this is true, don't prompt the user to share */
+	public static final String SHARE_NEVER = "share_never";
 	public static final String RATE = "main_rated";
 
 	// How many times the user unlocked an app, entered a wrong pass, and

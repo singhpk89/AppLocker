@@ -176,6 +176,25 @@ public class Analytics {
 	}
 
 	/**
+	 * May return null if this preference has not yet been set
+	 */
+	public String getString(String key) {
+		return mPrefs.getString(key, null);
+	}
+
+	public long getLong(String key) {
+		return mPrefs.getLong(key, 0);
+	}
+
+	public float getFloat(String key) {
+		return mPrefs.getFloat(key, 0);
+	}
+
+	public boolean getBoolean(String key) {
+		return mPrefs.getBoolean(key, false);
+	}
+
+	/**
 	 * Returns all analytics, never null
 	 * 
 	 * @return
@@ -193,7 +212,7 @@ public class Analytics {
 		return result;
 	}
 
-	public void setEnabled(String key, boolean enabled) {
+	public void putBoolean(String key, boolean enabled) {
 		if (mEnableAnalytics) {
 			mEditor.putBoolean(key, enabled);
 			autoSave();

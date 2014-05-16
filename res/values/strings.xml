@@ -338,4 +338,7 @@
     <!-- May be used for twitter -->
     <string name="share_promo_text">Check out Twinone App Locker, the free app that protects your privacy and apps. https://play.google.com/store/apps/details?id=com.twinone.locker</string>
 
+    <!-- BEGIN v2335 -->
+    <string name="share_dlg_never">Never</string>
+    <string name="share_dlg_later">Later</string>
 </resources>

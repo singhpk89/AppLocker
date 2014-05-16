@@ -24,10 +24,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+import com.twinone.locker.LockerAnalytics;
 import com.twinone.locker.R;
 import com.twinone.locker.lock.LockPreferences;
 import com.twinone.locker.lock.LockService;
 import com.twinone.locker.util.PrefUtils;
+import com.twinone.util.Analytics;
 import com.twinone.util.DialogSequencer;
 
 public class Dialogs {
@@ -131,7 +133,8 @@ public class Dialogs {
 	 * 
 	 * Get the dialog to share the app
 	 */
-	public static AlertDialog getShareEditDialog(final Context c) {
+	public static AlertDialog getShareEditDialog(final Context c,
+			boolean addNeverButton) {
 		final AlertDialog.Builder ab = new AlertDialog.Builder(c);
 
 		LayoutInflater inflater = (LayoutInflater) c
@@ -155,10 +158,21 @@ public class Dialogs {
 				intent.putExtra(Intent.EXTRA_TEXT, text);
 				Intent sender = Intent.createChooser(intent,
 						c.getString(R.string.share_dlg_tit));
+				new Analytics(c).increment(LockerAnalytics.SHARE);
 				c.startActivity(sender);
 			}
 		});
-		ab.setNegativeButton(android.R.string.cancel, null);
+		ab.setNeutralButton(R.string.share_dlg_later, null);
+		if (addNeverButton) {
+			ab.setNegativeButton(R.string.share_dlg_never,
+					new OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							new Analytics(c).putBoolean(
+									LockerAnalytics.SHARE_NEVER, true);
+						}
+					});
+		}
 		return ab.create();
 	}
 }

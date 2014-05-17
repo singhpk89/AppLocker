@@ -349,4 +349,9 @@
     <!-- May be used for twitter -->
     <string name="share_promo_text">Echa un vistazo a Twinone App Locker, la app gratuita que protege tu privacidad y aplicaciones. https://play.google.com/store/apps/details?id=com.twinone.locker</string>
 
+        <!-- BEGIN v2335 -->
+    <string name="share_dlg_never">Nunca</string>
+    <string name="share_dlg_later">Más tarde</string>
+    
+    
 </resources>

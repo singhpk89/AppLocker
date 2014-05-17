@@ -341,4 +341,17 @@
     <string name="apps_toast_unlocked_single">%s ontgrendeld</string>
     <string name="apps_toast_unlocked_all">Alle apps ontgrendeld</string>
 
+     <!-- BEGIN v2332 -->
+    <string name="nav_b_share">Delen</string>
+    <string name="nav_b_rate">Beoordelen</string>
+    <string name="share_dlg_tit">Locker delen</string>
+    <string name="share_dlg_msg">Als je deze app leuk vindt, overweeg dan hem te delen met je vrienden.</string>
+    <!-- May be used for twitter -->
+    <string name="share_promo_text">Probeer Twinone App Locker, de gratis app die je privacy beschermt. https://play.google.com/store/apps/details?id=com.twinone.locker</string>
+
+        <!-- BEGIN v2335 -->
+    <string name="share_dlg_never">Nooit</string>
+    <string name="share_dlg_later">Later</string>
+    
+    
 </resources>

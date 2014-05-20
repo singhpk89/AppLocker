@@ -158,8 +158,13 @@ public class Dialogs {
 				intent.putExtra(Intent.EXTRA_TEXT, text);
 				Intent sender = Intent.createChooser(intent,
 						c.getString(R.string.share_dlg_tit));
-				new Analytics(c).increment(LockerAnalytics.SHARE);
+				Analytics anal = new Analytics(c);
+				anal.increment(LockerAnalytics.SHARE);
 				c.startActivity(sender);
+				// At this point, we can assume the user will share the app.
+				// So never show the dialog again, he can manually open it from the navigation
+				anal.putBoolean(
+						LockerAnalytics.SHARE_NEVER, true);
 			}
 		});
 		ab.setNeutralButton(R.string.share_dlg_later, null);

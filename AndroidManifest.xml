@@ -68,16 +68,6 @@
             android:label="@string/application_name"
             android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
-
-            <!--
-                 <meta-data
-                android:name="android.support.UI_OPTIONS"
-                android:value="splitActionBarWhenNarrow" />
-            -->
-            <meta-data
-                android:name="android.app.searchable"
-                android:value="@xml/searchable" />
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.SEARCH" />

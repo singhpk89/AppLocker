@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
-import com.twinone.androidlib.DebugTools;
 import com.twinone.locker.Constants;
 import com.twinone.locker.LockerAnalytics;
 import com.twinone.locker.R;
@@ -208,7 +207,6 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	private void showLockerIfNotUnlocked(boolean relock) {
-		DebugTools.lap("posting onStartCommand (relock=" + relock + ")");
 		boolean unlocked = getIntent().getBooleanExtra(EXTRA_UNLOCKED, false);
 		if (new PrefUtils(this).isCurrentPasswordEmpty()) {
 			unlocked = true;

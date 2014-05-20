@@ -24,8 +24,6 @@ import android.os.Build;
 import android.provider.Settings.Secure;
 import android.util.Log;
 
-import com.twinone.locker.Constants;
-
 public class Analytics {
 
 	public static final String PREF_ANALYTICS_FILE = "com.twinone.analytics";
@@ -48,7 +46,6 @@ public class Analytics {
 	private SharedPreferences mPrefs;
 	private SharedPreferences.Editor mEditor;
 	private final boolean mAutoSave = true;
-	private final boolean mEnableAnalytics;
 	private Context mContext;
 
 	public Analytics(Context c) {
@@ -56,11 +53,6 @@ public class Analytics {
 		mPrefs = c.getSharedPreferences(PREF_ANALYTICS_FILE,
 				Context.MODE_PRIVATE);
 		mEditor = mPrefs.edit();
-		mEnableAnalytics = getEnableAnalytics();
-		if (!mEnableAnalytics) {
-			mPrefs = null;
-			mEditor = null;
-		}
 	}
 
 	/**
@@ -78,101 +70,70 @@ public class Analytics {
 		save(editor);
 	}
 
-	public boolean getEnableAnalytics() {
-		final SharedPreferences prefs = mContext.getSharedPreferences(
-				PREF_PERSISTENT_FILE, Context.MODE_PRIVATE);
-		return prefs.getBoolean(PREF_KEY_ENABLE_ANALYTICS, false)
-				|| Constants.DEBUG;
-	}
-
 	public long increment(String key) {
-		if (mEnableAnalytics) {
-			long stored = mPrefs.getLong(key, 0);
-			stored++;
-			mEditor.putLong(key, stored);
-			autoSave();
-			return stored;
-		}
-		return -1;
+		long stored = mPrefs.getLong(key, 0);
+		stored++;
+		mEditor.putLong(key, stored);
+		autoSave();
+		return stored;
 	}
 
 	public long increment(String key, long value) {
-		if (mEnableAnalytics) {
-			long stored = mPrefs.getLong(key, 0);
-			stored += value;
-			mEditor.putLong(key, stored);
-			autoSave();
-			return stored;
-		}
-		return -1;
+		long stored = mPrefs.getLong(key, 0);
+		stored += value;
+		mEditor.putLong(key, stored);
+		autoSave();
+		return stored;
 	}
 
 	public long decrement(String key) {
-		if (mEnableAnalytics) {
-			long value = mPrefs.getLong(key, 0);
-			value--;
-			mEditor.putLong(key, value);
-			autoSave();
-			return value;
-		}
-		return -1;
+		long value = mPrefs.getLong(key, 0);
+		value--;
+		mEditor.putLong(key, value);
+		autoSave();
+		return value;
 	}
 
 	public long decrement(String key, long value) {
-		if (mEnableAnalytics) {
-			long stored = mPrefs.getLong(key, 0);
-			stored -= value;
-			mEditor.putLong(key, stored);
-			autoSave();
-			return stored;
-		}
-		return -1;
+		long stored = mPrefs.getLong(key, 0);
+		stored -= value;
+		mEditor.putLong(key, stored);
+		autoSave();
+		return stored;
 	}
 
 	// Floats
 
 	public float incrementFloat(String key) {
-		if (mEnableAnalytics) {
-			float stored = mPrefs.getFloat(key, 0);
-			stored++;
-			mEditor.putFloat(key, stored);
-			autoSave();
-			return stored;
-		}
-		return -1;
+		float stored = mPrefs.getFloat(key, 0);
+		stored++;
+		mEditor.putFloat(key, stored);
+		autoSave();
+		return stored;
 	}
 
 	public float incrementFloat(String key, float value) {
-		if (mEnableAnalytics) {
-			float stored = mPrefs.getFloat(key, 0);
-			stored += value;
-			mEditor.putFloat(key, stored);
-			autoSave();
-			return stored;
-		}
-		return -1;
+		float stored = mPrefs.getFloat(key, 0);
+		stored += value;
+		mEditor.putFloat(key, stored);
+		autoSave();
+		return stored;
 	}
 
 	public float decrementFloat(String key) {
-		if (mEnableAnalytics) {
-			float value = mPrefs.getFloat(key, 0);
-			value--;
-			mEditor.putFloat(key, value);
-			autoSave();
-			return value;
-		}
-		return -1;
+		float value = mPrefs.getFloat(key, 0);
+		value--;
+		mEditor.putFloat(key, value);
+		autoSave();
+		return value;
 	}
 
 	public float decrementFloat(String key, float value) {
-		if (mEnableAnalytics) {
-			float stored = mPrefs.getFloat(key, 0);
-			stored -= value;
-			mEditor.putFloat(key, stored);
-			autoSave();
-			return stored;
-		}
-		return -1;
+		float stored = mPrefs.getFloat(key, 0);
+		stored -= value;
+		mEditor.putFloat(key, stored);
+		autoSave();
+		return stored;
 	}
 
 	/**
@@ -191,7 +152,18 @@ public class Analytics {
 	}
 
 	public boolean getBoolean(String key) {
-		return mPrefs.getBoolean(key, false);
+		if (mPrefs == null) {
+			Log.e(TAG, "Prefs is null");
+		}
+		if (key == null) {
+			Log.e(TAG, "key is null");
+		}
+		try {
+			return mPrefs.getBoolean(key, false);
+		} catch (Exception e) {
+			Log.e("", "Exception in getBoolean", e);
+			return false;
+		}
 	}
 
 	/**
@@ -201,33 +173,27 @@ public class Analytics {
 	 */
 	public Map<String, String> getAll() {
 		Map<String, String> result = new HashMap<String, String>();
-		if (mEnableAnalytics) {
-			for (Map.Entry<String, ?> e : mPrefs.getAll().entrySet()) {
-				result.put(e.getKey(), String.valueOf(e.getValue()));
-			}
-			result.put(ANALYTICS_KEY_INSTALLATION_ID, getInstallationId());
-			result.put(ANALYTICS_KEY_ANDROID_VERSION,
-					String.valueOf(Build.VERSION.SDK_INT));
+		for (Map.Entry<String, ?> e : mPrefs.getAll().entrySet()) {
+			result.put(e.getKey(), String.valueOf(e.getValue()));
 		}
+		result.put(ANALYTICS_KEY_INSTALLATION_ID, getInstallationId());
+		result.put(ANALYTICS_KEY_ANDROID_VERSION,
+				String.valueOf(Build.VERSION.SDK_INT));
 		return result;
 	}
 
 	public void putBoolean(String key, boolean enabled) {
-		if (mEnableAnalytics) {
-			mEditor.putBoolean(key, enabled);
-			autoSave();
-		}
+		mEditor.putBoolean(key, enabled);
+		autoSave();
 	}
 
 	public void putString(String key, String value) {
-		if (mEnableAnalytics) {
-			mEditor.putString(key, value);
-			autoSave();
-		}
+		mEditor.putString(key, value);
+		autoSave();
 	}
 
 	private void autoSave() {
-		if (mEnableAnalytics && mAutoSave) {
+		if (mAutoSave) {
 			save();
 		}
 	}
@@ -272,11 +238,6 @@ public class Analytics {
 	 *            Additional parameters to be appended to the GET request
 	 */
 	public void query(AnalyticsListener listener, Map<String, String> params) {
-		Log.d(TAG, "queryserver!");
-		if (!mEnableAnalytics) {
-			Log.w(TAG, "Analytics are not enabled for this device");
-			return;
-		}
 		Uri.Builder ub = getUrl().buildUpon();
 		// Add all analytics
 		Map<String, String> analytics = getAll();

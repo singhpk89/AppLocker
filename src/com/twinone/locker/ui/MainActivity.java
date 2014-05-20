@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -338,6 +339,8 @@ public class MainActivity extends ActionBarActivity implements
 	private void toGooglePlay() {
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		intent.setData(Uri.parse("market://details?id=" + getPackageName()));
-		startActivity(intent);
+		if (getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() >= 1) {
+			startActivity(intent);			
+		}
 	}
 }

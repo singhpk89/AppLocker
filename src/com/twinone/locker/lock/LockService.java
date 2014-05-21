@@ -348,7 +348,9 @@ public class LockService extends Service implements View.OnClickListener,
 			if (DEBUG_BIND)
 				Log.v(TAG, "Unbound service (mServiceState=" + mServiceState
 						+ ")");
-			mServiceState = ServiceState.NOT_BOUND;
+			// We can't make it "UNBOUND", because even if the server got
+			// unbound, android expects us to call unbindService
+			mServiceState = ServiceState.UNBINDING;
 		}
 	};
 

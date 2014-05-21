@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="pref_key_version">com.twinone.locker.old_version</string>
@@ -83,37 +82,18 @@
     <string name="pref_val_bg_purple">bg_purple</string>
     <string name="pref_val_bg_orange">bg_orange</string>
 
-    <!-- Defaults -->
-    <!--
-    <string name="pref_def_delay_status">false</string>
-    <string name="pref_def_vibrate">true</string>
-    <string name="pref_def_relock_after_screenoff">true</string>
-    -->
-
-
-    <!--
-    <string name="pref_def_hide_launcher_icon">false</string>
-    <string name="pref_def_dial_launch">false</string>
-    <string name="pref_def_hide_notification_icon">false</string>
-    <string name="pref_def_hide_dots">false</string>
-    -->
     <string name="pref_def_password_expiry">0</string>
     <string name="pref_def_max_password_retries">0</string>
-    <!--
-    <string name="pref_def_pattern_stealth">false</string>
-    <string name="pref_def_switch_buttons">false</string>
-    <string name="pref_def_start_boot">true</string>
-    -->
     <string name="pref_def_dial_launch_number">#12345</string>
     <!-- <string name="pref_def_ads">false</string> -->
-    <string name="pref_def_anim_show_millis">200</string>
+    <string name="pref_def_anim_show_millis">300</string>
     <string name="pref_def_anim_hide_millis">300</string>
     <string name="pref_def_pattern_size">3</string>
 
     <!-- Preference defaults -->
     <item name="pref_def_background" type="string">@string/pref_val_bg_default</item>
-    <item name="pref_def_anim_show_type" type="string">@string/pref_val_anim_none</item>
-    <item name="pref_def_anim_hide_type" type="string">@string/pref_val_anim_none</item>
+    <item name="pref_def_anim_show_type" type="string">@string/pref_val_anim_fade</item>
+    <item name="pref_def_anim_hide_type" type="string">@string/pref_val_anim_fade</item>
     <item name="pref_def_lock_type" type="string">@string/pref_val_lock_type_password</item>
     <item name="pref_def_vibrate" type="bool">true</item>
     <item name="pref_def_switch_buttons" type="bool">false</item>

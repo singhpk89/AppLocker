@@ -123,11 +123,11 @@ public class MainActivity extends ActionBarActivity implements
 		unregisterReceiver(mReceiver);
 		mSequencer.stop();
 
-		// if (mCurrentFragmentType != NavigationElement.TYPE_SETTINGS) {
-		// // Keep settings open because the user could navigate to gallery to
-		// // change background
-		// finish();
-		// }
+		// We have to finish here or the system will assign a lower priority to
+		// the app (since 4.4?)
+		if (mCurrentFragmentType != NavigationElement.TYPE_SETTINGS) {
+			finish();
+		}
 	}
 
 	@Override
@@ -339,8 +339,9 @@ public class MainActivity extends ActionBarActivity implements
 	private void toGooglePlay() {
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		intent.setData(Uri.parse("market://details?id=" + getPackageName()));
-		if (getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() >= 1) {
-			startActivity(intent);			
+		if (getPackageManager().queryIntentActivities(intent,
+				PackageManager.MATCH_DEFAULT_ONLY).size() >= 1) {
+			startActivity(intent);
 		}
 	}
 }

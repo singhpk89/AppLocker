@@ -187,9 +187,6 @@ public class AppLockService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// Log.d(TAG, "test");
 		if (intent == null || ACTION_START.equals(intent.getAction())) {
-			if (intent == null) {
-				Log.d(TAG, "onStartCommand intent==null");
-			}
 			if (!mExplicitStarted) {
 				Log.d(TAG, "explicitStarted = false");
 				if (init() == false) {
@@ -202,7 +199,10 @@ public class AppLockService extends Service {
 		} else if (ACTION_RESTART.equals(intent.getAction())) {
 			if (mExplicitStarted
 					|| intent.getBooleanExtra(EXTRA_FORCE_RESTART, false)) {
-				Log.d(TAG, "ACTION_RESTART");
+				Log.d(TAG,
+						"ACTION_RESTART (force="
+								+ intent.getBooleanExtra(EXTRA_FORCE_RESTART,
+										false));
 				// init();
 				doRestartSelf(); // not allowed, so service will restart
 			} else {
@@ -493,6 +493,7 @@ public class AppLockService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		Log.d(TAG, "onDestroy: (mAllowRestart=" + mAllowRestart + ")");
 		if (mScreenReceiver != null)
 			unregisterReceiver(mScreenReceiver);
 		if (mShowNotification)
@@ -504,7 +505,7 @@ public class AppLockService extends Service {
 			return;
 		}
 
-		Log.i(TAG, "onDestroy (allowed=" + mAllowDestroy + ")");
+		Log.i(TAG, "onDestroy (mAllowDestroy=" + mAllowDestroy + ")");
 		if (!mAllowDestroy) {
 			Log.d(TAG, "Destroy not allowed, restarting service");
 			start(this);
@@ -525,6 +526,7 @@ public class AppLockService extends Service {
 	}
 
 	private void doRestartSelf() {
+		Log.d(TAG, "Setting allowrestart to true");
 		mAllowRestart = true;
 		stopSelf();
 	}

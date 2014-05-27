@@ -265,6 +265,7 @@ public class MainActivity extends ActionBarActivity implements
 	private void toggleService() {
 		boolean newState = false;
 		if (AppLockService.isRunning(this)) {
+			Log.d("", "toggleService() Service is running, now stopping");
 			AppLockService.stop(this);
 		} else if (Dialogs.addEmptyPasswordDialog(this, mSequencer)) {
 			mSequencer.start();

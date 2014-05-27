@@ -74,8 +74,9 @@ public class AdMobManager {
 			return;
 		// Create an ad request. Check logcat output for the hashed device ID to
 		// get test ads on a physical device.
+
 		AdRequest adRequest = new AdRequest.Builder()
-				.addTestDevice("E0693F52CA05BAAC485AF5778E218619")
+				.addTestDevice("896CB3D3288417013D38303D179FD45B")
 				.addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
 
 		// Start loading the ad in the background.

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.twinone.locker"
-    android:versionCode="2338"
-    android:versionName="2.3.3.8" >
+    android:versionCode="2340"
+    android:versionName="2.3.4" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -63,8 +63,10 @@
         <activity
             android:name="com.twinone.locker.ui.MainActivity"
             android:configChanges="orientation|screenSize"
+            android:excludeFromRecents="true"
             android:label="@string/application_name"
             android:launchMode="singleTop"
+            android:noHistory="true"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

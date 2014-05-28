@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.twinone.locker"
-    android:versionCode="2340"
-    android:versionName="2.3.4" >
+    android:versionCode="2341"
+    android:versionName="2.3.4.1" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -60,13 +60,13 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <!-- No history causes background change not working (because of startActivityForResult() -->
         <activity
             android:name="com.twinone.locker.ui.MainActivity"
             android:configChanges="orientation|screenSize"
             android:excludeFromRecents="true"
             android:label="@string/application_name"
             android:launchMode="singleTop"
-            android:noHistory="true"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

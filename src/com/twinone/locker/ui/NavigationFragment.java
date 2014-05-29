@@ -15,6 +15,8 @@
  */
 package com.twinone.locker.ui;
 
+import java.lang.reflect.Field;
+
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -24,6 +26,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.ViewDragHelper;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -163,6 +166,8 @@ public class NavigationFragment extends Fragment implements
 	public void setUp(int fragmentId, DrawerLayout drawerLayout) {
 		mFragmentView = getActivity().findViewById(fragmentId);
 		mDrawerLayout = drawerLayout;
+
+		hackDrawerLayoutWidth();
 
 		// set a custom shadow that overlays the main content when the drawer
 		// opens
@@ -362,4 +367,26 @@ public class NavigationFragment extends Fragment implements
 			break;
 		}
 	}
+
+	// Source:
+	// http://stackoverflow.com/questions/16988597/set-drag-margin-for-android-navigation-drawer/17802569#17802569
+	private void hackDrawerLayoutWidth() {
+		try {
+			Field mDragger = mDrawerLayout.getClass().getDeclaredField(
+					"mLeftDragger");// mRightDragger for right obviously
+			mDragger.setAccessible(true);
+			ViewDragHelper draggerObj = (ViewDragHelper) mDragger
+					.get(mDrawerLayout);
+
+			Field mEdgeSize = draggerObj.getClass().getDeclaredField(
+					"mEdgeSize");
+			mEdgeSize.setAccessible(true);
+			int edge = mEdgeSize.getInt(draggerObj);
+
+			// dp
+			mEdgeSize.setInt(draggerObj, edge * 5);
+		} catch (Exception e) {
+		}
+	}
+
 }

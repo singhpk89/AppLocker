@@ -13,34 +13,11 @@
         android:dividerHeight="1dp" >
     </ListView>
 
-    <LinearLayout
-        android:id="@id/nav_bottom_buttons"
-        style="@style/ButtonBar"
+    <include
+        android:id="@+id/share_rate_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:padding="0dp" >
-
-        <Button
-            android:id="@id/nav_b_share"
-            style="@style/ButtonBarButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/nav_b_share"
-            android:textAllCaps="true"
-            android:textAppearance="@android:style/TextAppearance.Small" />
-
-        <Button
-            android:id="@id/nav_b_rate"
-            style="@style/ButtonBarButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/nav_b_rate"
-            android:textAllCaps="true"
-            android:textAppearance="@android:style/TextAppearance.Small" />
-    </LinearLayout>
+        layout="@layout/share_rate_list" />
 
 </RelativeLayout>

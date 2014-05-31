@@ -72,4 +72,8 @@
         <item name="android:background">#0000</item>
     </style>
 
+    <style name="Common.Small" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">#ccc</item>
+    </style>
+
 </resources>

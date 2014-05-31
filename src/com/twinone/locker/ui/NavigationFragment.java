@@ -17,6 +17,8 @@ package com.twinone.locker.ui;
 
 import java.lang.reflect.Field;
 
+import org.twinone.androidlib.ShareRateView;
+
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -34,9 +36,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.twinone.locker.R;
@@ -68,8 +71,8 @@ public class NavigationFragment extends Fragment implements
 	private ListView mListView;
 	private View mFragmentView;
 
-	private Button bRate;
-	private Button bShare;
+	private LinearLayout tvRate;
+	private LinearLayout tvShare;
 
 	private boolean isOpen;
 	private int mCurrentSelectedPosition = -1;
@@ -129,10 +132,17 @@ public class NavigationFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_nav, container, false);
 
-		bRate = (Button) root.findViewById(R.id.nav_b_rate);
-		bRate.setOnClickListener(this);
-		bShare = (Button) root.findViewById(R.id.nav_b_share);
-		bShare.setOnClickListener(this);
+		// tvRate = (LinearLayout) root.findViewById(R.id.nav_b_rate);
+		// tvRate.setOnClickListener(this);
+		// tvShare = (LinearLayout) root.findViewById(R.id.nav_b_share);
+		// tvShare.setOnClickListener(this);
+
+		ShareRateView srv = (ShareRateView) root
+				.findViewById(R.id.share_rate_view);
+		srv.addItem(R.id.nav_b_share, R.string.nav_b_share,
+				R.drawable.ic_action_share, this);
+		srv.addItem(R.id.nav_b_rate, R.string.nav_b_rate,
+				R.drawable.ic_action_important, this);
 
 		mListView = (ListView) root.findViewById(R.id.nav_list);
 		// mListView = (ListView) inflater.inflate(

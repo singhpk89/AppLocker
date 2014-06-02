@@ -1,18 +1,3 @@
-/*
- * Copyright 2014 Luuk Willemsen (Twinone)
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- */
 package com.twinone.locker.ui;
 
 import android.app.AlertDialog;
@@ -135,12 +120,16 @@ public class Dialogs {
 	 */
 	public static AlertDialog getShareEditDialog(final Context c,
 			boolean addNeverButton) {
+		String promoText = c.getString(R.string.share_promo_text);
 		final AlertDialog.Builder ab = new AlertDialog.Builder(c);
 
 		LayoutInflater inflater = (LayoutInflater) c
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		final View v = inflater.inflate(R.layout.share_dialog, null);
 		ab.setView(v);
+		final EditText et = (EditText) v
+				.findViewById(R.id.share_dialog_et_content);
+		et.setText(promoText);
 
 		ab.setCancelable(false);
 		ab.setTitle(R.string.share_dlg_tit);
@@ -152,9 +141,7 @@ public class Dialogs {
 				Intent intent = new Intent();
 				intent.setAction(Intent.ACTION_SEND);
 				intent.setType("text/plain");
-				final String text = ((EditText) v
-						.findViewById(R.id.share_dlg_et_content)).getText()
-						.toString();
+				final String text = et.getText().toString();
 				intent.putExtra(Intent.EXTRA_TEXT, text);
 				Intent sender = Intent.createChooser(intent,
 						c.getString(R.string.share_dlg_tit));
@@ -162,9 +149,9 @@ public class Dialogs {
 				anal.increment(LockerAnalytics.SHARE);
 				c.startActivity(sender);
 				// At this point, we can assume the user will share the app.
-				// So never show the dialog again, he can manually open it from the navigation
-				anal.putBoolean(
-						LockerAnalytics.SHARE_NEVER, true);
+				// So never show the dialog again, he can manually open it from
+				// the navigation
+				anal.putBoolean(LockerAnalytics.SHARE_NEVER, true);
 			}
 		});
 		ab.setNeutralButton(R.string.share_dlg_later, null);

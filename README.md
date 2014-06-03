@@ -1,4 +1,4 @@
-AppLocker
+cdAppLocker
 =========
 
 https://play.google.com/store/apps/details?id=com.twinone.locker
@@ -30,3 +30,10 @@ Download
 ========
 
 You can download the app from the Google Play Store at the following url: https://play.google.com/store/apps/details?id=com.twinone.locker
+
+
+Building Manually
+=================
+
+Clone this project.
+Clone [my library project](http://github.com/twinone/androidlib) and add it as a library to this project.

@@ -36,4 +36,5 @@ Building Manually
 =================
 
 Clone this project.
+
 Clone [my library project](http://github.com/twinone/androidlib) and add it as a library to this project.

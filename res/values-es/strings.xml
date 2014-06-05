@@ -100,7 +100,7 @@
     <string name="old_pref_tit_dial_launch">Iniciar con llamada</string>
     <string name="old_pref_desc_dial_launch">Cuando esta opción está encendida, puedes iniciar Locker llamando a #CONTRASEÑA.\nEs decir, si tu contraseña es 1111, puedes llamar a #1111 para inciar Locker</string>
     <string name="pref_tit_hide_launcher_icon">Ocultar icono</string>
-    <string name="pref_desc_hide_launcher_icon">Con esta opción se oculta el icono de Locker de las aplicaciones instaladas (Necesita reinicio. Obliga activar Iniciar con llamada")</string>
+    <string name="pref_desc_hide_launcher_icon">Con esta opción se oculta el icono de Locker de las aplicaciones instaladas (Necesita reinicio. Obliga activar "Iniciar con llamada")</string>
     <!-- Updated text for "Notification" -->
     <string name="pref_tit_show_notification">Mostrar notificación</string>
     <!-- Changelog -->
@@ -247,7 +247,7 @@
     <string name="background_locker_orange">Naranja</string>
     <!-- BEGIN v2205 -->
     <string name="pref_tit_ads">Publicidad</string>
-    <string name="pref_desc_ads">Si te gusta Locker, ayúdanos a mejorar activando los anuncios<stirng></stirng></string>
+    <string name="pref_desc_ads">Si te gusta Locker, ayúdanos a mejorar activando los anuncios</string>
     <string name="pref_desc_ads_forced">En este momento no puedes desactivar la publicidad</string>
     <!-- BEGIN v2300 -->
     <!-- animations for the lock screen -->
@@ -277,16 +277,16 @@
     <string name="pro_ft_more">Más próximamente</string>
     <string name="pro_header">Elige tu plan:</string>
     <string name="pro_tit_ads">Locker Anuncios</string>
-    <string name="pro_desc_ads">Todas las funciones pro están disponibles y se muestran anuncios</string>
+    <string name="pro_desc_ads">Todas las funciones Pro están disponibles y se muestran anuncios</string>
     <string name="pro_tit_free">Locker Gratis</string>
-    <string name="pro_desc_free">No hay funciones pro disponibles y no se muestran anuncios</string>
+    <string name="pro_desc_free">No hay funciones Pro disponibles y no se muestran anuncios</string>
     <!--  -->
     <string name="pro_tit_paid">Locker Pro</string>
-    <string name="pro_desc_paid">Todas las funciones pro están disponibles y sin anuncios</string>
+    <string name="pro_desc_paid">Todas las funciones Pro están disponibles y sin anuncios</string>
     <!--  -->
     <string name="pro_required">Esto es una función pro. ¿Quieres activar Locker Pro ahora gratis?</string>
     <string name="pro_tofree_tit">Modo gratis</string>
-    <string name="pro_tofree_msg">Perderás todas las funciones pro\n¿Seguro que quieres activar Locker gratis?</string>
+    <string name="pro_tofree_msg">Perdrs todas las funciones pro\n¿Seguro que quieres activar Locker gratis?</string>
     <string name="applist_tit_apps">Aplicaciones</string>
     <string name="applist_tit_important">Importantes</string>
     <string name="applist_tit_system">Sistema</string>
@@ -345,7 +345,7 @@
     <string name="nav_b_share">Compartir</string>
     <string name="nav_b_rate">Valorar</string>
     <string name="share_dlg_tit">Compartir Locker</string>
-    <string name="share_dlg_msg">Si te gusta esta app, considera ayudar a mejorarla compartíendola con tus amigos.</string>
+    <string name="share_dlg_msg">Si te gusta esta app, considera ayudar a mejorarla compartiéndola con tus amigos.</string>
     <!-- May be used for twitter -->
     <string name="share_promo_text">Echa un vistazo a Twinone App Locker, la app gratuita que protege tu privacidad y aplicaciones. https://play.google.com/store/apps/details?id=com.twinone.locker</string>
 

@@ -21,7 +21,7 @@
 
     <!-- All Strings for applist -->
     <string name="applist_on">SI</string>
-    <string name="applist_window_title">Aplicationes bloqueadas</string>
+    <string name="applist_window_title">Aplicaciones bloqueadas</string>
     <!-- Change password activity -->
     <string name="change_pass_tit">Nueva contraseña</string>
     <string name="change_pass_desc">Introduce la nueva contraseña\nSe recomienda 4 o más dígitos</string>
@@ -286,7 +286,7 @@
     <!--  -->
     <string name="pro_required">Esto es una función pro. ¿Quieres activar Locker Pro ahora gratis?</string>
     <string name="pro_tofree_tit">Modo gratis</string>
-    <string name="pro_tofree_msg">Perdrs todas las funciones pro\n¿Seguro que quieres activar Locker gratis?</string>
+    <string name="pro_tofree_msg">Perderás todas las funciones pro\n¿Seguro que quieres activar Locker gratis?</string>
     <string name="applist_tit_apps">Aplicaciones</string>
     <string name="applist_tit_important">Importantes</string>
     <string name="applist_tit_system">Sistema</string>

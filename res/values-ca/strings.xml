@@ -99,7 +99,7 @@
     <!--  -->
     <string name="old_pref_tit_dial_launch">Inicia mitjançant trucada</string>
     <string name="old_pref_desc_dial_launch">Quan l'opció estigui habilitada, podeu iniciar Locker trucant a #CONTRASENYA.\nPer exemple, si la vostra contrasenya és 1111, podeu trucar a #1111 per a inciar Locker</string>
-    <string name="pref_tit_hide_launcher_icon">Oculta l'icona</string>
+    <string name="pref_tit_hide_launcher_icon">Oculta la icona</string>
     <string name="pref_desc_hide_launcher_icon">Amb aquesta opció s'oculta la icona de Locker de les aplicacions instalades (Necessita reiniciar. És necessari habilitar "Inicia mitjançant trucada")</string>
     <!-- Updated text for "Notification" -->
     <string name="pref_tit_show_notification">Mostra la notificació</string>
@@ -153,7 +153,7 @@
     <string name="pref_tit_delay_time">Temps de sortida breu</string>
     <!-- Seconds is important, not just "time" -->
     <string name="pref_dlgmsg_delay_time">Introduïu el nombre de segons fins que es torni a activar el bloqueig</string>
-    <string name="pref_tit_orientation">Orientación</string>
+    <string name="pref_tit_orientation">Orientació</string>
 
     <!-- Password specific settings -->
     <string name="pref_tit_vibrate_password">Vibració</string>

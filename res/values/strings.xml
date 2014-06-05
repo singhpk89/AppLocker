@@ -333,8 +333,8 @@
     <!-- BEGIN v2332 -->
     <string name="nav_b_share">Share</string>
     <string name="nav_b_rate">Rate</string>
-    <string name="share_dlg_tit">Share Locker</string>
-    <string name="share_dlg_msg">If you like this app, consider helping improve it by sharing it with your friends.</string>
+    <string name="lib_share_dlg_tit">Share Locker</string>
+    <string name="lib_share_dlg_msg">If you like this app, consider helping improve it by sharing it with your friends.</string>
     <!-- May be used for twitter -->
     <string name="share_promo_text">Check out Twinone App Locker, the free app that protects your privacy and apps. https://play.google.com/store/apps/details?id=com.twinone.locker</string>
 

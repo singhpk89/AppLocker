@@ -13,11 +13,11 @@
     <string name="main_stop_service">Atura el bloqueig</string>
     <string name="main_change_password">Contrasenya</string>
     <string name="main_change_message">Missatge</string>
-    <string name="main_change_message_desc">Aquest missatge apareixerà sota l'aplicació bloquejada\nPodeu fer servir %s pel nom de l'aplicació.</string>
-    <string name="main_change_message_saved">S'ha desat el missatge</string>
+    <string name="main_change_message_desc">Aquest missatge apareixerà sota l\'aplicació bloquejada\nPodeu fer servir %s pel nom de l\'aplicació.</string>
+    <string name="main_change_message_saved">S\'ha desat el missatge</string>
     <string name="main_share">Comparteix</string>
     <string name="main_share_tit">Compartiu Locker</string>
-    <string name="main_share_text">Prova Locker, l'app gratuïta que protegeix les teves apps importants a Android. https://play.google.com/store/apps/details?id=com.twinone.locker</string>
+    <string name="main_share_text">Prova Locker, l\'app gratuïta que protegeix les teves apps importants a Android. https://play.google.com/store/apps/details?id=com.twinone.locker</string>
 
     <!-- All Strings for applist -->
     <string name="applist_on">SI</string>
@@ -27,15 +27,15 @@
     <string name="change_pass_desc">Introduïu la nova contrasenya\n4 o més dígits recomanats</string>
     <string name="change_pass_desc_confirmation">Confirmeu la contrasenya</string>
     <string name="change_pass_not_match">Les contrasenyes no coincideixen</string>
-    <string name="change_pass_changed">S'ha canviat la contrasenya</string>
-    <string name="change_pass_not_changed">No s'ha pogut canviar la contrasenya</string>
+    <string name="change_pass_changed">S\'ha canviat la contrasenya</string>
+    <string name="change_pass_not_changed">No s\'ha pogut canviar la contrasenya</string>
     <string name="change_pass_empty">Error: La contrasenya està buida</string>
     <string name="select_tit">Aplicacions bloquejades</string>
 
     <!-- All strings for LockActivity -->
     <string name="locker_footer_default">Introduïu la contrasenya per a desbloquejar</string>
     <string name="locker_enter_password">Introduïu la contrasenya</string>
-    <string name="upper_ok">D'ACORD</string>
+    <string name="upper_ok">D\'ACORD</string>
     <string name="upper_back">ENRERE</string>
     <string name="cancel">Cancel·la</string>
     <string name="welcome_tit">Benvingut a Locker!</string>
@@ -53,7 +53,7 @@
     <string name="pref_tit_lock_message">Missatge</string>
     <!-- Changed from the original. Re-translate -->
     <string name="pref_desc_lock_message">Aquest missatge apareixerà quan una app estigui bloquejada</string>
-    <string name="pref_dlgmsg_lock_message">Podeu fer servir %s per al nom de l'aplicació</string>
+    <string name="pref_dlgmsg_lock_message">Podeu fer servir %s per al nom de l\'aplicació</string>
     <!-- Keep it short! -->
     <string name="pref_tit_start_boot">Inicia amb el dispositiu</string>
     <!-- Descriptions can be longer -->
@@ -68,9 +68,9 @@
     <string name="pref_list_perf_high">Alt</string>
     <string name="pref_list_perf_normal">Normal</string>
     <string name="pref_list_perf_low">Baix</string>
-    <string name="pref_list_perf_very_low">Mode d'estalvi</string>
+    <string name="pref_list_perf_very_low">Mode d\'estalvi</string>
     <string name="old_pref_tit_delay_status">Retard de bloqueig</string>
-    <string name="old_pref_desc_delay_status">En introduir la contrasenya correcta, s'augmentarà el temps per a tornar a demanar la contrasenya</string>
+    <string name="old_pref_desc_delay_status">En introduir la contrasenya correcta, s\'augmentarà el temps per a tornar a demanar la contrasenya</string>
     <string name="old_pref_tit_delay_time">Temps de redard</string>
     <string name="old_pref_dlgmsg_delay_time">Passat aquest temps, es tornarà a demanar la contrasenya (Segons)</string>
     <string name="applist_lock_all">Totes</string>
@@ -82,7 +82,7 @@
     <!-- BEGIN v2.0 Strings -->
     <!-- For android 4.2 and below, the system will not kill Locker -->
     <string name="pref_desc_show_notification">Mostra una notificació mentre es bloquegen les aplicacions</string>
-    <!-- Since Android 4.3, system kills app if it doesn't show a notification, we should warnt he users about this -->
+    <!-- Since Android 4.3, system kills app if it doesn\'t show a notification, we should warnt he users about this -->
     <string name="old_pref_desc_show_notification_v18">Mostra una notificació mentre es bloquegen aplicacions. Es recomana mantenir aquesta opció habilitada; en cas contrari Android podria tancar Locker</string>
     <string name="notification_title">Locker està actiu</string>
     <string name="notification_state_locked">Feu clic aquí per a desactivar el bloqueig</string>
@@ -98,14 +98,14 @@
     <string name="pref_tit_cat_launcher">Inici</string>
     <!--  -->
     <string name="old_pref_tit_dial_launch">Inicia mitjançant trucada</string>
-    <string name="old_pref_desc_dial_launch">Quan l'opció estigui habilitada, podeu iniciar Locker trucant a #CONTRASENYA.\nPer exemple, si la vostra contrasenya és 1111, podeu trucar a #1111 per a inciar Locker</string>
+    <string name="old_pref_desc_dial_launch">Quan l\'opció estigui habilitada, podeu iniciar Locker trucant a #CONTRASENYA.\nPer exemple, si la vostra contrasenya és 1111, podeu trucar a #1111 per a inciar Locker</string>
     <string name="pref_tit_hide_launcher_icon">Oculta la icona</string>
-    <string name="pref_desc_hide_launcher_icon">Amb aquesta opció s'oculta la icona de Locker de les aplicacions instalades (Necessita reiniciar. És necessari habilitar "Inicia mitjançant trucada")</string>
+    <string name="pref_desc_hide_launcher_icon">Amb aquesta opció s\'oculta la icona de Locker de les aplicacions instalades (Necessita reiniciar. És necessari habilitar "Inicia mitjançant trucada")</string>
     <!-- Updated text for "Notification" -->
     <string name="pref_tit_show_notification">Mostra la notificació</string>
     <!-- Changelog -->
     <string name="cl_title">Canvis recents</string>
-    <string name="pref_tit_cat_about">Sobre l'aplicació</string>
+    <string name="pref_tit_cat_about">Sobre l\'aplicació</string>
     <!-- END v2.0.6 Strings -->
 
 
@@ -114,17 +114,17 @@
     <string name="password_change_tit">Canvia la contrasenya</string>
     <string name="password_change_head">Introduïu una nova contrasenya</string>
     <string name="password_change_confirm">Confirmeu la nova contrasenya</string>
-    <string name="password_change_saved">S'ha canviat la contrasenya</string>
-    <string name="password_change_error">No s'ha pogut canviar la contrasenya</string>
+    <string name="password_change_saved">S\'ha canviat la contrasenya</string>
+    <string name="password_change_error">No s\'ha pogut canviar la contrasenya</string>
     <string name="password_change_not_match">Les contrasenyes no coincideixen</string>
     <string name="password_empty">La contrasenya no pot estar buida</string>
     <!-- PATTERN -->
     <string name="pattern_change_tit">Canvia el patró</string>
-    <string name="pattern_detected">S'ha detectat el patró</string>
+    <string name="pattern_detected">S\'ha detectat el patró</string>
     <string name="pattern_change_head">Dibuixeu un nou patró</string>
     <string name="pattern_change_confirm">Dibuixeu el patró de nou per a confirmar</string>
-    <string name="pattern_change_saved">S'ha canviat el patró</string>
-    <string name="pattern_change_error">No s'ha pogut canviar el patró</string>
+    <string name="pattern_change_saved">S\'ha canviat el patró</string>
+    <string name="pattern_change_error">No s\'ha pogut canviar el patró</string>
     <string name="pattern_change_not_match">Els patrons no coincideixen</string>
     <!--  -->
     <string name="button_confirm">Confirma</string>
@@ -143,13 +143,13 @@
     <string name="vc_tit_new_version">Actualizació</string>
     <string name="vc_tit_unsupported">Ho sentim</string>
     <string name="vc_msg_new_version">Hi ha una nova versió disponible, voleu actualitzar ara?</string>
-    <string name="vc_msg_unsupported">La versió que feu servir d'aquesta aplicació és massa antiga i ha d'actualitzar-se. Si us plau, actualitzeu l'aplicació o trieu Surt. Disculpeu les molèsties.</string>
+    <string name="vc_msg_unsupported">La versió que feu servir d\'aquesta aplicació és massa antiga i ha d\'actualitzar-se. Si us plau, actualitzeu l\'aplicació o trieu Surt. Disculpeu les molèsties.</string>
 
     <!-- Settings -->
     <string name="pref_tit_cat_password">Preferències de contrasenya</string>
     <string name="pref_tit_cat_pattern">Preferències de patró</string>
     <string name="pref_tit_delay_status">Sortida breu</string>
-    <string name="pref_desc_delay_status">Podeu sortir d'una aplicació i tornar dins el límit de temps sense contrasenya</string>
+    <string name="pref_desc_delay_status">Podeu sortir d\'una aplicació i tornar dins el límit de temps sense contrasenya</string>
     <string name="pref_tit_delay_time">Temps de sortida breu</string>
     <!-- Seconds is important, not just "time" -->
     <string name="pref_dlgmsg_delay_time">Introduïu el nombre de segons fins que es torni a activar el bloqueig</string>
@@ -165,7 +165,7 @@
     <string name="pref_tit_pattern_stealth">Mode invisible</string>
     <string name="pref_desc_pattern_stealth">El patró serà invisible</string>
     <string name="pref_tit_switch_buttons">Canvia els botons</string>
-    <string name="pref_desc_switch_buttons">Canvia la posició dels botons "D'acord" i "Enrere"</string>
+    <string name="pref_desc_switch_buttons">Canvia la posició dels botons "D\'acord" i "Enrere"</string>
     <string name="pref_list_orientation_portrait">Vertical</string>
     <!-- TODO: Use android standards -->
     <string name="pref_list_orientation_landscape">Horizontal</string>
@@ -187,7 +187,7 @@
     <string name="pref_tit_dial_launch">Inici amb trucada</string>
     <string name="pref_desc_dial_launch">Accedeix a Locker trucant a un número.</string>
     <string name="pref_tit_dial_launch_number">Número</string>
-    <string name="pref_desc_dial_launch_number">En trucar a aquest número, Locker s'obrirà. (Recomanem que comenci per #)</string>
+    <string name="pref_desc_dial_launch_number">En trucar a aquest número, Locker s\'obrirà. (Recomanem que comenci per #)</string>
     <string name="vc_later">Més tard</string> <!-- END v2.0.8 Strings -->
 
 
@@ -234,8 +234,8 @@
     <string name="background_from_gallery">Galeria</string>
     <string name="background_locker_green">Verd</string>
     <string name="old_background_default">Elimina el fons</string>
-    <string name="background_changed">S'ha canviat el fons</string>
-    <string name="background_removed">S'ha eliminat el fons</string>
+    <string name="background_changed">S\'ha canviat el fons</string>
+    <string name="background_removed">S\'ha eliminat el fons</string>
     <!-- Start missing -->
     <string name="pref_tit_lockactivity_background">Fons</string>
     <string name="pref_desc_lockactivity_background"></string>
@@ -251,15 +251,15 @@
     <string name="pref_desc_ads_forced">En aquest moment no pots deshabilitar els anuncis.</string>
     <!-- BEGIN v2300 -->
     <!-- animations for the lock screen -->
-    <string name="pref_tit_cat_anim_show">Animació d'entrada</string>
+    <string name="pref_tit_cat_anim_show">Animació d\'entrada</string>
     <string name="pref_tit_cat_anim_hide">Animació de sortida</string>
     <string name="pref_tit_anim_millis">Duració</string>
-    <string name="pref_desc_anim_millis">Temps en milisegons per a l'animació</string>
+    <string name="pref_desc_anim_millis">Temps en milisegons per a l\'animació</string>
     <string name="pref_tit_anim_type">Tipus</string>
     <string name="pref_desc_anim_type">%s</string>
     <string name="pref_list_anim_fade">Fon</string>
     <string name="pref_list_anim_slide_right">Desplaça a la dreta</string>
-    <string name="pref_list_anim_slide_left">Desplaça a l'esquerra</string>
+    <string name="pref_list_anim_slide_left">Desplaça a l\'esquerra</string>
     <string name="pref_list_anim_none">Apagat</string>
     <!-- BEGIN v2302 -->
     <string name="background_default">Predeterminat</string>
@@ -309,8 +309,8 @@
     <string name="fragment_title_pro">Pro</string>
     <string name="setup_new_lock">Crea un bloqueig</string>
     <!--  -->
-    <string name="pref_tit_pattern_hide_error">Oculta l'error</string>
-    <string name="pref_desc_pattern_hide_error">Quan s'introdueix un patró incorrecte, no el mostris.</string>
+    <string name="pref_tit_pattern_hide_error">Oculta l\'error</string>
+    <string name="pref_desc_pattern_hide_error">Quan s\'introdueix un patró incorrecte, no el mostris.</string>
     <string name="pref_tit_pattern_size">Tamany del patró</string>
     <string name="pref_desc_pattern_size">Nombre de files i columnes del patró</string>
     <!--  -->
@@ -319,7 +319,7 @@
 
     <!-- Recovery dialog -->
     <string name="recovery_tit">Codi de recuperació</string>
-    <string name="recovery_dlgmsg">El vostre codi de recuperació és %s\nÉs important que us l'envieu (per si oblideu la contrasenya). Podeu trobar aquest codi a Preferències.</string>
+    <string name="recovery_dlgmsg">El vostre codi de recuperació és %s\nÉs important que us l\'envieu (per si oblideu la contrasenya). Podeu trobar aquest codi a Preferències.</string>
     <string name="recovery_code_send_button">Envia</string>
     <!-- Recovery preference -->
     <string name="pref_tit_recovery_code">Codi de recuperació</string>
@@ -336,20 +336,20 @@
     <string name="apps_menu_search_hint">Cerca aplicacions</string>
 
     <!-- Example: WhatsApp locked -->
-    <string name="apps_toast_locked_single">S'ha bloquejat %s</string>
-    <string name="apps_toast_locked_all">S'han bloquejat totes les aplicacions</string>
-    <string name="apps_toast_unlocked_single">S'ha desbloquejat %s</string>
-    <string name="apps_toast_unlocked_all">S'han desbloquejat totes les aplicacions</string>
+    <string name="apps_toast_locked_single">S\'ha bloquejat %s</string>
+    <string name="apps_toast_locked_all">S\'han bloquejat totes les aplicacions</string>
+    <string name="apps_toast_unlocked_single">S\'ha desbloquejat %s</string>
+    <string name="apps_toast_unlocked_all">S\'han desbloquejat totes les aplicacions</string>
 
     <!-- BEGIN v2332 -->
     <string name="nav_b_share">Comparteix</string>
     <string name="nav_b_rate">Valora</string>
-    <string name="share_dlg_tit">Comparteix Locker</string>
-    <string name="share_dlg_msg">Si us agrada aquesta app, podeu ajudar a millorar-la si la compartiu amb els vostres amics.</string>
+    <string name="lib_share_dlg_tit">Comparteix Locker</string>
+    <string name="lib_share_dlg_msg">Si us agrada aquesta app, podeu ajudar a millorar-la si la compartiu amb els vostres amics.</string>
     <!-- May be used for twitter -->
-    <string name="share_promo_text">Dona una ullada a Twinone App Locker, l'app gratuïta que protegeix les vostres aplicacions. https://play.google.com/store/apps/details?id=com.twinone.locker</string>
+    <string name="share_promo_text">Dona una ullada a Twinone App Locker, l\'app gratuïta que protegeix les vostres aplicacions. https://play.google.com/store/apps/details?id=com.twinone.locker</string>
 
-        <!-- BEGIN v2335 -->
+    <!-- BEGIN v2335 -->
     <string name="share_dlg_never">Mai</string>
     <string name="share_dlg_later">Més tard</string>
 

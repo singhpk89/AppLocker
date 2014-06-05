@@ -344,8 +344,8 @@
     <!-- BEGIN v2332 -->
     <string name="nav_b_share">Compartir</string>
     <string name="nav_b_rate">Valorar</string>
-    <string name="share_dlg_tit">Compartir Locker</string>
-    <string name="share_dlg_msg">Si te gusta esta app, considera ayudar a mejorarla compartiéndola con tus amigos.</string>
+    <string name="lib_share_dlg_tit">Compartir Locker</string>
+    <string name="lib_share_dlg_msg">Si te gusta esta app, considera ayudar a mejorarla compartiéndola con tus amigos.</string>
     <!-- May be used for twitter -->
     <string name="share_promo_text">Echa un vistazo a Twinone App Locker, la app gratuita que protege tu privacidad y aplicaciones. https://play.google.com/store/apps/details?id=com.twinone.locker</string>
 

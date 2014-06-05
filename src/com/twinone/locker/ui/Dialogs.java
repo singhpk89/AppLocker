@@ -132,8 +132,8 @@ public class Dialogs {
 		et.setText(promoText);
 
 		ab.setCancelable(false);
-		ab.setTitle(R.string.share_dlg_tit);
-		ab.setMessage(R.string.share_dlg_msg);
+		ab.setTitle(R.string.lib_share_dlg_tit);
+		ab.setMessage(R.string.lib_share_dlg_msg);
 		ab.setPositiveButton(android.R.string.ok, new OnClickListener() {
 
 			@Override
@@ -144,7 +144,7 @@ public class Dialogs {
 				final String text = et.getText().toString();
 				intent.putExtra(Intent.EXTRA_TEXT, text);
 				Intent sender = Intent.createChooser(intent,
-						c.getString(R.string.share_dlg_tit));
+						c.getString(R.string.lib_share_dlg_tit));
 				Analytics anal = new Analytics(c);
 				anal.increment(LockerAnalytics.SHARE);
 				c.startActivity(sender);

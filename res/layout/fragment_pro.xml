@@ -22,7 +22,7 @@
             android:text="@string/pro_header"
             android:textAppearance="@android:style/TextAppearance.Large" />
 
-        <com.twinone.locker.ui.ProItemView
+        <org.twinone.locker.ui.ProItemView
             android:id="@+id/proItemFree"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
             pro:proTitle="@string/pro_tit_free"
             pro:proTitleColor="@color/pro_item_tit_free" />
 
-        <com.twinone.locker.ui.ProItemView
+        <org.twinone.locker.ui.ProItemView
             android:id="@+id/proItemAds"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
             pro:proTitle="@string/pro_tit_ads"
             pro:proTitleColor="@color/pro_item_tit_ads" />
 
-        <com.twinone.locker.ui.ProItemView
+        <org.twinone.locker.ui.ProItemView
             android:id="@+id/proItemPaid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

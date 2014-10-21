@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.twinone.locker.lock.PasswordView xmlns:android="http://schemas.android.com/apk/res/android"
+<org.twinone.locker.lock.PasswordView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:numlock="http://schemas.android.com/apk/res-auto"
     android:id="@+id/passwordView"
     android:layout_width="wrap_content"
@@ -129,4 +129,4 @@
         android:gravity="center"
         android:padding="0px" />
 
-</com.twinone.locker.lock.PasswordView>
+</org.twinone.locker.lock.PasswordView>

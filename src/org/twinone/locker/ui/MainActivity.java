@@ -1,13 +1,9 @@
 package org.twinone.locker.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.twinone.locker.Constants;
 import org.twinone.locker.LockerAnalytics;
 import org.twinone.locker.lock.AppLockService;
 import org.twinone.locker.lock.LockService;
-import org.twinone.locker.pro.ProUtils;
 import org.twinone.locker.ui.NavigationFragment.NavigationListener;
 import org.twinone.locker.util.PrefUtils;
 import org.twinone.util.Analytics;
@@ -179,17 +175,6 @@ public class MainActivity extends ActionBarActivity implements
 		mActionBar.setTitle(resId);
 	}
 
-	private void doTest() {
-		Log.d("", "Querying from test");
-
-		Analytics analytics = new Analytics(this);
-		ProUtils proUtils = new ProUtils(this);
-		Map<String, String> data = new HashMap<String, String>();
-		data.put(LockerAnalytics.PRO_TYPE, proUtils.getProTypeString());
-		data.put(LockerAnalytics.LOCKED_APPS_COUNT,
-				String.valueOf(PrefUtils.getLockedApps(this).size()));
-		analytics.setDefaultUrl(LockerAnalytics.URL).query(data);
-	}
 
 	/**
 	 * 
@@ -252,7 +237,7 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public boolean onNavigationElementSelected(int type) {
 		if (type == NavigationElement.TYPE_TEST) {
-			doTest();
+			// Test something here
 			return false;
 		} else if (type == NavigationElement.TYPE_STATUS) {
 			toggleService();
@@ -316,9 +301,6 @@ public class MainActivity extends ActionBarActivity implements
 			break;
 		case NavigationElement.TYPE_STATISTICS:
 			mCurrentFragment = new StatisticsFragment();
-			break;
-		case NavigationElement.TYPE_PRO:
-			mCurrentFragment = new ProFragment();
 			break;
 		}
 		FragmentManager fm = getSupportFragmentManager();

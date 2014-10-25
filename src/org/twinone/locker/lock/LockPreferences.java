@@ -2,7 +2,6 @@ package org.twinone.locker.lock;
 
 import java.io.Serializable;
 
-import org.twinone.locker.pro.ProUtils;
 import org.twinone.locker.util.PrefUtils;
 
 import android.content.Context;
@@ -57,9 +56,6 @@ public class LockPreferences implements Serializable {
 	 * @return
 	 */
 	public LockPreferences(Context c) {
-		final ProUtils p = new ProUtils(c);
-		pro = p.proFeaturesEnabled();
-		showAds = p.showAds();
 		PrefUtils prefs = new PrefUtils(c);
 		// Common
 		type = prefs.getCurrentLockTypeInt();

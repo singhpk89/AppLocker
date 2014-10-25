@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.twinone.locker.Constants;
 import org.twinone.locker.lock.AppLockService;
-import org.twinone.locker.pro.ProUtils;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -80,9 +79,6 @@ public class NavigationAdapter extends BaseAdapter {
 
 			addElement(R.string.nav_test, NavigationElement.TYPE_TEST);
 		}
-		// Only allow to switch pro if the user has free
-		if (new ProUtils(mContext).getProType() == ProUtils.TYPE_FREE)
-			addElement(R.string.nav_pro, NavigationElement.TYPE_PRO);
 
 	}
 

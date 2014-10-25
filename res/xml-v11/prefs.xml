@@ -6,7 +6,7 @@
         android:key="@string/pref_key_lock_type"
         android:title="@string/pref_tit_lock_type" />
 
-    <com.twinone.locker.pro.pref.ProListPreference
+    <ListPreference
         android:background="@drawable/ic_launcher"
         android:entries="@array/pref_names_background"
         android:entryValues="@array/pref_values_background"
@@ -38,7 +38,7 @@
         android:title="@string/pref_tit_cat_pattern" >
 
         <!-- Pattern Color -->
-        <com.twinone.locker.pro.pref.ProListPreference
+        <ListPreference
             android:defaultValue="@string/pref_val_pattern_color_white"
             android:entries="@array/pref_names_pattern_colors"
             android:entryValues="@array/pref_values_pattern_colors"
@@ -65,7 +65,7 @@
             android:summary="@string/pref_desc_pattern_hide_error"
             android:title="@string/pref_tit_pattern_hide_error" />
 
-        <com.twinone.locker.pro.pref.ProEditTextPreference
+        <EditTextPreference
             android:defaultValue="@string/pref_def_pattern_size"
             android:key="@string/pref_key_pattern_size"
             android:numeric="integer"
@@ -114,7 +114,7 @@
             android:key="@string/pref_key_orientation"
             android:title="@string/pref_tit_orientation" />
         <!-- Delay -->
-        <com.twinone.locker.pro.pref.ProCheckBoxPreference
+        <CheckBoxPreference
             android:defaultValue="@bool/pref_def_delay_status"
             android:key="@string/pref_key_delay_status"
             android:summary="@string/pref_desc_delay_status"
@@ -135,7 +135,7 @@
         android:title="@string/pref_tit_cat_notification" >
 
         <!-- Show notification -->
-        <com.twinone.locker.pro.pref.ProCheckBoxPreference
+        <CheckBoxPreference
             android:defaultValue="@bool/pref_def_show_notification"
             android:key="@string/pref_key_show_notification"
             android:summary="@string/pref_desc_show_notification"
@@ -156,7 +156,7 @@
 
         <!-- Dial launch status -->
 
-        <com.twinone.locker.pro.pref.ProCheckBoxPreference
+        <CheckBoxPreference
             android:defaultValue="@bool/pref_def_dial_launch"
             android:key="@string/pref_key_dial_launch"
             android:summary="@string/pref_desc_dial_launch"
@@ -170,7 +170,7 @@
             android:title="@string/pref_tit_dial_launch_number" />
         <!-- Hide icon -->
 
-        <com.twinone.locker.pro.pref.ProCheckBoxPreference
+        <CheckBoxPreference
             android:defaultValue="@bool/pref_def_hide_launcher_icon"
             android:key="@string/pref_key_hide_launcher_icon"
             android:summary="@string/pref_desc_hide_launcher_icon"
@@ -193,7 +193,7 @@
 
     <!-- ANIMATIONS -->
     <PreferenceCategory android:title="@string/pref_tit_cat_anim_show" >
-        <com.twinone.locker.pro.pref.ProListPreference
+        <ListPreference
             android:defaultValue="@string/pref_val_anim_none"
             android:entries="@array/pref_names_anim"
             android:entryValues="@array/pref_values_anim"
@@ -201,7 +201,7 @@
             android:summary="@string/pref_desc_anim_type"
             android:title="@string/pref_tit_anim_type" />
 
-        <com.twinone.locker.pro.pref.ProEditTextPreference
+        <EditTextPreference
             android:defaultValue="@string/pref_def_anim_show_millis"
             android:dialogTitle="@string/pref_tit_anim_millis"
             android:key="@string/pref_key_anim_show_millis"
@@ -211,7 +211,7 @@
             android:title="@string/pref_tit_anim_millis" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_tit_cat_anim_hide" >
-        <com.twinone.locker.pro.pref.ProListPreference
+        <ListPreference
             android:defaultValue="@string/pref_val_anim_fade"
             android:entries="@array/pref_names_anim"
             android:entryValues="@array/pref_values_anim"
@@ -219,7 +219,7 @@
             android:summary="@string/pref_desc_anim_type"
             android:title="@string/pref_tit_anim_type" />
 
-        <com.twinone.locker.pro.pref.ProEditTextPreference
+        <EditTextPreference
             android:defaultValue="@string/pref_def_anim_hide_millis"
             android:dialogTitle="@string/pref_tit_anim_millis"
             android:key="@string/pref_key_anim_hide_millis"

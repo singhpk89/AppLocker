@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.twinone.locker.LockerAnalytics;
-import org.twinone.locker.pro.ProUtils;
 import org.twinone.locker.util.PrefUtils;
 import org.twinone.util.Analytics;
 
@@ -58,9 +57,7 @@ public class Receiver extends BroadcastReceiver {
 
 		// analytics
 		Analytics analytics = new Analytics(c);
-		ProUtils proUtils = new ProUtils(c);
 		Map<String, String> data = new HashMap<String, String>();
-		data.put(LockerAnalytics.PRO_TYPE, proUtils.getProTypeString());
 		data.put(LockerAnalytics.LOCKED_APPS_COUNT,
 				String.valueOf(PrefUtils.getLockedApps(c).size()));
 		Log.d("Receiver", "Test");

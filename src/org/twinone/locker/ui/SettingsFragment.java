@@ -5,11 +5,6 @@ import java.util.List;
 import org.twinone.locker.lock.AppLockService;
 import org.twinone.locker.lock.LockPreferences;
 import org.twinone.locker.lock.LockService;
-import org.twinone.locker.pro.ProUtils;
-import org.twinone.locker.pro.pref.ProCheckBoxPreference;
-import org.twinone.locker.pro.pref.ProEditTextPreference;
-import org.twinone.locker.pro.pref.ProListPreference;
-import org.twinone.locker.pro.pref.ProPreference;
 import org.twinone.locker.util.PrefUtils;
 import org.twinone.util.ChangeLog;
 
@@ -28,10 +23,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
@@ -52,31 +47,29 @@ public class SettingsFragment extends PreferenceFragment implements
 	SharedPreferences mPrefs;
 	SharedPreferences.Editor mEditor;
 	// private static final String TAG = "PrefsActivity";
-	// private ProCheckBoxPreference mShowNotification;
-	private ProCheckBoxPreference mShortExit;
+	// private CheckBoxPreference mShowNotification;
+	private CheckBoxPreference mShortExit;
 	private EditTextPreference mShortExitTime;
 	private CheckBoxPreference mTransparentPref;
 	private PreferenceCategory mCatNotif;
-	private ProCheckBoxPreference mStartWithCall;
-	private ProCheckBoxPreference mHideIcon;
+	private CheckBoxPreference mStartWithCall;
+	private CheckBoxPreference mHideIcon;
 	private Preference mChangeLogPref;
 	private PreferenceScreen mPrefScreen;
 	private Preference mLockTypePref;
 	private PreferenceCategory mCatPassword;
 	private PreferenceCategory mCatPattern;
 	private Preference mRecoveryPref;
-	private ProListPreference mBackground;
+	private ListPreference mBackground;
 
-	private ProEditTextPreference mPatternSize;
+	private EditTextPreference mPatternSize;
 
-	private ProUtils mProUtils;
 	private PrefUtils mPrefUtils;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mProUtils = new ProUtils(getActivity());
 		mPrefUtils = new PrefUtils(getActivity());
 
 		PreferenceManager pm = getPreferenceManager();
@@ -86,22 +79,22 @@ public class SettingsFragment extends PreferenceFragment implements
 
 		mPrefs = pm.getSharedPreferences();
 		mEditor = pm.getSharedPreferences().edit();
-		// mShowNotification = (ProCheckBoxPreference)
+		// mShowNotification = (CheckBoxPreference)
 		// findPreference(getString(R.string.pref_key_show_notification));
 		mShortExitTime = (EditTextPreference) findPreference(getString(R.string.pref_key_delay_time));
-		mShortExit = (ProCheckBoxPreference) findPreference(getString(R.string.pref_key_delay_status));
+		mShortExit = (CheckBoxPreference) findPreference(getString(R.string.pref_key_delay_status));
 		mCatNotif = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_notification));
 		mTransparentPref = (CheckBoxPreference) findPreference(getString(R.string.pref_key_hide_notification_icon));
-		mStartWithCall = (ProCheckBoxPreference) findPreference(getString(R.string.pref_key_dial_launch));
-		mHideIcon = (ProCheckBoxPreference) findPreference(getString(R.string.pref_key_hide_launcher_icon));
+		mStartWithCall = (CheckBoxPreference) findPreference(getString(R.string.pref_key_dial_launch));
+		mHideIcon = (CheckBoxPreference) findPreference(getString(R.string.pref_key_hide_launcher_icon));
 		mChangeLogPref = (Preference) findPreference(getString(R.string.pref_key_changelog));
 		mLockTypePref = (Preference) findPreference(getString(R.string.pref_key_lock_type));
 		mPrefScreen = (PreferenceScreen) findPreference(getString(R.string.pref_key_screen));
 		mCatPassword = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_password));
 		mCatPattern = (PreferenceCategory) findPreference(getString(R.string.pref_key_cat_pattern));
 		mRecoveryPref = (Preference) findPreference(getString(R.string.pref_key_recovery_code));
-		mBackground = (ProListPreference) findPreference(getString(R.string.pref_key_background));
-		mPatternSize = (ProEditTextPreference) findPreference(getString(R.string.pref_key_pattern_size));
+		mBackground = (ListPreference) findPreference(getString(R.string.pref_key_background));
+		mPatternSize = (EditTextPreference) findPreference(getString(R.string.pref_key_pattern_size));
 		initialize();
 	}
 
@@ -109,8 +102,6 @@ public class SettingsFragment extends PreferenceFragment implements
 	public View onCreateView(LayoutInflater paramLayoutInflater,
 			ViewGroup paramViewGroup, Bundle paramBundle) {
 		getActivity().setTitle(R.string.fragment_title_settings);
-		// ((MainActivity) getActivity())
-		// .setActionBarTitle(R.string.main_preferences);
 		return super.onCreateView(paramLayoutInflater, paramViewGroup,
 				paramBundle);
 	}
@@ -118,13 +109,9 @@ public class SettingsFragment extends PreferenceFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		setupMessagesAndViews();
+		// setupMessagesAndViews();
 	}
 
-	/**
-	 * Defines what should happen once the {@link PreferenceActivity} is
-	 * displayed to the user.
-	 */
 	protected void initialize() {
 
 		showCategory();
@@ -236,15 +223,6 @@ public class SettingsFragment extends PreferenceFragment implements
 		}
 		// Password/pattern categories
 		showCategory();
-		for (int i = 0; i < getListView().getCount(); i++) {
-			Preference p = (Preference) getListView().getItemAtPosition(i);
-			if (p instanceof ProPreference) {
-
-				((ProPreference) p).getHelper().setProUtils(mProUtils);
-				// ((IProPreference) p).getHelper().updateProFlag();
-			}
-		}
-
 	}
 
 	private void showCategory() {

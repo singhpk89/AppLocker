@@ -1,7 +1,6 @@
 package org.twinone.ads;
 
 import org.twinone.locker.Constants;
-import org.twinone.locker.pro.ProUtils;
 
 import android.content.Context;
 import android.util.Log;
@@ -52,7 +51,7 @@ public class AdMobBannerHelper {
 			Log.w(TAG, "not showing ads in debug mode");
 			return false;
 		}
-		return new ProUtils(mContext).showAds();
+		return true;
 	}
 
 	public void loadAd() {

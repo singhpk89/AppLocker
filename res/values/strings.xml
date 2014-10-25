@@ -341,4 +341,11 @@
     <!-- BEGIN v2335 -->
     <string name="share_dlg_never">Never</string>
     <string name="share_dlg_later">Later</string>
+    
+    <!-- Androilib strings -->
+     <string name="lib_rate_dlg_tit">Rate our app</string>
+    <string name="lib_rate_dlg_msg">Please help us improve and add new features by leaving a positive review on Google Play</string>
+    <!--  -->
+    <string name="lib_share_never">No thanks</string>
+    <string name="lib_share_later">Later</string>
 </resources>

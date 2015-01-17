@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Added in Locker v1.07
+    Author: Patschi (#Patschi, irc.pkern.at/6667)
+-->
+<resources>
+
+    <string name="application_name">App Locker</string>
+
+    <!-- All strings for MainActivity -->
+    <string name="main_share">Teilen</string>
+
+    <!-- All Strings for applist -->
+
+    <!-- Change password activity -->
+    <string name="change_pass_tit">Passwort ändern</string>
+    <string name="change_pass_desc">Gib das neue Passwort ein\n4 oder mehr Zeichen werden empfohlen</string>
+    <string name="change_pass_desc_confirmation">Passwort bestätigen</string>
+    <string name="change_pass_not_match">Passwörter sind nicht identisch</string>
+    <string name="change_pass_changed">Passwort wurde erfolgreich geändert</string>
+    <string name="change_pass_not_changed">Fehler beim ändern des Passwortes</string>
+    <string name="change_pass_empty">Fehler: Leeres Passwort</string>
+    <string name="select_tit">Gesperrte Apps</string>
+
+    <!-- All strings for LockActivity -->
+    <string name="locker_footer_default">Zum Entsperren Passwort eingeben</string>
+    <string name="locker_enter_password">Passwort eingeben</string>
+    <string name="upper_ok">OK</string>
+    <string name="upper_back">ZURÜCK</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="welcome_tit">Willkommen beim Locker!</string>
+    <string name="welcome_message">Du benötigst ein Passwort bevor du Apps sperren kannst.\nMöchtest du nun ein Passwort setzen?</string>
+    <!-- END v1.07 Strings -->
+
+
+    <!-- BEGIN v1.08 Strings -->
+    <!-- This section represents Locker > Preferences -->
+    <string name="preferences_tit">Einstellungen</string> <!-- The window title -->
+    <string name="main_preferences">Einstellungen</string> <!-- The button in the main screen -->
+    <!-- clone of "locker_footer_default" -->
+    <string name="pref_def_lock_message">Passwort zum Entsperren eingeben</string>
+    <string name="pref_tit_lock_message">Nachricht</string>
+    <!-- Changed from the original. Re-translate -->
+    <string name="pref_desc_lock_message">Diese Nachricht erscheint, wenn eine App gesperrt ist</string>
+    <string name="pref_dlgmsg_lock_message">Du kannst %s als App-Namen verwenden.</string>
+    <!-- Keep it short! -->
+    <string name="pref_tit_start_boot">Beim Start ausführen</string>
+    <!-- Descriptions can be longer -->
+    <string name="pref_desc_start_boot">Apps sperren, wenn das Gerät startet</string>
+    <string name="pref_tit_relock_after_screenoff">Sperren ausg. Bildschirm</string>
+    <string name="pref_desc_relock_after_screenoff">Frage erneut nach dem Passwort, nachdem der Bildschirm ausgeschaltet wurde</string>
+    <string name="old_pref_tit_vibrate_password">Vibration</string>
+    <string name="old_pref_desc_vibrate_password">Bei Tastendruck vibrieren</string>
+    <string name="pref_tit_performance">Leistung</string>
+    <string name="pref_desc_performance">Höhere Leistung bietet mehr Geschwindigkeit, verbraucht aber mehr Akku. Der Sparmodus ist dagegen sparsamer, aber auch langsamer</string>
+    <string name="pref_list_perf_very_high">Sehr hoch</string>
+    <string name="pref_list_perf_high">Hoch</string>
+    <string name="pref_list_perf_normal">Normal</string>
+    <string name="pref_list_perf_low">Niedrig</string>
+    <string name="pref_list_perf_very_low">Sparmodus</string>
+    <string name="old_pref_tit_delay_status">Sperre verzögern</string>
+    <string name="old_pref_desc_delay_status">Wenn du das korrekte Passwort eingibst, wirst du erst nach einer gewissen Zeit erneut gefragt</string>
+    <string name="old_pref_tit_delay_time">Zeitverzögerung</string>
+    <string name="old_pref_dlgmsg_delay_time">Du wirst erst nach der angegebenen Zeit wieder nach dem Passwort gefragt (Sekunden)</string> <!-- END v1.08 Strings -->
+    <string name="applist_lock_all">Alle</string>
+    <string name="applist_unlock_all">Keine</string>
+    <string name="main_rate">Bewerten</string>
+    <!-- END v1.08 Strings -->
+
+
+    <!-- BEGIN v2.0 Strings -->
+    <!-- For android 4.2 and below, the system will not kill Locker -->
+    <string name="pref_desc_show_notification">Zeige Benachrichtigungen in der Statusleiste</string>
+    <!-- Since Android 4.3, system kills app if it doesn't show a notification, we should warnt he users about this -->
+    <string name="notification_title">Locker ist aktiv</string>
+    <string name="notification_state_locked">Klicke hier um Locker zu deaktivieren</string>
+    <!-- END v2.0 Strings -->
+
+
+    <!-- BEGIN v2.0.6 Strings -->
+    <!-- All pref_tit_xxx must be short (2 words max || length < 20) -->
+    <!-- pref_desc_xxx can be like 3 lines or more if neccesary -->
+    <!-- Preference categories (Keep short) -->
+    <string name="pref_tit_cat_general">Allgemein</string>
+    <string name="pref_tit_cat_notification">Benachrichtigung</string>
+    <string name="pref_tit_cat_launcher">Start</string>
+    <!--  -->
+    <string name="old_pref_tit_dial_launch">Mit Anruf starten</string>
+    <string name="old_pref_desc_dial_launch">Wenn diese Einstellung aktiviert ist, kannst du Locker starten indem du einen Anruf an #DEINPASSWORT startest.\nWenn dein Passwort zum Beispiel 1111 ist, kannst du Locker öffnen indem du #1111 anrufst.</string>
+    <string name="pref_tit_hide_launcher_icon">Verstecke Icon</string>
+    <string name="pref_desc_hide_launcher_icon">Sobald diese Option aktiviert ist, wird das Icon zum Starten von Locker aus dem Launcher versteckt. Die abgelegten Verknüpfungen am Homescreen müssen hingegen manuell entfernt werden (Benötigt evtl. einen Neustart. Aktiviert die Option "Mit Anruf starten")</string>
+    <!-- Updated text for "Notification" -->
+    <string name="pref_tit_show_notification">Zeige Benachrichtigung</string>
+    <!-- Changelog -->
+    <string name="cl_title">Was ist neu</string>
+    <string name="pref_tit_cat_about">Über die App</string>
+    <!-- END v2.0.6 Strings -->
+
+
+    <!-- BEGIN v2.0.8 Strings -->
+    <!-- PASSWORD -->
+    <string name="password_change_tit">Passwort ändern</string>
+    <string name="password_change_head">Gib ein neues Passwort ein</string>
+    <string name="password_change_confirm">Gib das Passwort erneut ein</string>
+    <string name="password_change_saved">Passwort erfolgreich geändert</string>
+    <string name="password_change_error">Fehler beim Speichern des Passwortes</string>
+    <string name="password_change_not_match">Die Passwörter sind nicht identisch</string>
+    <string name="password_empty">Passwort darf nicht leer sein</string>
+    <!-- PATTERN -->
+    <string name="pattern_change_tit">Muster ändern</string>
+    <string name="pattern_detected">Muster erkannt</string>
+    <string name="pattern_change_head">Neues Muster aufzeichnen</string>
+    <string name="pattern_change_confirm">Wähle das Muster erneut zur Bestätigung aus</string>
+    <string name="pattern_change_saved">Muster erfolgreich geändert</string>
+    <string name="pattern_change_error">Fehler beim Speichern des Musters</string>
+    <string name="pattern_change_not_match">Die beiden Muster waren nicht identisch</string>
+    <!--  -->
+    <string name="button_confirm">Fortfahren</string>
+    <string name="button_continue">Weiter</string>
+    <string name="button_back">Zurück</string>
+    <!-- Buttons have short text! (2 words or so) -->
+    <string name="main_button_set_password">Passwort ändern</string>
+    <string name="main_button_set_pattern">Muster ändern</string>
+    <string name="pref_list_lock_type_password">Passwort</string>
+    <string name="pref_list_lock_type_pattern">Muster</string>
+    <string name="pref_tit_lock_type">Sperr-Typ</string>
+    <string name="pref_desc_lock_type">Derzeit: %s</string>
+    <!-- VersionChecker -->
+    <string name="vc_update">Aktualisieren</string>
+    <string name="vc_exit">Beenden</string>
+    <string name="vc_tit_new_version">Aktualisieren</string>
+    <string name="vc_tit_unsupported">Tut mir Leid</string>
+    <string name="vc_msg_new_version">Es ist eine neue Version verfügbar. Möchtest du nun aktualisieren?</string>
+    <string name="vc_msg_unsupported">Die Version dieser App ist alt und muss aktualisiert werden. Bitte aktualisiere, um die App weiterhin nutzen zu können.</string>
+
+    <!-- Settings -->
+    <string name="pref_tit_cat_password">Passwort-Einstellungen</string>
+    <string name="pref_tit_cat_pattern">Muster-Einstellungen</string>
+    <string name="pref_tit_delay_status">Kurzes Verlassen</string>
+    <string name="pref_desc_delay_status">Du kannst eine App verlassen und innerhalb der Zeitspanne zurück in die App gehen, ohne das Passwort ein weiteres Mal eingeben zu müssen</string>
+    <string name="pref_tit_delay_time">Kurze Verlassen-Zeit</string>
+    <!-- Seconds is important, not just "time" -->
+    <string name="pref_dlgmsg_delay_time">Gib die Anzahl der Sekunden ein, nachdem ein App wieder gesperrt werden soll</string>
+    <string name="pref_tit_orientation">Orientierung</string>
+
+    <!-- Password specific settings -->
+    <string name="pref_tit_vibrate_password">Vibration</string>
+    <string name="pref_desc_vibrate_password">Vibriere beim Drücken einer Taste</string>
+
+    <!-- Pattern specific settings -->
+    <string name="pref_tit_vibrate_pattern">Vibration</string>
+    <string name="pref_desc_vibrate_pattern">Vibriere, wenn du das Muster eingibst</string>
+    <string name="pref_tit_pattern_stealth">Unsichtbar-Modus</string>
+    <string name="pref_desc_pattern_stealth">Das Auswahl des Musters ist unsichtbar</string>
+    <string name="pref_tit_switch_buttons">Tausche Knöpfe</string>
+    <string name="pref_desc_switch_buttons">Tauscht die Position der "OK" und "Beenden" Knöpfe</string>
+    <string name="pref_list_orientation_portrait">Portrait</string>
+    <string name="pref_list_orientation_landscape">Querformat</string>
+    <string name="pref_list_orientation_auto_rotate">Auto-Rotate</string>
+    <string name="pref_list_orientation_system">System-Einstellungen</string>
+
+    <!-- Beta -->
+    <string name="pref_tit_temp_wifi_unlock_state">Bei WLAN beenden</string>
+    <string name="pref_desc_temp_wifi_unlock_state">Wenn du dich zu einem der angegebenen WLAN-Netzwerke verbindest, wird die Sperre deaktiviert</string>
+    <string name="pref_tit_temp_wifi_ssid">SSID (Netzwerkname)</string>
+    <string name="pref_desc_temp_wifi_ssid">Der Name des WLAN-Netzwerkes</string>
+    <string name="beta_tit">Beta</string>
+    <string name="beta_desc">Das ist der Beta-Bereich dieser App. Diese experimentellen Funktionen wurden noch nicht auf allen Geräten getestet und könnte durchaus auch einige Fehler beinhalten.</string>
+
+    <!-- MainActivity -->
+    <string name="main_state_running">Läuft</string>
+    <string name="main_state_not_running">Gestoppt</string>
+
+    <!-- More prefs -->
+    <string name="pref_tit_dial_launch">Starte mit einem Anruf</string>
+    <string name="pref_desc_dial_launch">Greife mit Hilfe eines Anrufes auf Locker zu</string>
+    <string name="pref_tit_dial_launch_number">Nummer</string>
+    <string name="pref_desc_dial_launch_number">Die Nummer, die zum Öffnen der App notwendig ist (Wir empfehlen, die Nummer mit # zu beginnen)</string>
+    <string name="vc_later">Später</string>
+    <!-- END v2.0.8 Strings -->
+
+
+    <!-- BEGIN v2.0.2 -->
+
+    <string name="main_no_password">Du hast noch kein Passwort gesetzt.\nMöchtest Du jetzt ein Passwort einrichten?</string>
+    <string name="main_setup">Einrichtung</string>
+    <string name="old_main_choose_lock_type">Wähle einen Sperr-Typ</string>
+    <string name="main_no_locked_apps">Du hast keine Apps geschützt.\nMöchtest Du jetzt paar Apps schützen?</string>
+    <!-- END v2.0.2 -->
+
+
+    <!-- BEGIN v2.1.1 -->
+    <string name="pref_tit_password_expiry">Maximale Zeit</string>
+    <string name="pref_desc_password_expiry">Die Zeitspanne, in der Du das richtige Passwort eingeben musst.</string>
+    <string name="pref_dlgmsg_password_expiry">Zeit in Sekunden, 0 bedeutet unbegrenzt</string>
+    <string name="pref_tit_max_password_retries">Maximale Versuche</string>
+    <string name="pref_desc_max_password_retries">Die Anzahl an Versuchen die Du hast, um das richtige Passwort einzugeben</string>
+    <string name="pref_dlgmsg_max_password_retries">0 bedeutet unbgegrenzt</string>
+    <!-- END v2.1.1 -->
+
+
+    <!-- BEGIN v2.1.2 -->
+    <string name="pref_tit_pattern_color">Muster-Farbe</string>
+    <string name="pref_desc_pattern_color">Die Farbe des Musters</string>
+    <string name="pref_list_pattern_color_white">Weiß</string>
+    <string name="pref_list_pattern_color_blue">Blau</string>
+    <string name="pref_list_pattern_color_green">Grün</string>
+    <string name="pref_tit_lockactivity_background">Hintergrund</string>
+    <string name="pref_desc_lockactivity_background">Hintergrundbild, was am Sperrbildschirm einer App angezeigt wird</string>
+    <string name="pref_tit_hide_notification_icon">Benachrichtigungssymbol verstecken</string>
+    <string name="pref_desc_hide_notification_icon">Die Option versteckt nur das Benachrichtigungssymbol in der Statusleiste</string>
+
+    <!-- BEGIN 2203 -->
+
+    <string name="update_available">Aktualisierung verfügbar</string>
+    <string name="update_needed">Aktualisierung benötigt</string>
+    <string name="update_available_msg">Es ist eine neue Aktualisierung für diese App verfügbar. Diese Version wird in %d Tagen nicht mehr unterstützt.</string>
+    <string name="update_needed_msg">Diese Version wird nicht länger unterstützt. Bitte aktualisiere zur aktuellsten Version.</string>
+    <string name="update_button">Aktualisieren</string>
+    <string name="update_button_cancel">Jetzt nicht</string>
+    <!-- BEGIN v2.1.2 Continuation -->
+    <string name="background_dialog_title">Hintergrund ändern</string>
+    <string name="background_from_gallery">Galerie</string>
+    <string name="background_locker_green">Grün</string>
+    <string name="background_changed">Hintergrund geändert</string>
+
+    <!-- See background_locker_green -->
+    <string name="background_locker_blue">Blau</string>
+    <string name="background_locker_dark_blue">Dunkelblau</string>
+    <string name="background_locker_red">Rot</string>
+    <string name="background_locker_purple">Lila</string>
+    <string name="background_locker_turquoise">Türkis</string>
+    <string name="background_locker_orange">Orange</string>
+
+    <!-- BEGIN v2205 -->
+    <string name="pref_tit_ads">Werbung</string>
+    <string name="pref_desc_ads">Wenn Du Locker magst, unterstütze mich bitte, indem Du die Werbung aktivierst</string>
+    <string name="pref_desc_ads_forced">Du kannst derzeit die Werbung nicht deaktivieren</string>
+    <!-- BEGIN v2300 -->
+    <!-- animations for the lock screen -->
+    <string name="pref_tit_cat_anim_show">Animation betreten</string>
+    <string name="pref_tit_cat_anim_hide">Animation verlassen</string>
+    <string name="pref_tit_anim_millis">Dauer</string>
+    <string name="pref_desc_anim_millis">Zeit in Millisekunden für die Animation</string>
+    <string name="pref_tit_anim_type">Typ</string>
+    <string name="pref_desc_anim_type">%s</string>
+    <string name="pref_list_anim_fade">Verblassen</string>
+    <string name="pref_list_anim_slide_right">Nach rechts ausblenden</string>
+    <string name="pref_list_anim_slide_left">Nach links ausblenden</string>
+    <string name="pref_list_anim_none">Deaktiviert</string>
+
+    <!-- BEGIN v2302 -->
+    <string name="background_default">Standard</string>
+    <!-- Pro stuff -->
+    <string name="pro_b_main">Pro</string>
+    <string name="pro_window_title">Pro Funktionen</string>
+    <!--  -->
+    <string name="pro_ft_tit">Pro Funktionen:</string>
+    <string name="pro_ft_bg">Benutzerdefiniertes Hintergrundbild</string>
+    <string name="pro_ft_hide">Verstecke Locker-App</string>
+    <string name="pro_ft_hide_notif">Verstecke Benachrichtigung</string>
+    <string name="pro_ft_pcolor">Muster-Farbe ändern</string>
+    <string name="pro_ft_short_exit">Schnelles Beenden</string>
+    <string name="pro_ft_anim">Animationen</string>
+    <string name="pro_ft_more">Mehr kommt bald</string>
+    <string name="pro_header">Wähle deinen Plan:</string>
+    <string name="pro_tit_ads">Locker Ads</string>
+    <string name="pro_desc_ads">Alle Pro-Funktionen sind verfügbar, aber Werbung wird eingeblendet</string>
+    <string name="pro_tit_free">Locker Free</string>
+    <string name="pro_desc_free">Keine Pro-Funktionen sind verfügbar, dafür wird auch keine Werbung eingeblendet</string>
+    <!--  -->
+    <string name="pro_tit_paid">Locker Pro</string>
+    <string name="pro_desc_paid">Alle Pro-Funktionen sind verfügbar und es wird keine Werbung angezeigt</string>
+    <!--  -->
+    <string name="pro_required">Das ist ein eine Pro-Funktionalität. Möchtest Du die Pro-Funktionen kostenlos aktivieren?</string>
+    <string name="pro_tofree_tit">Kostenloser Modus</string>
+    <string name="pro_tofree_msg">Du verlierst alle Pro-Funktionen.\nBist Du dir sicher, dass Du in den kostenlosen Modus wechseln möchtest?</string>
+    <string name="applist_tit_apps">Apps</string>
+    <string name="applist_tit_important">Wichtig</string>
+    <string name="applist_tit_system">System</string>
+    <string name="applist_app_pkginstaller">App Installation/Deinstallation</string>
+    <string name="applist_app_dialer">Eingehender Anruf</string>
+    <string name="applist_app_sysui">Aktuelle Aufgaben</string>
+    <string name="nav_status">Sperre</string>
+    <string name="nav_apps">Applikationen</string>
+    <string name="nav_change">Sperre ändern</string>
+    <string name="nav_settings">Einstellungen</string>
+    <string name="nav_statistics">Statistiken</string>
+    <string name="nav_pro">Pro</string>
+    <string name="nav_test">Testen</string>
+
+    <!--  -->
+    <string name="fragment_title_apps">Applikationen</string>
+    <string name="fragment_title_settings">Einstellungen</string>
+    <string name="fragment_title_statistics">Statistiken</string>
+    <string name="fragment_title_pro">Pro</string>
+    <string name="setup_new_lock">Neue Sperre einrichten</string>
+    <!--  -->
+    <string name="pref_tit_pattern_hide_error">Fehler verstecken</string>
+    <string name="pref_desc_pattern_hide_error">Keinen Fehler anzeigen, wenn ein falsches Muster eingegeben wurde</string>
+    <string name="pref_tit_pattern_size">Muster-Größe</string>
+    <string name="pref_desc_pattern_size">Die Nummer der Spalten und Zeilen, welches das Muster hat</string>
+    <!--  -->
+    <string name="locker_invalid_password">Falsches Passwort</string>
+    <string name="locker_invalid_pattern">Falsches Muster</string>
+
+    <!-- Recovery dialog -->
+    <string name="recovery_tit">Wiederherstellungscode</string>
+    <string name="recovery_dlgmsg">Dein Wiederherstellungscode ist %s\nEs ist wichtig, dass Du den Code sicher aufbewahrst (falls Du dein Passwort vergessen solltest), aber Du kannst diesen Code jederzeit in den Einstellungen einsehen.</string>
+    <string name="recovery_code_send_button">Senden</string>
+    <!-- Recovery preference -->
+    <string name="pref_tit_recovery_code">Wiederherstellungscode</string>
+    <string name="pref_desc_recovery_code">Aktueller Code: %s</string>
+    <string name="pref_dlgmsg_recovery_code">Dein aktueller Code ist: %s</string>
+    <!-- Recovery intent chooser -->
+    <string name="recovery_intent_tit">Wiederherstellungscode senden</string>
+    <string name="recovery_intent_message">Dein Twinone App Locker Wiederherstellungscode.\nUm auf dein Gerät wieder zugreifen und um das Passwort wieder ändern zu können, öffne bitte das Wahlfeld und rufe folgende Nummer an: %s</string>
+    <!-- Da menu -->
+    <string name="apps_menu_sort">Sortieren</string>
+    <string name="apps_menu_lock_all">Alle sperren</string>
+    <string name="apps_menu_unlock_all">Alle entsperren</string>
+    <string name="apps_menu_search">Suche</string>
+    <string name="apps_menu_search_hint">Suche Apps</string>
+
+    <!-- Example: WhatsApp locked -->
+    <string name="apps_toast_locked_single">%s gesperrt</string>
+    <string name="apps_toast_locked_all">Alle Apps gesperrt</string>
+    <string name="apps_toast_unlocked_single">%s entsperrt</string>
+    <string name="apps_toast_unlocked_all">Alle Apps entsperrt</string>
+
+</resources>

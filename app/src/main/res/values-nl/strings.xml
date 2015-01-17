@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+    Added in Locker v1.0
+    Author: TwinoneDevs
+    -->
+    <string name="application_name">App Locker</string>
+
+    <!-- All strings for MainActivity -->
+    <string name="main_share">Delen</string>
+
+    <!-- All Strings for applist -->
+
+    <!-- Change password activity -->
+    <string name="change_pass_tit">Nieuw wachtwoord</string>
+    <string name="change_pass_desc">Voer het nieuwe wachtwoord in\n4 of meer cijfers aanbefolen</string>
+    <string name="change_pass_desc_confirmation">Voer het wachtwoord opnieuw in</string>
+    <string name="change_pass_not_match">De wachtwoorden zijn niet gelijk</string>
+    <string name="change_pass_changed">Wachtwoord veranderd</string>
+    <string name="change_pass_not_changed">Fout tijdens wachtwoord veranderen</string>
+    <string name="change_pass_empty">Fout: Leeg wachtwoord</string>
+    <string name="select_tit">Geblokkeerde apps</string>
+
+    <!-- All strings for LockActivity -->
+    <string name="locker_footer_default">Voer het wachtwoord in om te ontgrendelen</string>
+    <string name="locker_enter_password">Voer wachtwoord in</string>
+    <string name="upper_ok">OK</string>
+    <string name="upper_back">TERUG</string>
+    <string name="cancel">Annuleren</string>
+    <string name="welcome_tit">Welkom bij Locker!</string>
+    <string name="welcome_message">Om apps te kunnen blokkeren heb je een wachtwoord nodig\nWil je nu een nieuw wachtwoord invoeren?</string>
+    <!-- END v1.07 Strings -->
+
+
+    <!-- BEGIN v1.08 Strings -->
+    <!-- This section represents Locker > Preferences -->
+    <string name="preferences_tit">Instellingen</string> <!-- The window title -->
+    <string name="main_preferences">Instellingen</string> <!-- The button in the main screen -->
+    <!-- clone of "locker_footer_default" -->
+    <string name="pref_def_lock_message">Voer het wachtwoord in om te ontgrendelen</string>
+    <string name="pref_tit_lock_message">Bericht</string>
+    <!-- Changed from the original. Re-translate -->
+    <string name="pref_desc_lock_message">Dit bericht komt onder de geblokkeerde app te staan</string>
+    <string name="pref_dlgmsg_lock_message">Je kunt %s gebruiken voor de naam van de app</string>
+    <!-- Keep it short! -->
+    <string name="pref_tit_start_boot">Automatisch opstarten</string>
+    <!-- Descriptions can be longer -->
+    <string name="pref_desc_start_boot">Begin automatisch apps te vergrendelen na het opstarten van het toestel</string>
+    <string name="pref_tit_relock_after_screenoff">Vergrendel na scherm uit</string>
+    <string name="pref_desc_relock_after_screenoff">Vraag opnieuw om het wachtwoord nadat het beeldscherm uit is geweest</string>
+    <string name="old_pref_tit_vibrate_password">Vibratie</string>
+    <string name="old_pref_desc_vibrate_password">Trillen wanneer een cijfer wordt ingedrukt</string>
+    <string name="pref_tit_performance">Prestaties</string>
+    <string name="pref_desc_performance">Hoe hoger de prestaties hoe sneller, en hoe meer batterij wordt gebruikt.</string>
+    <string name="pref_list_perf_very_high">Heel hoog</string>
+    <string name="pref_list_perf_high">Hoog</string>
+    <string name="pref_list_perf_normal">Normaal</string>
+    <string name="pref_list_perf_low">Laag</string>
+    <string name="pref_list_perf_very_low">Energiebesparing</string>
+    <string name="old_pref_tit_delay_status">Slot uistellen</string>
+    <string name="old_pref_desc_delay_status">Als je het goede wachtwoord invoert, wordt de volgende keer dat het wachtwoord wordt gevraagd uitgesteld</string>
+    <string name="old_pref_tit_delay_time">Uistel tijd</string>
+    <string name="old_pref_dlgmsg_delay_time">Na deze tijd wordt het wachtwoord weer gevraagd (Sekonden)</string>
+    <string name="applist_lock_all">Alle</string>
+    <string name="applist_unlock_all">Geen</string>
+    <string name="main_rate">Beoordelen</string>
+    <!-- END v1.08 Strings -->
+
+
+    <!-- BEGIN v2.0 Strings -->
+    <!-- For android 4.2 and below, the system will not kill Locker -->
+    <string name="pref_desc_show_notification">Laat een melding zien wanneer apps geblokkeerd zijn</string>
+    <!-- Since Android 4.3, system kills app if it doesn't show a notification, we should warnt he users about this -->
+    <string name="notification_title">Locker is actief</string>
+    <string name="notification_state_locked">Klik hier om de vergrendeling uit te schakelen</string>
+    <!-- END v2.0 Strings -->
+
+
+    <!-- BEGIN v2.0.6 Strings -->
+    <!-- All pref_tit_xxx must be short (2 words max || length < 20) -->
+    <!-- pref_desc_xxx can be like 3 lines or more if neccesary -->
+    <!-- Preference categories (Keep short) -->
+    <string name="pref_tit_cat_general">Algemeen</string>
+    <string name="pref_tit_cat_notification">Melding</string>
+    <string name="pref_tit_cat_launcher">Start</string>
+    <!--  -->
+    <string name="old_pref_tit_dial_launch">Start met oproep</string>
+    <string name="old_pref_desc_dial_launch">Als deze optie aan is, kan je Locker starten door naar #WACHTWOORD te bellen.\nBijvoorbeeld, als je wachtwoord 1111 is, kun je #1111 bellen om Locker te starten</string>
+    <string name="pref_tit_hide_launcher_icon">Icoon verbergen</string>
+    <string name="pref_desc_hide_launcher_icon">Deze optie verbergt het iccon van de lijst met geïnstalleerde apps. (Opnieuw opstarten nodig. Start met oproep verplicht)</string>
+    <!-- Updated text for "Notification" -->
+    <string name="pref_tit_show_notification">Melding weergeven</string>
+    <!-- Changelog -->
+    <string name="cl_title">Wat is nieuw</string>
+    <string name="pref_tit_cat_about">Over de app</string>
+    <!-- END v2.0.6 Strings -->
+
+
+    <!-- BEGIN v2.0.8 Strings -->
+    <!-- PASSWORD -->
+    <string name="password_change_tit">Wachtwoord veranderen</string>
+    <string name="password_change_head">Typ een nieuw wachtwoord</string>
+    <string name="password_change_confirm">Bevestig het nieuwe wachtwoord</string>
+    <string name="password_change_saved">Wachtwoord opgeslagen</string>
+    <string name="password_change_error">Fout bij opslaan van het wachtwoord</string>
+    <string name="password_change_not_match">Wachtwoorden komen niet overeen</string>
+    <string name="password_empty">Wachtwoord kan niet leeg zijn</string>
+    <!-- PATTERN -->
+    <string name="pattern_change_tit">Patroon veranderen</string>
+    <string name="pattern_detected">Patroon gedetecteerd</string>
+    <string name="pattern_change_head">Teken een nieuw patroon</string>
+    <string name="pattern_change_confirm">Teken het patroon opnieuw om te bevestigen</string>
+    <string name="pattern_change_saved">Patroon opgeslagen</string>
+    <string name="pattern_change_error">Fout bij opslaan van patroon</string>
+    <string name="pattern_change_not_match">Patronen komen niet overeen</string>
+    <!--  -->
+    <string name="button_confirm">Bevestig</string>
+    <string name="button_continue">Volgende</string>
+    <string name="button_back">Terug</string>
+    <!-- Buttons have short text! (2 words or so) -->
+    <string name="main_button_set_password">Wachtwoord wijzigen</string>
+    <string name="main_button_set_pattern">Patroon wijzigen</string>
+    <string name="pref_list_lock_type_password">Wachtwoord</string>
+    <string name="pref_list_lock_type_pattern">Patroon</string>
+    <string name="pref_tit_lock_type">Ontgrendelings methode</string>
+    <string name="pref_desc_lock_type">Huidig: %s</string>
+    <!-- VersionChecker -->
+    <string name="vc_update">Update</string>
+    <string name="vc_exit">Afsluiten</string>
+    <string name="vc_tit_new_version">Nieuwe versie</string>
+    <string name="vc_tit_unsupported">Sorry</string>
+    <string name="vc_msg_new_version">Er is een nieuwe versie beschikbaar, wil je deze nu installeren?</string>
+    <string name="vc_msg_unsupported">De versie van deze app die je gebruikt is te oud om nog te kunnen werken. Installeer nu de nieuwe versie of druk op afsluiten. Excuses voor het ongemak.</string>
+
+    <!-- Settings -->
+    <string name="pref_tit_cat_password">Wachtwoord instellingen</string>
+    <string name="pref_tit_cat_pattern">Patroon instellingen</string>
+    <string name="pref_tit_delay_status">Korte uitgang</string>
+    <string name="pref_desc_delay_status">Je kunt uit een app gaan en binnen de limiet-tijd teruggaan zonder wachtwoord te hoeven invoeren.</string>
+    <string name="pref_tit_delay_time">Korte uitgang tijd</string>
+    <!-- Seconds is important, not just "time" -->
+    <string name="pref_dlgmsg_delay_time">Na dit aantal seconden worden apps weer geblokkeerd</string>
+    <string name="pref_tit_orientation">Orientatië</string>
+
+    <!-- Password specific settings -->
+    <string name="pref_tit_vibrate_password">Vibratie</string>
+    <string name="pref_desc_vibrate_password">Tril als je op toetsen drukt</string>
+
+    <!-- Pattern specific settings -->
+    <string name="pref_tit_vibrate_pattern">Vibration</string>
+    <string name="pref_desc_vibrate_pattern">Tril als je een patroon tekent</string>
+    <string name="pref_tit_switch_buttons">Knoppen omwisselen</string>
+    <string name="pref_desc_switch_buttons">De OK en terug knoppen worden omgewisseld</string>
+    <string name="pref_list_orientation_portrait">Staand</string>
+    <!-- TODO: Use android standards -->
+    <string name="pref_list_orientation_landscape">Landschap</string>
+    <string name="pref_list_orientation_auto_rotate">Auto-rotatie</string>
+    <string name="pref_list_orientation_system">Systeem instelling</string>
+
+    <!-- Beta -->
+    <string name="pref_tit_temp_wifi_unlock_state">Stop met wifi</string>
+    <string name="pref_desc_temp_wifi_unlock_state">Als je met een bepaald wifi netwerk bent verbonden, (zoals thuis), wordt de blokkering automatisch gestopt</string>
+    <string name="pref_tit_temp_wifi_ssid">SSID (Netwerk naam)</string>
+    <string name="pref_desc_temp_wifi_ssid">De naam van het wifi netwerk</string>
+    <string name="beta_tit">Beta</string>
+    <string name="beta_desc">Dit zijn functies die in volgende versies beschikbaar worden, maar nu alvast klaar zijn om te testen.</string>
+
+    <!-- MainActivity -->
+    <string name="main_state_running">Locker is aan</string>
+    <string name="main_state_not_running">Locker is uit</string>
+
+    <!-- More prefs -->
+    <string name="pref_tit_dial_launch">Start met oproep</string>
+    <string name="pref_desc_dial_launch">Bel een speciaal nummer om Locker te starten.</string>
+    <string name="pref_tit_dial_launch_number">Nummer</string>
+    <string name="pref_desc_dial_launch_number">Als je dit nummer belt wordt Locker gestart (Het is aanbevolen een # voor het nummer te zetten).</string>
+    <string name="vc_later">Later</string>
+    <!-- END v2.0.8 Strings -->
+    <!-- BEGIN v2.0.2 -->
+    <string name="main_no_password">Je hebt nog geen wachtwoord.\nWil je er nu een maken?</string>
+    <string name="main_setup">Setup</string>
+    <string name="old_main_choose_lock_type">Kies type</string>
+    <string name="main_no_locked_apps">Je hebt nog geen apps geblokkeerd.\nWil je nu apps toevoegen?</string>
+    <!-- END v2.0.2 -->
+    <!-- BEGIN v2.1.1 -->
+    <string name="pref_tit_password_expiry">Maximale tijd</string>
+    <string name="pref_desc_password_expiry">Tijd om het juiste wachtwoord in te voeren</string>
+    <string name="pref_dlgmsg_password_expiry">Tijd is in seconden. 0 is oneindig</string>
+    <string name="pref_tit_max_password_retries">Maximale pogingen</string>
+    <string name="pref_desc_max_password_retries">Aantal pogingen om het juiste wachtwoord in te voeren</string>
+    <string name="pref_dlgmsg_max_password_retries">0 is oneindig</string>
+    <!-- END v2.1.1 -->
+    <!-- BEGIN v2.1.2 -->
+    <string name="pref_tit_pattern_color">Patroon kleur</string>
+    <string name="pref_desc_pattern_color">Kleur van de cirkels op het patroon</string>
+    <string name="pref_list_pattern_color_white">Wit</string>
+    <string name="pref_list_pattern_color_blue">Blauw</string>
+    <string name="pref_list_pattern_color_green">Groen</string>
+    <string name="pref_tit_lockactivity_background">Achtergrond</string>
+    <string name="pref_desc_lockactivity_background">Achtergrondafbeelding voor wanneer je het wachtwoord in moet voeren</string>
+    <string name="pref_tit_hide_notification_icon">Verberg melding icoon</string>
+    <string name="pref_desc_hide_notification_icon">Verbergt het icoon alleen in de statusbalk.</string>
+    <!-- BEGIN 2203 -->
+    <string name="update_available">Update beschikbaar</string>
+    <string name="update_needed">Update nodig</string>
+    <string name="update_available_msg">Er is een nieuwe update beschikbaar. De huidige versie zal stoppen met werken in %d dagen.</string>
+    <string name="update_needed_msg">Deze versie wordt niet langer ondersteund. Update naar de nieuwste versie.</string>
+    <string name="update_button">Update</string>
+    <string name="update_button_cancel">Niet nu</string>
+
+    <!--  -->
+    <!-- See background_locker_green -->
+    <string name="background_locker_blue">Blauw</string>
+    <string name="background_locker_dark_blue">Donkerblauw</string>
+    <string name="background_locker_red">Rood</string>
+    <string name="background_locker_purple">Paars</string>
+    <string name="background_locker_turquoise">Turkoois</string>
+    <string name="background_locker_orange">Oranje</string>
+
+    <!-- BEGIN v2.1.2 Continuation -->
+    <string name="background_dialog_title">Kies achtergrond</string>
+    <string name="background_from_gallery">Galerij</string>
+    <string name="background_locker_green">Groen</string>
+    <string name="background_changed">Achtergrond veranderd</string>
+    <!-- BEGIN v2205 -->
+    <string name="pref_tit_ads">Advertenties</string>
+    <string name="pref_desc_ads">Als je Locker leuk vindt, help ons dan door advertenties in te schakelen<stirng></stirng></string>
+    <string name="pref_desc_ads_forced">Je kunt op dit moment reclame niet uitschakelen</string>
+    <!-- BEGIN v2300 -->
+    <!-- animations for the lock screen -->
+    <string name="pref_tit_cat_anim_show">In animatie</string>
+    <string name="pref_tit_cat_anim_hide">Uit animatie</string>
+    <string name="pref_tit_anim_millis">Tijd</string>
+    <string name="pref_desc_anim_millis">Tijd in milliseconden voor de animatie</string>
+    <string name="pref_tit_anim_type">Type</string>
+    <string name="pref_desc_anim_type">%s</string>
+    <string name="pref_list_anim_fade">Vervagen</string>
+    <string name="pref_list_anim_slide_right">Schuif lechts</string>
+    <string name="pref_list_anim_slide_left">Schuif links</string>
+    <string name="pref_list_anim_none">Uitgeschakeld</string>
+    <!-- BEGIN v2302 -->
+    <string name="background_default">Standaard</string>
+    <!-- Pro stuff -->
+    <string name="pro_b_main">Pro</string>
+    <string name="pro_window_title">Pro functies</string>
+    <!--  -->
+    <string name="pro_ft_tit">Pro functies:</string>
+    <string name="pro_ft_bg">Aanpasbare achtergrond afbeelding</string>
+    <string name="pro_ft_hide">Verberg Locker applicatie</string>
+    <string name="pro_ft_hide_notif">Verberg melding</string>
+    <string name="pro_ft_pcolor">Verander patroon kleur</string>
+    <string name="pro_ft_short_exit">Korte uitgang</string>
+    <string name="pro_ft_anim">Animaties</string>
+    <string name="pro_ft_more">Meer binnenkort</string>
+    <string name="pro_header">Kies je plan:</string>
+    <string name="pro_tit_ads">Locker Advertenties</string>
+    <string name="pro_desc_ads">Alle pro functies zijn beschikbaar en advertenties worden getoond</string>
+    <string name="pro_tit_free">Locker Gratis</string>
+    <string name="pro_desc_free">Geen pro functies zijn beschikbaar en er worden geen advertenties getoond</string>
+    <!--  -->
+    <string name="pro_tit_paid">Locker Pro</string>
+    <string name="pro_desc_paid">Alle functies zijn beschikbaar en er worden geen advertenties getoond</string>
+    <!--  -->
+    <string name="pro_required">Dit is een pro-functie. Wilt u Pro-functies gratis inschakelen?</string>
+    <string name="pro_tofree_tit">Locker Gratis</string>
+    <string name="pro_tofree_msg">Je zult alle pro-functies verliezen\nWeet je zeker dat je Locker Gratis wilt inschakelen?</string>
+    <string name="applist_tit_apps">Apps</string>
+    <string name="applist_tit_important">Belangrijk</string>
+    <string name="applist_tit_system">Systeem</string>
+    <string name="applist_app_pkginstaller">App installeren/verwijderen</string>
+    <string name="applist_app_dialer">Inkomende oproep</string>
+    <string name="applist_app_sysui">Recente apps</string>
+
+    <!-- BEGIN v2320 -->
+    <string name="nav_status">Vergrendeling</string>
+    <string name="nav_apps">Applicaties</string>
+    <string name="nav_change">Slot veranderen</string>
+    <string name="nav_settings">Instellingen</string>
+    <string name="nav_statistics">Statistieken</string>
+    <string name="nav_pro">Pro</string>
+    <string name="nav_test">Test</string>
+
+    <!--  -->
+    <string name="fragment_title_apps">Applicaties</string>
+    <string name="fragment_title_settings">Instellingen</string>
+    <string name="fragment_title_statistics">Statistieken</string>
+    <string name="fragment_title_pro">Pro</string>
+    <string name="setup_new_lock">Nieuw slot maken</string>
+    <!--  -->
+    <string name="pref_tit_pattern_stealth">Verberg patroon</string>
+    <string name="pref_desc_pattern_stealth">Vertoon het patroon niet</string>
+    <string name="pref_tit_pattern_hide_error">Verberg fout</string>
+    <string name="pref_desc_pattern_hide_error">Vertoon het patroon niet als het fout is</string>
+    <string name="pref_tit_pattern_size">Patroon grootte</string>
+    <string name="pref_desc_pattern_size">Het aantal rijen en kolommen dat het patroon heeft</string>
+    <!--  -->
+    <string name="locker_invalid_password">Verkeerd wachtwoord</string>
+    <string name="locker_invalid_pattern">Verkeerd patroon</string>
+
+    <!-- Recovery dialog -->
+    <string name="recovery_tit">Herstel code</string>
+    <string name="recovery_dlgmsg">Je herstel code is %s\nHet is belangrijk dat je jezelf stuurt (voor het geval dat je je wachtwoord vergeet). Je kunt deze code terugvinden in instellingen.</string>
+    <string name="recovery_code_send_button">Versturen</string>
+    <!-- Recovery preference -->
+    <string name="pref_tit_recovery_code">Herstel code</string>
+    <string name="pref_desc_recovery_code">Huidige code: %s</string>
+    <string name="pref_dlgmsg_recovery_code">Je huidige code is: %s</string>
+    <!-- Recovery intent chooser -->
+    <string name="recovery_intent_tit">Stuur herstel code</string>
+    <string name="recovery_intent_message">Je Twinone App Locker herstel code.\nOm weer toegang te krijgen tot je toestel en je wacthwoord te herstellen, open bel je het volgende nummer: %s</string>
+    <!-- Da menu -->
+    <string name="apps_menu_sort">Sorteren</string>
+    <string name="apps_menu_lock_all">Vergrendel alles</string>
+    <string name="apps_menu_unlock_all">Ontgrendel alles</string>
+    <string name="apps_menu_search">Zoeken</string>
+    <string name="apps_menu_search_hint">Zoek apps</string>
+
+    <!-- Example: WhatsApp locked -->
+    <string name="apps_toast_locked_single">%s vergrendeld</string>
+    <string name="apps_toast_locked_all">Alle apps vergrendeld</string>
+    <string name="apps_toast_unlocked_single">%s ontgrendeld</string>
+    <string name="apps_toast_unlocked_all">Alle apps ontgrendeld</string>
+
+    <!-- BEGIN v2332 -->
+    <string name="nav_b_share">Delen</string>
+    <string name="nav_b_rate">Beoordelen</string>
+    <string name="lib_share_dlg_tit">Locker delen</string>
+    <string name="lib_share_dlg_msg">Als je deze app leuk vindt, overweeg dan hem te delen met je vrienden.</string>
+    <!-- May be used for twitter -->
+    <string name="share_promo_text">Probeer Twinone App Locker, de gratis app die je privacy beschermt. https://play.google.com/store/apps/details?id=com.twinone.locker</string>
+
+    <!-- BEGIN v2335 -->
+    <string name="share_dlg_never">Nooit</string>
+    <string name="share_dlg_later">Later</string>
+
+
+</resources>

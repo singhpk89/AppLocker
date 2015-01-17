@@ -1,0 +1,139 @@
+<resources>
+
+    <string translatable="false" name="pref_key_version">com.twinone.locker.old_version</string>
+    <!-- Keys -->
+    <string translatable="false" name="pref_key_password">com.twinone.locker.pref.passwd</string>
+    <string translatable="false" name="pref_key_pattern">com.twinone.locker.pref.pattern</string>
+    <string translatable="false" name="pref_key_lock_message">com.twinone.locker.pref.message_key</string>
+    <string translatable="false" name="pref_key_start_boot">com.twinone.locker.pref.start_boot</string>
+    <string translatable="false" name="pref_key_relock_after_screenoff">com.twinone.locker.pref.relock_after_screenoff</string>
+    <string translatable="false" name="pref_key_relock_between_switch_delay">com.twinone.locker.pref.relock_delay</string>
+    <string translatable="false" name="pref_key_vibrate">com.twinone.locker.pref.vibrate_keypress</string>
+    <string translatable="false" name="pref_key_performance">com.twinone.locker.pref.performance</string>
+    <string translatable="false" name="pref_key_delay_status">com.twinone.locker.pref.delay_status</string>
+    <string translatable="false" name="pref_key_delay_time">com.twinone.locker.pref.delay_time</string>
+    <string translatable="false" name="pref_key_show_notification">com.twinone.locker.pref.show_notification</string>
+    <string translatable="false" name="pref_key_hide_launcher_icon">com.twinone.locker.pref.hide_icon</string>
+    <string translatable="false" name="pref_key_dial_launch">com.twinone.locker.pref.dial_launch</string>
+    <string translatable="false" name="pref_key_hide_notification_icon">com.twinone.locker.pref.transparent_notification</string>
+    <string translatable="false" name="pref_key_cat_general">com.twinone.locker.pref.category_general</string>
+    <string translatable="false" name="pref_key_cat_notification">com.twinone.locker.pref.category_notification</string>
+    <string translatable="false" name="pref_key_cat_launcher">com.twinone.locker.pref.category_launcher</string>
+    <string translatable="false" name="pref_key_cat_about">com.twinone.locker.pref.category_about</string>
+    <string translatable="false" name="pref_key_changelog">com.twinone.locker.pref.changelog</string>
+    <string translatable="false" name="pref_key_recovery_code">com.twinone.locker.pref.recovery_code</string>
+    <string translatable="false" name="pref_key_lock_type">com.twinone.locker.pref.lock_type</string>
+    <string translatable="false" name="pref_key_hide_dots">com.twinone.locker.pref.hide_dots</string>
+    <string translatable="false" name="pref_key_password_expiry">com.twinone.locker.pref.password_expiry</string>
+    <string translatable="false" name="pref_key_max_password_retries">com.twinone.locker.pref.max_password_retries</string>
+    <string translatable="false" name="pref_key_pattern_stealth">com.twinone.locker.pref.pattern_stealth</string>
+    <string translatable="false" name="pref_key_screen">com.twinone.locker.pref.main_preference_screen</string>
+    <string translatable="false" name="pref_key_show_specific_settings">com.twinone.locker.pref.show_specific_settings</string>
+    <string translatable="false" name="pref_key_switch_buttons">com.twinone.locker.pref.switch_buttons</string>
+    <string translatable="false" name="pref_key_cat_password">com.twinone.locker.pref.category_password</string>
+    <string translatable="false" name="pref_key_cat_pattern">com.twinone.locker.pref.category_pattern</string>
+    <string translatable="false" name="pref_key_orientation">com.twinone.locker.pref.orientation</string>
+    <string translatable="false" name="pref_key_security_number">com.twinone.locker.pref.security_number</string>
+    <string translatable="false" name="pref_key_dial_launch_number">com.twinone.locker.pref.dial_launch_number</string>
+    <string translatable="false" name="pref_key_pattern_color">com.twinone.locker.pref.pattern_color</string>
+    <string translatable="false" name="pref_key_background">com.twinone.locker.pref.lockactivity_background</string>
+    <string translatable="false" name="pref_key_ads">com.twinone.locker.pref.show_ads</string>
+    <string translatable="false" name="pref_key_anim_show_type">com.twinone.locker.pref.anim_show_type</string>
+    <string translatable="false" name="pref_key_anim_hide_type">com.twinone.locker.pref.anim_hide_type</string>
+    <string translatable="false" name="pref_key_anim_show_millis">com.twinone.locker.pref.anim_show_millis</string>
+    <string translatable="false" name="pref_key_anim_hide_millis">com.twinone.locker.pref.anim_hide_millis</string>
+    <string translatable="false" name="pref_key_pattern_size">com.twinone.locker.pref.pattern_width</string>
+    <string translatable="false" name="pref_key_pattern_hide_error">com.twinone.locker.pref.pattern_hide_error</string>
+
+    <!-- Temp -->
+    <string translatable="false" name="pref_key_temp_wifi_unlock_state">temp.unlockstate</string>
+    <string translatable="false" name="pref_key_temp_wifi_ssid">temp.ssid</string>
+
+    <!-- Values -->
+    <string translatable="false" name="pref_val_perf_very_high">150</string>
+    <string translatable="false" name="pref_val_perf_high">200</string>
+    <string translatable="false" name="pref_val_perf_normal">250</string>
+    <string translatable="false" name="pref_val_perf_low">300</string>
+    <string translatable="false" name="pref_val_perf_very_low">350</string>
+    <!--  -->
+    <string translatable="false" name="pref_val_lock_type_password">password</string>
+    <string translatable="false" name="pref_val_lock_type_pattern">pattern</string>
+    <!--  -->
+    <string translatable="false" name="pref_val_orientation_auto_rotate">autorotate</string>
+    <string translatable="false" name="pref_val_orientation_system">system</string>
+    <string translatable="false" name="pref_val_orientation_portrait">portrait</string>
+    <string translatable="false" name="pref_val_orientation_landscape">landscape</string>
+    <string translatable="false" name="pref_val_pattern_color_white">pc_white</string>
+    <string translatable="false" name="pref_val_pattern_color_blue">pc_blue</string>
+    <string translatable="false" name="pref_val_pattern_color_green">pc_green</string>
+    <string translatable="false" name="pref_val_anim_fade">anim_fade</string>
+    <string translatable="false" name="pref_val_anim_slide_left">anim_slide_left</string>
+    <string translatable="false" name="pref_val_anim_slide_right">anim_slide_right</string>
+    <string translatable="false" name="pref_val_anim_none">anim_none</string>
+
+    <!--  -->
+    <string translatable="false" name="pref_val_bg_default">bg_none</string>
+    <string translatable="false" name="pref_val_bg_gallery">bg_gallery</string>
+    <string translatable="false" name="pref_val_bg_green">bg_green</string>
+    <string translatable="false" name="pref_val_bg_red">bg_red</string>
+    <string translatable="false" name="pref_val_bg_blue">bg_blue</string>
+    <string translatable="false" name="pref_val_bg_dark_blue">bg_dark_blue</string>
+    <string translatable="false" name="pref_val_bg_turquoise">bg_turquoise</string>
+    <string translatable="false" name="pref_val_bg_purple">bg_purple</string>
+    <string translatable="false" name="pref_val_bg_orange">bg_orange</string>
+
+    <string translatable="false" name="pref_def_password_expiry">0</string>
+    <string translatable="false" name="pref_def_max_password_retries">0</string>
+    <string translatable="false" name="pref_def_dial_launch_number">#12345</string>
+    <!-- <string translatable="false" name="pref_def_ads">false</string> -->
+    <string translatable="false" name="pref_def_anim_show_millis">300</string>
+    <string translatable="false" name="pref_def_anim_hide_millis">300</string>
+    <string translatable="false" name="pref_def_pattern_size">3</string>
+
+    <!-- Preference defaults -->
+    <item name="pref_def_background" type="string">@string/pref_val_bg_default</item>
+    <item name="pref_def_anim_show_type" type="string">@string/pref_val_anim_fade</item>
+    <item name="pref_def_anim_hide_type" type="string">@string/pref_val_anim_fade</item>
+    <item name="pref_def_lock_type" type="string">@string/pref_val_lock_type_password</item>
+    <item name="pref_def_vibrate" type="bool">true</item>
+    <item name="pref_def_switch_buttons" type="bool">false</item>
+    <item name="pref_def_pattern_size" type="integer">3</item>
+    <item name="pref_def_show_notification" type="bool">false</item>
+    <item name="pref_def_hide_notification_icon" type="bool">false</item>
+    <item name="pref_def_hide_launcher_icon" type="bool">false</item>
+    <item name="pref_def_dial_launch" type="bool">false</item>
+    <item name="pref_def_delay_status" type="bool">false</item>
+    <item name="pref_def_relock_after_screenoff" type="bool">true</item>
+    <item name="pref_def_start_boot" type="bool">true</item>
+    <item name="pref_def_pattern_stealth" type="bool">false</item>
+    <item name="pref_def_pattern_error_stealth" type="bool">false</item>
+
+    <string translatable="false" name="pref_def_delay_time">60</string>
+
+    <!-- <item name="pref_def_" type="bool">false</item> -->
+
+
+    <!--  -->
+    <string translatable="false" name="num0">0</string>
+    <string translatable="false" name="num1">1</string>
+    <string translatable="false" name="num2">2</string>
+    <string translatable="false" name="num3">3</string>
+    <string translatable="false" name="num4">4</string>
+    <string translatable="false" name="num5">5</string>
+    <string translatable="false" name="num6">6</string>
+    <string translatable="false" name="num7">7</string>
+    <string translatable="false" name="num8">8</string>
+    <string translatable="false" name="num9">9</string>
+    <string translatable="false" name="numBack">&lt;</string>
+    <!-- Works for 4.4 -->
+    <string translatable="false" name="packagename_dialer">com.android.dialer</string>
+
+    <!-- Navigation -->
+    <string translatable="false" name="nav_key_status">status</string>
+    <string translatable="false" name="nav_key_apps">apps</string>
+    <string translatable="false" name="nav_key_change">change</string>
+    <string translatable="false" name="nav_key_settings">settings</string>
+    <string translatable="false" name="nav_key_statistics">statistics</string>
+    <string translatable="false" name="nav_key_pro">Pro</string>
+
+</resources>

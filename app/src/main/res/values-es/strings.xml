@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+    Added in Locker v1.0
+    Author: TwinoneDevs
+    -->
+    <string name="application_name">App Locker</string>
+
+    <!-- All strings for MainActivity -->
+    <string name="main_share">Compartir</string>
+
+    <!-- All Strings for applist -->
+    <!-- Change password activity -->
+    <string name="change_pass_tit">Nueva contraseña</string>
+    <string name="change_pass_desc">Introduce la nueva contraseña\nSe recomienda 4 o más dígitos</string>
+    <string name="change_pass_desc_confirmation">Confirma la contraseña</string>
+    <string name="change_pass_not_match">Las contraseñas no coinciden</string>
+    <string name="change_pass_changed">Contraseña cambiada</string>
+    <string name="change_pass_not_changed">Error al cambiar contraseña</string>
+    <string name="change_pass_empty">Error: Contraseña vacía</string>
+    <string name="select_tit">Aplicaciones bloqueadas</string>
+
+    <!-- All strings for LockActivity -->
+    <string name="locker_footer_default">Introduce la contraseña para desbloquear</string>
+    <string name="locker_enter_password">Introduce contraseña</string>
+    <string name="upper_ok">OK</string>
+    <string name="upper_back">ATRÁS</string>
+    <string name="cancel">Cancelar</string>
+    <string name="welcome_tit">¡Bienvenido a Locker!</string>
+    <string name="welcome_message">Para empezar a bloquear aplicaciones, necesitas crear una contraseña\n¿Quieres crearla ahora?</string>
+    <!-- END v1.07 Strings -->
+
+
+    <!-- BEGIN v1.08 Strings -->
+    <!-- This section represents Locker > Preferences -->
+    <string name="preferences_tit">Ajustes</string> <!-- The window title -->
+    <string name="main_preferences">Ajustes</string> <!-- The button in the main screen -->
+    <!-- clone of "locker_footer_default" -->
+    <string name="pref_def_lock_message">Introduce la contraseña para desbloquear</string>
+    <string name="pref_tit_lock_message">Mensaje</string>
+    <!-- Changed from the original. Re-translate -->
+    <string name="pref_desc_lock_message">Este mensaje aparecerá cuando una app esté bloqueada</string>
+    <string name="pref_dlgmsg_lock_message">Puedes usar %s para el nombre de la aplicación</string>
+    <!-- Keep it short! -->
+    <string name="pref_tit_start_boot">Iniciar con dispositivo</string>
+    <!-- Descriptions can be longer -->
+    <string name="pref_desc_start_boot">Inciar el bloqueo al encender el dispositivo</string>
+    <string name="pref_tit_relock_after_screenoff">Bloqueo pantalla</string>
+    <string name="pref_desc_relock_after_screenoff">Volver a pedir la contraseña cuando se ha bloqueado la pantalla</string>
+    <string name="old_pref_tit_vibrate_password">Vibración</string>
+    <string name="old_pref_desc_vibrate_password">Vibrar cuando se presionan las teclas</string>
+    <string name="pref_tit_performance">Rendimiento</string>
+    <string name="pref_desc_performance">Cuanto más alto el rendimiento, más rápido funcionará, pero también consumirá más batería</string>
+    <string name="pref_list_perf_very_high">Muy alto</string>
+    <string name="pref_list_perf_high">Alto</string>
+    <string name="pref_list_perf_normal">Normal</string>
+    <string name="pref_list_perf_low">Bajo</string>
+    <string name="pref_list_perf_very_low">Modo ahorro</string>
+    <string name="old_pref_tit_delay_status">Retraso de bloqueo</string>
+    <string name="old_pref_desc_delay_status">Tras introducir la contraseña correcta, se retrasará el tiempo hasta que se pida la contraseña otra vez</string>
+    <string name="old_pref_tit_delay_time">Tiempo de retraso</string>
+    <string name="old_pref_dlgmsg_delay_time">Tras este tiempo se volverá a pedir la contraseña (Segundos)</string>
+    <string name="applist_lock_all">Todas</string>
+    <string name="applist_unlock_all">Ninguna</string>
+    <string name="main_rate">Valorar</string>
+    <!-- END v1.08 Strings -->
+
+
+    <!-- BEGIN v2.0 Strings -->
+    <!-- For android 4.2 and below, the system will not kill Locker -->
+    <string name="pref_desc_show_notification">Mostrar una notificación mientras se bloquean aplicaciones</string>
+    <!-- Since Android 4.3, system kills app if it doesn't show a notification, we should warnt he users about this -->
+    <string name="notification_title">Locker está activo</string>
+    <string name="notification_state_locked">Haz clic aquí para desactivar el bloqueo</string>
+    <!-- END v2.0 Strings -->
+
+
+    <!-- BEGIN v2.0.6 Strings -->
+    <!-- All pref_tit_xxx must be short (2 words max || length < 20) -->
+    <!-- pref_desc_xxx can be like 3 lines or more if neccesary -->
+    <!-- Preference categories (Keep short) -->
+    <string name="pref_tit_cat_general">General</string>
+    <string name="pref_tit_cat_notification">Notificación</string>
+    <string name="pref_tit_cat_launcher">Inicio</string>
+    <!--  -->
+    <string name="old_pref_tit_dial_launch">Iniciar con llamada</string>
+    <string name="old_pref_desc_dial_launch">Cuando esta opción está encendida, puedes iniciar Locker llamando a #CONTRASEÑA.\nEs decir, si tu contraseña es 1111, puedes llamar a #1111 para inciar Locker</string>
+    <string name="pref_tit_hide_launcher_icon">Ocultar icono</string>
+    <string name="pref_desc_hide_launcher_icon">Con esta opción se oculta el icono de Locker de las aplicaciones instaladas (Necesita reinicio. Obliga activar "Iniciar con llamada")</string>
+    <!-- Updated text for "Notification" -->
+    <string name="pref_tit_show_notification">Mostrar notificación</string>
+    <!-- Changelog -->
+    <string name="cl_title">Qué hay nuevo</string>
+    <string name="pref_tit_cat_about">Sobre la aplicación</string>
+    <!-- END v2.0.6 Strings -->
+
+
+    <!-- BEGIN v2.0.8 Strings -->
+    <!-- PASSWORD -->
+    <string name="password_change_tit">Cambiar contraseña</string>
+    <string name="password_change_head">Introduce una nueva contraseña</string>
+    <string name="password_change_confirm">Confirma la nueva contraseña</string>
+    <string name="password_change_saved">Contraseña cambiada correctamente</string>
+    <string name="password_change_error">Error al guardar la contraseña</string>
+    <string name="password_change_not_match">Las contraseñas no coinciden</string>
+    <string name="password_empty">La contraseña no puede estar vacía</string>
+    <!-- PATTERN -->
+    <string name="pattern_change_tit">Cambiar patrón</string>
+    <string name="pattern_detected">Patrón detectado</string>
+    <string name="pattern_change_head">Dibuja un nuevo patrón</string>
+    <string name="pattern_change_confirm">Dibuja el patrón de nuevo para confirmar</string>
+    <string name="pattern_change_saved">Patrón cambiado correctamente</string>
+    <string name="pattern_change_error">Error al cambiar el patrón</string>
+    <string name="pattern_change_not_match">Los patrones no coinciden</string>
+    <!--  -->
+    <string name="button_confirm">Confirmar</string>
+    <string name="button_continue">Siguiente</string>
+    <string name="button_back">Atrás</string>
+    <!-- Buttons have short text! (2 words or so) -->
+    <string name="main_button_set_password">Cambiar contraseña</string>
+    <string name="main_button_set_pattern">Cambiar patrón</string>
+    <string name="pref_list_lock_type_password">Contraseña</string>
+    <string name="pref_list_lock_type_pattern">Patrón</string>
+    <string name="pref_tit_lock_type">Tipo de bloqueo</string>
+    <string name="pref_desc_lock_type">Actualmente: %s</string>
+    <!-- VersionChecker -->
+    <string name="vc_update">Actualizar</string>
+    <string name="vc_exit">Salir</string>
+    <string name="vc_tit_new_version">Actualización</string>
+    <string name="vc_tit_unsupported">Lo sentimos</string>
+    <string name="vc_msg_new_version">Hay una nueva versión disponible, ¿quieres actualizar ahora?</string>
+    <string name="vc_msg_unsupported">La versión que utilizas de esta aplicación es demasiado vieja y tiene que actualizarse. Por favor actualiza la aplicación o pulsa salir. Disculpa las molestias.</string>
+
+    <!-- Settings -->
+    <string name="pref_tit_cat_password">Ajustes de contraseña</string>
+    <string name="pref_tit_cat_pattern">Ajustes de patrón</string>
+    <string name="pref_tit_delay_status">Salida breve</string>
+    <string name="pref_desc_delay_status">Puedes salir de una aplicación y volver en el límite de tiempo sin contraseña</string>
+    <string name="pref_tit_delay_time">Tiempo de salida breve</string>
+    <!-- Seconds is important, not just "time" -->
+    <string name="pref_dlgmsg_delay_time">Introduce el numero de segundos tras el que se volverá a activar el bloqueo</string>
+    <string name="pref_tit_orientation">Orientación</string>
+
+    <!-- Password specific settings -->
+    <string name="pref_tit_vibrate_password">Vibración</string>
+    <string name="pref_desc_vibrate_password">Vibra cuando pulsas los números</string>
+
+    <!-- Pattern specific settings -->
+    <string name="pref_tit_vibrate_pattern">Vibración</string>
+    <string name="pref_desc_vibrate_pattern">Vibrar mientras dibujas el patrón</string>
+    <string name="pref_tit_pattern_stealth">Modo invisible</string>
+    <string name="pref_desc_pattern_stealth">El patrón será invisible</string>
+    <string name="pref_tit_switch_buttons">Cambiar botones</string>
+    <string name="pref_desc_switch_buttons">Cambia la posición de los botones de OK y Atrás</string>
+    <string name="pref_list_orientation_portrait">Vertical</string>
+    <!-- TODO: Use android standards -->
+    <string name="pref_list_orientation_landscape">Horizontal</string>
+    <string name="pref_list_orientation_auto_rotate">Auto-rotación</string>
+    <string name="pref_list_orientation_system">Sistema</string>
+
+    <!-- Beta -->
+    <string name="pref_tit_temp_wifi_unlock_state">Detener con wifi</string>
+    <string name="pref_desc_temp_wifi_unlock_state">Cuando te conectas a una red especifica (como la de tu casa), se desactivará el bloqueo</string>
+    <string name="pref_tit_temp_wifi_ssid">SSID (Nombre de la red)</string>
+    <string name="pref_desc_temp_wifi_ssid">El nombre de la red wifi</string>
+    <string name="beta_tit">Beta</string>
+    <string name="beta_desc">Aquí hay funciones para futuras versiones, que ya están incluidas para que puedas probarlas.</string>
+    <!-- MainActivity -->
+    <string name="main_state_running">Activo</string>
+    <string name="main_state_not_running">Detenido</string>
+
+    <!-- More prefs -->
+    <string name="pref_tit_dial_launch">Iniciar con llamada</string>
+    <string name="pref_desc_dial_launch">Acceder a Locker llamando a un número.</string>
+    <string name="pref_tit_dial_launch_number">Número</string>
+    <string name="pref_desc_dial_launch_number">Cuando llamas a este número, Locker se abrirá. (Recomendamos que empieze por #)</string>
+    <string name="vc_later">Más tarde</string> <!-- END v2.0.8 Strings -->
+
+
+    <!-- END v2.0.8 Strings -->
+
+
+    <!-- BEGIN v2.0.2 -->
+
+    <string name="main_no_password">Necesitas una contraseña para empezar.\n¿Quieres crear una ahora?</string>
+    <string name="main_setup">Configuración</string>
+    <string name="old_main_choose_lock_type">Tipo de bloqueo</string>
+    <string name="main_no_locked_apps">No tienes aplicaciones bloqueadas.\n¿Quieres añadir apps ahora?</string>
+    <!-- END v2.0.2 -->
+
+
+    <!-- BEGIN v2.1.1 -->
+    <string name="pref_tit_password_expiry">Tiempo máximo</string>
+    <string name="pref_desc_password_expiry">Tiempo máximo para poner la contraseña correcta</string>
+    <string name="pref_dlgmsg_password_expiry">Tiempo en segundos, 0 es ilimitado</string>
+    <string name="pref_tit_max_password_retries">Intentos máximos</string>
+    <string name="pref_desc_max_password_retries">Intentos máximos para desbloquear correctamente</string>
+    <string name="pref_dlgmsg_max_password_retries">0 es ilimitado</string>
+    <!-- END v2.1.1 -->
+
+
+    <!-- BEGIN v2.1.2 -->
+    <string name="pref_tit_pattern_color">Color del patrón</string>
+    <string name="pref_desc_pattern_color"></string>
+    <string name="pref_list_pattern_color_white">Blanco</string>
+    <string name="pref_list_pattern_color_blue">Azul</string>
+    <string name="pref_list_pattern_color_green">Verde</string>
+    <string name="pref_tit_hide_notification_icon">Ocultar icono notificación</string>
+    <string name="pref_desc_hide_notification_icon">Solo oculta el icono de la barra de notificaciones.</string>
+    <!-- BEGIN 2203 -->
+    <string name="update_available">Actualización disponible</string>
+    <string name="update_needed">Actualización necesaria</string>
+    <string name="update_available_msg">Hay una nueva actualización. La versión actual dejará de funcionar en %d días.</string>
+    <string name="update_needed_msg">Esta versión ya no está soportada. Por favor, actualiza a la última versión.</string>
+    <string name="update_button">Actualizar</string>
+    <string name="update_button_cancel">Ahora no</string>
+
+    <!-- BEGIN v2.1.2 Continuation -->
+    <string name="background_dialog_title">Cambiar fondo</string>
+    <string name="background_from_gallery">Galería</string>
+    <string name="background_locker_green">Verde</string>
+    <string name="background_changed">Fondo cambiado</string>
+    <!-- Start missing -->
+    <string name="pref_tit_lockactivity_background">Fondo</string>
+    <string name="pref_desc_lockactivity_background"></string>
+    <string name="background_locker_blue">Azul</string>
+    <string name="background_locker_dark_blue">Azul oscuro</string>
+    <string name="background_locker_red">Rojo</string>
+    <string name="background_locker_purple">Lila</string>
+    <string name="background_locker_turquoise">Turquesa</string>
+    <string name="background_locker_orange">Naranja</string>
+    <!-- BEGIN v2205 -->
+    <string name="pref_tit_ads">Publicidad</string>
+    <string name="pref_desc_ads">Si te gusta Locker, ayúdanos a mejorar activando los anuncios</string>
+    <string name="pref_desc_ads_forced">En este momento no puedes desactivar la publicidad</string>
+    <!-- BEGIN v2300 -->
+    <!-- animations for the lock screen -->
+    <string name="pref_tit_cat_anim_show">Animación entrada</string>
+    <string name="pref_tit_cat_anim_hide">Animación salida</string>
+    <string name="pref_tit_anim_millis">Duración</string>
+    <string name="pref_desc_anim_millis">Tiempo en milisegundos para la animación</string>
+    <string name="pref_tit_anim_type">Tipo</string>
+    <string name="pref_desc_anim_type">%s</string>
+    <string name="pref_list_anim_fade">Desvanecer</string>
+    <string name="pref_list_anim_slide_right">Deslizar derecha</string>
+    <string name="pref_list_anim_slide_left">Deslizar izquierda</string>
+    <string name="pref_list_anim_none">Apagado</string>
+    <!-- BEGIN v2302 -->
+    <string name="background_default">Predeterminado</string>
+    <!-- Pro stuff -->
+    <string name="pro_b_main">Pro</string>
+    <string name="pro_window_title">Funciones Pro</string>
+    <!--  -->
+    <string name="pro_ft_tit">Funciones Pro:</string>
+    <string name="pro_ft_bg">Fondo personalizado</string>
+    <string name="pro_ft_hide">Ocultar Locker</string>
+    <string name="pro_ft_hide_notif">Ocultar notificación</string>
+    <string name="pro_ft_pcolor">Cambiar color del patrón</string>
+    <string name="pro_ft_short_exit">Salida breve</string>
+    <string name="pro_ft_anim">Animaciones</string>
+    <string name="pro_ft_more">Más próximamente</string>
+    <string name="pro_header">Elige tu plan:</string>
+    <string name="pro_tit_ads">Locker Anuncios</string>
+    <string name="pro_desc_ads">Todas las funciones Pro están disponibles y se muestran anuncios</string>
+    <string name="pro_tit_free">Locker Gratis</string>
+    <string name="pro_desc_free">No hay funciones Pro disponibles y no se muestran anuncios</string>
+    <!--  -->
+    <string name="pro_tit_paid">Locker Pro</string>
+    <string name="pro_desc_paid">Todas las funciones Pro están disponibles y sin anuncios</string>
+    <!--  -->
+    <string name="pro_required">Esto es una función pro. ¿Quieres activar Locker Pro ahora gratis?</string>
+    <string name="pro_tofree_tit">Modo gratis</string>
+    <string name="pro_tofree_msg">Perderás todas las funciones pro\n¿Seguro que quieres activar Locker gratis?</string>
+    <string name="applist_tit_apps">Aplicaciones</string>
+    <string name="applist_tit_important">Importantes</string>
+    <string name="applist_tit_system">Sistema</string>
+    <string name="applist_app_pkginstaller">Instalar/Desinstalar apps</string>
+    <string name="applist_app_dialer">Llamada entrante</string>
+    <string name="applist_app_sysui">Apps recientes</string>
+
+    <!-- BEGIN v2320 -->
+    <string name="nav_status">Bloqueo</string>
+    <string name="nav_apps">Aplicaciones</string>
+    <string name="nav_change">Cambiar bloqueo</string>
+    <string name="nav_settings">Ajustes</string>
+    <string name="nav_statistics">Estadísticas</string>
+    <string name="nav_pro">Pro</string>
+    <string name="nav_test">Test</string>
+    <!--  -->
+    <string name="fragment_title_apps">Aplicaciones</string>
+    <string name="fragment_title_settings">Ajustes</string>
+    <string name="fragment_title_statistics">Estadísticas</string>
+    <string name="fragment_title_pro">Pro</string>
+    <string name="setup_new_lock">Crear bloqueo</string>
+    <!--  -->
+    <string name="pref_tit_pattern_hide_error">Ocultar error</string>
+    <string name="pref_desc_pattern_hide_error">Cuando introduces un patrón incorrecto, no mostrarlo.</string>
+    <string name="pref_tit_pattern_size">Tamaño patrón</string>
+    <string name="pref_desc_pattern_size">Número de filas y columnas del patrón</string>
+    <!--  -->
+    <string name="locker_invalid_password">Contraseña incorrecta</string>
+    <string name="locker_invalid_pattern">Patrón incorrecto</string>
+
+    <!-- Recovery dialog -->
+    <string name="recovery_tit">Código de recuperación</string>
+    <string name="recovery_dlgmsg">Tu código de recuperación es %s\nEs importante que te lo envíes (por si olvidas tu contraseña). Puedes encontrar este código en ajustes.</string>
+    <string name="recovery_code_send_button">Enviar</string>
+    <!-- Recovery preference -->
+    <string name="pref_tit_recovery_code">Código de recuperación</string>
+    <string name="pref_desc_recovery_code">Código actual: %s</string>
+    <string name="pref_dlgmsg_recovery_code">Tu código actual es %s</string>
+    <!-- Recovery intent chooser -->
+    <string name="recovery_intent_tit">Enviar código de recuperación</string>
+    <string name="recovery_intent_message">Tu código de recuperación de Twinone App Locker.\nPara poder acceder a tu dispositivo de nuevo y restablecer tu contraseña, abre marcador y llama al siguiente número: %s</string>
+    <!-- Da menu -->
+    <string name="apps_menu_sort">Ordenar</string>
+    <string name="apps_menu_lock_all">Bloquear todo</string>
+    <string name="apps_menu_unlock_all">Desbloquear todo</string>
+    <string name="apps_menu_search">Buscar</string>
+    <string name="apps_menu_search_hint">Buscar aplicaciones</string>
+
+    <!-- Example: WhatsApp locked -->
+    <string name="apps_toast_locked_single">%s bloqueado</string>
+    <string name="apps_toast_locked_all">Todas las aplicaciones bloqueadas</string>
+    <string name="apps_toast_unlocked_single">%s desbloqueado</string>
+    <string name="apps_toast_unlocked_all">Todas las aplicaciones desbloqueadas</string>
+
+    <!-- BEGIN v2332 -->
+    <string name="nav_b_share">Compartir</string>
+    <string name="nav_b_rate">Valorar</string>
+    <string name="lib_share_dlg_tit">Compartir Locker</string>
+    <string name="lib_share_dlg_msg">Si te gusta esta app, considera ayudar a mejorarla compartiéndola con tus amigos.</string>
+    <!-- May be used for twitter -->
+    <string name="share_promo_text">Echa un vistazo a Twinone App Locker, la app gratuita que protege tu privacidad y aplicaciones. https://play.google.com/store/apps/details?id=com.twinone.locker</string>
+
+        <!-- BEGIN v2335 -->
+    <string name="share_dlg_never">Nunca</string>
+    <string name="share_dlg_later">Más tarde</string>
+    
+    
+</resources>

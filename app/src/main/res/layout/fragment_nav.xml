@@ -1,0 +1,22 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f0222222" >
+
+    <ListView
+        android:id="@id/nav_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:choiceMode="singleChoice"
+        android:divider="#48cccccc"
+        android:dividerHeight="1dp" >
+    </ListView>
+
+    <include
+        android:id="@+id/share_rate_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        layout="@layout/share_rate_list" />
+
+</RelativeLayout>

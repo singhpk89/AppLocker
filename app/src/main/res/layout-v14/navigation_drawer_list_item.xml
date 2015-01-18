@@ -6,7 +6,7 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp" >
 
-    <Switch
+    <!--<Switch
         android:id="@id/navFlag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,6 +16,16 @@
         android:focusable="false"
         android:thumb="@drawable/switch_background"
         android:visibility="gone" >
+    </Switch>-->
+    <Switch
+        android:id="@id/navFlag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:clickable="false"
+        android:focusable="false"
+        android:visibility="invisible" >
     </Switch>
 
     <TextView

@@ -837,11 +837,13 @@ public class LockService extends Service implements View.OnClickListener,
             mAdMobManager = new AdMobBannerHelper(this,
                     mRootView.findViewById(R.id.lock_ad_container));
             mAdMobManager.loadAd();
+            Log.w(TAG, "Showing ad");
 
         } else {
             // Don't use precious space
             mRootView.findViewById(R.id.lock_ad_container).setVisibility(
                     View.GONE);
+            Log.w(TAG, "Not requesting ads!!!n!!!");
         }
         // if (!AdViewManager.isOnEmulator() && !ACTION_CREATE.equals(mAction))
         // {
@@ -930,6 +932,8 @@ public class LockService extends Service implements View.OnClickListener,
 
         if (ACTION_CREATE.equals(mAction) || mPackageName == getPackageName()) {
             options.showAds = false;
+        } else {
+            options.showAds = true;
         }
 
         if (ACTION_CREATE.equals(mAction)) {

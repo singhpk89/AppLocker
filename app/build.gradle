@@ -7,8 +7,7 @@ android {
     defaultConfig {
         applicationId "com.twinone.locker"
         minSdkVersion 9
-        targetSdkVersion 19
-        maxSdkVersion 19
+        targetSdkVersion 21
     }
 
     buildTypes {
@@ -21,6 +20,6 @@ android {
 
 dependencies {
     compile 'com.google.code.gson:gson:2.3'
-    compile 'com.google.android.gms:play-services:+'
     compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.google.android.gms:play-services:+'
 }

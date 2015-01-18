@@ -22,6 +22,7 @@ public class AdMobInterstitialHelper {
 		AdRequest.Builder builder = new AdRequest.Builder();
 		for (String device : mInterface.getTestDevices()) {
 			builder.addTestDevice(device);
+            builder.addTestDevice("E7A26A4BF003FCF63C06197FA9AAE006");
 		}
 		AdRequest request = builder.build();
 		Log.d("INTERSTITIAL", "Loading...");

@@ -31,10 +31,10 @@ import com.twinone.locker.R;
 public class MainActivity extends ActionBarActivity implements
 		NavigationListener {
 
-	private static final String VERSION_URL_PRD = "https://twinone.org/apps/locker/update.php";
-	private static final String VERSION_URL_DBG = "https://twinone.org/apps/locker/dbg-update.php";
-	public static final String VERSION_URL = Constants.DEBUG ? VERSION_URL_DBG
-			: VERSION_URL_PRD;
+//	private static final String VERSION_URL_PRD = "https://twinone.org/apps/locker/update.php";
+//	private static final String VERSION_URL_DBG = "https://twinone.org/apps/locker/dbg-update.php";
+//	public static final String VERSION_URL = Constants.DEBUG ? VERSION_URL_DBG
+//			: VERSION_URL_PRD;
 	private static final String EXTRA_UNLOCKED = "com.twinone.locker.unlocked";
 
 	private DialogSequencer mSequencer;

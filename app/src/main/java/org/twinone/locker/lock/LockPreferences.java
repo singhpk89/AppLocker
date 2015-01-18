@@ -46,7 +46,7 @@ public class LockPreferences implements Serializable {
 	// Pro & pattern only
 	public final int patternCircleResId;
 
-	public boolean showAds;
+	public boolean showAds = true;
 
 	/**
 	 * You should use this constructor which loads all properties into the

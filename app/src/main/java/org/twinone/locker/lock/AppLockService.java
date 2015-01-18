@@ -267,17 +267,19 @@ public class AppLockService extends Service {
         // Log.d(TAG, "onLockedAppOpen (locked=" + locked + ")");
         if (locked) {
             showLocker(open);
-            mAdCount++;
-            if (mAdCount % Constants.APPS_PER_INTERSTITIAL == 0)
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mInterstitialHelper.load();
-                    }
-                }).start();
-
         }
         removeRelockTimer(open);
+    }
+
+    private void showInterstitial() {
+        mAdCount++;
+        if (mAdCount % Constants.APPS_PER_INTERSTITIAL == 0)
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mInterstitialHelper.load();
+                }
+            });
 
     }
 
@@ -296,7 +298,10 @@ public class AppLockService extends Service {
     }
 
     private void onLockedAppClose(String close, String open) {
+        showInterstitial();
+
         setRelockTimer(close);
+
         if (getPackageName().equals(close) || getPackageName().equals(open)) {
             // Don't interact with own app
             return;

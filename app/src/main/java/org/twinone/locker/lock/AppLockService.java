@@ -269,7 +269,12 @@ public class AppLockService extends Service {
             showLocker(open);
             mAdCount++;
             if (mAdCount % Constants.APPS_PER_INTERSTITIAL == 0)
-                mInterstitialHelper.load();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mInterstitialHelper.load();
+                    }
+                }).start();
 
         }
         removeRelockTimer(open);

@@ -11,6 +11,7 @@ import org.twinone.locker.Constants;
 import org.twinone.locker.LockerAdInterface;
 import org.twinone.locker.LockerAnalytics;
 import org.twinone.locker.ui.MainActivity;
+import org.twinone.locker.util.LaunchInterstitialActivity;
 import org.twinone.locker.util.PrefUtils;
 import org.twinone.locker.version.VersionManager;
 import org.twinone.locker.version.VersionUtils;
@@ -79,7 +80,7 @@ public class AppLockService extends Service {
     private static final String EXTRA_FORCE_RESTART = "com.twinone.locker.intent.extra.force_restart";
     private ActivityManager mActivityManager;
 
-    private AdMobInterstitialHelper mInterstitialHelper;
+//    private AdMobInterstitialHelper mInterstitialHelper;
 
     /**
      * 0 for disabled
@@ -160,8 +161,8 @@ public class AppLockService extends Service {
             return false;
         }
 
-        mInterstitialHelper = new AdMobInterstitialHelper(this,
-                new LockerAdInterface());
+//        mInterstitialHelper = new AdMobInterstitialHelper(this,
+//                new LockerAdInterface());
         mHandler = new Handler();
         mActivityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 
@@ -277,7 +278,10 @@ public class AppLockService extends Service {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mInterstitialHelper.load();
+//                    mInterstitialHelper.load();
+                    Intent i = new Intent(AppLockService.this, LaunchInterstitialActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(i);
                 }
             });
 
@@ -357,31 +361,6 @@ public class AppLockService extends Service {
     List<RunningTaskInfo> mTestList = new ArrayList<>();
 
 
-    //    private List<String> getTopTaskPackageNames() {
-//        List<String> res = new ArrayList<>();
-//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-//            final String packageName = mActivityManager.getRunningTasks(1).get(0).topActivity.getPackageName();
-//            res.add(packageName);
-//            return res;
-//        } else {
-//            // Hack, see
-//            // http://stackoverflow.com/questions/24625936/getrunningtasks-doesnt-work-in-android-l/27140347#27140347
-//            final Set<String> set = new HashSet<String>();
-//            final List<ActivityManager.RunningAppProcessInfo> pis = mActivityManager.getRunningAppProcesses();
-//
-//            for (ActivityManager.RunningAppProcessInfo pi : pis) {
-//                if (pi.pkgList.length == 1)
-//                    set.add(pi.pkgList[0]);
-//                break;
-////                if (pi.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-////                    set.add(pi.processName);
-//////                        set.addAll(Arrays.asList(pi.pkgList));
-////                }
-//            }
-//            res.addAll(set);
-//            return res;
-//        }
-//    }
     private String getTopPackageName() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return mActivityManager.getRunningTasks(1).get(0).topActivity.getPackageName();

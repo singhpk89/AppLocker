@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.twinone.locker"
     android:versionCode="2501"
-    android:versionName="2.5.1" >
+    android:versionName="2.5.1">
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -53,7 +53,7 @@
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/application_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
 
         <!-- For goole play services -->
         <meta-data
@@ -66,8 +66,7 @@
             android:configChanges="orientation|screenSize"
             android:excludeFromRecents="true"
             android:label="@string/application_name"
-            android:launchMode="singleTop"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.SEARCH" />
@@ -78,13 +77,14 @@
             android:name="com.twinone.locker.MainActivityAlias"
             android:enabled="true"
             android:label="@string/application_name"
-            android:targetActivity="org.twinone.locker.ui.MainActivity" >
+            android:targetActivity="org.twinone.locker.ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
+        <activity android:name="org.twinone.locker.util.LaunchInterstitialActivity"/>
 
         <!-- Admob -->
         <activity
@@ -95,22 +95,22 @@
         <service android:name="org.twinone.locker.lock.LockService" />
         <service android:name="org.twinone.locker.lock.HelperService" />
 
-        <receiver android:name="org.twinone.locker.receivers.OutgoingCallReceiver" >
+        <receiver android:name="org.twinone.locker.receivers.OutgoingCallReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
-        <receiver android:name="org.twinone.locker.receivers.BootCompleteReceiver" >
+        <receiver android:name="org.twinone.locker.receivers.BootCompleteReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name="org.twinone.locker.receivers.NetworkStateReceiver" >
+        <receiver android:name="org.twinone.locker.receivers.NetworkStateReceiver">
             <intent-filter>
                 <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
         </receiver>
-        <receiver android:name="org.twinone.locker.version.Receiver" >
+        <receiver android:name="org.twinone.locker.version.Receiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

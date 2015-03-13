@@ -32,6 +32,10 @@ Download
 
 You can download the app from the Google Play Store at the following url: https://play.google.com/store/apps/details?id=com.twinone.locker
 
+License
+=======
+See the [LICENSE](https://github.com/twinone/AppLocker/blob/master/LICENSE) file.
+
 
 Eclipse
 =======

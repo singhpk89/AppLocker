@@ -1,4 +1,4 @@
-package org.twinone.androidlib;
+package org.twinone.ads;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -65,7 +65,7 @@ public class AdMobBannerBuilder {
 				Settings.Secure.ANDROID_ID);
 		try {
 			// Create MD5 Hash
-			MessageDigest digest = java.security.MessageDigest
+			MessageDigest digest = MessageDigest
 					.getInstance("MD5");
 			digest.update(id.getBytes());
 			byte messageDigest[] = digest.digest();

@@ -16,10 +16,26 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
         }
     }
+    productFlavors {
+        google {
+            manifestPlaceholders = [PLAY_VERSION: "@integer/google_play_services_version"]
+        }
+        fdroid {
+            manifestPlaceholders = [PLAY_VERSION: "0"]
+        }
+    }
+    sourceSets {
+        google {
+            java.srcDirs = ['src/google/java']
+        }
+        fdroid {
+            java.srcDirs = ['src/fdroid/java']
+        }
+    }
 }
 
 dependencies {
     compile 'com.google.code.gson:gson:2.3'
     compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.google.android.gms:play-services:+'
+    googleCompile 'com.google.android.gms:play-services:+'
 }

@@ -38,7 +38,6 @@ import android.widget.Toast;
 import com.twinone.locker.R;
 
 import org.twinone.ads.AdMobBannerHelper;
-import org.twinone.locker.LockerAnalytics;
 import org.twinone.locker.lock.PasswordView.OnNumberListener;
 import org.twinone.locker.lock.PatternView.DisplayMode;
 import org.twinone.locker.lock.PatternView.OnPatternListener;
@@ -543,7 +542,6 @@ public class LockService extends Service implements View.OnClickListener,
             mFingerDistance = mLockPasswordView.getFingerDistance();
             exitSuccessCompare();
         } else if (explicit) {
-            mAnalytics.increment(LockerAnalytics.UNLOCK_ERROR);
             mLockPasswordView.clearPassword();
             updatePassword();
             Toast.makeText(this, R.string.locker_invalid_password,
@@ -561,7 +559,6 @@ public class LockService extends Service implements View.OnClickListener,
             mFingerDistance = mLockPatternView.getFingerDistance();
             exitSuccessCompare();
         } else {
-            mAnalytics.increment(LockerAnalytics.UNLOCK_ERROR);
             if (options.patternErrorStealth) {
                 Toast.makeText(this, R.string.locker_invalid_pattern,
                         Toast.LENGTH_SHORT).show();
@@ -634,14 +631,6 @@ public class LockService extends Service implements View.OnClickListener,
         long current = System.nanoTime();
         long total = (current - mTimeViewShown) / 1000000;
         long interacting = (current - mTimeFirstFingerDown) / 1000000;
-        mAnalytics.increment(LockerAnalytics.TIME_SPENT_IN_LOCKSCREEN, total);
-        mAnalytics.increment(LockerAnalytics.TIME_SPENT_INTERACTING,
-                interacting);
-        mAnalytics.increment(LockerAnalytics.UNLOCK_SUCCESS);
-        mAnalytics.incrementFloat(LockerAnalytics.FINGER_DISTANCE,
-                mFingerDistance);
-        Log.d(TAG, "Time in screen: " + total + ", interacting:" + interacting);
-
         if (mPackageName == null || mPackageName.equals(getPackageName())) {
             finish(true);
             return;
@@ -658,7 +647,6 @@ public class LockService extends Service implements View.OnClickListener,
 
     private void finish(boolean unlocked) {
         if (!unlocked && ACTION_COMPARE.equals(mAction)) {
-            mAnalytics.increment(LockerAnalytics.UNLOCK_CANCEL);
             final Intent i = new Intent(Intent.ACTION_MAIN);
             i.addCategory(Intent.CATEGORY_HOME);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

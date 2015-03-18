@@ -1,6 +1,5 @@
 package org.twinone.locker.ui;
 
-import org.twinone.locker.LockerAnalytics;
 import org.twinone.locker.lock.LockPreferences;
 import org.twinone.locker.lock.LockService;
 import org.twinone.locker.util.PrefUtils;
@@ -147,12 +146,10 @@ class Dialogs {
 				Intent sender = Intent.createChooser(intent,
 						c.getString(R.string.lib_share_dlg_tit));
 				Analytics anal = new Analytics(c);
-				anal.increment(LockerAnalytics.SHARE);
 				c.startActivity(sender);
 				// At this point, we can assume the user will share the app.
 				// So never show the dialog again, he can manually open it from
 				// the navigation
-				anal.putBoolean(LockerAnalytics.SHARE_NEVER, true);
 			}
 		});
 		ab.setNeutralButton(R.string.share_dlg_later, null);
@@ -161,8 +158,6 @@ class Dialogs {
 					new OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							new Analytics(c).putBoolean(
-									LockerAnalytics.SHARE_NEVER, true);
 						}
 					});
 		}

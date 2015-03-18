@@ -3,7 +3,6 @@ package org.twinone.locker.version;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.twinone.locker.LockerAnalytics;
 import org.twinone.locker.util.PrefUtils;
 import org.twinone.util.Analytics;
 
@@ -36,7 +35,6 @@ public class Receiver extends BroadcastReceiver {
 	}
 
 	private static void scheduleAlarm(Context c) {
-		Log.d("", "Scheduling alarm");
 		Intent i = new Intent(c, Receiver.class);
 		i.setAction(ACTION_QUERY_SERVER);
 
@@ -52,17 +50,6 @@ public class Receiver extends BroadcastReceiver {
 	}
 
 	private void onAlarmReceived(final Context c) {
-		Log.d("", "Querying from alarm");
-		// new VersionManager(c).queryServer(null);
-
-		// analytics
-		Analytics analytics = new Analytics(c);
-		Map<String, String> data = new HashMap<>();
-		data.put(LockerAnalytics.LOCKED_APPS_COUNT,
-				String.valueOf(PrefUtils.getLockedApps(c).size()));
-		Log.d("Receiver", "Test");
-		analytics.setDefaultUrl(LockerAnalytics.URL).query(data);
-
 	}
 
 }

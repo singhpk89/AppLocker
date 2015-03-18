@@ -1,7 +1,6 @@
 package org.twinone.locker.ui;
 
 import org.twinone.locker.Constants;
-import org.twinone.locker.LockerAnalytics;
 import org.twinone.locker.lock.AppLockService;
 import org.twinone.locker.lock.LockService;
 import org.twinone.locker.ui.NavigationFragment.NavigationListener;
@@ -90,13 +89,6 @@ public class MainActivity extends ActionBarActivity implements
 		mCurrentFragmentType = NavigationElement.TYPE_APPS;
 
 		mSequencer = new DialogSequencer();
-		Analytics a = new Analytics(this);
-		long count = a.increment(LockerAnalytics.OPEN_MAIN);
-		boolean never = a.getBoolean(LockerAnalytics.SHARE_NEVER);
-		// Every 5 times the user opens the app, but only after 10 initial opens
-		if (!never && count >= 10 && count % 5 == 0) {
-			mSequencer.addDialog(Dialogs.getShareEditDialog(this, true));
-		}
 		showDialogs();
 		showLockerIfNotUnlocked(false);
 

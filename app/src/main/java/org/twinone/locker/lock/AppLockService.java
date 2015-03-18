@@ -9,7 +9,6 @@ import java.util.Set;
 import org.twinone.ads.AdMobInterstitialHelper;
 import org.twinone.locker.Constants;
 import org.twinone.locker.LockerAdInterface;
-import org.twinone.locker.LockerAnalytics;
 import org.twinone.locker.ui.MainActivity;
 import org.twinone.locker.util.LaunchInterstitialActivity;
 import org.twinone.locker.util.PrefUtils;
@@ -439,7 +438,6 @@ public class AppLockService extends Service {
     }
 
     public static void start(Context c) {
-        new Analytics(c).increment(LockerAnalytics.SERVICE_START);
         startAlarm(c);
     }
 
@@ -511,7 +509,6 @@ public class AppLockService extends Service {
      */
     public static void stop(Context c) {
         stopAlarm(c);
-        new Analytics(c).increment(LockerAnalytics.SERVICE_STOP);
         Intent i = new Intent(c, AppLockService.class);
         i.setAction(ACTION_STOP);
         c.startService(i);

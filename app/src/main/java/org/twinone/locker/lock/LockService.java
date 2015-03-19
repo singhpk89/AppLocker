@@ -37,7 +37,7 @@ import android.widget.Toast;
 
 import com.twinone.locker.R;
 
-import org.twinone.ads.AdMobBannerHelper;
+import org.twinone.ads.BannerHelper;
 import org.twinone.locker.lock.PasswordView.OnNumberListener;
 import org.twinone.locker.lock.PatternView.DisplayMode;
 import org.twinone.locker.lock.PatternView.OnPatternListener;
@@ -294,7 +294,7 @@ public class LockService extends Service implements View.OnClickListener,
     }
 
     private String mAction;
-    private AdMobBannerHelper mAdMobManager;
+    private BannerHelper mBannerHelper;
     /**
      * Called after views are inflated
      */
@@ -471,8 +471,8 @@ public class LockService extends Service implements View.OnClickListener,
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mAdMobManager != null) {
-            mAdMobManager.destroy();
+        if (mBannerHelper != null) {
+            mBannerHelper.destroy();
         }
         // if (mAdViewManager != null)
         // mAdViewManager.onDestroy();
@@ -767,8 +767,8 @@ public class LockService extends Service implements View.OnClickListener,
         }
         mAnimHide = null;
 
-        if (mAdMobManager != null) {
-            mAdMobManager.pause();
+        if (mBannerHelper != null) {
+            mBannerHelper.pause();
         }
 
         // With stopSelf there is a problem with the rotation
@@ -819,19 +819,17 @@ public class LockService extends Service implements View.OnClickListener,
     private void afterInflate() {
         setBackground();
         if (options.showAds) {
-            if (mAdMobManager != null) {
-                mAdMobManager.destroy();
+            if (mBannerHelper != null) {
+                mBannerHelper.destroy();
             }
-            mAdMobManager = new AdMobBannerHelper(this,
+            mBannerHelper = new BannerHelper(this,
                     mRootView.findViewById(R.id.lock_ad_container));
-            mAdMobManager.loadAd();
-            Log.w(TAG, "Showing ad");
+            mBannerHelper.loadAd();
 
         } else {
             // Don't use precious space
             mRootView.findViewById(R.id.lock_ad_container).setVisibility(
                     View.GONE);
-            Log.w(TAG, "Not requesting ads!!!n!!!");
         }
         // if (!AdViewManager.isOnEmulator() && !ACTION_CREATE.equals(mAction))
         // {

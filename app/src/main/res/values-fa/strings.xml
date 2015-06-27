@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+
+    <string name="application_name">App Locker</string>
+
+    <!-- All strings for MainActivity -->
+    <string name="main_share">همرسانی</string>
+
+    <!-- All Strings for applist -->
+
+
+    <!-- Change password activity -->
+    <string name="change_pass_tit">تغییر کلمه عبور</string>
+
+    <string name="change_pass_desc">کلمه عبور جدید را وارد نمایید \n
+4 رقم یا بیشتر توصیه می شود</string> 
+    <string name="change_pass_desc_confirmation">تایید کلمه عبور </string>
+    <string name="change_pass_not_match">کلمات عبور همخوانی ندارند</string>
+    <string name="change_pass_changed">کلمه عبور با موفقیت تغییر یافت </string>
+    <string name="change_pass_not_changed">ایراد تغییر کلمه عبور</string> 
+    <string name="change_pass_empty">ایراد: کلمه عبور خالی</string>
+    <string name="select_tit">برنامه ها را جهت قفل کردن انتخاب نمایید </string>
+
+    <!-- All strings for LockActivity -->
+    <string name="locker_footer_default">برای بازگشایی کلمه عبور را وارد نمایید </string>
+    <string name="locker_enter_password">کلمه عبور را وارد نمایید </string>
+    <string name="upper_ok"> تایید </string>
+    <string name="upper_back">BACK</string>
+    <string name="cancel"> کنسل </string>
+    <string name="welcome_tit">به برنامه لاکر خوش آمدید !</string>
+    <string name="welcome_message">قبل از قفل کردن برنامه ها به کلمه عبور نیاز دارید.\n آیا تمایل دارید که اکنون کلمه عبور را انتخاب نمایید؟</string>
+
+    <!-- END v1.07 Strings -->
+
+
+    <!-- BEGIN v1.08 Strings -->
+    <!-- This section represents Locker > Preferences -->
+    <string name="preferences_tit"> تنظیمات </string>
+    <!-- The window title -->
+    <string name="main_preferences"> تنظیمات </string>
+    <!-- The button in the main screen -->
+    <!-- clone of "locker_footer_default" -->
+    <string name="pref_def_lock_message">جهت بازگشایی کلمه عبور را وارد نمایید </string>
+    <string name="pref_tit_lock_message"> پیغام </string>
+    <!-- Changed from the original. Re-translate -->
+    <string name="pref_desc_lock_message">این پیغام زمانی که برنامه ای قفل شده باشد نمایش داده خواهد شد </string>
+    <string name="pref_dlgmsg_lock_message">شما میتوانید از %s برای نمایش نام برنامه استفاده نمایید </string>
+
+    <!-- Keep it short! -->
+    <string name="pref_tit_start_boot">اجرا هنگام بوت</string>
+    <!-- Descriptions can be longer -->
+    <string name="pref_desc_start_boot">اجرای برنامه زمانی که گوشی بوت می شود</string>
+    <string name="pref_tit_relock_after_screenoff">قفل مجدد پس از قفل شدن صفحه نمایش </string>
+    <string name="pref_desc_relock_after_screenoff">درخواست برای کلمه عبور پس از خاموشی صفحه نمایش </string>
+    <string name="old_pref_tit_vibrate_password"> لرزش </string>
+    <string name="old_pref_desc_vibrate_password">لرزش هنگام فشردن کلید</string>
+    <string name="pref_tit_performance"> کارایی </string>
+    <string name="pref_desc_performance">کارایی بالاتر موجب اجرای سریعتر و مصرف باتری بیشتر میگردد.  کارایی پایین تر موجب اجرای کندتر و مصرف باتری کمتر می گردد. </string>
+    <string name="pref_list_perf_very_high">بسیار بالا</string>
+    <string name="pref_list_perf_high"> بالا </string>
+    <string name="pref_list_perf_normal"> معمولی </string>
+    <string name="pref_list_perf_low"> پایین </string>
+    <string name="pref_list_perf_very_low">ذخیره انرژی </string>
+    <string name="old_pref_tit_delay_status">قفل با تعلل</string>
+    <string name="old_pref_desc_delay_status">زمانی که شما کلمه عبور صحیح را وارد کنید، کلمه عبور بعدی پس از مقداری تعلل پرسیده خواهد شد </string>
+    <string name="old_pref_tit_delay_time">زمان تعلل</string>
+    <string name="old_pref_dlgmsg_delay_time">پس از این مقدار زمان کلمه عبور پرسیده خواهد شد(ثانیه) </string>
+    <string name="applist_lock_all"> همه </string>
+    <string name="applist_unlock_all"> هیچکدام</string>
+    <string name="main_rate">امتیاز دادن</string>
+    <!-- END v1.08 Strings -->
+
+
+    <!-- BEGIN v2.0 Strings -->
+    <!-- For android 4.2 and below, the system will not kill Locker -->
+    <string name="pref_desc_show_notification"> نمایش یک اعلان زمانی که برنامه ها قفل شده اند </string>   <!-- Since Android 4.3, system kills app if it doesn't show a notification, we should warnt he users about this -->
+    <string name="notification_title">برنامه قفل گذاری فعال است </string>
+    <string name="notification_state_locked">جهت غیر فعال کردن برنامه قفل گذاری اینجا را کلیک نمایید</string> 
+    <!-- END v2.0 Strings -->
+
+
+    <!-- BEGIN v2.0.6 Strings -->
+    <!-- All pref_tit_xxx must be short (2 words max || length < 20) -->
+    <!-- pref_desc_xxx can be like 3 lines or more if neccesary -->
+    <!-- Preference categories (Keep short) -->
+    <string name="pref_tit_cat_general"> عمومی </string>
+    <string name="pref_tit_cat_notification"> اعلان</string>
+    <string name="pref_tit_cat_launcher"> شروع</string>
+    <!--  -->
+    <string name="old_pref_tit_dial_launch">شروع با شماره گیری</string>
+    <string name="old_pref_desc_dial_launch">زمانی که این گزینه فعال است، شما میتوانید با شماره گیری #کلمه_عبور به برنامه قفل گذاری دسترسی پیدا کنید. \nاین بدان معنی است که اگر کلمه عبور شما 1111 باشد،  شما می توانید با شماره گیری #1111 برنامه قفل گذاری را باز نمایید. </string>
+    <string name="pref_tit_hide_launcher_icon">مخفی کردن آیکون</string>
+    <string name="pref_desc_hide_launcher_icon">زمانی که این گزینه فعال باشد، برنامه قفل گزاری آیکون خود را از لیست برنامه ها مخفی خواهد کرد.  شما می توانید میانبر برنامه را از صفحه اصلی به صورت دستی حذف نمایید (نیاز به ره اندازی مجدد.  اجرای اجباری با شماره گیری)</string>
+    <!-- Updated text for "Notification" -->
+    <string name="pref_tit_show_notification">نمایش اعلان</string>
+    <!-- Changelog -->
+    <string name="cl_title">چه چیزی تازه است</string>
+    <string name="pref_tit_cat_about">در مورد برنامه</string>
+    <!-- END v2.0.6 Strings -->
+
+
+    <!-- BEGIN v2.0.8 Strings -->
+    <!-- PASSWORD -->
+    <string name="password_change_tit">تغییر کلمه عبور</string>
+    <string name="password_change_head">کلمه عبور تازه را وارد نمایید</string>
+    <string name="password_change_confirm">کلمه عبور را جهت تایید مجددا وارد نمایید</string>
+    <string name="password_change_saved">کلمه عبور با موفقیت تغییر یافت</string>
+    <string name="password_change_error">ایراد ذخیره کلمه عبور</string>
+    <string name="password_change_not_match">کلمات عبور همخوانی ندارند</string>
+    <string name="password_empty">کلمه عبور نمی تواند خالی باشد</string>
+    <!-- PATTERN -->
+    <string name="pattern_change_tit">تغییرالگو</string>
+    <string name="pattern_detected">الگو کشف گردید</string>
+    <string name="pattern_change_head">الگوی تازه ای وارد نمایید</string>
+    <string name="pattern_change_confirm">الگو را جهت تایید دوباره وارد نمایید</string>
+    <string name="pattern_change_saved">الگو با موفقیت تغییر یافت </string>
+    <string name="pattern_change_error">ایراد ذخیره سازی الگو</string>
+    <string name="pattern_change_not_match">الگوها همخوانی ندارند</string>
+    <!--  -->
+    <string name="button_confirm"> تایید</string>
+    <string name="button_continue"> بعدی</string>
+    <string name="button_back"> عقب</string>
+    <!-- Buttons have short text! (2 words or so) -->
+    <string name="main_button_set_password">تغییر کلمه عبور</string>
+    <string name="main_button_set_pattern">تغییر الگو</string>
+    <string name="pref_list_lock_type_password">کلمه عبور</string>
+    <string name="pref_list_lock_type_pattern"> الگو</string>
+    <string name="pref_tit_lock_type">نوع قفل</string>
+    <string name="pref_desc_lock_type">جاری: %s</string>
+    <!-- VersionChecker -->
+    <string name="vc_update">بروز رسانی</string>
+    <string name="vc_exit"> خروج</string>
+    <string name="vc_tit_new_version">بروز رسانی</string>
+    <string name="vc_tit_unsupported"> شرمنده</string>
+    <string name="vc_msg_new_version">نسخه جدید موجود است،  علاقمند بروز رسانی میباشید؟ </string>
+    <string name="vc_msg_unsupported">نسخه ای از برنامه که در حال استفاده میباشید قدیمی میباشد و نیازمند بروز رسانی است. لطفا جهت استفاده از برنامه آن را بروز رسانی نمایید.</string>
+    <!-- Settings -->
+    <string name="pref_tit_cat_password">تنظیمات کلمه عبور</string>
+    <string name="pref_tit_cat_pattern">تنظیمات الگو</string>
+    <string name="pref_tit_delay_status">خروج کوتاه</string>
+    <string name="pref_desc_delay_status">شما میتوانید در مدت زمان محدود بدون وارد نمودن کلمه عبور از برنامه خارج شده و به عقب باز گردید</string>
+    <string name="pref_tit_delay_time">زمان خروج کوتاه</string>
+    <!-- Seconds is important, not just "time" -->
+    <string name="pref_dlgmsg_delay_time">مدت زمانی را که برنامه دوباره قفل خواهد گردید را به ثانیه وارد نمایید</string>
+    <string name="pref_tit_orientation"> جهت</string>
+    <!-- Password specific settings -->
+    <string name="pref_tit_vibrate_password"> لرزش</string>
+    <string name="pref_desc_vibrate_password">لرزش هنگام فشردن کلید</string>
+    <!-- Pattern specific settings -->
+    <string name="pref_tit_vibrate_pattern"> لرزش</string>
+    <string name="pref_desc_vibrate_pattern">لرزش هنگام کشیدن الگو</string>
+    <string name="pref_tit_pattern_stealth">حالت نامرئی</string>
+    <string name="pref_desc_pattern_stealth">الگو نامرئی خواهد گردید</string>
+    <string name="pref_tit_switch_buttons">چرخش کلیدها</string>
+    <string name="pref_desc_switch_buttons">موقعیت کلیدهای تایید و لغو را بچرخد</string>
+    <string name="pref_list_orientation_portrait"> پرتره</string>
+    <!-- TODO: Use android standards -->
+    <string name="pref_list_orientation_landscape"> عمودی</string>
+    <string name="pref_list_orientation_auto_rotate">چرخش خودکار</string>
+    <string name="pref_list_orientation_system">تنظیمات سیستم</string>
+    <!-- Beta -->
+    <string name="pref_tit_temp_wifi_unlock_state">ایست با وای فای</string>
+    <string name="pref_desc_temp_wifi_unlock_state">هنگامی که شما به شبکه وای فای خواصی(مانند خانه) وصل شوید قفل به صورت خودکار می ایستد</string>
+    <string name="pref_tit_temp_wifi_ssid">SSID(نام شبکه)</string>
+    <string name="pref_desc_temp_wifi_ssid">نام شبکه وای فای</string>
+    <string name="beta_tit"> بتا</string>
+    <string name="beta_desc">این ها امکانات آزمایشی هستند که در آینده در دسترس خواهد بود اما شما اکنون میتوانید آن ها را مورد استفاده قرار دهید.</string>
+    <!-- MainActivity -->
+    <string name="main_state_running">در حال اجرا می باشد</string>
+    <string name="main_state_not_running">در حال اجرا نمی باشد</string>
+
+    <!-- More prefs -->
+    <string name="pref_tit_dial_launch">شروع با شماره گیری</string> 
+    <string name="pref_desc_dial_launch">دسترسی به قفل با شماره گیری یک شماره خاص.</string>
+    <string name="pref_tit_dial_launch_number"> شماره</string>
+    <string name="pref_desc_dial_launch_number">شماره ای که شما باید جهت دسترسی به برنامه آن را بگیرید)(پیشنهاد می شود شماره باعلامت # شروع گردد) .</string>
+    <string name="vc_later"> بعدا</string>
+    <!-- END v2.0.8 Strings -->
+
+
+    <!-- BEGIN v2.0.2 -->
+
+    <string name="main_no_password">شما کلمه عبور تعیین نکرده اید.\nآیا تمایل دارید که هم اکنون یک کلمه عبور تعیین نمایید؟</string>
+    <string name="main_setup">برپایی</string>
+    <string name="old_main_choose_lock_type">نوع قفل را انتخاب نمایید</string>
+    <string name="main_no_locked_apps">شما برنامه قفل شده ای ندارید.\nآیا تمایل دارید که برنامه هایی جهت قفل گذاری انتخاب نمایید؟</string>
+    <!-- END v2.0.2 -->
+
+
+    <!-- BEGIN v2.1.1 -->
+    <string name="pref_tit_password_expiry">حداکثر زمان</string>
+    <string name="pref_desc_password_expiry">حداکثر زمانی که شما برای وارد کردن کلمه عبور صحیح دارید</string>
+    <string name="pref_dlgmsg_password_expiry">زمان بر حسب ثانیه،  0 به معنی بینهایت میباشد</string>
+    <string name="pref_tit_max_password_retries">حداکثر تلاش</string>
+    <string name="pref_desc_max_password_retries">تعداد دفعاتی که شما اجازه دارید کلمه عبور صحیح را وارد نمایید</string>
+    <string name="pref_dlgmsg_max_password_retries">0  به معنی بینهایت میباشد</string>
+    <!-- END v2.1.1 -->
+
+
+    <!-- BEGIN v2.1.2 -->
+    <string name="pref_tit_pattern_color">رنگ الگو</string>
+    <string name="pref_desc_pattern_color">رنگ الگوهای دایره ای</string>
+    <string name="pref_list_pattern_color_white"> سفید</string>
+    <string name="pref_list_pattern_color_blue"> آبی</string>
+    <string name="pref_list_pattern_color_green"> سبز</string>
+    <string name="pref_tit_lockactivity_background">پشت زمینه</string>
+    <string name="pref_desc_lockactivity_background">عکس پشت زمینه ای که هنگام بازگشایی قفل برنامه ها نشان داده خواهد شد</string>
+    <string name="pref_tit_hide_notification_icon">مخفی کردن آیکون اعلان</string>
+    <string name="pref_desc_hide_notification_icon">این تنها آیکون اعلان استاتوس بار را مخفی می کند</string>
+    <!-- BEGIN 2203 -->
+    <string name="update_available">بروزرسانی موجوداست</string>
+    <string name="update_needed">بروزرسانی مورد نیاز است</string>
+    <string name="update_available_msg">بروز رسانی جدیدی برای برنامه موجود میباشد.  وسخه فعلی پس از %d از کار خواهد ایستاد.</string>
+    <string name="update_needed_msg">این نسخه دیگر پشتیبانی نمی گردد.  لطفا به نسخه جدیدتری بروزرسانی نمایید .</string>
+    <string name="update_button"> بروزرسانی</string>
+    <string name="update_button_cancel">العان نه</string>
+
+    <!--  -->
+    <!-- See background_locker_green -->
+    <string name="background_locker_blue"> آبی</string>
+    <string name="background_locker_dark_blue">آبی گرفته</string>
+    <string name="background_locker_red"> قرمز</string>
+    <string name="background_locker_purple"> بنفش</string>
+    <string name="background_locker_turquoise">Turquoise</string>
+    <string name="background_locker_orange"> نارنجی</string>
+
+    <!-- BEGIN v2.1.2 Continuation -->
+    <string name="background_dialog_title">تغییر پشت زمینه</string>
+    <string name="background_from_gallery"> گالری</string>
+    <string name="background_locker_green"> سبز</string>
+    <string name="background_changed">پشت زمینه تغییر یافت </string>
+
+    <!-- BEGIN v2205 -->
+    <string name="pref_tit_ads"> تبلیغات</string>
+    <string name="pref_desc_ads">اگر شما برنامه قفل گذاری را پسندیده لطفا من را با فعال کردن تبلیغات پشتیبانی نمایید<stirng></stirng></string>
+    <string name="pref_desc_ads_forced">شما هم اکنون نمیتوانید تبلیغات را غیر فعال نمایید</string>
+    <!-- BEGIN v2300 -->
+    <!-- animations for the lock screen -->
+    <string name="pref_tit_cat_anim_show">انیمیشن را وارد نمایید</string>
+    <string name="pref_tit_cat_anim_hide">خروج از انیمیشن</string>
+    <string name="pref_tit_anim_millis">مدت زمان</string> 
+    <string name="pref_desc_anim_millis">زمان بر حسب میای ثانیه برای انیمیشن</string>
+    <string name="pref_tit_anim_type"> نوع</string>
+    <string name="pref_desc_anim_type"></string>
+    <string name="pref_list_anim_fade">محو شدن</string>
+    <string name="pref_list_anim_slide_right">کشیدن به راست</string>
+    <string name="pref_list_anim_slide_left">کشیدن به چپ</string>
+    <string name="pref_list_anim_none">غیر فعال شد</string>
+    <!-- BEGIN v2302 -->
+    <string name="background_default">پیش فرض</string>
+    <!-- Pro stuff -->
+    <string name="pro_b_main">حرفه ای</string>
+    <string name="pro_window_title">ویژگی های حرفه ای</string>
+    <!--  -->
+    <string name="pro_ft_tit">ویژگی های حرفه ای :</string>
+    <string name="pro_ft_bg">عکس پشت زمینه شخصی</string>
+    <string name="pro_ft_hide">مخفی سازی برنامه قفل گذاری</string>
+    <string name="pro_ft_hide_notif">مخفی سازی اعلان</string> 
+    <string name="pro_ft_pcolor">تغییر رنگ الگو</string>
+    <string name="pro_ft_short_exit">خروج کوتاه</string>
+    <string name="pro_ft_anim">انیمیشن ها</string>
+    <string name="pro_ft_more">به زودی بیشتر</string>
+    <string name="pro_header">نقشه خود را انتخاب نمایید :</string>
+    <string name="pro_tit_ads">تبلیغات برنامه </string>
+    <string name="pro_desc_ads">تمامی ویژگی های حرفه ای در دسترس نمی باشد و تبلیغات در حال نمایش هستند </string>
+    <string name="pro_tit_free">برنامه قفل گذاری مجانی</string>
+    <string name="pro_desc_free">هیچ ویژگی حرفه ای در دسترس نمی باشد و تبلیغی نمایش داده نمی شود</string>
+    <!--  -->
+    <string name="pro_tit_paid">برنامه قفل گذاری حرفه ای</string>
+    <string name="pro_desc_paid">تمامی ویژگی های حرفه ای در دسترس میباشند و شما تبلیغی نمی بینید</string>
+    <!--  -->
+    <string name="pro_required">این یک ویژگی حرفه ای میباشد. آیا تمایل دارید که ویژگی های حرفه ای به صورت رایگان فعال گردند؟</string>
+    <string name="pro_tofree_tit">حالت رایگان</string>
+    <string name="pro_tofree_msg">شما تمامی ویژگی های حرفه ای را از دست خواهید داد.\nبرای تغییر حالت مطمئن میباشید؟</string>
+    <string name="applist_tit_apps">برنامه ها</string>
+    <string name="applist_tit_important"> مهم</string>
+    <string name="applist_tit_system"> سیستم</string>
+    <string name="applist_app_pkginstaller">نصب/پاک کردن برنامه</string>
+    <string name="applist_app_dialer">تماس ورودی</string>
+    <string name="applist_app_sysui">وظایف اخیر</string>
+
+    <!-- BEGIN v2320 -->
+    <string name="nav_status"> قفل</string>
+    <string name="nav_apps">برنامه ها</string>
+    <string name="nav_change">تغییر قفل</string>
+    <string name="nav_settings"> تنظیمات</string>
+    <string name="nav_statistics"> آمار</string>
+    <string name="nav_pro">حرفه ای</string>
+    <string name="nav_test"> تست</string>
+
+    <!--  -->
+    <string name="fragment_title_apps">برنامه ها</string>
+    <string name="fragment_title_settings"> تنظیمات</string>
+    <string name="fragment_title_statistics"> آمار</string>
+    <string name="fragment_title_pro">حرفه ای</string>
+    <string name="setup_new_lock">نصب قفل جدید</string> 
+    <!--  -->
+    <string name="pref_tit_pattern_hide_error">مخفی سازی خطا</string>
+    <string name="pref_desc_pattern_hide_error">عدم نمایش پیغام خطا هنگام ورود الگوی اشتباه</string>
+    <string name="pref_tit_pattern_size">اندازه الگو</string>
+    <string name="pref_desc_pattern_size">تعداد سطرها وستون های الگو</string>
+    <!--  -->
+    <string name="locker_invalid_password">کلمه عبور اشتباه</string>
+    <string name="locker_invalid_pattern">الگوی اشتباه</string> 
+
+    <!-- Recovery dialog -->
+    <string name="recovery_tit">کد بازیابی</string>
+    <string name="recovery_dlgmsg">کد بازیابی شما % s میباشد.  \nبسیار مهم است که کد بازیابی را به خودتان بفرستید(به منطور استفاده در صورت فراموشی کلمه عبور).  شما می توانید کد بازیابی را در بخش تنظیمات پیدا نمایید</string>
+    <string name="recovery_code_send_button"> ارسال</string>
+    <!-- Recovery preference -->
+    <string name="pref_tit_recovery_code">کد بازیابی</string>
+    <string name="pref_desc_recovery_code">کد کنونی: %s</string>
+    <string name="pref_dlgmsg_recovery_code">کد کنونی شما: %s</string>
+    <!-- Recovery intent chooser -->
+    <string name="recovery_intent_tit">ارسال کد بازیابی</string>
+    <string name="recovery_intent_message">کد بازیابی برنامه قفل گذاری شما برابر %s میباشد. به منظور دسترسی دوباره به دستگاه و ریست کردن کلمه عبور،  شماره مقابل را شماره گیری نمایید: %s/string>
+    <!-- Da menu -->
+    <string name="apps_menu_sort"> ردیف</string>
+    <string name="apps_menu_lock_all">قفل همه</string>
+    <string name="apps_menu_unlock_all">بازگشایی همه</string>
+    <string name="apps_menu_search"> جستجو</string>
+    <string name="apps_menu_search_hint">جستجوی برنامه ها</string>
+    <!-- Example: WhatsApp locked -->
+    <string name="apps_toast_locked_single">%s قفل گردید</string>
+    <string name="apps_toast_locked_all">تمامی برنامه ها قفل گردیدند</string>
+    <string name="apps_toast_unlocked_single">%s بازگشایی گردید</string>
+    <string name="apps_toast_unlocked_all">تمامی برنامه ها بازگشایی شدند</string>
+
+    <!-- BEGIN v2332 -->
+    <string name="nav_b_share"> همرسانی</string>
+    <string name="nav_b_rate">امتیاز دهی</string>
+    <string name="lib_share_dlg_tit">همرسانی برنامه</string> 
+    <string name="lib_share_dlg_msg">اگر برنامه را دوست داشتید آنرا با دوستان خود به اشتراک بگذارید.</string>
+    <!-- May be used for twitter -->
+    <string name="share_promo_text">سری به برنامه رایگان Twinone App Locker  که امنیت شما و برنامه های شما را تامین میکند بزنید. https://play.google.com/store/apps/details?id=com.twinone.locker</string>
+
+    <!-- BEGIN v2335 -->
+    <string name="share_dlg_never">هرگز </string>
+    <string name="share_dlg_later"> بعدا</string>
+    <!-- Androilib strings -->
+    <string name="lib_rate_dlg_tit">به برنامه ما امتیاز دهید</string>
+    <string name="lib_rate_dlg_msg">لطفا با ننوشتن نظرات مثبت خود در گوگل پلی ما را در بهبود این برنامه یاری نمایید</string>
+    <!--  -->
+    <string name="lib_share_never">نه ممنون</string>
+    <string name="lib_share_later"> بعدا</string>
+</resources>

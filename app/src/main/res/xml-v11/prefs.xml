@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="@string/pref_key_screen" >
+
+    <Preference
+        android:key="@string/pref_key_lock_type"
+        android:title="@string/pref_tit_lock_type" />
+
+    <ListPreference
+        android:background="@drawable/ic_launcher"
+        android:entries="@array/pref_names_background"
+        android:entryValues="@array/pref_values_background"
+        android:key="@string/pref_key_background"
+        android:summary="@string/pref_desc_lockactivity_background"
+        android:title="@string/pref_tit_lockactivity_background" />
+
+    <!-- PASSWORD -->
+    <PreferenceCategory
+        android:key="@string/pref_key_cat_password"
+        android:title="@string/pref_tit_cat_password" >
+
+        <!-- Vibration -->
+        <CheckBoxPreference
+            android:defaultValue="@bool/pref_def_vibrate"
+            android:key="@string/pref_key_vibrate"
+            android:summary="@string/pref_desc_vibrate_password"
+            android:title="@string/pref_tit_vibrate_password" />
+        <!-- Switch buttons -->
+        <CheckBoxPreference
+            android:defaultValue="@bool/pref_def_switch_buttons"
+            android:key="@string/pref_key_switch_buttons"
+            android:summary="@string/pref_desc_switch_buttons"
+            android:title="@string/pref_tit_switch_buttons" />
+    </PreferenceCategory>
+    <!-- PATTERN -->
+    <PreferenceCategory
+        android:key="@string/pref_key_cat_pattern"
+        android:title="@string/pref_tit_cat_pattern" >
+
+        <!-- Pattern Color -->
+        <ListPreference
+            android:defaultValue="@string/pref_val_pattern_color_white"
+            android:entries="@array/pref_names_pattern_colors"
+            android:entryValues="@array/pref_values_pattern_colors"
+            android:key="@string/pref_key_pattern_color"
+            android:summary="@string/pref_desc_pattern_color"
+            android:title="@string/pref_tit_pattern_color" />
+        <!-- Vibration -->
+        <CheckBoxPreference
+            android:defaultValue="@bool/pref_def_vibrate"
+            android:key="@string/pref_key_vibrate"
+            android:summary="@string/pref_desc_vibrate_pattern"
+            android:title="@string/pref_tit_vibrate_pattern" />
+        <!-- Stealth mode -->
+        <CheckBoxPreference
+            android:defaultValue="@bool/pref_def_pattern_stealth"
+            android:key="@string/pref_key_pattern_stealth"
+            android:summary="@string/pref_desc_pattern_stealth"
+            android:title="@string/pref_tit_pattern_stealth" />
+
+        <!-- Hide error -->
+        <CheckBoxPreference
+            android:defaultValue="@bool/pref_def_pattern_error_stealth"
+            android:key="@string/pref_key_pattern_hide_error"
+            android:summary="@string/pref_desc_pattern_hide_error"
+            android:title="@string/pref_tit_pattern_hide_error" />
+
+        <EditTextPreference
+            android:defaultValue="@string/pref_def_pattern_size"
+            android:key="@string/pref_key_pattern_size"
+            android:numeric="integer"
+            android:summary="@string/pref_desc_pattern_size"
+            android:title="@string/pref_tit_pattern_size" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="@string/pref_key_cat_general"
+        android:title="@string/pref_tit_cat_general" >
+
+        <!-- Start at boot -->
+        <CheckBoxPreference
+            android:defaultValue="@bool/pref_def_start_boot"
+            android:key="@string/pref_key_start_boot"
+            android:summary="@string/pref_desc_start_boot"
+            android:title="@string/pref_tit_start_boot" />
+        <!-- Relock screenoff -->
+        <CheckBoxPreference
+            android:defaultValue="@bool/pref_def_relock_after_screenoff"
+            android:key="@string/pref_key_relock_after_screenoff"
+            android:summary="@string/pref_desc_relock_after_screenoff"
+            android:title="@string/pref_tit_relock_after_screenoff" />
+        <!-- Message -->
+        <EditTextPreference
+            android:defaultValue="@string/pref_def_lock_message"
+            android:dialogMessage="@string/pref_dlgmsg_lock_message"
+            android:dialogTitle="@string/pref_tit_lock_message"
+            android:key="@string/pref_key_lock_message"
+            android:selectAllOnFocus="true"
+            android:summary="@string/pref_desc_lock_message"
+            android:title="@string/pref_tit_lock_message" />
+
+        <!-- Performance -->
+        <ListPreference
+            android:defaultValue="@string/pref_val_perf_normal"
+            android:entries="@array/performance_names"
+            android:entryValues="@array/performance_values"
+            android:key="@string/pref_key_performance"
+            android:summary="@string/pref_desc_performance"
+            android:title="@string/pref_tit_performance" />
+        <!-- Orientation -->
+        <ListPreference
+            android:defaultValue="@string/pref_val_orientation_system"
+            android:entries="@array/orientation_names"
+            android:entryValues="@array/orientation_values"
+            android:key="@string/pref_key_orientation"
+            android:title="@string/pref_tit_orientation" />
+        <!-- Delay -->
+        <CheckBoxPreference
+            android:defaultValue="@bool/pref_def_delay_status"
+            android:key="@string/pref_key_delay_status"
+            android:summary="@string/pref_desc_delay_status"
+            android:title="@string/pref_tit_delay_status" />
+        <!-- Delay time -->
+        <EditTextPreference
+            android:defaultValue="@string/pref_def_delay_time"
+            android:dependency="@string/pref_key_delay_status"
+            android:dialogMessage="@string/pref_dlgmsg_delay_time"
+            android:key="@string/pref_key_delay_time"
+            android:numeric="integer"
+            android:title="@string/pref_tit_delay_time" />
+    </PreferenceCategory>
+
+    <!-- Notification related preferences -->
+    <PreferenceCategory
+        android:key="@string/pref_key_cat_notification"
+        android:title="@string/pref_tit_cat_notification" >
+
+        <!-- Show notification -->
+        <CheckBoxPreference
+            android:defaultValue="@bool/pref_def_show_notification"
+            android:key="@string/pref_key_show_notification"
+            android:summary="@string/pref_desc_show_notification"
+            android:title="@string/pref_tit_show_notification" />
+
+        <CheckBoxPreference
+            android:defaultValue="@bool/pref_def_hide_notification_icon"
+            android:dependency="@string/pref_key_show_notification"
+            android:key="@string/pref_key_hide_notification_icon"
+            android:summary="@string/pref_desc_hide_notification_icon"
+            android:title="@string/pref_tit_hide_notification_icon" />
+    </PreferenceCategory>
+
+    <!-- Launcher related preferences -->
+    <PreferenceCategory
+        android:key="@string/pref_key_cat_launcher"
+        android:title="@string/pref_tit_cat_launcher" >
+
+        <!-- Dial launch status -->
+
+        <CheckBoxPreference
+            android:defaultValue="@bool/pref_def_dial_launch"
+            android:key="@string/pref_key_dial_launch"
+            android:summary="@string/pref_desc_dial_launch"
+            android:title="@string/pref_tit_dial_launch" />
+        <!-- Dial launch number -->
+        <EditTextPreference
+            android:defaultValue="@string/pref_def_dial_launch_number"
+            android:dependency="@string/pref_key_dial_launch"
+            android:key="@string/pref_key_dial_launch_number"
+            android:summary="@string/pref_desc_dial_launch_number"
+            android:title="@string/pref_tit_dial_launch_number" />
+        <!-- Hide icon -->
+
+        <CheckBoxPreference
+            android:defaultValue="@bool/pref_def_hide_launcher_icon"
+            android:key="@string/pref_key_hide_launcher_icon"
+            android:summary="@string/pref_desc_hide_launcher_icon"
+            android:title="@string/pref_tit_hide_launcher_icon" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="@string/pref_key_cat_about"
+        android:title="@string/pref_tit_cat_about" >
+        <Preference
+            android:key="@string/pref_key_changelog"
+            android:title="@string/cl_title" >
+        </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_tit_recovery_code" >
+        <Preference
+            android:key="@string/pref_key_recovery_code"
+            android:title="@string/pref_tit_recovery_code" >
+        </Preference>
+    </PreferenceCategory>
+
+    <!-- ANIMATIONS -->
+    <PreferenceCategory android:title="@string/pref_tit_cat_anim_show" >
+        <ListPreference
+            android:defaultValue="@string/pref_val_anim_none"
+            android:entries="@array/pref_names_anim"
+            android:entryValues="@array/pref_values_anim"
+            android:key="@string/pref_key_anim_show_type"
+            android:summary="@string/pref_desc_anim_type"
+            android:title="@string/pref_tit_anim_type" />
+
+        <EditTextPreference
+            android:defaultValue="@string/pref_def_anim_show_millis"
+            android:dialogTitle="@string/pref_tit_anim_millis"
+            android:key="@string/pref_key_anim_show_millis"
+            android:numeric="decimal"
+            android:selectAllOnFocus="true"
+            android:summary="@string/pref_desc_anim_millis"
+            android:title="@string/pref_tit_anim_millis" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_tit_cat_anim_hide" >
+        <ListPreference
+            android:defaultValue="@string/pref_val_anim_fade"
+            android:entries="@array/pref_names_anim"
+            android:entryValues="@array/pref_values_anim"
+            android:key="@string/pref_key_anim_hide_type"
+            android:summary="@string/pref_desc_anim_type"
+            android:title="@string/pref_tit_anim_type" />
+
+        <EditTextPreference
+            android:defaultValue="@string/pref_def_anim_hide_millis"
+            android:dialogTitle="@string/pref_tit_anim_millis"
+            android:key="@string/pref_key_anim_hide_millis"
+            android:numeric="decimal"
+            android:selectAllOnFocus="true"
+            android:summary="@string/pref_desc_anim_millis"
+            android:title="@string/pref_tit_anim_millis" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

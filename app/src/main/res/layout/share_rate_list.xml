@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.twinone.androidlib.ShareRateView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <!--
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#48cccccc" >
+    </View>
+
+    <LinearLayout
+        android:id="@id/nav_b_share"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="48dp"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp" >
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:contentDescription="@string/nav_b_share"
+            android:src="@drawable/ic_action_share"
+            android:textAllCaps="true" />
+
+        <TextView
+            style="@style/Common.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="@string/nav_b_share"
+            android:textAllCaps="true" >
+        </TextView>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#48cccccc" >
+    </View>
+
+    <LinearLayout
+        android:id="@id/nav_b_rate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="48dp"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp" >
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:contentDescription="@string/nav_b_rate"
+            android:src="@drawable/ic_action_important"
+            android:textAllCaps="true" />
+
+        <TextView
+            style="@style/Common.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="@string/nav_b_rate"
+            android:textAllCaps="true" >
+        </TextView>
+    </LinearLayout>
+    -->
+
+</org.twinone.androidlib.ShareRateView>

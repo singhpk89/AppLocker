@@ -1,0 +1,41 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "com.twinone.locker"
+        minSdkVersion 9
+        targetSdkVersion 21
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+        }
+    }
+    productFlavors {
+        google {
+            manifestPlaceholders = [PLAY_VERSION: "@integer/google_play_services_version"]
+        }
+        fdroid {
+            manifestPlaceholders = [PLAY_VERSION: "0"]
+        }
+    }
+    sourceSets {
+        google {
+            java.srcDirs = ['src/google/java']
+        }
+        fdroid {
+            java.srcDirs = ['src/fdroid/java']
+        }
+    }
+}
+
+dependencies {
+    compile 'com.google.code.gson:gson:2.3'
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    googleCompile 'com.google.android.gms:play-services:+'
+}

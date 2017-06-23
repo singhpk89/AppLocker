@@ -1,6 +1,6 @@
 package org.twinone.ads;
 
-public abstract class AdInterface {
+public abstract class BaseAdInterface {
 
 	/**
 	 * @return The Ad Unit Id of the banner if this app uses banners
@@ -16,5 +16,11 @@ public abstract class AdInterface {
 	 * @return The device id's of devices that must show test ads
 	 */
 	public abstract String[] getTestDevices();
+
+    /**
+     *
+     * @return True if ads should be displayed
+     */
+    public abstract boolean adsEnabled();
 
 }

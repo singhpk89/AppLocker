@@ -1,11 +1,9 @@
 package org.twinone.locker.ui;
 
-import org.twinone.locker.Constants;
 import org.twinone.locker.lock.AppLockService;
 import org.twinone.locker.lock.LockService;
 import org.twinone.locker.ui.NavigationFragment.NavigationListener;
 import org.twinone.locker.util.PrefUtils;
-import org.twinone.util.Analytics;
 import org.twinone.util.DialogSequencer;
 
 import android.app.Activity;

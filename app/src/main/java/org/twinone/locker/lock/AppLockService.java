@@ -1,21 +1,5 @@
 package org.twinone.locker.lock;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.twinone.ads.AdMobInterstitialHelper;
-import org.twinone.locker.Constants;
-import org.twinone.locker.LockerAdInterface;
-import org.twinone.locker.ui.MainActivity;
-import org.twinone.locker.util.LaunchInterstitialActivity;
-import org.twinone.locker.util.PrefUtils;
-import org.twinone.locker.version.VersionManager;
-import org.twinone.locker.version.VersionUtils;
-import org.twinone.util.Analytics;
-
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -38,6 +22,20 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.twinone.locker.R;
+
+import org.twinone.ads.DefaultAdInterface;
+import org.twinone.locker.Constants;
+import org.twinone.locker.ui.MainActivity;
+import org.twinone.locker.util.LaunchInterstitialActivity;
+import org.twinone.locker.util.PrefUtils;
+import org.twinone.locker.version.VersionManager;
+import org.twinone.locker.version.VersionUtils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class AppLockService extends Service {
 
@@ -160,8 +158,6 @@ public class AppLockService extends Service {
             return false;
         }
 
-//        mInterstitialHelper = new AdMobInterstitialHelper(this,
-//                new LockerAdInterface());
         mHandler = new Handler();
         mActivityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 
@@ -272,6 +268,8 @@ public class AppLockService extends Service {
     }
 
     private void showInterstitial() {
+        if (!new DefaultAdInterface().adsEnabled()) return;
+
         mAdCount++;
         if (mAdCount % Constants.APPS_PER_INTERSTITIAL == 0)
             mHandler.post(new Runnable() {

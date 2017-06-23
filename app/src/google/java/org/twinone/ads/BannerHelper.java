@@ -1,7 +1,5 @@
 package org.twinone.ads;
 
-import org.twinone.locker.Constants;
-
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
@@ -13,9 +11,11 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
-public class AdMobBannerHelper {
+import org.twinone.locker.Constants;
 
-	private static final String TAG = AdMobBannerHelper.class.getSimpleName();
+public class BannerHelper {
+
+	private static final String TAG = BannerHelper.class.getSimpleName();
 
     private final Context mContext;
 
@@ -27,7 +27,7 @@ public class AdMobBannerHelper {
 
 	private final boolean mShowAds;
 
-	public AdMobBannerHelper(Context c, View parent) {
+	public BannerHelper(Context c, View parent) {
 
 		mContext = c;
 		adView = new AdView(mContext);

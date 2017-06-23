@@ -1,8 +1,8 @@
-package org.twinone.locker;
+package org.twinone.ads;
 
-import org.twinone.ads.AdInterface;
+import org.twinone.ads.BaseAdDetails;
 
-public class LockerAdInterface extends AdInterface {
+public class DefaultAdInterface extends BaseAdDetails {
 
 	@Override
 	public String getBannerAdUnitId() {
@@ -19,4 +19,8 @@ public class LockerAdInterface extends AdInterface {
 		return new String[] { "7F0691401B3202E821FD7686CF452966" };
 	}
 
+    @Override
+    public boolean adsEnabled() {
+        return true;
+    }
 }
